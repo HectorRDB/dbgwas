@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=utf-8 />
+    <link rel="stylesheet" href="components/lib/css/bootstrap.min.css">
+    <link rel="stylesheet" href="components/lib/css/query-builder.default.min.css">
+    <style>
+        img {
+            max-width: 200px;
+            height: auto;
+        }
+
+        table{
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        td,tr{
+            border: 1px solid gray;
+            border-collapse: collapse;
+        }
+
+        .centeredbtn{
+            margin:auto;
+            display:block;
+            width: 50%;
+        }
+    </style>
+
+
+
+    <script src="components/lib/js/jquery.min.js"></script>
+    <script src="components/lib/js/query-builder.standalone.min.js"></script>
+    <script src="components/lib/js/alasql.min.js"></script>
+    <script type="text/javascript">
+        var data;
+
+        function buildObjectsHTML(objects) {
+            var html="";
+            var nb=0;
+            objects.forEach(function(object) {
+                html += object.preview + "\n";
+                nb += 1;
+            });
+            return "<h3>Done! Found " + nb + " components.</h3><br/><br/>" + html;
+        }
+
+        function showObjects() {
+            var objectDiv = $('#showItemsDiv');
+            objectDiv.html('Working...');
+            var sql = 'SELECT preview FROM ? WHERE ' + $('#builder').queryBuilder('getSQL', false).sql + ' ORDER BY ' + $('#sortTerm').val() + ' ' + $('#asc_desc').val();
+            var objects = alasql(sql, [data]);
+            objectDiv.html(buildObjectsHTML(objects));
+        }
+    </script>
+    <title>Your DBGWAS results</title>
+</head>
+<body>
+<h1>Your DBGWAS results</h1>
+
+
+<div style="margin:0 auto; width:60%;">
+    <h3> Filters: </h3>
+    <div id="builder"></div>
+
+    <script>
+        $( document ).ready(function() {
+            //auto generated stuff comes here
+            data = <previews>
+            //auto generated stuff comes here
+
+            var queryBuilder = $('#builder').queryBuilder({
+                filters: [
+                    {id: 'qvalue', type: 'string', label: 'q-value', input: 'text', operators: ['equal', 'not_equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal', 'between']},
+                    {id: 'annotations', type: 'string', label: 'Annotations', input: 'text', operators: ['equal', 'not_equal', 'contains', 'not_contains']}
+                ],
+                rules: [{
+                    condition: 'AND',
+                    id: 'qvalue',
+                    operator: 'between',
+                    value: ['0.0', '1.0']
+                }]
+            });
+
+            showObjects();
+        })
+    </script>
+
+    <h3> Sort by:
+        <select id="sortTerm">
+            <option value="qvalue" selected>q-value</option>
+        </select>
+        <select id="asc_desc">
+            <option value="ASC" selected>Asc</option>
+            <option value="DESC">Desc</option>
+        </select>
+    </h3>
+
+    <br/>
+    <button type="button" class="centeredbtn" onclick="showObjects()">Apply</button>
+    <br/>
+</div>
+<br/>
+<br/>
+
+<div id="showItemsDiv"></div>
+
+</body>
+</html>

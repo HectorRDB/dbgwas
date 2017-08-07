@@ -1,0 +1,439 @@
+## Adapted from BUGWAS_modular.R
+
+
+#####################################################################################################################################################################
+######## 									BUGWAS				   						
+#####################################################################################################################################################################
+
+
+#####################################################################################################################################################################
+#### Library dependencies
+#####################################################################################################################################################################
+## library(ape)
+## library(phangorn)
+
+## source("/dipro/mmm/ana/Saur/AbxGWAS/bugwas/BUGWAS_functions.R")
+## source("/home/wilson/R/ridge regression.R")
+## source("/dipro/mmm/ana/Saur/AbxGWAS/bugwas/all_plots_new.R")
+## source("/dipro/mmm/ana/Saur/AbxGWAS/bugwas/jessie_plots_code.R")
+
+
+##' Lineage and locus tests for bacterial GWAS
+##'
+##' This function tests for locus effects using GEMMA and lineage effects using a bayesian wald test for haploid data
+##' @param gen A file name specified by either a variable of mode character, or a double-quoted string, containing imputed haploid SNP data. Rows are SNPs, and columns are samples, with the first column being SNP positions. Column headers must contain 'ps' for the SNP positions with the others being the sample names. This must contain biallelic SNPs, but can also contain tri and tetra-allelic SNPs. Required argument.
+##' @param pheno A file name specified by either a variable of mode character, or a double-quoted string, containing a column of sample names with header 'ID' and a column of the binary phenotype (coded by 0s and 1s) with column header 'pheno'. Required argument.
+##' @param phylo A file name specified by either a variable of mode character, or a double-quoted string, containing a phylogeny of the samples, with the same names matching with arguments gen and pheno. Required argument.
+##' @param prefix Output file prefix. Required argument.
+##' @param gem.path A file path specified by either a variable of mode character, or a double-quoted string. gem.path is the file path to the software GEMMA (version >= ?). Required argument.
+##' @param pcs A file name specified by either a variable of mode character, or a double-quoted string, containing the principle components of the data. Column names should be 'PC1' to 'PCn' and row names should be the sample names.
+##' @param lmm.bi A file name specified by either a variable of mode character, or a double-quoted string, containing GEMMA results (ending '.assoc.txt') for the biallelic SNPs in argument 'gen'.
+##' @param logreg.bi A file name specified by either a variable of mode character, or a double-quoted string, containing logistic regression -log10(p) for the biallelic SNPs with column names 'ps' for SNP positions/IDs and 'negLog10' for -log10(p).
+##' @param cutOffCor Correlation cut-off for assigning and colouring variants by Principal Components (Default = 0, variants are coloured by the PC they are most correlated with).
+##' @param run.lmm Whether to run GEMMA (Default = TRUE).
+##' @param maf Minor allele frequency for GEMMA (Default = 0, all varaints are tested).
+##' @param relmatrix A file name specified by either a variable of mode character, or a double-quoted string of a file containing the GEMMA relatedness matrix of the samples created from biallelic SNPs. The individual ordering must be in the same order as the column names in argument 'gen'.
+##' @param lognull The log likelihood under the null from GEMMA.
+##' @param lambda Lambda from GEMMA.
+##' @param output.dir Output file directory.
+##' @param creatingAllPlots Whether to create all bugwas plots. Default = TRUE.
+##' @param allBranchAndPCCor Whether or not to retreive correlation matrix between branches and PCs. Default = FALSE.
+##' @param svd.XX The output of svd(XX), where XX is a rescaled version of SNPdata$XX.all$XX. Optional, only used if creatingAllPlots is TRUE. Default = NULL (computed if creatingAllPlots is TRUE).
+##' @param pca The output of bugwas:::do_pca(pcs = pcs, XX = XX, XX.ID = SNPdata$XX.ID), where XX is a rescaled version of SNPdata$XX.all$XX. Optional, only used if creatingAllPlots is TRUE. Default = NULL (computed if creatingAllPlots is TRUE).
+##' @keywords bacteria GWAS locus lineage wald GEMMA
+##' @export
+##' @examples
+##' lin_loc()
+##' #### An example of running lin_loc with the minimum required inputs
+##' #### Assuming gemma is installed in the present working directory
+##' gen <- system.file("extdata", "gen.txt", package = "bugwas")
+##' pheno <- system.file("extdata", "pheno.txt", package = "bugwas")
+##' phylo <- system.file("extdata", "tree.txt", package = "bugwas")
+##' prefix <- "test_bugwas"
+##' gem.path <- "./gemma"
+##' data <- lin_loc(gen = gen, pheno = pheno, phylo = phylo, prefix = prefix, gem.path = gem.path)
+
+
+cdbg_lin_loc <- function(SNPdata = NULL,
+                         pheno = NULL,
+                         phylo = NULL,
+                         prefix = NULL,
+                         gem.path = NULL,
+                         pcs = NULL,
+                         lmm.bi = NULL,
+                         logreg.bi = NULL,
+                         cutOffCor = 0,
+                         run.lmm = TRUE,
+                         maf = 0,
+                         relmatrix = NULL,
+                         lognull = NULL,
+                         lambda = NULL,
+                         output.dir = getwd(),
+                         creatingAllPlots = TRUE,
+                         allBranchAndPCCor = FALSE,
+                         svd.XX = NULL,
+                         pca = NULL){
+    
+    pheno = bugwas:::extractInputArgument(arg = pheno, checkExist = TRUE)
+    phylo = bugwas:::extractInputArgument(arg = phylo, checkExist = TRUE)
+    prefix = bugwas:::extractInputArgument(arg = prefix)
+    gem.path = bugwas:::extractInputArgument(arg = gem.path, checkExist = TRUE)
+    pcs = bugwas:::extractInputArgument(arg = pcs, canBeNULL = TRUE)
+    lmm.bi = bugwas:::extractInputArgument(arg = lmm.bi, canBeNULL = TRUE, checkExist = TRUE)
+    logreg.bi = bugwas:::extractInputArgument(arg = logreg.bi, canBeNULL = TRUE, checkExist = TRUE)
+    cutOffCor = bugwas:::extractInputArgument(arg = cutOffCor, default = 0)
+    run.lmm = bugwas:::extractInputArgument(arg = run.lmm, default = TRUE)
+    maf = bugwas:::extractInputArgument(arg = maf, default = 0)
+    relmatrix = bugwas:::extractInputArgument(arg = relmatrix, canBeNULL = TRUE, checkExist = TRUE)
+    lognull = bugwas:::extractInputArgument(arg = lognull, canBeNULL = TRUE)
+    lambda = bugwas:::extractInputArgument(arg = lambda, canBeNULL = TRUE)
+    output.dir = bugwas:::extractInputArgument(arg = output.dir, default = getwd())
+    creatingAllPlots = bugwas:::extractInputArgument(arg = creatingAllPlots, default = TRUE)
+    allBranchAndPCCor = bugwas:::extractInputArgument(arg = allBranchAndPCCor, default = FALSE)
+    
+    XX.all <- SNPdata$XX.all
+    sample_ID <- SNPdata$sample_ID
+    npcs <- SNPdata$npcs
+    y <- SNPdata$y
+    XX.ID <- SNPdata$XX.ID
+    rm(SNPdata)
+    gc()
+    
+    bugwas:::get_log_file(XX.all = XX.all, prefix = prefix)
+    
+    ## Read in kinship matrix, if no kinship matrix to read in, compute kinship matrix
+    if(run.lmm){
+        pheno.file <- bugwas:::write_pheno(pheno = y, prefix = prefix)
+        if(is.null(relmatrix)){
+            message("Calculating kinship matrix.")
+            relmatrix <- bugwas:::get_kinship(XX = XX.all$XX,
+                                              pattern = XX.all$pattern,
+                                              prefix = prefix,
+                                              path = gem.path,
+                                              dir = output.dir,
+                                              maf = maf,
+                                              pheno.file = pheno.file)
+            message("Kinship matrix calculated successfully.")
+        }
+    }
+    
+    
+    XX <- bugwas:::rescale_variants(var = XX.all$XX, varpat = XX.all$bippat)
+    message("Rescaled variants.")
+
+    if(creatingAllPlots && is.null(svd.XX)){
+        svd.XX <- svd(XX)
+        message("Single value decomposition complete.")
+    }
+
+    if(creatingAllPlots && is.null(pca)){
+        ## PCA on the bips
+        pca <- bugwas:::do_pca(pcs = pcs, XX = XX, XX.ID = XX.ID)
+        message("Principle component analysis complete.")
+    }
+    
+    biallelic <- cdbg_get_biallelic(logreg.bi = logreg.bi,
+                                    XX.all = XX.all,
+                                    XX = XX,
+                                    lmm.bi = lmm.bi,
+                                    lognull = lognull,
+                                    lambda = lambda,
+                                    relmatrix = relmatrix,
+                                    pheno.file = pheno.file,
+                                    maf = maf,
+                                    gem.path = gem.path,
+                                    output.dir = output.dir,
+                                    prefix = prefix,
+                                    run.lmm = run.lmm,
+                                    XX.ID = XX.ID,
+                                    pca = pca$pca,
+                                    npcs = npcs)
+    message("Biallelic data processed successfully.")
+
+    if(creatingAllPlots){
+        ## Get list of all tree info
+        treeInfo <- bugwas:::get_tree(phylo = phylo,
+                                      prefix = prefix,
+                                      XX.ID = XX.ID,
+                                      pca = pca$pca,
+                                      npcs = npcs,
+                                      allBranchAndPCCor = allBranchAndPCCor)
+        message("Tree data processed successfully.")
+        
+        ## Ridge regression
+        wald <- bugwas:::wald_test(y = y,
+                                   XX = XX,
+                                   svd.XX = svd.XX,
+                                   lambda = biallelic$lambda,
+                                   XX.all = XX.all,
+                                   prefix = prefix,
+                                   npcs = npcs,
+                                   pca = pca$pca)
+        
+        ## rm(list=c("XX", "svd.XX"))
+        rm(XX)
+        gc()
+    }else{
+        treeInfo <- NULL
+        wald <- NULL
+    }
+    
+    ## Put everything into lists
+    biallelic <- list("pattern" = XX.all$pattern,
+                      "cor.XX" = biallelic$cor.XX,
+                      "npcs" = npcs,
+                      "pheno" = y,
+                      "logreg" = biallelic$logreg.bi,
+                      "lmm" = biallelic$lmm.bi,
+                      "ps" = XX.all$ps,
+                      "pred" = wald$pred,
+                      "pca" = pca$pca,
+                      "pc_order" = wald$pc_order,
+                      "p.pca.bwt" = wald$p.pca.bwt,
+                      "bippat" = XX.all$bippat,
+                      "id" = XX.ID, ## New  - Jessie need to add
+                      "svd.XX" = svd.XX)
+    
+    config <- list("prefix" = prefix,
+                   "signif_cutoff" = wald$signif_cutoff,
+                   "cutoffCor" = cutOffCor)
+    
+    if(creatingAllPlots){
+        cdbg_all_plots(biallelic = biallelic, triallelic = NULL,
+                       genVars = NULL, treeInfo = treeInfo, config = config)        
+    }
+    
+    return(list("biallelic" = biallelic, "config" = config, "treeInfo" = treeInfo))
+}
+
+
+## all_plots(biallelic = biallelic, triallelic = triallelic, config = config, treeInfo = treeInfo, genVars = genVars)
+
+
+################################################################################################
+##
+## Adapted from BUGWAS_functions.R
+##
+## Changelog:
+##   - calls gemma with option "-lmm 4" rather than "-lmm 2" in order
+##    to get beta (weights in the linear model) and standard errors
+##    rather than just lrt p-values.
+##
+##
+## Run GEMMA software on binary data.
+## @XX: Binary variant patterns
+## @relmatrix: Path to a relatedness matrix built from biallelic SNP data
+## @pattern: For each variant, which pattern (row of XX) is it
+## @ps: For each variant, what position is it in a reference genome (if mapped data)
+##		Otherwise, an ID number
+## @pheno.file: File containing phenotype to be tested (in same order as columns of XX)
+## @maf: Minor allele frequency to test using GEMMA (Default: 0, all variants are tested)
+## @prefix: Output file prefix
+## @path: Path to where GEMMA is installed
+## @dir: Working directory
+## @process.results: Whether to process the p-value output of LMM or just return lambda and
+## 					 the log likelihood under the null
+## 					 Defaults to TRUE, which processes LMM p-value results
+##
+## Outputs:
+## Likelihood ratio test results, the log likelihood under the null, lambda
+################################################################################################
+
+cdbg_run_lmm_bi <- function(XX = NULL,
+                            relmatrix = NULL,
+                            pattern = NULL,
+                            ps = NULL,
+                            pheno.file = NULL,
+                            maf = NULL,
+                            prefix = NULL,
+                            path = NULL,
+                            dir = NULL,
+                            process.results = TRUE){
+    
+    
+                                        #message("cdbg_run_lmm_bi")				   	
+    
+                                        # Output file names
+    gen.output.file <- paste0(prefix, "_gemma_genfile.txt")
+    snp.output.file <- paste0(prefix, "_gemma_snpfile.txt")
+    
+    if(is.null(dim(XX))){
+        XX <- matrix(XX,nrow=1)
+    }
+    
+                                        # Check if the variants are binary
+    num.alleles <- apply(XX, 1, function(data) length(unique(data)))
+    
+    if(length(which(num.alleles>2))!=0){
+        stop("\nError: function cdbg_run_lmm_bi requires binary variants\n")
+    }
+    gen.file <- cbind(paste0("pattern",1:nrow(XX)),rep(1,nrow(XX)),rep(0,nrow(XX)),XX)
+    write.table(gen.file, file = gen.output.file, row=F, col=F, sep="\t", quote=F)
+    
+    snp.file <- cbind(paste0("pattern",1:nrow(XX)), 1:nrow(XX), rep(24,nrow(XX)))
+    write.table(snp.file, file = snp.output.file, row=F, col=F, sep="\t", quote=F)
+    
+    system(paste0(path, " -g ", gen.output.file, " -p ", pheno.file, " -a ", snp.output.file,
+                  " -k ", relmatrix," -lmm 4 -o ", prefix, "_lmmout_patterns"," -maf ", maf))
+    
+                                        #message("LMM calculations completed successfully.")
+    lmm.log <- paste0(dir, "/output/", prefix, "_lmmout_patterns.log.txt")
+    
+                                        #message(paste(c("GEMMA log file:", lmm.log), collapse=""))
+    
+    lambda.lognull <- bugwas:::extract_lambda_lognull(lmm.log)
+    
+                                        #message("Lambda estimations extracted successfully.")
+                                        #message(paste(c("Extracted lambda: ", lambda.lognull), collapse=""))
+    
+    if(process.results == FALSE){
+        
+        return(lambda.lognull)
+        
+    } else {
+        
+        assocFile = paste0(dir, "/output/", prefix, "_lmmout_patterns.assoc.txt")
+                                        #message(paste(c("assocFile:", assocFile), collapse=" "))
+        lmm <- read.table(assocFile, header=T, sep="\t", as.is=T)
+        
+                                        #message(paste(c("Header:", names(lmm)), collapse=" "))
+        
+        LH1 <- lmm$logl_H1
+        
+        
+        D <- sapply(LH1, bugwas:::get_deviance, lognull=lambda.lognull["lognull"], USE.NAMES=FALSE)
+        pvals <- pchisq(as.numeric(D), 1, low=F)
+        negLog10 <- -log10(pvals)	
+        
+                                        #message("flag1")
+        
+        ## !!! lmm$ps is not the same thing as ps. It is indexing
+        ## !!! unique patterns in the output file of gemma so its
+        ## !!! length is at most the number of unique
+        ## !!! patterns. The following operation therefore simply
+        ## !!! restrict the "pattern" variable to the subset of
+        ## !!! unique patterns which were tested by gemma.  ##
+        ## !!! Important: since these patterns are arbitrarilly
+        ## !!! named 1:nrow(XX), patterns should contain row
+        ## !!! numbers in XX, not pattern IDs.
+        m <- match(pattern, lmm$ps) 
+        pattern <- pattern[!is.na(m)]
+        ## This restricts ps (which has one value per variant) to
+        ## the set of variants corresponding to tested patterns.
+        ps <- ps[!is.na(m)]
+        
+                                        #message("flag2")
+        
+        lmm <- cbind(lmm, negLog10)
+        lmm <- lmm[match(pattern,lmm$ps), ]
+        lmm$ps <- ps
+        
+                                        #message("flag3")
+        
+        write.table(lmm, file = paste0(prefix, "_lmmout_allSNPs.txt"), sep="\t",
+                    row=F, col=T, quote=F)
+        
+        return(list("lmm" = lmm, "lognull" = lambda.lognull["lognull"],
+                    "lambda" = lambda.lognull["lambda"]))
+    }
+    
+}
+
+################################################################################################
+## Adapted from BUGWAS_functions.R
+## Changelog:
+##   - calls cdbg_run_lmm_bi rather than bugwas:::run_lmm_bi
+## Functions for biallelic data
+################################################################################################
+
+cdbg_get_biallelic <- function(logreg.bi = NULL,
+                               XX.all = NULL,
+                               XX = NULL,
+                               lmm.bi = NULL,
+                               lognull = NULL,
+                               lambda = NULL,
+                               relmatrix = NULL,
+                               pheno.file = NULL,
+                               maf = NULL,
+                               gem.path = NULL,
+                               output.dir = NULL,
+                               prefix = NULL,
+                               run.lmm = NULL,
+                               XX.ID = NULL,
+                               pca = NULL,
+                               npcs = NULL){
+
+    if(!is.null(logreg.bi)){
+        logreg.bi <- read.table(logreg.bi, header=T, sep="\t", as.is=T)
+        if(nrow(logreg.bi)!=length(XX.all$pattern)){
+            cat(paste0("logreg.bi = ", nrow(logreg.bi), " variants"),"\n")
+            cat(paste0("gen = ", length(XX.all$pattern), " biallelic variants"),"\n")
+            stop("\nError: number of variants in logreg.bi does not match number of biallelic SNPs in gen")
+        }
+        if(any(is.na(match(logreg.bi$ps, XX.all$ps)))){
+            stop("\nError: variant positions/IDs do not match between logreg.bi and biallelic variants in gen\n")
+        }
+        if(any(logreg.bi$ps != XX.all$ps)){
+            m <- match(XX.all$ps, logreg.bi$ps)
+            logreg.bi <- logreg.bi[m,]
+        }
+    }
+    
+    
+    if(!is.null(lmm.bi)){
+        lmm.bi <- read.table(lmm.bi, header=T, sep="\t", as.is=T)
+        if(nrow(lmm.bi)!=length(XX.all$pattern)){
+            cat(paste0("lmm.bi = ", nrow(lmm.bi), " variants"),"\n")
+            cat(paste0("gen = ", length(XX.all$pattern), " biallelic variants"),"\n")
+            stop("\nError: number of variants in lmm.bi does not match number of biallelic SNPs in gen")
+        }
+        if(any(is.na(match(lmm.bi$ps, XX.all$ps)))){
+            stop("\nError: variant positions/IDs do not match between lmm.bi and biallelic variants in gen\n")
+        }
+        if(any(lmm.bi$ps != XX.all$ps)){
+            m <- match(XX.all$ps, lmm.bi$ps)
+            lmm.bi <- lmm.bi[m,]
+        }
+        
+        if(is.null(lognull) | is.null(lambda)){
+            lambda.lognull <- cdbg_run_lmm_bi(XX = XX.all$XX[1,], relmatrix = relmatrix,
+                                              pheno.file = pheno.file, maf = maf,
+                                              prefix = paste0(prefix, "_getlognull"), path = gem.path,
+                                              dir = output.dir, process.results = FALSE)
+            if(is.null(lambda)){
+                lambda <- as.numeric(lambda.lognull$lambda)
+                cat(paste0("## Lambda = ", lambda), file = paste0(prefix,"_logfile.txt"),
+                    sep="\n", append = TRUE)
+            }
+            if(is.null(lognull)){
+                lognull <- as.numeric(lambda.lognull$lognull)
+                cat(paste0("## Log likelihood under the null = ", lognull),
+                    file = paste0(prefix,"_logfile.txt"), sep="\n", append = TRUE)
+            }
+        }
+        
+    } else if(is.null(lmm.bi) & run.lmm){	
+        lmm.bi <- cdbg_run_lmm_bi(XX = XX.all$XX, relmatrix = relmatrix, pattern = XX.all$pattern,
+                                  ps = XX.all$ps, pheno.file = pheno.file, maf = maf,
+                                  prefix = paste0(prefix, "_biallelic"), path = gem.path, dir = output.dir)
+        
+        lognull <- as.numeric(lmm.bi$lognull)
+        cat(paste0("## Log likelihood under the null = ", lognull),
+            file = paste0(prefix,"_logfile.txt"), sep="\n", append = TRUE)
+        lambda <- as.numeric(lmm.bi$lambda)
+        cat(paste0("## Lambda = ", lambda), file = paste0(prefix,"_logfile.txt"),
+            sep="\n", append = TRUE) 
+        lmm.bi <- lmm.bi$lmm
+    }
+
+
+    if(!is.null(pca)){
+        cor.XX <- bugwas:::get_correlations(XX = XX, pca = pca$x, npcs = npcs, id = XX.ID)
+    }else{
+        cor.XX <- NULL
+    }
+
+    return(list("logreg.bi" = logreg.bi, "lmm.bi" = lmm.bi, "lognull" = lognull,
+                "lambda" = lambda, "cor.XX" = cor.XX))
+
+}

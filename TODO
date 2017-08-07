@@ -1,0 +1,44 @@
+﻿General TODO:
+  -create a log file
+    Containing at least nb of kmers, of unitigs and of unique patterns
+  -newick file should be optional (R script and software)
+  -treat NA better
+  -if we want to show only figures from the software, and not the one I customized in cytoscape + inkscape, we should definitely add some insights of the annotation.
+
+Low priority:
+    - When the strains input file is missing, we return an error:
+        [FATAL ERROR] Error opening file
+        Could it be a little more detailed? Eg, which file (there are two inputs), and whether the format is wrong or the file was not found.
+    - for the user to be able to customize its results completely, export cytoscape files (sif + table ?) and/or add interaction in the web version (possibility to modify the node size, the colors...) ???
+    - possibility to work on unitig counts rather than presence/absence
+
+
+Annotation TODO:
+    -We should propose it optionnally or even better : from the result web page, as it should take quite a while to blast
+     all the selected unitigs (if we propose it from the summary index page, we could have the possibility to select only
+     some components we want to annotate, and not all, and launch the annotation on these components.)
+    - as the ncbi blast cgi service prevents from launching too many queries, we should launch only one big query on all
+    selected component's unitigs and parse the results.
+    - ideally, we should be able, as a result of the annotation, to add 1) an annotation summary of the component on the
+    index page (for example, the gene name or region description that appears the more often, like on the first scheme
+    drawn of the index page), + 2) when clicking on the component, a detailed annotation (per unitig) should be available
+    on the component page. For example, the one you proposed : a toogle list of (cleaned) annotations, and when we click
+    on a particular annotation this highlights the nodes concerned by the annotation (highligh could be done by selecting
+    the nodes for instance).
+    - technically, we saw that a correct annotation can be parsed from the blast output, following one or two well chosen
+    links). However, we looked at the blast result web page and not at the cgi query content. Maybe this will differ a
+    bit. I have good knowledge of perl which is cool for parsing, but not as efficient as python for performance... I also
+    know several ways to query ncbi properties. I don't know your knowledge on it, and if you would need help on this.
+    - Blast the genes of the nodes and show a view with the genes and which unitigs belong to each gene
+
+
+
+
+
+
+
+
+
+Misc:
+Installing zlib (only for compiling):
+   sudo apt-get install libgcrypt11-dev zlib1g-dev

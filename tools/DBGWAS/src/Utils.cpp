@@ -1,0 +1,382 @@
+//
+// Created by Leandro Ishi Soares de Lima on 05/06/16.
+//
+
+#include "Utils.h"
+#include "global.h"
+
+using namespace std;
+
+char complement(char b)
+{
+  switch(b)
+  {
+    case 'A': return 'T';
+    case 'T': return 'A';
+    case 'G': return 'C';
+    case 'C': return 'G';
+
+    case 'a': return 't';
+    case 't': return 'a';
+    case 'g': return 'c';
+    case 'c': return 'g';
+
+    case 'N': return 'N';
+    case '*': return '*';
+  }
+  return '?';
+}
+
+string reverse_complement(const string &seq)
+{
+  string s(seq.begin(),seq.end());
+  string::iterator pos;
+
+  reverse(s.begin(), s.end());
+
+  for(pos=s.begin();pos!=s.end();++pos)
+    *pos=complement(*pos);
+
+  return s;
+}
+
+
+//Read all strings in the readsFile file and return them as a vector of strings
+vector<string> getVectorStringFromFile(const string &readsFile) {
+  vector<string> allReadFilesNames;
+  string tempStr;
+
+  ifstream readsFileStream;
+  openFileForReading(readsFile, readsFileStream);
+  while (getline(readsFileStream, tempStr)) {
+    if (tempStr.size() > 0)
+      allReadFilesNames.push_back(tempStr);
+  }
+  readsFileStream.close();
+
+  return allReadFilesNames;
+}
+
+//this function also populates strains if needed
+void checkStrainsFile(const string &strainsFile) {
+  vector<Strain> localStrains;
+  bool header=true;
+  ifstream input;
+  openFileForReading(strainsFile, input);
+  set<string> allIds;
+
+  for(string line; getline( input, line ); )
+  {
+    //parse header
+    if (header) {
+      header=false;
+      continue;
+    }
+
+    //ignore empty lines
+    if (line.size()==0)
+      continue;
+
+    //create the strain
+    stringstream ss;
+    ss << line;
+    string id, pheno, path;
+    ss >> id >> pheno >> path;
+
+    //check for duplicated IDs
+    if (allIds.find(id)!=allIds.end()) {
+      stringstream ss;
+      ss << "Duplicated IDs in " << strainsFile << ": " << id << endl;
+      fatalError(ss.str());
+    }
+    allIds.insert(id);
+
+    //check for disallowed phenotypes
+    if (pheno!="0" && pheno!="1" && pheno!="NA") {
+      stringstream ss;
+      ss << "Phenotype not allowed: " << pheno << " . The only allowed values for phenotype are 0, 1 or NA." << endl;
+      fatalError(ss.str());
+    }
+
+    //check if the path is ok
+    ifstream file;
+    openFileForReading(path, file);
+    if (!file.is_open()) {
+      stringstream ss;
+      ss << "Error opening file " << path << " in " << strainsFile << endl;
+      fatalError(ss.str());
+    }
+    file.close();
+
+    //add the strain if it is different from NA
+    if (pheno=="NA") {
+      cerr << "[WARNING] Skipping strain " << id << " because its phenotype is NA" << endl;
+    }else {
+      Strain strain(id, pheno, path);
+      localStrains.push_back(strain);
+    }
+  }
+  input.close();
+
+  //in the end, check if strain is null. If it is, populate it
+  if (strains==NULL)
+    strains = new vector<Strain>(localStrains);
+}
+
+
+
+string readFileAsString(const char* fileName) {
+  std::ifstream t;
+  openFileForReading(fileName, t);
+  std::string str;
+
+  t.seekg(0, std::ios::end);
+  str.reserve(t.tellg());
+  t.seekg(0, std::ios::beg);
+
+  str.assign((std::istreambuf_iterator<char>(t)),
+             std::istreambuf_iterator<char>());
+  t.close();
+  return str;
+}
+
+
+void copyDirectoryRecursively(const fs::path& sourceDir, const fs::path& destinationDir)
+{
+  if (!fs::exists(sourceDir) || !fs::is_directory(sourceDir))
+  {
+    throw std::runtime_error("Source directory " + sourceDir.string() + " does not exist or is not a directory");
+  }
+  if (fs::exists(destinationDir))
+  {
+    throw std::runtime_error("Destination directory " + destinationDir.string() + " already exists");
+  }
+  if (!fs::create_directory(destinationDir))
+  {
+    throw std::runtime_error("Cannot create destination directory " + destinationDir.string());
+  }
+
+  for (const auto& dirEnt : fs::recursive_directory_iterator{sourceDir})
+  {
+    const auto& path = dirEnt.path();
+    auto relativePathStr = path.string();
+    boost::replace_first(relativePathStr, sourceDir.string(), "");
+    fs::copy(path, destinationDir / relativePathStr);
+  }
+}
+
+
+int getNbLinesInFile(const string &filename) {
+  std::ifstream file;
+  openFileForReading(filename.c_str(), file);
+
+  // Number of lines in the file
+  int n = std::count(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>(), '\n');
+
+  file.close();
+
+  return n;
+}
+
+
+void checkParametersBuildDBG(Tool *tool) {
+  //check if we skip or not
+  skip1 = tool->getInput()->get(STR_SKIP1) != 0;
+  skip2 = tool->getInput()->get(STR_SKIP2) != 0;
+  if (skip2) skip1=true;
+
+  if (skip1) {
+    cerr << "Skipping Step 1!" << endl;
+    return;
+  }
+
+  //check the count mode
+  //TODO: seeveral questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
+  /*
+  string countMode = tool->getInput()->getStr(STR_COUNT_MODE);
+  if (countMode!="01" && countMode!="Freq") {
+    stringstream ss;
+    ss << "Wrong value for parameter " << STR_COUNT_MODE << ". Value found: " << countMode << " . Values accepted: 01 or Freq.";
+    fatalError(ss.str());
+  }
+   */
+
+  //check the strains file
+  string strainsFile = tool->getInput()->getStr(STR_STRAINS_FILE);
+  checkStrainsFile(strainsFile);
+
+  //check output
+  //string outputFolderPath = tool->getInput()->getStr(STR_OUTPUT);
+  string outputFolderPath("output");
+  boost::filesystem::path p(outputFolderPath.c_str());
+  if (boost::filesystem::exists(p)) {
+    stringstream ss;
+    ss << "Could not create dir " << outputFolderPath << " - path already exists";
+    fatalError(ss.str());
+  }
+  createFolder(p.string());
+
+  //create temp folder
+  boost::filesystem::path tempPath(p);
+  tempPath /= "tmp";
+  createFolder(tempPath.string());
+}
+
+
+void checkParametersStatisticalTest(Tool *tool) {
+  if (skip2) {
+    cerr << "Skipping Step 2!" << endl;
+    return;
+  }
+
+  //check if newickTreeFilePath exists
+  string newickTreeFilePath = tool->getInput()->getStr(STR_NEWICK_PATH);
+  boost::filesystem::path p(newickTreeFilePath.c_str());
+  if (!boost::filesystem::exists(p)) {
+    stringstream ss;
+    ss << "Error locating newick tree file path: " << newickTreeFilePath;
+    fatalError(ss.str());
+  }
+}
+
+
+void checkParametersGenerateOutput(Tool *tool) {
+  //string outputFolderPath = tool->getInput()->getStr(STR_OUTPUT);
+  string outputFolderPath("output");
+  boost::filesystem::path visPath(outputFolderPath.c_str());
+  visPath /= "visualisations";
+  if (boost::filesystem::exists(visPath)) {
+    cerr << "[WARNING] Removing " << outputFolderPath << "/visualisations because path already exists (maybe previous visualisations?). " << endl;
+    boost::filesystem::remove_all(visPath);
+  }
+  createFolder(visPath.string());
+  visPath /= "components";
+  createFolder(visPath.string());
+
+
+  //parse and get SFF
+  string SFFString = tool->getInput()->getStr(STR_SFF);
+  if (SFFString.find(".")==string::npos) {
+    //. not found in SFFString : integer
+    //get the first n significant patterns
+    int n;
+    {
+      stringstream ss;
+      ss << SFFString;
+      ss >> n;
+      if (ss.fail())
+        fatalError(string("Error on ") + string(STR_SFF) + " parameter. It must be an integer or a double.");
+    }
+
+    SFF=n;
+  }else {
+    //double
+    //get all sequence in which the q-value is <= n
+    double n;
+    {
+      stringstream ss;
+      ss << SFFString;
+      ss >> n;
+      if (ss.fail())
+        fatalError(string("Error on ") + string(STR_SFF) + " parameter. It must be an integer or a double.");
+    }
+    SFF = n;
+  }
+}
+
+
+void fatalError (const string &message) {
+  cerr << endl << endl << "[FATAL ERROR] " << message << endl << endl;
+  cerr.flush();
+  exit(1);
+}
+
+
+void executeCommand(const string &command, bool verbose) {
+  // run a process and create a streambuf that reads its stdout and stderr
+  if (verbose)
+    cout << "Executing " << command << "..." << endl;
+
+  //create the process
+  redi::ipstream proc(command, redi::pstreams::pstdout | redi::pstreams::pstderr);
+  string line;
+
+  // read child's stdout
+  while (getline(proc.out(), line)) {
+    if (verbose)
+      cout << line << endl;
+  }
+  // read child's stderr
+  while (getline(proc.err(), line)) {
+    if (verbose)
+      cerr << line << endl;
+  }
+
+  //check exit status
+  proc.close();
+  if (proc.rdbuf()->exited()) {
+    if (proc.rdbuf()->status() != 0) {
+      stringstream ss;
+      ss << "Error executing " << command << ". Exit status: " << proc.rdbuf()->status();
+      fatalError(ss.str());
+    }
+    if (verbose)
+      cout << "Executing " << command << " - Done!" << endl;
+  }
+  else
+    fatalError("On executeCommand()");
+}
+
+
+void openFileForReading(const string &filePath, ifstream &stream) {
+  stream.open(filePath);
+  if (!stream.is_open()) {
+    stringstream ss;
+    ss << "Error opening file " << filePath;
+    fatalError(ss.str());
+  }
+}
+
+void openFileForWriting(const string &filePath, ofstream &stream) {
+  stream.open(filePath);
+  if (!stream.is_open()) {
+    stringstream ss;
+    ss << "Error opening file " << filePath;
+    fatalError(ss.str());
+  }
+}
+
+void createFolder(const string &path) {
+  boost::filesystem::path folder(path.c_str());
+
+  if (boost::filesystem::exists(folder))
+    return;
+
+  if (!boost::filesystem::create_directories(folder)) {
+    stringstream ss;
+    ss << "Could not create dir " << path << " - unknown reasons...";
+    fatalError(ss.str());
+  }
+}
+
+
+
+
+void GetSignificantPatterns::operator()(int &n) const
+{
+  n = min(n, (int)patterns.size());
+  int i=0;
+  for (const auto &pattern : patterns) {
+    if (i < n)
+      significantPatterns.push_back(pattern);
+    i++;
+  }
+}
+
+void GetSignificantPatterns::operator()(double &qValue) const
+{
+  for (const auto &pattern : patterns) {
+    if (pattern.qValue <= qValue)
+      significantPatterns.push_back(pattern);
+  }
+}

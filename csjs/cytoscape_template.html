@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=utf-8 />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
+
+    <title>DBGWAS Viewer v0.1</title>
+
+    <link rel="stylesheet" href="lib/css/bootstrap.min.css">
+    <link rel="stylesheet" href="lib/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="lib/css/bootstrap-slider.min.css">
+    <link rel="stylesheet" href="lib/css/font-awesome.min.css">
+    <link href="lib/css/jquery.qtip.min.css" rel="stylesheet" type="text/css" />
+    <link href="lib/css/style.css" rel="stylesheet" />
+    <link href="lib/css/cytoscape.js-panzoom.css" rel="stylesheet" type="text/css" />
+    <link href="lib/css/font-awesome-4.0.3/css/font-awesome.css" rel="stylesheet" type="text/css" />
+    <link href="lib/css/jquery-ui.min.css" rel="stylesheet">
+    <link href="lib/css/cytoscape-context-menus.css" rel="stylesheet" type="text/css" />
+    <link href="lib/css/handsontable.full.min.css" rel="stylesheet" type="text/css" />
+
+    <script src="lib/js/fastclick.min.js"></script>
+    <script src="lib/js/lodash.min.js"></script>
+    <script src="lib/js/jquery.min.js"></script>
+    <script src="lib/js/bootstrap.min.js"></script>
+    <script src="lib/js/bootstrap-slider.min.js"></script>
+    <script src="lib/js/cola.v3.min.js"></script>
+    <script src="lib/js/cytoscape.min.js"></script>
+    <script src="lib/js/jquery.qtip.min.js"></script>
+    <script src="lib/js/cytoscape-qtip.js"></script>
+    <script src="lib/js/cytoscape-cola.js"></script>
+    <script src="lib/js/cytoscape-panzoom.js"></script>
+    <script src="lib/js/jquery-ui.min.js"></script>
+    <script src="lib/js/cytoscape-ngraph.forcelayout.js"></script>
+    <script src="lib/js/cytoscape-context-menus.js"></script>
+    <script src="lib/js/handsontable.full.min.js"></script>
+    <script src="lib/js/helpers.js"></script>
+    <script type="text/javascript">
+
+        $(function(){ // on dom ready
+            var elements = [ <elementsTag> ]
+            buildPage(elements)
+        });
+    </script>
+</head>
+<body>
+<div id="dialogInstructions" title="Instructions">
+    I am loading the graph, please wait...
+</div>
+
+
+<div id="cy" style="width: 80%; height: 80%; max-width: 80%;  max-height: 80%"></div>
+<div id="config" class="config" style="width: 20%;">
+    <div class="preamble">
+        <table>
+            <tr>
+                <td><span class="label label-warning" id="PlWarning" style="font-size:20px;"></span></td>
+            </tr>
+            <tr>
+                <td><span class="label label-info" id="PlInfo"></span></td>
+            </tr>
+
+            <tr>
+                <!-- Vertical spacing -->
+                <td><p style="margin-bottom: 1cm;"'></p></td>
+            </tr>
+            <tr>
+            <tr>
+                <td>Legend:</td>
+            </tr>
+            <tr>
+                <td>
+                    <span style="color:blue">Pheno0</span>/<span style="color:red">Pheno1</span> ratio:<br/>
+                    <canvas id="gradientCanvas" width="150" height="50"></canvas> <br/>
+                    <span style="color:blue">Pheno0 &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp </span><span style="color:red">Pheno1</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p style="margin-bottom: 1cm;"'></p>
+                    Allele frequency: <br/>
+                    <canvas id="alleleCanvas" width="250" height="100"></canvas> <br/>
+                    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp High &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Low
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p style="margin-bottom: 3cm;"'></p>
+                    <p>Remeber to use the context menu (right click anywhere in the graph)</p>
+                    <button class="btn btn-default" type="button" onclick="dialogInstructions.dialog('open');">HELP!</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<!-- Div for the node table -->
+<div id="nodeTable" style='overflow: hidden; z-index: 2; position: fixed; top: 80%; left: 0;' ></div>
+</body>
+</html>
