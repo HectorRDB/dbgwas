@@ -5,14 +5,15 @@ DBGWAS is a tool for quick and efficient bacterial GWAS. It uses a compacted De 
 
 # DBGWAS in a nutshell
 For a quick example on how DBGWAS works, consider the following input example:
-288 bacterial genomes testing a phenotype if each strain is resistant or sensitive to a drug (TODO - rephrase this, give link to the input).
 
-The output can be found here: TODO
+288 bacterial genomes testing a phenotype if each strain is resistant or sensitive to a drug (from Jaillard M at al. ,"Correlation between phenotypic antibiotic susceptibility and the resistome in Pseudomonas aeruginosa". IJAA , 50 (2017) 210-218.)
+
+The output can be found here: http://leoisl.gitlab.io/DBGWAS_support/full_dataset_visualization/
 
 # Downloading, installing and running
 ## Downloading the latest release
 This is the easiest way to run the tool since it is already pre-compiled for Linux AMD64 machines.
-Download the latest release here: TODO
+Download the latest release here: https://gitlab.com/leoisl/dbgwas/uploads/466f782295c31aa9d510ccbe6bfc6e9d/DBGWAS-0.0.1-Linux.tar.gz
 
 ## Compiling
 If you still want to compile, clone the repository and execute inside the repository directory:
@@ -57,9 +58,9 @@ DBGWAS makes use of several thirdparties libraries:
 3. Bugwas (https://github.com/sgearle/bugwas)
 4. GEMMA (https://github.com/genetics-statistics/GEMMA)
 5. Cytoscape.js (http://js.cytoscape.org/) and these extensions:
-   5.1: cytoscape.js-cxtmenu (https://github.com/cytoscape/cytoscape.js-cxtmenu)
-   5.2: cytoscape-ngraph.forcelayout (https://github.com/Nickolasmv/cytoscape-ngraph.forcelayout)
-   5.3: cytoscape.js-panzoom (https://github.com/cytoscape/cytoscape.js-panzoom)
+   1. cytoscape.js-cxtmenu (https://github.com/cytoscape/cytoscape.js-cxtmenu)
+   2. cytoscape-ngraph.forcelayout (https://github.com/Nickolasmv/cytoscape-ngraph.forcelayout)
+   3. cytoscape.js-panzoom (https://github.com/cytoscape/cytoscape.js-panzoom)
 6. PhantomJS (http://phantomjs.org/)
 7. Alasql (https://github.com/agershun/alasql)
 8. Handsontable (https://github.com/handsontable/handsontable)
