@@ -75,12 +75,13 @@ DBGWAS makes use of several thirdparty libraries:
    2. cytoscape-ngraph.forcelayout (https://github.com/Nickolasmv/cytoscape-ngraph.forcelayout)
    3. cytoscape.js-panzoom (https://github.com/cytoscape/cytoscape.js-panzoom)
 6. PhantomJS (http://phantomjs.org/)
-7. Alasql (https://github.com/agershun/alasql)
-8. Handsontable (https://github.com/handsontable/handsontable)
-9. Bootstrap (http://getbootstrap.com/javascript/)
-10. JQuery (https://jquery.com/)
-11. jQuery QueryBuilder (http://querybuilder.js.org/)
-12. Fastclick (https://github.com/ftlabs/fastclick)
+7. PStreams (http://pstreams.sourceforge.net/)
+8. Alasql (https://github.com/agershun/alasql)
+9. Handsontable (https://github.com/handsontable/handsontable)
+10. Bootstrap (http://getbootstrap.com/javascript/)
+11. JQuery (https://jquery.com/)
+12. jQuery QueryBuilder (http://querybuilder.js.org/)
+13. Fastclick (https://github.com/ftlabs/fastclick)
 
 
 # How to cite
@@ -99,7 +100,6 @@ terms of article 2 below.
 WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
 or FITNESS FOR A PARTICULAR PURPOSE. See below the GNU Affero General  
 Public License for more details.
-
 You should have received a copy of the GNU Affero General Public License 
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
