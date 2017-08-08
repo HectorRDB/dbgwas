@@ -4,9 +4,18 @@ DBGWAS is a tool for quick and efficient bacterial GWAS. It uses a compacted De 
 **Important: DBGWAS only works on Linux for the moment.**
 
 # DBGWAS in a nutshell
-For a quick example on how DBGWAS works, consider the following input example:
 
-288 bacterial genomes testing a phenotype if each strain is resistant or sensitive to a drug (from Jaillard M at al. ,"Correlation between phenotypic antibiotic susceptibility and the resistome in Pseudomonas aeruginosa". IJAA , 50 (2017) 210-218.)
+For a quick example on how DBGWAS works, we provide the output
+obtained from 288 bacterial genomes along with their drug sensitivity
+phenotype.
+
+Genomes are taken from van Belkum A et al., "Phylogenetic Distribution
+of CRISPR-Cas Systems in Antibiotic-Resistant Pseudomonas
+aeruginosa.", MBio, 2015 Nov 24;6(6):e01796-15
+
+Phenotypes are taken from Jaillard M at al. ,"Correlation between
+phenotypic antibiotic susceptibility and the resistome in Pseudomonas
+aeruginosa". IJAA , 50 (2017) 210-218.
 
 The output can be found here: http://leoisl.gitlab.io/DBGWAS_support/full_dataset_visualization/
 
@@ -34,7 +43,11 @@ install.packages("https://raw.githubusercontent.com/sgearle/bugwas/master/build/
 ```
 
 ## Running on a sample example
-Now that everything is installed, let's try running the tool in a sample example comprising 50 bacterial genomes:
+
+Now that everything is installed, let's try running the tool in a
+sample example comprising 50 bacterial genomes (subset of the 288
+described in the "DBGWAS in a nutshell" section):
+
 1. Go to the binary folder:
 ```
 cd bin/
@@ -52,7 +65,7 @@ cd bin/
 Check at least the file ```sample_example/strains``` to know how to build the input to the program.
 
 # Thirdparties
-DBGWAS makes use of several thirdparties libraries:
+DBGWAS makes use of several thirdparty libraries:
 1. GATB (https://github.com/GATB/gatb-core)
 2. Boost C++ Libraries (http://www.boost.org/)
 3. Bugwas (https://github.com/sgearle/bugwas)
@@ -82,7 +95,7 @@ it under the terms of the GNU Affero General Public License as published
 by the Free Software Foundation version 3 of the  License and under the 
 terms of article 2 below.
 
-This program is distributed in the hope that it will be useful, but 
+2. This program is distributed in the hope that it will be useful, but 
 WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
 or FITNESS FOR A PARTICULAR PURPOSE. See below the GNU Affero General  
 Public License for more details.

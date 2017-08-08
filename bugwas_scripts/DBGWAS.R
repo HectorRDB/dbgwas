@@ -1,35 +1,34 @@
-## TODO:
-## - Option to provide relmatrix, svd, pca or skip pca/svd.
-## - Use reweighted matrix instead of redundant one for gemma
-## - Return pvalues with unitigs
-## - Write help for command call
+## Copyright (C) <2017>  <bioMerieux, Universite Claude Bernard Lyon 1, 
+## Centre National de la Recherche Scientifique> 
 
-##------------------------------
-## To download strain scaffolds:
-##------------------------------
+## 1. This program is free software: you can redistribute it and/or modify 
+## it under the terms of the GNU Affero General Public License as published 
+## by the Free Software Foundation version 3 of the  License and under the 
+## terms of article 2 below.
+## 2. This program is distributed in the hope that it will be useful, but 
+## WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+## or FITNESS FOR A PARTICULAR PURPOSE. See below the GNU Affero General  
+## Public License for more details.
+## You should have received a copy of the GNU Affero General Public License 
+## along with this program.  If not, see <http://www.gnu.org/licenses/>.
+## 3. Communication to the public by any means, in particular in the form of 
+## a scientific paper, a poster, a slideshow, an internet page, or a patent, 
+## of a result obtained directly or indirectly by running this program must 
+## cite the following paper :   
+##  Magali Jaillard, Maud Tournoud, Leandro Lima, Vincent Lacroix, 
+##  Jean-Baptiste Veyrieras and Laurent Jacob, "Representing Genetic 
+##  Determinants in Bacterial GWAS with Compacted De Bruijn Graphs", 2017,
+##  Cold Spring Harbor Labs Journals, doi:10.1101/113563.
+##  (url: http://www.biorxiv.org/content/early/2017/03/03/113563)
+## -------------------------------------------------------------------------
 
-## for a in `cat assembly_summary_genbank.txt | grep PRJNA297679 | awk '{print $NF}'`; do wget $a/*[0-9]_genomic.fna.gz; done
+## Authors (alphabetically): Jacob L., Jaillard M., Lima L.
 
-##---------------
-## To run step 1
-##---------------
-
-## cat assembly_summary_genbank.txt | grep PRJNA297679 | awk '{print $10}' | cut -d'=' -f2 > strainsIds
-## ls ../../data/bmx/*.fna > ../../data/bmx/strains
-## tools/ksgatb -strains ../../data/bmx/strains -strainsIds ../../data/bmx/strainsIds
 
 library(bugwas)
 
 source('cdbg_lin_loc.R')
 source('cdbg_all_plots.R')
-
-## gem.path <- '../bugwas-master/gemma'
-## tree.file <- '../../data/bmx/bmx.newick'
-## pheno.file <- '../../data/bmx/Amikacin_pheno.txt'
-## step1.output <- './output'
-## prefix <- 'bmx_Amikacin'
-## bh.thr <- 0.01
-## maf.filter <- 0.01
 
 ## step1.output <- './output'
 ## pheno.file <- 'output/bugwas_input.id_phenotype'
