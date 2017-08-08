@@ -20,9 +20,9 @@ aeruginosa". IJAA , 50 (2017) 210-218.
 The output can be found here: http://leoisl.gitlab.io/DBGWAS_support/full_dataset_visualization/
 
 # Downloading, installing and running
-## Downloading the latest release
-This is the easiest way to run the tool since it is already pre-compiled for Linux AMD64 machines.
-Download the latest release here: https://gitlab.com/leoisl/dbgwas/uploads/466f782295c31aa9d510ccbe6bfc6e9d/DBGWAS-0.0.1-Linux.tar.gz
+## Downloading the precompiled binaries
+This is the easiest way to run the tool since it is already precompiled for Linux AMD64 machines.
+Download the latest binary here: https://gitlab.com/leoisl/dbgwas/raw/master/precompiled_binaries/DBGWAS-0.0.1-Linux.tar.gz
 
 ## Compiling
 If you still want to compile, clone the repository and execute inside the repository directory:
