@@ -6,7 +6,7 @@ DBGWAS is a tool for quick and efficient bacterial GWAS. It uses a compacted De 
 # DBGWAS in a nutshell
 
 For a quick example on how DBGWAS works, we provide the output
-obtained from 288 bacterial genomes along with their drug sensitivity
+obtained from 282 bacterial genomes along with their drug sensitivity
 phenotype.
 
 Genomes are taken from van Belkum A et al., "Phylogenetic Distribution
@@ -22,7 +22,7 @@ The output can be found here: http://leoisl.gitlab.io/DBGWAS_support/full_datase
 # Downloading, installing and running
 ## Downloading the precompiled binaries
 This is the easiest way to run the tool since it is already precompiled for Linux AMD64 machines.
-Download the latest binary here: https://gitlab.com/leoisl/dbgwas/raw/master/precompiled_binaries/DBGWAS-0.0.1-Linux.tar.gz
+Download the latest binary here: https://gitlab.com/leoisl/dbgwas/raw/master/precompiled_binaries/DBGWAS-0.0.2-Linux.tar.gz
 
 ## Compiling
 If you still want to compile, clone the repository and execute inside the repository directory:
