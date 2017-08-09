@@ -124,7 +124,7 @@ cdbg_lin_loc <- function(SNPdata = NULL,
                          pca = NULL){
     
     pheno = bugwas:::extractInputArgument(arg = pheno, checkExist = TRUE)
-    phylo = bugwas:::extractInputArgument(arg = phylo, checkExist = TRUE)
+    phylo = bugwas:::extractInputArgument(arg = phylo, canBeNULL=TRUE, checkExist = TRUE)
     prefix = bugwas:::extractInputArgument(arg = prefix)
     gem.path = bugwas:::extractInputArgument(arg = gem.path, checkExist = TRUE)
     pcs = bugwas:::extractInputArgument(arg = pcs, canBeNULL = TRUE)
@@ -139,14 +139,14 @@ cdbg_lin_loc <- function(SNPdata = NULL,
     output.dir = bugwas:::extractInputArgument(arg = output.dir, default = getwd())
     creatingAllPlots = bugwas:::extractInputArgument(arg = creatingAllPlots, default = TRUE)
     allBranchAndPCCor = bugwas:::extractInputArgument(arg = allBranchAndPCCor, default = FALSE)
-    
+
     XX.all <- SNPdata$XX.all
     sample_ID <- SNPdata$sample_ID
     npcs <- SNPdata$npcs
     y <- SNPdata$y
     XX.ID <- SNPdata$XX.ID
     rm(SNPdata)
-    gc()
+    cleanMem()
     
     bugwas:::get_log_file(XX.all = XX.all, prefix = prefix)
     
@@ -166,9 +166,13 @@ cdbg_lin_loc <- function(SNPdata = NULL,
         }
     }
     
-    
-    XX <- bugwas:::rescale_variants(var = XX.all$XX, varpat = XX.all$bippat)
-    message("Rescaled variants.")
+
+    if(creatingAllPlots){
+        XX <- bugwas:::rescale <- variants(var = XX.all$XX, varpat = XX.all$bippat)
+        message("Rescaled variants.")
+    }else{
+        XX <- NULL
+    }
 
     if(creatingAllPlots && is.null(svd.XX)){
         svd.XX <- svd(XX)
@@ -180,7 +184,7 @@ cdbg_lin_loc <- function(SNPdata = NULL,
         pca <- bugwas:::do_pca(pcs = pcs, XX = XX, XX.ID = XX.ID)
         message("Principle component analysis complete.")
     }
-    
+
     biallelic <- cdbg_get_biallelic(logreg.bi = logreg.bi,
                                     XX.all = XX.all,
                                     XX = XX,
@@ -221,7 +225,7 @@ cdbg_lin_loc <- function(SNPdata = NULL,
         
         ## rm(list=c("XX", "svd.XX"))
         rm(XX)
-        gc()
+        cleanMem()
     }else{
         treeInfo <- NULL
         wald <- NULL
@@ -305,21 +309,27 @@ cdbg_run_lmm_bi <- function(XX = NULL,
                                         # Output file names
     gen.output.file <- paste0(prefix, "_gemma_genfile.txt")
     snp.output.file <- paste0(prefix, "_gemma_snpfile.txt")
+
+    n.pat <- nrow(XX)
     
     if(is.null(dim(XX))){
         XX <- matrix(XX,nrow=1)
     }
     
-                                        # Check if the variants are binary
-    num.alleles <- apply(XX, 1, function(data) length(unique(data)))
+    ## Check if the variants are binary. Takes up a lot of memory, so we comment it for now.
+    ## num.alleles <- apply(XX, 1, function(data) length(unique(data)))    
+    ## if(length(which(num.alleles>2))!=0){
+    ##     stop("\nError: function cdbg_run_lmm_bi requires binary variants\n")
+    ## }
+
     
-    if(length(which(num.alleles>2))!=0){
-        stop("\nError: function cdbg_run_lmm_bi requires binary variants\n")
-    }
-    gen.file <- cbind(paste0("pattern",1:nrow(XX)),rep(1,nrow(XX)),rep(0,nrow(XX)),XX)
-    write.table(gen.file, file = gen.output.file, row=F, col=F, sep="\t", quote=F)
+    ## gen.file <- cbind(paste0("pattern",1:n.pat),rep(1,n.pat),rep(0,n.pat),XX)
+    ## write.table(gen.file, file = gen.output.file, row=F, col=F, sep="\t", quote=F)
+
+    XX <- cbind(rep(1,n.pat),rep(0,n.pat), XX)
+    write.table(XX, file = gen.output.file, row.names=paste0("pattern",1:n.pat), col.names=F, sep="\t", quote=F)
     
-    snp.file <- cbind(paste0("pattern",1:nrow(XX)), 1:nrow(XX), rep(24,nrow(XX)))
+    snp.file <- cbind(paste0("pattern",1:n.pat), 1:n.pat, rep(24,n.pat))
     write.table(snp.file, file = snp.output.file, row=F, col=F, sep="\t", quote=F)
     
     system(paste0(path, " -g ", gen.output.file, " -p ", pheno.file, " -a ", snp.output.file,
@@ -482,6 +492,8 @@ cdbg_get_biallelic <- function(logreg.bi = NULL,
         cor.XX <- NULL
     }
 
+    save.image('run_biallelic.RData')
+    
     return(list("logreg.bi" = logreg.bi, "lmm.bi" = lmm.bi, "lognull" = lognull,
                 "lambda" = lambda, "cor.XX" = cor.XX))
 
