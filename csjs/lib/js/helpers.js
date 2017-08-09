@@ -38,6 +38,8 @@ var timeout = null
 //some variables to deal with user interaction
 var dialogGetFASTANodes;
 var dialogInstructions;
+var cytoscapeExportDialog;
+var cytoscapeDesktopGraph = null;
 var colors = ['red', 'blue', 'green', 'yellow', 'fuchsia', 'brown', 'lime', 'aqua', 'Aquamarine', 'BlueViolet', 'CadetBlue', 'DarkBlue', 'DarkCyan', 'DarkGoldenRod', 'DarkGray', 'DarkGreen', 'DarkMagenta', 'DarkSlateBlue', 'DarkSeaGreen', 'DarkSalmon', 'DarkViolet', 'DarkTurquoise'];
 //declare some global variables
 //****************************************************************
@@ -252,6 +254,28 @@ function fillTable() {
 //************************************************************
 
 
+
+//************************************************************
+//FUNCTIONS OF EXPORTING
+//function to export the graph to Cytoscape Desktop
+function makeFile (text, file, fileType) {
+    var data = new Blob([text], {type: fileType});
+
+    // If we are replacing a previously generated file we need to
+    // manually revoke the object URL to avoid memory leaks.
+    if (file !== null) {
+      window.URL.revokeObjectURL(file);
+    }
+
+    file = window.URL.createObjectURL(data);
+
+    return file;
+  }
+//FUNCTIONS OF EXPORTING
+//************************************************************
+
+
+
 //***************************************************************
 //MAIN FUNCTIONS
 function buildPage(graphElements)
@@ -270,6 +294,14 @@ function buildPage(graphElements)
 
         //create the instructions dialog
         dialogInstructions = $('#dialogInstructions').dialog({
+            autoOpen: false,
+            modal: true,
+            width: 0.8*$(window).width(),
+            maxHeight: 0.8*$(window).height()
+        });
+
+        //create the cytoscape dialog
+        cytoscapeExportDialog = $('#cytoscapeExportDialog').dialog({
             autoOpen: false,
             modal: true,
             width: 0.8*$(window).width(),
@@ -477,6 +509,18 @@ function buildPage(graphElements)
             <li>Press anywhere in the graph to unselect all nodes</li>\
         </ul>\
     </ul>");
+
+        //fills the cytoscape dialog instructions
+        $("#cytoscapeExportDialog").html("\
+          1. Download the graph <a download=\"graph2cytoscapeDesktop\" id=\"graph_cytoscape\"><b><u>here</u></b></a>, save it, and load it into Cytoscape (File > Import > Network > File...) <br/>\
+          2. After the graph is loaded, download the style <a href=\"lib/xml/DBGWAS_cytoscape_style.xml\" download=\"DBGWAS_cytoscape_style.xml\"><b><u>here</u></b></a>, save it, and load it into Cytoscape (File > Import > Styles...) <br/>\
+          3. To apply the style, go to the Style tab in the Control Panel and select DBGWAS_cytoscape_style.")
+
+        //add the listeners to the download buttons in the cytoscape dialog instructions
+        document.getElementById('graph_cytoscape').addEventListener('click', function () {
+          var link = document.getElementById('graph_cytoscape');
+          link.href = makeFile(JSON.stringify(cy.json()), cytoscapeDesktopGraph, 'application/json');
+        }, false);
 
 
         //create the node table

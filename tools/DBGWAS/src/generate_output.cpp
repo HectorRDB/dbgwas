@@ -82,6 +82,10 @@ void generateCytoscapeOutput(const graph_t &graph, const vector<int> &nodes, con
         ", qValue: '" << graph[v].unitigStats.getQValueAsStr() << "'" <<
         ", weight: '" << graph[v].unitigStats.getWeightAsStr() << "'" <<
         ", waldStatistic: '" << graph[v].unitigStats.getWaldStatisticAsStr() << "'" <<
+        ", background_color: rgbToHex(" << graph[v].unitigStats.getRGB() << ")" <<
+        ", width: " << (minSize + (((double)graph[v].phenoCounter.getTotal())/maxCoverage*(maxSize-minSize))) <<
+        ", height: " << (minSize + (((double)graph[v].phenoCounter.getTotal())/maxCoverage*(maxSize-minSize))) <<
+        ", transparency: " << (find(selectedUnitigs.begin(), selectedUnitigs.end(), graph[v].id)==selectedUnitigs.end() ? "76" : "255") <<
         "}, style: {'background-color': rgbToHex(" << graph[v].unitigStats.getRGB() << ")" <<
         ", 'width': " << (minSize + (((double)graph[v].phenoCounter.getTotal())/maxCoverage*(maxSize-minSize))) <<
         ", 'height': " << (minSize + (((double)graph[v].phenoCounter.getTotal())/maxCoverage*(maxSize-minSize))) <<
