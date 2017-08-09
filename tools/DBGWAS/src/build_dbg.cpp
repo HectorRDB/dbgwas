@@ -289,6 +289,6 @@ void build_dbg::execute ()
     cout << "################################################################################" << endl;
     cout << "Stats: " << endl;
     cout << "Number of kmers: " << graph->getInfo()["kmers_nb_solid"]->getInt() << endl;
-    cout << "Number of unitigs: " << getNbLinesInFile(outputFolder+string("/graph.nodes"));
+    cout << "Number of unitigs: " << getNbLinesInFile(outputFolder+string("/graph.nodes")) << endl;
     cout << "################################################################################" << endl;
 }
