@@ -284,4 +284,11 @@ void build_dbg::execute ()
 
     //save disk space
     remove(linear_seqs_name.c_str());
+
+    //print some stats
+    cout << "################################################################################" << endl;
+    cout << "Stats: " << endl;
+    cout << "Number of kmers: " << graph->getInfo()["kmers_nb_solid"]->getInt() << endl;
+    cout << "Number of unitigs: " << getNbLinesInFile(outputFolder+string("/graph.nodes"));
+    cout << "################################################################################" << endl;
 }

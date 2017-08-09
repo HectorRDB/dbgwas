@@ -67,4 +67,10 @@ void statistical_test::execute () {
   sort(patterns.begin(), patterns.end());
   //write
   PatternFromStats::writeFile(outputFolder + "/patterns.txt", patterns);
+
+  //print some stats
+  cout << "################################################################################" << endl;
+  cout << "Stats: " << endl;
+  cout << "Total number of patterns: " << patterns.size() << endl;
+  cout << "################################################################################" << endl;
 }
