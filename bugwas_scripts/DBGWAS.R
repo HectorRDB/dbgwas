@@ -87,31 +87,35 @@ if((ncol(gen) != nrow(pheno.mat)) || any(colnames(gen) != pheno.mat['ID'])){
 ## encountered in bugwas:::ridge_regression)
 ##-------------------------------------------------------------------
 
-annotated.sample <- !is.na(pheno.mat['pheno'])
-message(sprintf('[DBGWAS] Restricting genotype, phenotype and tree to %d/%d annotated strains.', sum(annotated.sample), length(annotated.sample)))
-pheno.mat <- pheno.mat[annotated.sample, ] # Restrict phenotype
+## annotated.sample <- !is.na(pheno.mat['pheno'])
+## message(sprintf('[DBGWAS] Restricting genotype, phenotype and tree to %d/%d annotated strains.', sum(annotated.sample), length(annotated.sample)))
+## pheno.mat <- pheno.mat[annotated.sample, ] # Restrict phenotype
 restr.pheno.file <- paste0(prefix, "_restricted_pheno.txt")
 write.table(pheno.mat, file=restr.pheno.file, row.names=FALSE, col.names=TRUE, quote=FALSE, sep='\t')
-gen <- gen[, annotated.sample] # Restrict genotype
-## Need to re-switch minor allele to 1
-rmg.mask <- (rowMeans(gen) > 0.5)
-cleanMem()
-gen[rmg.mask, ] <- 1L - gen[rmg.mask, ]
+## gen <- gen[, annotated.sample] # Restrict genotype
+## ## Need to re-switch minor allele to 1
+## rmg.mask <- (rowMeans(gen) > 0.5)
+## cleanMem()
+## gen[rmg.mask, ] <- 1L - gen[rmg.mask, ]
 XX.ID <- colnames(gen)
 
 if(do.lineage){
     ## Restrict tree
-    library(ape)
-    bmx.tree <- read.tree(tree.file)
-    restr.tree <- drop.tip(bmx.tree, setdiff(bmx.tree$tip.label, XX.ID))
-    restr.tree.file <- paste0(prefix, "_restricted_tree.txt")
-    write.tree(restr.tree, file=restr.tree.file)
+    ## library(ape)
+    ## bmx.tree <- read.tree(tree.file)
+    ## restr.tree <- drop.tip(bmx.tree, setdiff(bmx.tree$tip.label, XX.ID))
+    ## restr.tree.file <- paste0(prefix, "_restricted_tree.txt")
+    ## write.tree(restr.tree, file=restr.tree.file)
+    restr.tree.file <- tree.file
 }else{
     restr.tree.file <- NULL
 }
+
 ##-----------------
 ## Filter patterns
 ##-----------------
+
+## Takes up memory (~3x design size)
 
 ## Remove mono-allelic (constant) patterns (even if maf.filter=0)
 polyallelic.mask <- (apply(gen, 1, FUN=function(v) length(unique(v))) > 1)
@@ -138,7 +142,7 @@ bippat <- read.table(file=snps.by.pattern)
 XX.all$bippat <- bippat[, -1]
 names(XX.all$bippat) <- as.character(bippat[, 1])
 XX.all$bippat <- XX.all$bippat[pattern.mask]
-rm(gen, rmg.mask, polyallelic.mask, pattern.mask)
+rm(gen, polyallelic.mask, pattern.mask)
 cleanMem()
 
 pattern <- read.table(file=snp.to.pattern, colClasses=rep('character', 2))
