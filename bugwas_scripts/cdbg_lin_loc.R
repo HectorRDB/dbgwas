@@ -168,7 +168,8 @@ cdbg_lin_loc <- function(SNPdata = NULL,
     
 
     if(creatingAllPlots){
-        XX <- bugwas:::rescale <- variants(var = XX.all$XX, varpat = XX.all$bippat)
+        XX <- bugwas:::rescale_variants(var = XX.all$XX, varpat = XX.all$bippat)
+        cleanMem()
         message("Rescaled variants.")
     }else{
         XX <- NULL
@@ -176,12 +177,14 @@ cdbg_lin_loc <- function(SNPdata = NULL,
 
     if(creatingAllPlots && is.null(svd.XX)){
         svd.XX <- svd(XX)
+        cleanMem()
         message("Single value decomposition complete.")
     }
 
     if(creatingAllPlots && is.null(pca)){
         ## PCA on the bips
         pca <- bugwas:::do_pca(pcs = pcs, XX = XX, XX.ID = XX.ID)
+        cleanMem()
         message("Principle component analysis complete.")
     }
 
