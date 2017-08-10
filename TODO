@@ -1,16 +1,18 @@
-﻿General TODO:
+﻿High priority TODO:
   -newick file should be optional (R script and software)
+  -remove the patterns with maf < maf.filter in C++
   -treat NA better
   -if we want to show only figures from the software, and not the one I customized in cytoscape + inkscape, we should definitely add some insights of the annotation.
 
-Low priority:
+Low priority TODO:
     - When the strains input file is missing, we return an error:
         [FATAL ERROR] Error opening file
         Could it be a little more detailed? Eg, which file (there are two inputs), and whether the format is wrong or the file was not found.
     - possibility to work on unitig counts rather than presence/absence
+    - Some messages output by the R statistical test are not captured by DBGWAS (I guess we are capturing either the error or the output stream, but not both).
 
 
-Annotation TODO:
+Annotation (High priority) TODO:
     -We should propose it optionnally or even better : from the result web page, as it should take quite a while to blast
      all the selected unitigs (if we propose it from the summary index page, we could have the possibility to select only
      some components we want to annotate, and not all, and launch the annotation on these components.)
