@@ -30,9 +30,12 @@ library(bugwas)
 source('cdbg_lin_loc.R')
 source('cdbg_all_plots.R')
 
+cleanMem <- function(n=50) { for (i in 1:n) gc() }
+
 ## step1.output <- './output'
 ## pheno.file <- 'output/bugwas_input.id_phenotype'
 ## tree.file <- '../sample_example/strains.newick'
+## ## tree.file <- '../../../data/bmx/bmx.newick'
 ## prefix <- 'output/bugwas_out_'
 ## gem.path <- './gemma.0.93b'
 ## ## bh.thr <- 0.02
@@ -55,7 +58,7 @@ maf.filter <- as.numeric(args[6])
 ## plots. Otherwise skip tree management (the input file can be
 ## empty), svd, pca and plots. Could be an input of the script.
 
-do.lineage <- TRUE
+do.lineage <- FALSE
     
 output.dir <- '.' # must be '.' as gemma automatically writes in ./output.
 
@@ -65,7 +68,8 @@ output.dir <- '.' # must be '.' as gemma automatically writes in ./output.
 gen.file <- file.path(step1.output, 'bugwas_input.unique_rows.binary')
 message(sprintf('[DBGWAS] Reading unitigs from %s', gen.file))
 gen <- read.table(file=gen.file, header=TRUE,
-                  row.names=1, check.names=FALSE) # colClasses='integer'
+                  row.names=1, check.names=FALSE, colClasses='integer')
+cleanMem()
 
 
 ##------------------------------
@@ -83,36 +87,43 @@ if((ncol(gen) != nrow(pheno.mat)) || any(colnames(gen) != pheno.mat['ID'])){
 ## encountered in bugwas:::ridge_regression)
 ##-------------------------------------------------------------------
 
-annotated.sample <- !is.na(pheno.mat['pheno'])
-message(sprintf('[DBGWAS] Restricting genotype, phenotype and tree to %d/%d annotated strains.', sum(annotated.sample), length(annotated.sample)))
-pheno.mat <- pheno.mat[annotated.sample, ] # Restrict phenotype
+## annotated.sample <- !is.na(pheno.mat['pheno'])
+## message(sprintf('[DBGWAS] Restricting genotype, phenotype and tree to %d/%d annotated strains.', sum(annotated.sample), length(annotated.sample)))
+## pheno.mat <- pheno.mat[annotated.sample, ] # Restrict phenotype
 restr.pheno.file <- paste0(prefix, "_restricted_pheno.txt")
 write.table(pheno.mat, file=restr.pheno.file, row.names=FALSE, col.names=TRUE, quote=FALSE, sep='\t')
-gen <- gen[, annotated.sample] # Restrict genotype
-## Need to re-switch minor allele to 1
-rmg.mask <- (rowMeans(gen) > 0.5)
-gen[rmg.mask, ] <- 1 - gen[rmg.mask, ]
+## gen <- gen[, annotated.sample] # Restrict genotype
+## ## Need to re-switch minor allele to 1
+## rmg.mask <- (rowMeans(gen) > 0.5)
+## cleanMem()
+## gen[rmg.mask, ] <- 1L - gen[rmg.mask, ]
 XX.ID <- colnames(gen)
 
 if(do.lineage){
     ## Restrict tree
-    library(ape)
-    bmx.tree <- read.tree(tree.file)
-    restr.tree <- drop.tip(bmx.tree, setdiff(bmx.tree$tip.label, XX.ID))
-    restr.tree.file <- paste0(prefix, "_restricted_tree.txt")
-    write.tree(restr.tree, file=restr.tree.file)
+    ## library(ape)
+    ## bmx.tree <- read.tree(tree.file)
+    ## restr.tree <- drop.tip(bmx.tree, setdiff(bmx.tree$tip.label, XX.ID))
+    ## restr.tree.file <- paste0(prefix, "_restricted_tree.txt")
+    ## write.tree(restr.tree, file=restr.tree.file)
+    restr.tree.file <- tree.file
 }else{
     restr.tree.file <- NULL
 }
+
 ##-----------------
 ## Filter patterns
 ##-----------------
 
+## Takes up memory (~3x design size)
+
 ## Remove mono-allelic (constant) patterns (even if maf.filter=0)
 polyallelic.mask <- (apply(gen, 1, FUN=function(v) length(unique(v))) > 1)
+cleanMem()
 ## Filter on MAF
 maf.mask <- (rowMeans(gen) >= maf.filter)
 pattern.mask <- polyallelic.mask & maf.mask
+cleanMem()
 message(sprintf('[DBGWAS] Restricting genotype %d/%d patterns with MAF >= %g.', sum(pattern.mask), length(pattern.mask), maf.filter))
 gen <- gen[pattern.mask, ]
 
@@ -125,13 +136,14 @@ snp.to.pattern <- file.path(step1.output, 'gemma_input.unitig_to_pattern.binary'
 
 XX.all <- list()
 XX.all$XX <- gen
-rm(gen)
-gc()
+## gc(verbose=FALSE)
 
 bippat <- read.table(file=snps.by.pattern)
 XX.all$bippat <- bippat[, -1]
 names(XX.all$bippat) <- as.character(bippat[, 1])
 XX.all$bippat <- XX.all$bippat[pattern.mask]
+rm(gen, polyallelic.mask, pattern.mask)
+cleanMem()
 
 pattern <- read.table(file=snp.to.pattern, colClasses=rep('character', 2))
 XX.all$pattern <- pattern[, -1]
@@ -152,7 +164,7 @@ y <- pheno.mat[, 'pheno']
 
 SNPdata <- list(XX.all=XX.all, sample_ID=sample_ID, npcs=npcs, y=y, XX.ID=XX.ID)
 rm(XX.all)
-gc()
+cleanMem()
 
 ## Gemma apparently filters out patterns with maf <
 ## 2*maf.filter. Deactivate filtering since we did it upstream anyway.
