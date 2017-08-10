@@ -45,7 +45,7 @@ install.packages("https://raw.githubusercontent.com/sgearle/bugwas/master/build/
 ## Running on a sample example
 
 Now that everything is installed, let's try running the tool in a
-sample example comprising 50 bacterial genomes (subset of the 288
+sample example comprising 50 bacterial genomes (subset of the 282
 described in the "DBGWAS in a nutshell" section):
 
 1. Go to the binary folder:
