@@ -22,7 +22,7 @@ The output can be found here: http://leoisl.gitlab.io/DBGWAS_support/full_datase
 # Downloading, installing and running
 ## Downloading the precompiled binaries
 This is the easiest way to run the tool since it is already precompiled for Linux AMD64 machines.
-Download the latest binary here: https://gitlab.com/leoisl/dbgwas/raw/master/precompiled_binaries/DBGWAS-0.0.2-Linux.tar.gz
+Download the latest binary here: https://gitlab.com/leoisl/dbgwas/raw/master/precompiled_binaries/DBGWAS-0.0.3-Linux.tar.gz
 
 ## Compiling
 If you still want to compile, clone the repository and execute inside the repository directory:
