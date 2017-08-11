@@ -58,7 +58,7 @@ maf.filter <- as.numeric(args[6])
 ## plots. Otherwise skip tree management (the input file can be
 ## empty), svd, pca and plots. Could be an input of the script.
 
-do.lineage <- FALSE
+do.lineage <- TRUE
     
 output.dir <- '.' # must be '.' as gemma automatically writes in ./output.
 

@@ -25,7 +25,7 @@
 ## Authors (alphabetically): Jacob L., Jaillard M., Lima L.
 
 ## Modified (2017) from bugwas (copyright, authors and license below)
-## files BUGWAS_modular.R. Appending "cdbg" to the modified function.
+## file BUGWAS_modular.R. Appending "cdbg" to the modified functions.
 
 ## # Authors: Earle, S. G., Wu, C.-H. and Wilson, D. J.
 ## #
@@ -174,11 +174,11 @@ cdbg_lin_loc <- function(SNPdata = NULL,
     }else{
         XX <- NULL
     }
-
+    
     if(creatingAllPlots && is.null(svd.XX)){
         svd.XX <- svd(XX)
         cleanMem()
-        message("Single value decomposition complete.")
+        message("Singular value decomposition complete.")
     }
 
     if(creatingAllPlots && is.null(pca)){
@@ -306,7 +306,6 @@ cdbg_run_lmm_bi <- function(XX = NULL,
                             dir = NULL,
                             process.results = TRUE){
     
-    
                                         #message("cdbg_run_lmm_bi")				   	
     
                                         # Output file names
@@ -334,7 +333,7 @@ cdbg_run_lmm_bi <- function(XX = NULL,
     
     snp.file <- cbind(paste0("pattern",1:n.pat), 1:n.pat, rep(24,n.pat))
     write.table(snp.file, file = snp.output.file, row=F, col=F, sep="\t", quote=F)
-    
+
     system(paste0(path, " -g ", gen.output.file, " -p ", pheno.file, " -a ", snp.output.file,
                   " -k ", relmatrix," -lmm 4 -o ", prefix, "_lmmout_patterns"," -maf ", maf))
     
@@ -357,7 +356,7 @@ cdbg_run_lmm_bi <- function(XX = NULL,
         assocFile = paste0(dir, "/output/", prefix, "_lmmout_patterns.assoc.txt")
                                         #message(paste(c("assocFile:", assocFile), collapse=" "))
         lmm <- read.table(assocFile, header=T, sep="\t", as.is=T)
-        
+
                                         #message(paste(c("Header:", names(lmm)), collapse=" "))
         
         LH1 <- lmm$logl_H1
@@ -488,16 +487,73 @@ cdbg_get_biallelic <- function(logreg.bi = NULL,
         lmm.bi <- lmm.bi$lmm
     }
 
-
     if(!is.null(pca)){
-        cor.XX <- bugwas:::get_correlations(XX = XX, pca = pca$x, npcs = npcs, id = XX.ID)
+        cor.XX <- cdbg_get_correlations(XX = XX, pca = pca$x, npcs = npcs, id = XX.ID)
     }else{
         cor.XX <- NULL
     }
 
-    save.image('run_biallelic.RData')
     
     return(list("logreg.bi" = logreg.bi, "lmm.bi" = lmm.bi, "lognull" = lognull,
                 "lambda" = lambda, "cor.XX" = cor.XX))
 
 }
+
+################################################################################################
+## Get correlations between variant patterns and principal components.
+## @XX: variant matrix scaled by how many variants each pattern represents
+## @pca: principal component analysis
+## @npcs: number of principal components (= number of individuals)
+##
+## Outputs:
+## which.pc: for each variant pattern, which PC it is most correlated to
+## max.cor.pc: for each variant pattern, the maximum correlation value
+## Adapted from BUGWAS_functions.R
+##
+## Changelog:
+## Using more efficient (memory+cpu) technique for which.pc and max.cor.pc computation.
+################################################################################################
+
+
+cdbg_get_correlations <- function (XX = NULL, 
+                                   pca = NULL,
+                                   npcs = NULL,
+                                   id = NULL,
+                                   all.cor  = FALSE){
+        
+    cor.XX.pca <- cor(XX,pca[, 1:npcs])
+    cor.XX.pca[is.na(cor.XX.pca)] = 0
+    which.pc <- max.col(abs(cor.XX.pca))
+    max.cor.pc <- abs(cor.XX.pca[cbind(1:nrow(cor.XX.pca), which.pc)])
+    if(all.cor){
+        return(list("which.pc" = which.pc, "max.cor.pc" = max.cor.pc, "all.cor.pc" = cor.XX.pca))
+    }else{
+        return(list("which.pc" = which.pc, "max.cor.pc" = max.cor.pc))
+    }
+    
+}
+
+
+## FOR LATER USE
+## ################################################################################################
+## ## Do PCA
+## ##
+## ## Changelog:
+## ## Adding a rank argument to limit the number of PCs (saving memory on large datasets)
+## ################################################################################################
+
+
+## cdbg_do_pca <- function(pcs = NULL, XX = NULL, XX.ID = NULL, rank=NULL){
+## 	if(is.null(pcs)){
+## 		pca <- prcomp(XX, rank=rank)
+## 	} else {
+## 		## Read in PCs
+## 		pca <- read.table(pcs, header = T, as.is = T)
+## 		if(any(XX.ID != rownames(pca))){
+## 			m <- match(XX.ID, rownames(pca))
+## 			pca <- pca[m, ]
+## 		}
+## 		pca <- list("x" = pca, "rotation" = NULL)
+## 	}
+## 	return(list("pca" = pca))
+## }
