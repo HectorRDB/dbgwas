@@ -64,6 +64,40 @@ cd bin/
 5. See also the directory ```sample_example``` to understand better this example;
 Check at least the file ```sample_example/strains``` to know how to build the input to the program.
 
+## Lineage vs locus effect
+
+DBGWAS is based on bugwas, which is described in the following paper:
+
+Sarah Earle et al., "Identifying lineage effects when controlling for
+population structure improves power in bacterial association studies",
+Nature Microbiology 2016.
+
+Bugwas offers association tests at the "locus" level (SNPs, kmers, or
+in our case unitigs) or at the lineage level, i.e. groups of
+SNPs/kmers/unitigs represented by a principal component of the full
+design matrix. The latter option needs more memory as it requires a
+PCA step. By default, DBGWAS skips lineage effect estimation to save
+memory. If you would like to activate lineage effect estimation,
+change do.lineage to TRUE in bin/DBGWAS.R.
+
+## Memory and CPU requirements
+
+The analysis on the full dataset with 280 P. aeruginosa strains
+described in section "DBGWAS in a nutshell" and in our paper (ref at
+the end of the README) produces 54,397,312 kmers which are compressed
+into 2,356,052 unitigs corresponding to 1,141,877 unique patterns.
+
+The analysis runs in about 40 minutes on a PC with 8 Intel(R) Xeon(R)
+CPU E5-1620 0 @ 3.60GHz cores, although most of the operations only
+use a single core at the moment.
+
+With do.lineage=TRUE, memory usage peaks at ~20Gb, vs ~9Gb with
+do.lineage=FALSE.
+
+Scaling on new datasets will essentially depend on the number of
+strains and the number of unique presence/absence patterns obtained
+across unitigs, i.e., on the genetic variability in the dataset.
+
 # Thirdparties
 DBGWAS makes use of several thirdparty libraries:
 1. GATB (https://github.com/GATB/gatb-core)

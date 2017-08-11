@@ -3,6 +3,11 @@
   -remove the patterns with maf < maf.filter in C++
   -treat NA better
   -if we want to show only figures from the software, and not the one I customized in cytoscape + inkscape, we should definitely add some insights of the annotation.
+  - svd and pca steps are probably redundant in cdbg_lin_loc as XX is centered. Check
+   that they produce the same set of eigenvectors and remove the pca
+   steps (call to prcomp uses more memory than svd).
+  - memory bottleneck right now when do.lineage=TRUE is in the
+   bayesian wald test step, needs to be improved. 
 
 Low priority TODO:
     - When the strains input file is missing, we return an error:
