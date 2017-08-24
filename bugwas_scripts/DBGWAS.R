@@ -76,7 +76,7 @@ cleanMem()
 ## Read phenotypes
 ##------------------------------
 message(sprintf('[DBGWAS] Reading phenotypes from %s', pheno.file))
-pheno.mat <- read.table(file=pheno.file, header=TRUE)
+pheno.mat <- read.table(file=pheno.file, header=TRUE, check.names=FALSE)
 if((ncol(gen) != nrow(pheno.mat)) || any(colnames(gen) != pheno.mat['ID'])){
     stop('Mismatch between genotype and phenotype ids (should be in the same order)')
 }
