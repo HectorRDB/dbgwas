@@ -12,6 +12,7 @@ General:
         -Need a fix on Gemma/Bugwas output folder first
     -Show the error stream in R
         -redirect error stream to output stream
+    -fix the error we get when the filter has no rules in the index page
 
 1st step of the annotation:
 -Local database approach - blast

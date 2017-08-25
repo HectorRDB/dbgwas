@@ -183,17 +183,17 @@ function drawAlleles() {
 //FUNCTIONS OF SELECT/UNSELECT
 
 var selectedNodeEqualsToNodeTableDataNodeFunction = function selectedNodeEqualsToNodeTableDataNode(selectedNode, nodeTableDataNode) {
-  return nodeTableDataNode[0] == selectedNode.id()
+    return nodeTableDataNode[0] == selectedNode.id()
 }
 
 var nodeTableDataNodeEqualsToSelectedNodeFunction = function nodeTableDataNodeEqualsToSelectedNode(nodeTableDataNode, selectedNode) {
-  return nodeTableDataNode[0] == selectedNode.id()
+    return nodeTableDataNode[0] == selectedNode.id()
 }
 
 function alreadyPresentInCollection(element, collection, testFunction) {
     for (var i = 0; i < collection.length; i++) {
         if(testFunction(element, collection[i]))
-          return true;
+            return true;
     }
     return false;
 }
@@ -207,35 +207,36 @@ function fillTable() {
         //flag which nodes are already present in nodeTableData
         var alreadyPresentInNodeTableData= []
         selectedNodes.forEach(function(node){
-          alreadyPresentInNodeTableData.push(alreadyPresentInCollection(node, nodeTableData, selectedNodeEqualsToNodeTableDataNodeFunction))
+            alreadyPresentInNodeTableData.push(alreadyPresentInCollection(node, nodeTableData, selectedNodeEqualsToNodeTableDataNodeFunction))
         })
 
         //add the nodes to the table if they are not yet there
         for (var i = 0; i < selectedNodes.length; i++) {
             node = selectedNodes[i]
             if (alreadyPresentInNodeTableData[i] == false) {
-              nodeTableData.push([node.id(),
-                  node.data('total'),
-                  node.data('pheno0'),
-                  node.data('pheno1'),
-                  //TODO: NA temporarily removed
-                  //node.data('NA'),
-                  node.data('qValue'),
-                  node.data('weight'),
-                  node.data('waldStatistic'),
-                  node.data('name')
-              ])
+                nodeTableData.push([node.id(),
+                    node.data('total'),
+                    node.data('pheno0'),
+                    node.data('pheno1'),
+                    //TODO: NA temporarily removed
+                    //node.data('NA'),
+                    node.data('genes').toString(),
+                    node.data('qValue'),
+                    node.data('weight'),
+                    node.data('waldStatistic'),
+                    node.data('name')
+                ])
             }
         }
 
         //remove from nodeTableData the nodes that are not anymore selected
         nodeTableDataTemp = []
         nodeTableData.forEach(function(node){
-          if (alreadyPresentInCollection(node, selectedNodes, nodeTableDataNodeEqualsToSelectedNodeFunction) == false) {
-            //do nothing
-          }else {
-            nodeTableDataTemp.push(node);
-          }
+            if (alreadyPresentInCollection(node, selectedNodes, nodeTableDataNodeEqualsToSelectedNodeFunction) == false) {
+                //do nothing
+            }else {
+                nodeTableDataTemp.push(node);
+            }
         })
 
         //clear nodeTableData
@@ -243,7 +244,7 @@ function fillTable() {
 
         //fill nodeTableData with correct nodes
         nodeTableDataTemp.forEach(function(node){
-          nodeTableData.push(node);
+            nodeTableData.push(node);
         })
 
         //render the table
@@ -264,13 +265,13 @@ function makeFile (text, file, fileType) {
     // If we are replacing a previously generated file we need to
     // manually revoke the object URL to avoid memory leaks.
     if (file !== null) {
-      window.URL.revokeObjectURL(file);
+        window.URL.revokeObjectURL(file);
     }
 
     file = window.URL.createObjectURL(data);
 
     return file;
-  }
+}
 //FUNCTIONS OF EXPORTING
 //************************************************************
 
@@ -278,11 +279,11 @@ function makeFile (text, file, fileType) {
 
 //***************************************************************
 //MAIN FUNCTIONS
-function buildPage(graphElements)
+function buildPage(graphElements, genes2nodes)
 {
     //this is basically main()
     $(function(){ // on dom ready
-        $("#config *").prop("disabled", true); //disable the buttons
+        $("#config button").prop("disabled", true); //disable the buttons
 
         //create the get fasta dialog
         dialogGetFASTANodes = $('#dialogGetFASTANodes').dialog({
@@ -410,8 +411,26 @@ function buildPage(graphElements)
         });
 
 
+        //populate the dropdown list for the genes
+        Object.keys(genes2nodes).forEach(function(key) {
+            $('#geneSelect').append($('<option>', {
+                value: key,
+                text: key,
 
+            }));
+        })
 
+        //highlight the gene nodes
+        $('#geneSelect').change(function(){
+            var gene = $(this).val();
+            var nodesToHighlight=[];
+            cy.nodes().forEach(function(node) {
+                if (genes2nodes[gene].includes(node.id()))
+                    nodesToHighlight.push(node)
+            })
+            unselectAllNodes();
+            cy.collection(nodesToHighlight).select();
+        });
 
         //say we are drawing the layout
         $("#PlWarning").html("Drawing layout...");
@@ -482,7 +501,7 @@ function buildPage(graphElements)
         layout.on('layoutstop', function(){
             //say we are ready
             $("#PlWarning").html("Ready!");
-            $("#config *").prop("disabled", false);
+            $("#config button").prop("disabled", false);
             window.callPhantom(); //tells phantom we are ready
         })
 
@@ -518,8 +537,8 @@ function buildPage(graphElements)
 
         //add the listeners to the download buttons in the cytoscape dialog instructions
         document.getElementById('graph_cytoscape').addEventListener('click', function () {
-          var link = document.getElementById('graph_cytoscape');
-          link.href = makeFile(JSON.stringify(cy.json()), cytoscapeDesktopGraph, 'application/json');
+            var link = document.getElementById('graph_cytoscape');
+            link.href = makeFile(JSON.stringify(cy.json()), cytoscapeDesktopGraph, 'application/json');
         }, false);
 
 
@@ -536,6 +555,7 @@ function buildPage(graphElements)
                 {type: 'text'},
                 {type: 'text'},
                 {type: 'text'},
+                {type: 'text'},
                 {type: 'text'}
             ],
             colHeaders: [
@@ -545,6 +565,7 @@ function buildPage(graphElements)
                 'Pheno1',
                 //TODO: NA temporarily removed
                 //'NA',
+                'Annotation',
                 'q-Value',
                 'Est effect',
                 'Wald stat',

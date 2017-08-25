@@ -33,6 +33,8 @@
 #include "generate_output.h"
 #include "global.h"
 #include "Utils.h"
+#include <stdlib.h>
+#include <time.h>
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
 #undef BOOST_NO_CXX11_SCOPED_ENUMS
@@ -40,6 +42,9 @@
 
 int main (int argc, char* argv[])
 {
+    // initialize random seed, in case we want to use rand(), we are already set
+    srand (time(NULL));
+
     //get the template path
     pathToExecParent = argv[0];
     pathToExecParent.replace(pathToExecParent.rfind("DBGWAS"), 6, "");

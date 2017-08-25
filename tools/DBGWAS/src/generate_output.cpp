@@ -52,8 +52,39 @@ generate_output::generate_output ()  : Tool ("generate_output") //give a name to
   populateParser(this);
 }
 
+vector<string> blast (const string &seq) {
+  string genes[] = {"Gene1", "Gene2", "Gene3", "Gene4", "Gene5", "Gene6", "Gene7", "Gene8", "Gene9", "Gene10"};
+  vector<string> dummyBlast;
+  for (int i=0; i<3; i++)
+    dummyBlast.push_back(genes[rand()%10]);
+  return dummyBlast;
+}
+
 void generateCytoscapeOutput(const graph_t &graph, const vector<int> &nodes, const string &typeOfGraph, int i,
-                             const string &outputFolder, const vector<int> &selectedUnitigs, int nbPheno0, int nbPheno1) {
+                             const string &outputFolder, const vector<int> &selectedUnitigs, int nbPheno0, int nbPheno1,
+                              map<int, set<string> > &idComponent2allGenesInIt) {
+  cout << "Rendering " << typeOfGraph << "_" << i << "..." << endl;
+
+
+
+  cout << "Annotating..." << endl;
+  map<int, vector<string> > node2genes;
+  map<string, vector<int> > gene2nodes;
+  for (const auto &node : nodes) {
+    MyVertex v = vertex(node, graph);
+    const string& seq = graph[v].name;
+    vector<string> genesContainingThisNode = blast(seq);
+    node2genes[node] = genesContainingThisNode;
+    for (const auto &gene : genesContainingThisNode) {
+      gene2nodes[gene].push_back(graph[v].id);
+      idComponent2allGenesInIt[i].insert(gene);
+    }
+  }
+  cout << "Annotating... - Done!" << endl;
+
+
+
+  cout << "Building the graph..." << endl;
   //gets the maxCoverage of the nodes in this component
   int maxCoverage=-1;
   for (const auto &node : nodes) {
@@ -76,6 +107,10 @@ void generateCytoscapeOutput(const graph_t &graph, const vector<int> &nodes, con
     elementsSS << "{data: {id: 'n" << graph[v].id << "', name: '" << graph[v].name << "'" <<
         ", info: '" << graph[v].id << "'" <<
         ", total: '" << graph[v].phenoCounter.getTotal() << "'" <<
+        ", genes: {";
+    for (const auto& gene : node2genes[node])
+      elementsSS << "'" << gene << "', ";
+    elementsSS << "}" <<
         ", pheno0: '" << graph[v].phenoCounter.getPheno0() << "/" << nbPheno0 << "'" <<
         ", pheno1: '" << graph[v].phenoCounter.getPheno1() << "/" << nbPheno1 << "'" <<
         ", NA: '" << graph[v].phenoCounter.getNA() << "'" <<
@@ -129,6 +164,10 @@ void generateCytoscapeOutput(const graph_t &graph, const vector<int> &nodes, con
   string toLibPath = outputFolder + string("/visualisations/components/lib");
   if (!boost::filesystem::exists(toLibPath))
     copyDirectoryRecursively(fromLibPath, toLibPath);
+  cout << "Building the graph... - Done!" << endl;
+
+
+  cout << "Rendering " << typeOfGraph << "_" << i << "... - Done!" << endl;
 }
 
 void generate_output::execute () {
@@ -363,6 +402,7 @@ void generate_output::execute () {
   //create a subgraph containing only the nodes in the neighbourhoods
   graph_t& newGraph = graph.create_subgraph();
   vector<vector<int> > nodesInComponent; //care: the nodes in this variable are the nodes in newGraph, not in the normal graph
+  map<int, set<string> > idComponent2allGenesInIt;
   int numberOfComponents=0;
   {
     for (auto vp = vertices(graph); vp.first != vp.second; ++vp.first) {
@@ -381,7 +421,7 @@ void generate_output::execute () {
     }
 
     for (int i = 0; i < nodesInComponent.size(); i++) {
-      generateCytoscapeOutput(newGraph, nodesInComponent[i], "comp", i, outputFolder, selectedUnitigs, nbPheno0, nbPheno1);
+      generateCytoscapeOutput(newGraph, nodesInComponent[i], "comp", i, outputFolder, selectedUnitigs, nbPheno0, nbPheno1, idComponent2allGenesInIt);
     }
     numberOfComponents = nodesInComponent.size();
   }
@@ -429,7 +469,19 @@ void generate_output::execute () {
       "      </table>";
   for (int i=0;i<numberOfComponents;i++) {
     string idString = std::to_string(i);
-    string annotations = string("TODO");
+    string annotations="";
+    string annotationsPreview="";
+    {
+      stringstream ssPreview, ss;
+      ssPreview << "<select size=\"3\">";
+      for (string gene : idComponent2allGenesInIt[i]) {
+        ssPreview << "<option>" << gene << "/option>";
+        ss << gene << " ";
+      }
+      ssPreview << "</select>";
+      annotationsPreview = ssPreview.str();
+      annotations = ss.str();
+    }
     string thisPreview(preview);
 
     //get the q-value
@@ -445,7 +497,7 @@ void generate_output::execute () {
 
     //fix this preview
     boost::replace_all(thisPreview, "<id>", idString);
-    boost::replace_all(thisPreview, "<annotations>", annotations);
+    boost::replace_all(thisPreview, "<annotations>", annotationsPreview);
     string qValueAsStr;
     {
       stringstream ss;

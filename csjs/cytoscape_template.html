@@ -62,10 +62,11 @@
     <script src="lib/js/handsontable.full.min.js"></script>
     <script src="lib/js/helpers.js"></script>
     <script type="text/javascript">
-
+        var genes2nodes;
         $(function(){ // on dom ready
             var elements = [ <elementsTag> ]
-            buildPage(elements)
+            genes2nodes = [ <genes2nodesTag> ]
+            buildPage(elements, genes2nodes)
         });
     </script>
 </head>
@@ -110,6 +111,18 @@
                     Allele frequency: <br/>
                     <canvas id="alleleCanvas" width="250" height="100"></canvas> <br/>
                     &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp High &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Low
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p style="margin-bottom: 2cm;"'></p>
+                    Annotation:<br/>
+                    Select nodes contained in Gene
+                    <select id="geneSelect">
+                        <option selected disabled>
+                            -------
+                        </option>
+                    </select>
                 </td>
             </tr>
             <tr>
