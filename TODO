@@ -13,6 +13,8 @@ General:
     -Show the error stream in R
         -redirect error stream to output stream
     -fix the error we get when the filter has no rules in the index page
+    -Move the preview table template on generate_output.cpp from hard code to a separate file
+    -Make the annotation process optional and also ask for the blastn path on the parameters
 
 1st step of the annotation:
 -Local database approach - blast
