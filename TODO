@@ -1,4 +1,54 @@
-﻿High priority TODO:
+﻿TODO Friday 25/08:
+General:
+    -Visualisation:
+        Remeber -> RemeMber
+    -Put the nb of signigicant patterns and signigicant unitigs in the index page
+        -Maybe just show all the arguments of the executing
+    -Put a collumn for significant unitigs in the table indicating that a node is a significant unitig
+    -Remove the boxes from the index page
+        -Laurent is checking this
+    -Add a sequence length collumn to the table in the visualisation
+    -fix output folder
+        -Need a fix on Gemma/Bugwas output folder first
+    -Show the error stream in R
+        -redirect error stream to output stream
+    -fix the error we get when the filter has no rules in the index page
+    -Move the preview table template on generate_output.cpp from hard code to a separate file
+    -Make the annotation process optional and also ask for the blastn path on the parameters
+
+1st step of the annotation:
+-Local database approach - blast
+-ARG NAUT
+1. Annotation is a part of the pipeline
+  -Blast nodes for now, and after from an assembly
+2. What should be displayed in the index page, related to the annotation?
+  -All the gene names ordered by hits, and other blast statistics (to be defined)
+  -filter the components by the gene name
+3. Graph page
+  -Genes, and when you select a gene, you highlight all the nodes inside that gene
+  -when you select a node, show the genes that contain that node
+-Add some tables with summary of the annotation?? (to be defined)
+
+
+2nd step: try to blast nodes to NCBI, Uniplot, but not really the nodes, but an assembly
+          blast an assembly of the selected nodes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+High priority TODO:
   -newick file should be optional (R script and software)
   -remove the patterns with maf < maf.filter in C++
   -treat NA better

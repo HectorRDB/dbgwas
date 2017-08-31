@@ -33,6 +33,8 @@
 #include <ctime>
 #include <boost/graph/connected_components.hpp>
 #include <boost/graph/copy.hpp>
+#include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string.hpp>
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
 #undef BOOST_NO_CXX11_SCOPED_ENUMS
@@ -52,8 +54,94 @@ generate_output::generate_output ()  : Tool ("generate_output") //give a name to
   populateParser(this);
 }
 
+class BlastRecord {
+public:
+    int nodeId;
+    string gene;
+    double qcovs, bitscore, pident, evalue;
+    BlastRecord(){}
+    BlastRecord(int nodeId, const string &gene, double qcovs, double bitscore, double pident, double evalue):
+        nodeId(nodeId), gene(gene), qcovs(qcovs), bitscore(bitscore), pident(pident), evalue(evalue){}
+    friend std::istream& operator>> (std::istream& stream, BlastRecord& record) {
+      //read
+      stream >> record.nodeId >> record.gene >> record.qcovs >> record.bitscore >> record.pident >> record.evalue;
+
+      //escape '
+      boost::replace_all(record.gene, "'", "\\'");
+
+      //split the header
+      vector< string > geneSplit;
+      boost::split(geneSplit, record.gene, boost::is_any_of(":"));
+      record.gene = geneSplit[0];
+
+      return stream;
+    }
+};
+
+vector<BlastRecord> blast (const string &outputFolder) {
+  //run blast
+  string commandLine=string("blastn -query ") + outputFolder + "/tmp/temp.fasta -db blastdb/arganot -out " + outputFolder +
+      "/tmp/blastout -outfmt '6 qseqid sseqid qcovs bitscore pident evalue'";
+  executeCommand(commandLine);
+
+  //read output
+  BlastRecord record;
+  vector<BlastRecord> records;
+  ifstream blastOut(outputFolder + "/tmp/blastout");
+  while (blastOut >> record)
+    records.push_back(record);
+  blastOut.close();
+
+  return records;
+}
+
+
 void generateCytoscapeOutput(const graph_t &graph, const vector<int> &nodes, const string &typeOfGraph, int i,
-                             const string &outputFolder, const vector<int> &selectedUnitigs, int nbPheno0, int nbPheno1) {
+                             const string &outputFolder, const vector<int> &selectedUnitigs, int nbPheno0, int nbPheno1,
+                              map<int, set<string> > &idComponent2allGenesInIt) {
+  cout << "Rendering " << typeOfGraph << "_" << i << "..." << endl;
+
+
+
+  cout << "Annotating..." << endl;
+  //create a file containing all unitigs in this component
+  {
+    ofstream sequenceFile;
+    openFileForWriting(outputFolder + "/tmp/temp.fasta", sequenceFile);
+    for (const auto &node : nodes) {
+      MyVertex v = vertex(node, graph);
+      sequenceFile << ">" << node << endl << graph[v].name << endl;
+    }
+    sequenceFile.close();
+  }
+
+  //execute the blast
+  vector<BlastRecord> records = blast(outputFolder);
+
+  //some indexes to help gathering info later
+  //an index from node id to Blast Record - these node ids are Boost node ids - will help to know which genes are in each node
+  map<int, vector<const BlastRecord *> > node2BlastRecords;
+  for (const auto& record : records)
+    node2BlastRecords[record.nodeId].push_back(&record);
+
+  //will contain, for each gene, all cytoscape node ids that mapped to that gene - will help to know all the nodes mapping to a gene
+  map<string, set<string> > gene2cytoscapeNodes;
+  for (const auto& node2BlastRecord : node2BlastRecords) {
+    MyVertex v = vertex(node2BlastRecord.first, graph);
+    string cytoscapeNodeId = string("n") + to_string(graph[v].id);
+    for (const auto &blastRecord : node2BlastRecord.second)
+      gene2cytoscapeNodes[blastRecord->gene].insert(cytoscapeNodeId);
+  }
+
+  //will contain all the genes in this component
+  for (const auto& gene2cytoscapeNode : gene2cytoscapeNodes)
+    idComponent2allGenesInIt[i].insert(gene2cytoscapeNode.first);
+
+  cout << "Annotating... - Done!" << endl;
+
+
+
+  cout << "Building the graph..." << endl;
   //gets the maxCoverage of the nodes in this component
   int maxCoverage=-1;
   for (const auto &node : nodes) {
@@ -64,53 +152,100 @@ void generateCytoscapeOutput(const graph_t &graph, const vector<int> &nodes, con
 
   //declares the stringstream which will store the elements to be printed
   stringstream elementsSS;
-  elementsSS << scientific;
+  {
+    elementsSS << scientific;
 
-  //goes through the nodes and print them
-  set<MyVertex> verticesInThisComponent;
-  for (const auto &node : nodes) {
-    MyVertex v = vertex(node, graph);
-    verticesInThisComponent.insert(v);
+    //goes through the nodes and print them
+    set<MyVertex> verticesInThisComponent;
+    for (const auto &node : nodes) {
+      MyVertex v = vertex(node, graph);
+      verticesInThisComponent.insert(v);
 
-    //TODO: if the graph file is too large, a good idea is to try to remove the name (node sequence)
-    elementsSS << "{data: {id: 'n" << graph[v].id << "', name: '" << graph[v].name << "'" <<
-        ", info: '" << graph[v].id << "'" <<
-        ", total: '" << graph[v].phenoCounter.getTotal() << "'" <<
-        ", pheno0: '" << graph[v].phenoCounter.getPheno0() << "/" << nbPheno0 << "'" <<
-        ", pheno1: '" << graph[v].phenoCounter.getPheno1() << "/" << nbPheno1 << "'" <<
-        ", NA: '" << graph[v].phenoCounter.getNA() << "'" <<
-        ", qValue: '" << graph[v].unitigStats.getQValueAsStr() << "'" <<
-        ", weight: '" << graph[v].unitigStats.getWeightAsStr() << "'" <<
-        ", waldStatistic: '" << graph[v].unitigStats.getWaldStatisticAsStr() << "'" <<
-        ", background_color: rgbToHex(" << graph[v].unitigStats.getRGB() << ")" <<
-        ", width: " << (minSize + (((double)graph[v].phenoCounter.getTotal())/maxCoverage*(maxSize-minSize))) <<
-        ", height: " << (minSize + (((double)graph[v].phenoCounter.getTotal())/maxCoverage*(maxSize-minSize))) <<
-        ", transparency: " << (find(selectedUnitigs.begin(), selectedUnitigs.end(), graph[v].id)==selectedUnitigs.end() ? "76" : "255") <<
-        "}, style: {'background-color': rgbToHex(" << graph[v].unitigStats.getRGB() << ")" <<
-        ", 'width': " << (minSize + (((double)graph[v].phenoCounter.getTotal())/maxCoverage*(maxSize-minSize))) <<
-        ", 'height': " << (minSize + (((double)graph[v].phenoCounter.getTotal())/maxCoverage*(maxSize-minSize))) <<
-        //if it is not a selected unitig, then it becomes a little bit transparent
-        (find(selectedUnitigs.begin(), selectedUnitigs.end(), graph[v].id)==selectedUnitigs.end() ? ", 'background-opacity': 0.3" : "") <<
-        "}}, ";
-  }
+      //get the genes string
+      //TODO: here, we can have duplicates if we have more than 1 hit in the same gene!!!
+      string genesString = "";
+      {
+        stringstream genesSS;
+        for (const auto &blastRecord : node2BlastRecords[node])
+          genesSS << "'" << blastRecord->gene << "',";
+        genesString = genesSS.str();
+      }
 
-  //goes through the edges and print them
-  for (auto ep = edges(graph); ep.first != ep.second; ++ep.first) {
-    MyEdge e = *ep.first;
-    if (verticesInThisComponent.find(source(e, graph)) != verticesInThisComponent.end() &&
-        verticesInThisComponent.find(target(e, graph)) != verticesInThisComponent.end()) {
-      elementsSS << "{data: {id: 'e" << graph[e].id << "', source: 'n" << graph[source(e, graph)].id
-      << "', target: 'n" << graph[target(e, graph)].id << "'}}, ";
+      elementsSS << "{data: {id: 'n" << graph[v].id << "', name: '" << graph[v].name << "'" <<
+      ", info: '" << graph[v].id << "'" <<
+      ", total: '" << graph[v].phenoCounter.getTotal() << "'" <<
+      ", genes: [" << genesString << "]" <<
+      ", pheno0: '" << graph[v].phenoCounter.getPheno0() << "/" << nbPheno0 << "'" <<
+      ", pheno1: '" << graph[v].phenoCounter.getPheno1() << "/" << nbPheno1 << "'" <<
+      ", NA: '" << graph[v].phenoCounter.getNA() << "'" <<
+      ", qValue: '" << graph[v].unitigStats.getQValueAsStr() << "'" <<
+      ", weight: '" << graph[v].unitigStats.getWeightAsStr() << "'" <<
+      ", waldStatistic: '" << graph[v].unitigStats.getWaldStatisticAsStr() << "'" <<
+      ", background_color: rgbToHex(" << graph[v].unitigStats.getRGB() << ")" <<
+      ", width: " << (minSize + (((double) graph[v].phenoCounter.getTotal()) / maxCoverage * (maxSize - minSize))) <<
+      ", height: " << (minSize + (((double) graph[v].phenoCounter.getTotal()) / maxCoverage * (maxSize - minSize))) <<
+      ", transparency: " <<
+      (find(selectedUnitigs.begin(), selectedUnitigs.end(), graph[v].id) == selectedUnitigs.end() ? "76" : "255") <<
+      "}, style: {'background-color': rgbToHex(" << graph[v].unitigStats.getRGB() << ")" <<
+      ", 'width': " << (minSize + (((double) graph[v].phenoCounter.getTotal()) / maxCoverage * (maxSize - minSize))) <<
+      ", 'height': " << (minSize + (((double) graph[v].phenoCounter.getTotal()) / maxCoverage * (maxSize - minSize))) <<
+      //if it is not a selected unitig, then it becomes a little bit transparent
+      (find(selectedUnitigs.begin(), selectedUnitigs.end(), graph[v].id) == selectedUnitigs.end()
+       ? ", 'background-opacity': 0.3" : "") <<
+      "}}, ";
+    }
+
+    //goes through the edges and print them
+    for (auto ep = edges(graph); ep.first != ep.second; ++ep.first) {
+      MyEdge e = *ep.first;
+      if (verticesInThisComponent.find(source(e, graph)) != verticesInThisComponent.end() &&
+          verticesInThisComponent.find(target(e, graph)) != verticesInThisComponent.end()) {
+        elementsSS << "{data: {id: 'e" << graph[e].id << "', source: 'n" << graph[source(e, graph)].id
+        << "', target: 'n" << graph[target(e, graph)].id << "'}}, ";
+      }
     }
   }
+
+  //this is what should replace <elementsTag>
   string elements = elementsSS.str();
+
+  stringstream genes2nodesSS;
+  {
+    genes2nodesSS << "{";
+    for (const auto &gene2cytoscapeNodesItem : gene2cytoscapeNodes) {
+      genes2nodesSS << "'" << gene2cytoscapeNodesItem.first << "' : [";
+      for (const auto &cytoscopeNode : gene2cytoscapeNodesItem.second)
+        genes2nodesSS << "'" << cytoscopeNode << "',";
+
+      /*
+       * TODO: remove
+      if (gene2cytoscapeNodesItem.second.size()>0) {
+        auto secondToLastIt = gene2cytoscapeNodesItem.second.end();
+        --secondToLastIt;
+        for (auto it = gene2cytoscapeNodesItem.second.begin(); it != secondToLastIt; ++it)
+          genes2nodesSS << "'" << *it << "',";
+        genes2nodesSS << "'" << *(gene2cytoscapeNodesItem.second.rbegin()) << "'";
+
+      }
+       */
+
+      genes2nodesSS << "], ";
+    }
+    genes2nodesSS << "}";
+  }
+
+  //this is what should replace <genes2nodesTag>
+  string genes2nodes = genes2nodesSS.str();
 
   //read template file
   string templatePath = pathToExecParent + string("/cytoscape_template.html");
   string cytoscapeOutput = readFileAsString(templatePath.c_str());
 
   //put the info in the template file
-  cytoscapeOutput.replace(cytoscapeOutput.find("<elementsTag>"), ((string) "<elementsTag>").size(), elements);
+  boost::replace_all(cytoscapeOutput, "<elementsTag>", elements);
+  //put the annotation info into the template file
+  boost::replace_all(cytoscapeOutput, "<genes2nodesTag>", genes2nodes);
+
 
   //output the file
   string outfilename;
@@ -129,6 +264,10 @@ void generateCytoscapeOutput(const graph_t &graph, const vector<int> &nodes, con
   string toLibPath = outputFolder + string("/visualisations/components/lib");
   if (!boost::filesystem::exists(toLibPath))
     copyDirectoryRecursively(fromLibPath, toLibPath);
+  cout << "Building the graph... - Done!" << endl;
+
+
+  cout << "Rendering " << typeOfGraph << "_" << i << "... - Done!" << endl;
 }
 
 void generate_output::execute () {
@@ -363,6 +502,7 @@ void generate_output::execute () {
   //create a subgraph containing only the nodes in the neighbourhoods
   graph_t& newGraph = graph.create_subgraph();
   vector<vector<int> > nodesInComponent; //care: the nodes in this variable are the nodes in newGraph, not in the normal graph
+  map<int, set<string> > idComponent2allGenesInIt;
   int numberOfComponents=0;
   {
     for (auto vp = vertices(graph); vp.first != vp.second; ++vp.first) {
@@ -381,7 +521,7 @@ void generate_output::execute () {
     }
 
     for (int i = 0; i < nodesInComponent.size(); i++) {
-      generateCytoscapeOutput(newGraph, nodesInComponent[i], "comp", i, outputFolder, selectedUnitigs, nbPheno0, nbPheno1);
+      generateCytoscapeOutput(newGraph, nodesInComponent[i], "comp", i, outputFolder, selectedUnitigs, nbPheno0, nbPheno1, idComponent2allGenesInIt);
     }
     numberOfComponents = nodesInComponent.size();
   }
@@ -429,7 +569,25 @@ void generate_output::execute () {
       "      </table>";
   for (int i=0;i<numberOfComponents;i++) {
     string idString = std::to_string(i);
-    string annotations = string("TODO");
+    string annotations="";
+    string annotationsPreview="";
+    {
+      stringstream ssPreview, ss;
+
+      if (idComponent2allGenesInIt[i].size()==0) {
+        ssPreview << "<b>No annotations found.</b>";
+        ss << "No annotations found";
+      }else {
+        ssPreview << "<select size=\"3\">";
+        for (string gene : idComponent2allGenesInIt[i]) {
+          ssPreview << "<option>" << gene << "</option>";
+          ss << gene << " ";
+        }
+        ssPreview << "</select>";
+      }
+      annotationsPreview = ssPreview.str();
+      annotations = ss.str();
+    }
     string thisPreview(preview);
 
     //get the q-value
@@ -445,7 +603,7 @@ void generate_output::execute () {
 
     //fix this preview
     boost::replace_all(thisPreview, "<id>", idString);
-    boost::replace_all(thisPreview, "<annotations>", annotations);
+    boost::replace_all(thisPreview, "<annotations>", annotationsPreview);
     string qValueAsStr;
     {
       stringstream ss;
@@ -473,6 +631,22 @@ void generate_output::execute () {
 
   //put the info in the template file
   boost::replace_all(indexOutput, "<previews>", ssPreview.str());
+
+  //populate the annotation dropdown filter
+  {
+    set<string> allGenes;
+    allGenes.insert("No annotations found");
+    for (const auto &pair : idComponent2allGenesInIt)
+      allGenes.insert(pair.second.begin(), pair.second.end());
+    stringstream ss;
+    ss << "[";
+    for (const auto &gene : allGenes)
+      ss << "'" << gene << "', ";
+    ss << "]";
+    boost::replace_all(indexOutput, "<all_genes_in_all_components>", ss.str());
+  }
+
+
 
   //output the file
   ofstream indexFile;

@@ -6,8 +6,8 @@ cmake_minimum_required(VERSION 2.6)
 # The version number.
 ################################################################################
 SET (gatb-tool_VERSION_MAJOR 0)
-SET (gatb-tool_VERSION_MINOR 0)
-SET (gatb-tool_VERSION_PATCH 2)
+SET (gatb-tool_VERSION_MINOR 1)
+SET (gatb-tool_VERSION_PATCH 0)
 
 IF (DEFINED MAJOR)
     SET (gatb-tool_VERSION_MAJOR ${MAJOR})
@@ -98,6 +98,7 @@ INSTALL (FILES   ${PROJECT_SOURCE_DIR}/html_templates/index_template.html  DESTI
 INSTALL (DIRECTORY   ${PROJECT_SOURCE_DIR}/sample_example  DESTINATION .)
 INSTALL (DIRECTORY   ${PROJECT_SOURCE_DIR}/csjs/lib  DESTINATION ./bin/)
 INSTALL (DIRECTORY   ${PROJECT_SOURCE_DIR}/sharedobjects  DESTINATION ./bin/)
+INSTALL (DIRECTORY   ${PROJECT_SOURCE_DIR}/blastdb  DESTINATION ./bin/)
 
 # Tell cmake where to install the cytoscape template
 #TODO: make package to get the correct way to run the tool...
