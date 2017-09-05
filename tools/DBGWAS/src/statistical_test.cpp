@@ -54,7 +54,7 @@ void statistical_test::execute () {
   executeCommand(string("Rscript --vanilla DBGWAS.R ") + outputFolder +
                  " " + outputFolder + "/bugwas_input.id_phenotype " +
                  newickTreeFilePath + " " + outputFolder +"/bugwas_out_ " +
-                     pathToExecParent + "gemma.0.93b 0.01");
+                     pathToExecParent + "gemma.0.93b 0.01 2>&1");
 
 
 

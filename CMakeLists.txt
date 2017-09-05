@@ -6,8 +6,8 @@ cmake_minimum_required(VERSION 2.6)
 # The version number.
 ################################################################################
 SET (gatb-tool_VERSION_MAJOR 0)
-SET (gatb-tool_VERSION_MINOR 1)
-SET (gatb-tool_VERSION_PATCH 1)
+SET (gatb-tool_VERSION_MINOR 2)
+SET (gatb-tool_VERSION_PATCH 0)
 
 IF (DEFINED MAJOR)
     SET (gatb-tool_VERSION_MAJOR ${MAJOR})
@@ -96,16 +96,10 @@ INSTALL (FILES   ${PROJECT_SOURCE_DIR}/bugwas_scripts/cdbg_lin_loc.R  DESTINATIO
 INSTALL (FILES   ${PROJECT_SOURCE_DIR}/bugwas_scripts/cdbg_ridge_regression.R  DESTINATION ./bin/)
 INSTALL (FILES   ${PROJECT_SOURCE_DIR}/bugwas_scripts/DBGWAS.R  DESTINATION ./bin/)
 INSTALL (FILES   ${PROJECT_SOURCE_DIR}/html_templates/index_template.html  DESTINATION ./bin/)
+INSTALL (FILES   ${PROJECT_SOURCE_DIR}/html_templates/index_table_template.html  DESTINATION ./bin/)
 INSTALL (DIRECTORY   ${PROJECT_SOURCE_DIR}/sample_example  DESTINATION .)
 INSTALL (DIRECTORY   ${PROJECT_SOURCE_DIR}/csjs/lib  DESTINATION ./bin/)
 INSTALL (DIRECTORY   ${PROJECT_SOURCE_DIR}/sharedobjects  DESTINATION ./bin/)
 INSTALL (DIRECTORY   ${PROJECT_SOURCE_DIR}/blastdb  DESTINATION ./bin/)
-
-# Tell cmake where to install the cytoscape template
-#TODO: make package to get the correct way to run the tool...
-#configure_file(${PROJECT_SOURCE_DIR}/csjs/cytoscape_template.html ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}/tools/cytoscape_template.html COPYONLY)
-#configure_file(${PROJECT_SOURCE_DIR}/gemma/gemma.0.93b ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}/tools/gemma.0.93b COPYONLY)
-#file(COPY ${PROJECT_SOURCE_DIR}/csjs/lib DESTINATION ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}/tools/)
-#file(COPY ${PROJECT_SOURCE_DIR}/bugwas_scripts DESTINATION ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}/tools/)
 
 include (CPack)

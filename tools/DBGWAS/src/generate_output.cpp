@@ -57,40 +57,58 @@ generate_output::generate_output ()  : Tool ("generate_output") //give a name to
 class BlastRecord {
 public:
     int nodeId;
-    string gene;
+    string antibioticClass, markerName, source, gene;
     double qcovs, bitscore, pident, evalue;
     BlastRecord(){}
-    BlastRecord(int nodeId, const string &gene, double qcovs, double bitscore, double pident, double evalue):
-        nodeId(nodeId), gene(gene), qcovs(qcovs), bitscore(bitscore), pident(pident), evalue(evalue){}
-    friend std::istream& operator>> (std::istream& stream, BlastRecord& record) {
+    BlastRecord(int nodeId, const string &antibioticClass, const string &markerName, const string &source,
+                double qcovs, double bitscore, double pident, double evalue):
+        nodeId(nodeId), antibioticClass(antibioticClass), markerName(markerName), source(source), qcovs(qcovs),
+        bitscore(bitscore), pident(pident), evalue(evalue) {}
+    static BlastRecord parseString (const string &str) {
+      BlastRecord record;
+      stringstream stream;
+      stream << str;
+
       //read
-      stream >> record.nodeId >> record.gene >> record.qcovs >> record.bitscore >> record.pident >> record.evalue;
+      string header;
+      stream >> record.nodeId >> header >> record.qcovs >> record.bitscore >> record.pident >> record.evalue;
 
       //escape '
-      boost::replace_all(record.gene, "'", "\\'");
+      boost::replace_all(header, "'", "\\'");
 
       //split the header
-      vector< string > geneSplit;
-      boost::split(geneSplit, record.gene, boost::is_any_of(":"));
-      record.gene = geneSplit[0];
+      vector< string > headerSplit;
+      boost::split(headerSplit, header, boost::is_any_of("()[]"), boost::token_compress_on);
+      record.antibioticClass = headerSplit[1];
+      record.markerName = headerSplit[2];
+      record.source = headerSplit[3];
 
-      return stream;
+      //compose the gene
+      stringstream ss;
+      ss << "(" << record.antibioticClass << ")" <<  record.markerName << "[" << record.source << "]";
+      record.gene = ss.str();
+
+      return record;
     }
 };
 
 vector<BlastRecord> blast (const string &outputFolder) {
   //run blast
-  string commandLine=string("blastn -query ") + outputFolder + "/tmp/temp.fasta -db blastdb/arganot -out " + outputFolder +
+  string commandLine=string("blastn -query ") + outputFolder + "/tmp/temp.fasta -db blastdb/DBGWAS_merged_ResDB.fasta -out " + outputFolder +
       "/tmp/blastout -outfmt '6 qseqid sseqid qcovs bitscore pident evalue'";
   executeCommand(commandLine);
 
   //read output
-  BlastRecord record;
   vector<BlastRecord> records;
-  ifstream blastOut(outputFolder + "/tmp/blastout");
-  while (blastOut >> record)
-    records.push_back(record);
-  blastOut.close();
+  {
+    auto recordsAsStringVector = getVectorStringFromFile(outputFolder + "/tmp/blastout");
+    for (const auto& recordString : recordsAsStringVector) {
+      if (recordString.length()>0) {
+        records.push_back(BlastRecord::parseString(recordString));
+      }
+    }
+  }
+
 
   return records;
 }
@@ -98,7 +116,7 @@ vector<BlastRecord> blast (const string &outputFolder) {
 
 void generateCytoscapeOutput(const graph_t &graph, const vector<int> &nodes, const string &typeOfGraph, int i,
                              const string &outputFolder, const vector<int> &selectedUnitigs, int nbPheno0, int nbPheno1,
-                              map<int, set<string> > &idComponent2allGenesInIt) {
+                              map<int, set<string> > &idComponent2allAntibioticClassInIt) {
   cout << "Rendering " << typeOfGraph << "_" << i << "..." << endl;
 
 
@@ -133,9 +151,9 @@ void generateCytoscapeOutput(const graph_t &graph, const vector<int> &nodes, con
       gene2cytoscapeNodes[blastRecord->gene].insert(cytoscapeNodeId);
   }
 
-  //will contain all the genes in this component
-  for (const auto& gene2cytoscapeNode : gene2cytoscapeNodes)
-    idComponent2allGenesInIt[i].insert(gene2cytoscapeNode.first);
+  //will contain all antibioticClass in this component
+  for (const auto& record : records)
+    idComponent2allAntibioticClassInIt[i].insert(record.antibioticClass);
 
   cout << "Annotating... - Done!" << endl;
 
@@ -171,13 +189,16 @@ void generateCytoscapeOutput(const graph_t &graph, const vector<int> &nodes, con
         genesString = genesSS.str();
       }
 
-      elementsSS << "{data: {id: 'n" << graph[v].id << "', name: '" << graph[v].name << "'" <<
+      elementsSS << "{data: {id: 'n" << graph[v].id << "'" <<
+      ", name: '" << graph[v].name << "'" <<
+      ", sequenceLength: '" << graph[v].name.length() << "'" <<
       ", info: '" << graph[v].id << "'" <<
       ", total: '" << graph[v].phenoCounter.getTotal() << "'" <<
       ", genes: [" << genesString << "]" <<
       ", pheno0: '" << graph[v].phenoCounter.getPheno0() << "/" << nbPheno0 << "'" <<
       ", pheno1: '" << graph[v].phenoCounter.getPheno1() << "/" << nbPheno1 << "'" <<
       ", NA: '" << graph[v].phenoCounter.getNA() << "'" <<
+      ", significant: '" << (find(selectedUnitigs.begin(), selectedUnitigs.end(), graph[v].id) == selectedUnitigs.end() ? "No" : "Yes") << "'" <<
       ", qValue: '" << graph[v].unitigStats.getQValueAsStr() << "'" <<
       ", weight: '" << graph[v].unitigStats.getWeightAsStr() << "'" <<
       ", waldStatistic: '" << graph[v].unitigStats.getWaldStatisticAsStr() << "'" <<
@@ -502,7 +523,7 @@ void generate_output::execute () {
   //create a subgraph containing only the nodes in the neighbourhoods
   graph_t& newGraph = graph.create_subgraph();
   vector<vector<int> > nodesInComponent; //care: the nodes in this variable are the nodes in newGraph, not in the normal graph
-  map<int, set<string> > idComponent2allGenesInIt;
+  map<int, set<string> > idComponent2allAntibioticClassInIt;
   int numberOfComponents=0;
   {
     for (auto vp = vertices(graph); vp.first != vp.second; ++vp.first) {
@@ -521,7 +542,7 @@ void generate_output::execute () {
     }
 
     for (int i = 0; i < nodesInComponent.size(); i++) {
-      generateCytoscapeOutput(newGraph, nodesInComponent[i], "comp", i, outputFolder, selectedUnitigs, nbPheno0, nbPheno1, idComponent2allGenesInIt);
+      generateCytoscapeOutput(newGraph, nodesInComponent[i], "comp", i, outputFolder, selectedUnitigs, nbPheno0, nbPheno1, idComponent2allAntibioticClassInIt);
     }
     numberOfComponents = nodesInComponent.size();
   }
@@ -550,23 +571,13 @@ void generate_output::execute () {
   //create the index
   //create the object previews for each component
   vector<ObjectPreview> previews;
-  string preview="<table style=\"float: left; margin-left: 10px; margin-bottom: 10px\">"
-      "        <tr> <td>"
-      "          <center><strong>Comp_<id></strong></center>"
-      "        </td> </tr>"
-      "        <tr> <td>"
-      "          q-value: <q-value>"
-      "        </td> </tr>"
-      "        <tr> <td>"
-      "          Annotations: <annotations>"
-      "        </td> </tr>"
-      "        <tr> <td>"
-      "          Preview (click to open) <br/>"
-      "          <center>"
-      "          <img id=\"img_<id>\" onclick=\"window.open(\\'components/comp_<id>.html\\',\\'_blank\\')\" src=\"components/comp_<id>.html.png\"/>"
-      "          </center>"
-      "        </td> </tr>"
-      "      </table>";
+  string preview="";
+  {
+    auto indexTableTemplateAsStringVector = getVectorStringFromFile(pathToExecParent + string("/index_table_template.html"));
+    for (const auto &line : indexTableTemplateAsStringVector)
+      preview += line;
+  }
+
   for (int i=0;i<numberOfComponents;i++) {
     string idString = std::to_string(i);
     string annotations="";
@@ -574,14 +585,14 @@ void generate_output::execute () {
     {
       stringstream ssPreview, ss;
 
-      if (idComponent2allGenesInIt[i].size()==0) {
+      if (idComponent2allAntibioticClassInIt[i].size()==0) {
         ssPreview << "<b>No annotations found.</b>";
         ss << "No annotations found";
       }else {
         ssPreview << "<select size=\"3\">";
-        for (string gene : idComponent2allGenesInIt[i]) {
-          ssPreview << "<option>" << gene << "</option>";
-          ss << gene << " ";
+        for (string antibioticClass : idComponent2allAntibioticClassInIt[i]) {
+          ssPreview << "<option>" << antibioticClass << "</option>";
+          ss << "(" << antibioticClass << ") ";
         }
         ssPreview << "</select>";
       }
@@ -636,12 +647,12 @@ void generate_output::execute () {
   {
     set<string> allGenes;
     allGenes.insert("No annotations found");
-    for (const auto &pair : idComponent2allGenesInIt)
+    for (const auto &pair : idComponent2allAntibioticClassInIt)
       allGenes.insert(pair.second.begin(), pair.second.end());
     stringstream ss;
     ss << "[";
     for (const auto &gene : allGenes)
-      ss << "'" << gene << "', ";
+      ss << "'(" << gene << ")', ";
     ss << "]";
     boost::replace_all(indexOutput, "<all_genes_in_all_components>", ss.str());
   }

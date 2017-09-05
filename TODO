@@ -1,90 +1,39 @@
-﻿TODO Friday 25/08:
-General:
-    -Visualisation:
-        Remeber -> RemeMber
-    -Put the nb of signigicant patterns and signigicant unitigs in the index page
-        -Maybe just show all the arguments of the executing
-    -Put a collumn for significant unitigs in the table indicating that a node is a significant unitig
-    -Remove the boxes from the index page
-        -Laurent is checking this
-    -Add a sequence length collumn to the table in the visualisation
-    -fix output folder
-        -Need a fix on Gemma/Bugwas output folder first
-    -Show the error stream in R
-        -redirect error stream to output stream
-    -fix the error we get when the filter has no rules in the index page
-    -Move the preview table template on generate_output.cpp from hard code to a separate file
-    -Make the annotation process optional and also ask for the blastn path on the parameters
-
-1st step of the annotation:
--Local database approach - blast
--ARG NAUT
-1. Annotation is a part of the pipeline
-  -Blast nodes for now, and after from an assembly
-2. What should be displayed in the index page, related to the annotation?
-  -All the gene names ordered by hits, and other blast statistics (to be defined)
-  -filter the components by the gene name
-3. Graph page
-  -Genes, and when you select a gene, you highlight all the nodes inside that gene
-  -when you select a node, show the genes that contain that node
--Add some tables with summary of the annotation?? (to be defined)
-
-
-2nd step: try to blast nodes to NCBI, Uniplot, but not really the nodes, but an assembly
-          blast an assembly of the selected nodes
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+﻿To check:
+    -Fixed a small bug on the annotation filtering in the index page (genes between parenthesis)
 
 
 High priority TODO:
+  -Make the annotation process optional and also check if blastn is on the path
+    -Or we can also pack blastn and makeblastdb in the app
+        -This can be good since then we enforce the blast and makeblast versions... And that is additional 50 MBs
+  -Allow users to input their own annotation database (Christine's example)
+    -The problem is the standardization on FASTA headers... I guess if we do this, we should not force the users to standardize it
+        -We can define two TAGs on the fasta header:
+            -DBGWAS_index_tag=<value>
+            -DBGWAS_graph_tag=<value>
+        which is what is going to be shown on the index and graph pages. If these tags are not found in the header, then we just set both values to the full header.
+        This way people can provide their own database, and they customize it or not...
+    -Maybe with this we won't need to blast to online database - the annotation is as good as the database provided by the user...
+  -Show other info output by blast on the index page/graph page?
+    -Order the genes by these info?
+  -Fix the error we get when the filter has no rules in the index page
+  -Write the nb of significant patterns and significant unitigs in the index page
+    -Maybe just show all the arguments of the execution
+  -Show the original genomes as paths in the graph?
   -newick file should be optional (R script and software)
   -remove the patterns with maf < maf.filter in C++
   -treat NA better
-  -if we want to show only figures from the software, and not the one I customized in cytoscape + inkscape, we should definitely add some insights of the annotation.
-  - svd and pca steps are probably redundant in cdbg_lin_loc as XX is centered. Check
-   that they produce the same set of eigenvectors and remove the pca
-   steps (call to prcomp uses more memory than svd).
+  -svd and pca steps are probably redundant in cdbg_lin_loc as XX is centered. Check that they produce the same set of eigenvectors and remove the pca steps (call to prcomp uses more memory than svd).
+  -fix output folder from being fixed to being a parameter
+      -Need a fix on Gemma/Bugwas output folder first
+
 
 Low priority TODO:
-   - When the strains input file is missing, we return an error:
+  - When the strains input file is missing, we return an error:
       [FATAL ERROR] Error opening file
       Could it be a little more detailed? Eg, which file (there are two inputs), and whether the format is wrong or the file was not found.
-      - possibility to work on unitig counts rather than presence/absence
-   - Some messages output by the R statistical test are not captured by DBGWAS (I guess we are capturing either the error or the output stream, but not both).
-- memory bottleneck right now when do.lineage=TRUE is in computing
-   the correlations between all PCs and variants. Could be improved
-   but not trivial. Second bottleneck is in computing SVD.
-
-
-Annotation (High priority) TODO:
-    -We should propose it optionnally or even better : from the result web page, as it should take quite a while to blast
-     all the selected unitigs (if we propose it from the summary index page, we could have the possibility to select only
-     some components we want to annotate, and not all, and launch the annotation on these components.)
-    - as the ncbi blast cgi service prevents from launching too many queries, we should launch only one big query on all
-    selected component's unitigs and parse the results.
-    - ideally, we should be able, as a result of the annotation, to add 1) an annotation summary of the component on the
-    index page (for example, the gene name or region description that appears the more often, like on the first scheme
-    drawn of the index page), + 2) when clicking on the component, a detailed annotation (per unitig) should be available
-    on the component page. For example, the one you proposed : a toogle list of (cleaned) annotations, and when we click
-    on a particular annotation this highlights the nodes concerned by the annotation (highligh could be done by selecting
-    the nodes for instance).
-    - technically, we saw that a correct annotation can be parsed from the blast output, following one or two well chosen
-    links). However, we looked at the blast result web page and not at the cgi query content. Maybe this will differ a
-    bit. I have good knowledge of perl which is cool for parsing, but not as efficient as python for performance... I also
-    know several ways to query ncbi properties. I don't know your knowledge on it, and if you would need help on this.
-    - Blast the genes of the nodes and show a view with the genes and which unitigs belong to each gene
+  - possibility to work on unitig counts rather than presence/absence
+  - memory bottleneck right now when do.lineage=TRUE is in computing the correlations between all PCs and variants. Could be improved but not trivial. Second bottleneck is in computing SVD.
 
 
 

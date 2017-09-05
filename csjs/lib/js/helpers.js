@@ -221,9 +221,11 @@ function fillTable() {
                     //TODO: NA temporarily removed
                     //node.data('NA'),
                     node.data('genes').toString(),
+                    node.data('significant'),
                     node.data('qValue'),
                     node.data('weight'),
                     node.data('waldStatistic'),
+                    node.data('sequenceLength'),
                     node.data('name')
                 ])
             }
@@ -424,10 +426,14 @@ function buildPage(graphElements, genes2nodes)
         $('#geneSelect').change(function(){
             var gene = $(this).val();
             var nodesToHighlight=[];
-            cy.nodes().forEach(function(node) {
-                if (genes2nodes[gene].includes(node.id()))
-                    nodesToHighlight.push(node)
-            })
+
+            if (gene!="clear") {
+                cy.nodes().forEach(function (node) {
+                    if (genes2nodes[gene].includes(node.id()))
+                        nodesToHighlight.push(node)
+                })
+            }
+
             unselectAllNodes();
             cy.collection(nodesToHighlight).select();
         });
@@ -531,7 +537,7 @@ function buildPage(graphElements, genes2nodes)
 
         //fills the cytoscape dialog instructions
         $("#cytoscapeExportDialog").html("\
-          1. Download the graph <a download=\"graph2cytoscapeDesktop\" id=\"graph_cytoscape\"><b><u>here</u></b></a>, save it, and load it into Cytoscape (File > Import > Network > File...) <br/>\
+          1. Download the graph <a download=\"graph2cytoscapeDesktop.json\" id=\"graph_cytoscape\"><b><u>here</u></b></a>, save it, and load it into Cytoscape (File > Import > Network > File...) <br/>\
           2. After the graph is loaded, download the style <a href=\"lib/xml/DBGWAS_cytoscape_style.xml\" download=\"DBGWAS_cytoscape_style.xml\"><b><u>here</u></b></a>, save it, and load it into Cytoscape (File > Import > Styles...) <br/>\
           3. To apply the style, go to the Style tab in the Control Panel and select DBGWAS_cytoscape_style.")
 
@@ -556,6 +562,8 @@ function buildPage(graphElements, genes2nodes)
                 {type: 'text'},
                 {type: 'text'},
                 {type: 'text'},
+                {type: 'text'},
+                {type: 'text'},
                 {type: 'text'}
             ],
             colHeaders: [
@@ -566,9 +574,11 @@ function buildPage(graphElements, genes2nodes)
                 //TODO: NA temporarily removed
                 //'NA',
                 'Annotation',
+                'Significant?',
                 'q-Value',
                 'Est effect',
                 'Wald stat',
+                'Sequence Length',
                 'Sequence'
             ],
             copyColsLimit: 1000000,
