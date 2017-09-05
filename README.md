@@ -91,7 +91,7 @@ The analysis runs in about 40 minutes on a PC with 8 Intel(R) Xeon(R)
 CPU E5-1620 0 @ 3.60GHz cores, although most of the operations only
 use a single core at the moment.
 
-With do.lineage=TRUE, memory usage peaks at ~20Gb, vs ~9Gb with
+With do.lineage=TRUE, memory usage peaks at ~15Gb, vs ~9Gb with
 do.lineage=FALSE.
 
 Scaling on new datasets will essentially depend on the number of

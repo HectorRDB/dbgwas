@@ -56,15 +56,16 @@ High priority TODO:
   - svd and pca steps are probably redundant in cdbg_lin_loc as XX is centered. Check
    that they produce the same set of eigenvectors and remove the pca
    steps (call to prcomp uses more memory than svd).
-  - memory bottleneck right now when do.lineage=TRUE is in the
-   bayesian wald test step, needs to be improved. 
 
 Low priority TODO:
-    - When the strains input file is missing, we return an error:
-        [FATAL ERROR] Error opening file
-        Could it be a little more detailed? Eg, which file (there are two inputs), and whether the format is wrong or the file was not found.
-    - possibility to work on unitig counts rather than presence/absence
-    - Some messages output by the R statistical test are not captured by DBGWAS (I guess we are capturing either the error or the output stream, but not both).
+   - When the strains input file is missing, we return an error:
+      [FATAL ERROR] Error opening file
+      Could it be a little more detailed? Eg, which file (there are two inputs), and whether the format is wrong or the file was not found.
+      - possibility to work on unitig counts rather than presence/absence
+   - Some messages output by the R statistical test are not captured by DBGWAS (I guess we are capturing either the error or the output stream, but not both).
+- memory bottleneck right now when do.lineage=TRUE is in computing
+   the correlations between all PCs and variants. Could be improved
+   but not trivial. Second bottleneck is in computing SVD.
 
 
 Annotation (High priority) TODO:
