@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 2.6)
 ################################################################################
 SET (gatb-tool_VERSION_MAJOR 0)
 SET (gatb-tool_VERSION_MINOR 1)
-SET (gatb-tool_VERSION_PATCH 0)
+SET (gatb-tool_VERSION_PATCH 1)
 
 IF (DEFINED MAJOR)
     SET (gatb-tool_VERSION_MAJOR ${MAJOR})
@@ -93,6 +93,7 @@ INSTALL (FILES   ${PROJECT_SOURCE_DIR}/phantomjs/render_graph.js  DESTINATION ./
 INSTALL (FILES   ${PROJECT_SOURCE_DIR}/bugwas_scripts/build_bmx_data.R  DESTINATION ./bin/)
 INSTALL (FILES   ${PROJECT_SOURCE_DIR}/bugwas_scripts/cdbg_all_plots.R  DESTINATION ./bin/)
 INSTALL (FILES   ${PROJECT_SOURCE_DIR}/bugwas_scripts/cdbg_lin_loc.R  DESTINATION ./bin/)
+INSTALL (FILES   ${PROJECT_SOURCE_DIR}/bugwas_scripts/cdbg_ridge_regression.R  DESTINATION ./bin/)
 INSTALL (FILES   ${PROJECT_SOURCE_DIR}/bugwas_scripts/DBGWAS.R  DESTINATION ./bin/)
 INSTALL (FILES   ${PROJECT_SOURCE_DIR}/html_templates/index_template.html  DESTINATION ./bin/)
 INSTALL (DIRECTORY   ${PROJECT_SOURCE_DIR}/sample_example  DESTINATION .)
