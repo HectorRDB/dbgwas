@@ -28,6 +28,7 @@
 library(bugwas)
 
 source('cdbg_lin_loc.R')
+source('cdbg_ridge_regression.R')
 source('cdbg_all_plots.R')
 
 cleanMem <- function(n=50) { for (i in 1:n) gc() }
@@ -58,7 +59,7 @@ maf.filter <- as.numeric(args[6])
 ## plots. Otherwise skip tree management (the input file can be
 ## empty), svd, pca and plots. Could be an input of the script.
 
-do.lineage <- FALSE
+do.lineage <- TRUE
     
 output.dir <- '.' # must be '.' as gemma automatically writes in ./output.
 

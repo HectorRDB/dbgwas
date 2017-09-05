@@ -174,20 +174,36 @@ cdbg_lin_loc <- function(SNPdata = NULL,
     }else{
         XX <- NULL
     }
-    
-    if(creatingAllPlots && is.null(svd.XX)){
-        svd.XX <- svd(XX)
+
+    ## Since XX is column-centered, SVD info is contained in PCA    
+    ## if(creatingAllPlots && is.null(svd.XX)){
+    ##     svd.XX <- svd(XX)
+    ##     ## Since XX is column-centered, PCA is the same as SVD
+    ##     ## pca <- list()
+    ##     ## pca$sdev <- svd.XX$d / sqrt(max(1, nrow(XX) - 1))
+    ##     ## pca$rotation <- svd.XX$v
+    ##     ## pca$x <- svd.XX$u %*% diag(svd.XX$d)
+    ##     ## pca <- list(pca=pca)
+    ##     cleanMem()
+    ##     message("Singular value decomposition complete.")
+    ## }
+
+    if(creatingAllPlots && is.null(pca)){## PCA on the bips
+        ## Since XX is column-centered, PCA is the same as SVD
+        pca <- svd(XX)
+        names(pca)[names(pca) == 'v'] <- 'rotation'
+        names(pca)[names(pca) == 'u'] <- 'x'        
+        pca$x <- pca$x %*% diag(pca$d)
+        pca <- list(pca=pca)
+        ## pca <- bugwas:::do_pca(pcs = pcs, XX = XX, XX.ID = XX.ID)        
+        ## Singular values of XX will be useful later, differ from
+        ## sdev by a factor sqrt(nrow(XX)-1)        
+        ## pca$pca$d <- pca$pca$sdev * sqrt(max(1, nrow(XX) - 1))        
         cleanMem()
-        message("Singular value decomposition complete.")
+        message("Principal component analysis complete.")
     }
 
-    if(creatingAllPlots && is.null(pca)){
-        ## PCA on the bips
-        pca <- bugwas:::do_pca(pcs = pcs, XX = XX, XX.ID = XX.ID)
-        cleanMem()
-        message("Principle component analysis complete.")
-    }
-
+    ## save(file='biallelic-data.RData', logreg.bi, XX.all, XX, lmm.bi, lognull, lambda, relmatrix, pheno.file, maf, gem.path, output.dir, prefix, run.lmm, XX.ID, pca, npcs, y, phylo)
     biallelic <- cdbg_get_biallelic(logreg.bi = logreg.bi,
                                     XX.all = XX.all,
                                     XX = XX,
@@ -217,14 +233,14 @@ cdbg_lin_loc <- function(SNPdata = NULL,
         message("Tree data processed successfully.")
         
         ## Ridge regression
-        wald <- bugwas:::wald_test(y = y,
-                                   XX = XX,
-                                   svd.XX = svd.XX,
-                                   lambda = biallelic$lambda,
-                                   XX.all = XX.all,
-                                   prefix = prefix,
-                                   npcs = npcs,
-                                   pca = pca$pca)
+        wald <- cdbg_wald_test(y = y,
+                               XX = XX,
+                               lambda = biallelic$lambda,
+                               XX.all = XX.all,
+                               prefix = prefix,
+                               npcs = npcs,
+                               pca = pca$pca)
+        
         
         ## rm(list=c("XX", "svd.XX"))
         rm(XX)
@@ -337,15 +353,15 @@ cdbg_run_lmm_bi <- function(XX = NULL,
     system(paste0(path, " -g ", gen.output.file, " -p ", pheno.file, " -a ", snp.output.file,
                   " -k ", relmatrix," -lmm 4 -o ", prefix, "_lmmout_patterns"," -maf ", maf))
     
-                                        #message("LMM calculations completed successfully.")
+                                        ##message("LMM calculations completed successfully.")
     lmm.log <- paste0(dir, "/output/", prefix, "_lmmout_patterns.log.txt")
     
-                                        #message(paste(c("GEMMA log file:", lmm.log), collapse=""))
+                                        ##message(paste(c("GEMMA log file:", lmm.log), collapse=""))
     
     lambda.lognull <- bugwas:::extract_lambda_lognull(lmm.log)
     
-                                        #message("Lambda estimations extracted successfully.")
-                                        #message(paste(c("Extracted lambda: ", lambda.lognull), collapse=""))
+                                        ##message("Lambda estimations extracted successfully.")
+                                        ##message(paste(c("Extracted lambda: ", lambda.lognull), collapse=""))
     
     if(process.results == FALSE){
         
@@ -354,7 +370,7 @@ cdbg_run_lmm_bi <- function(XX = NULL,
     } else {
         
         assocFile = paste0(dir, "/output/", prefix, "_lmmout_patterns.assoc.txt")
-                                        #message(paste(c("assocFile:", assocFile), collapse=" "))
+                                        ##message(paste(c("assocFile:", assocFile), collapse=" "))
         lmm <- read.table(assocFile, header=T, sep="\t", as.is=T)
 
                                         #message(paste(c("Header:", names(lmm)), collapse=" "))
@@ -366,7 +382,7 @@ cdbg_run_lmm_bi <- function(XX = NULL,
         pvals <- pchisq(as.numeric(D), 1, low=F)
         negLog10 <- -log10(pvals)	
         
-                                        #message("flag1")
+                                        ##message("flag1")
         
         ## !!! lmm$ps is not the same thing as ps. It is indexing
         ## !!! unique patterns in the output file of gemma so its
@@ -383,13 +399,13 @@ cdbg_run_lmm_bi <- function(XX = NULL,
         ## the set of variants corresponding to tested patterns.
         ps <- ps[!is.na(m)]
         
-                                        #message("flag2")
+                                        ##message("flag2")
         
         lmm <- cbind(lmm, negLog10)
         lmm <- lmm[match(pattern,lmm$ps), ]
         lmm$ps <- ps
         
-                                        #message("flag3")
+                                        ##message("flag3")
         
         write.table(lmm, file = paste0(prefix, "_lmmout_allSNPs.txt"), sep="\t",
                     row=F, col=T, quote=F)
@@ -404,6 +420,7 @@ cdbg_run_lmm_bi <- function(XX = NULL,
 ## Adapted from BUGWAS_functions.R
 ## Changelog:
 ##   - calls cdbg_run_lmm_bi rather than bugwas:::run_lmm_bi
+##   - calls cdbg_get_correlations rather than bugwas:::get_correlations
 ## Functions for biallelic data
 ################################################################################################
 
@@ -488,7 +505,9 @@ cdbg_get_biallelic <- function(logreg.bi = NULL,
     }
 
     if(!is.null(pca)){
+        message('Computing correlations between patterns and PCs')
         cor.XX <- cdbg_get_correlations(XX = XX, pca = pca$x, npcs = npcs, id = XX.ID)
+        cleanMem()
     }else{
         cor.XX <- NULL
     }
@@ -520,11 +539,13 @@ cdbg_get_correlations <- function (XX = NULL,
                                    npcs = NULL,
                                    id = NULL,
                                    all.cor  = FALSE){
-        
+
     cor.XX.pca <- cor(XX,pca[, 1:npcs])
+    cleanMem()
     cor.XX.pca[is.na(cor.XX.pca)] = 0
-    which.pc <- max.col(abs(cor.XX.pca))
+    which.pc <- max.col(abs(cor.XX.pca), ties.method='first')
     max.cor.pc <- abs(cor.XX.pca[cbind(1:nrow(cor.XX.pca), which.pc)])
+    names(which.pc) <- names(max.cor.pc) <- rownames(cor.XX.pca)
     if(all.cor){
         return(list("which.pc" = which.pc, "max.cor.pc" = max.cor.pc, "all.cor.pc" = cor.XX.pca))
     }else{
@@ -533,27 +554,122 @@ cdbg_get_correlations <- function (XX = NULL,
     
 }
 
+################################################################################################
+## Changelog:
+##
+## - Use pca instead of svd.XX (original function used both but they
+##  contain the same information, taking up space and requiring
+##  unnecessary computation).
+## - Call cdbg_ridge_regression instead of bugwas:::ridge_regression.
+## - Call cdbg_get_wald_input instead of bugwas:::get_wald_input.
+##
+## Do Wald test
+################################################################################################
 
-## FOR LATER USE
-## ################################################################################################
-## ## Do PCA
-## ##
-## ## Changelog:
-## ## Adding a rank argument to limit the number of PCs (saving memory on large datasets)
-## ################################################################################################
+cdbg_wald_test <- function(y = NULL,
+                           XX = NULL,
+                           lambda = NULL,
+                           XX.all = NULL,
+                           prefix = NULL,
+                           npcs = NULL,
+                           pca = NULL){
+    
 
+    fit.lmm <- cdbg_ridge_regression(y, XX, pca=pca,
+                                     lambda_init=as.numeric(lambda)/sum(XX.all$bippat),
+                                     maximize=FALSE, skip.var=TRUE)
+    
+    ## Fit the grand null model
+    
+    fit.0 <- lm(y~1)
+    
+    ## LRT for the LMM null vs grand null
+    LRTnullVgrand <- -log10(pchisq(2*(fit.lmm$ML - as.numeric(logLik(fit.0))), 1, low=F)/2)
+    cat(paste0("## LRT for the LMM null vs grand null = ", LRTnullVgrand),
+    	file = paste0(prefix, "_logfile.txt"), sep="\n", append = TRUE)
+    
+    ## Heritability
+    fit.lmm.ypred <- XX %*% fit.lmm$Ebeta
+    cat(paste0("## Heritability (R^2) = ", cor(fit.lmm.ypred,y)^2),
+    	file=paste0(prefix, "_logfile.txt"), sep="\n", append=TRUE)
+    
+    ## Get full posterior covariance matrix for Bayesian Wald Test
+    ## Need the full posterior covariance matrix for the Bayesian Wald test,
+    ## to get the posterior uncertainty for each point estimate
+    
+    wald_input <- cdbg_get_wald_input(fit.lmm = fit.lmm, pca = pca,
+                                 y = y)
+    
+    ## Bayesian Wald Test
+    pca.bwt <- wald_input$Ebeta^2/diag(wald_input$Vbeta)
+    
+    p.pca.bwt <- -log10(exp(1))*pchisq(pca.bwt, 1, low=F, log=T)
+    cat(paste0("## Bayesian Wald Test for PCs range = ", paste(range(p.pca.bwt), collapse=" ")),
+    	file=paste0(prefix, "_logfile.txt"), sep="\n", append=TRUE)
+    write.table(p.pca.bwt, file = paste0(prefix, "_Bayesian_Wald_Test_negLog10.txt"),
+    	        sep="\t", row=T, col = F, quote=F)
+    
+    ## Get order of PCs by Wald test results
+    signif_cutoff <- -log10(0.05/npcs)
+    pc_order <- bugwas:::get_pc_order(p.pca.bwt = p.pca.bwt, signif_cutoff = signif_cutoff)
+    ## Predict phenotype using effect sizes
+    ## effect <- t(t(XX) * as.vector(fit.lmm$Ebeta))
+    ## pred <- rowSums(effect)
+    
+    pred <- wald_input$XE
+    
+    return(list("pc_order" = pc_order, "p.pca.bwt" = p.pca.bwt, "pred" = pred,
+                "signif_cutoff" = signif_cutoff))
+    
+}
 
-## cdbg_do_pca <- function(pcs = NULL, XX = NULL, XX.ID = NULL, rank=NULL){
-## 	if(is.null(pcs)){
-## 		pca <- prcomp(XX, rank=rank)
-## 	} else {
-## 		## Read in PCs
-## 		pca <- read.table(pcs, header = T, as.is = T)
-## 		if(any(XX.ID != rownames(pca))){
-## 			m <- match(XX.ID, rownames(pca))
-## 			pca <- pca[m, ]
-## 		}
-## 		pca <- list("x" = pca, "rotation" = NULL)
-## 	}
-## 	return(list("pca" = pca))
-## }
+################################################################################################
+##
+## Changelog:
+## - Use pca instead of pca and svd (redundant since scaled XX was column centered).
+## - Use algebraic simplifications (caution: assuming npcs = ncol(pca$rotation))
+##
+## Get Bayesian Wald Test inputs.
+## @fit.lmm: ridge regression results
+## @pca: principal component analysis
+##
+## Outputs:
+## pca.Ebeta
+## pca.Vbeta
+################################################################################################
+
+cdbg_get_wald_input <- function(fit.lmm = NULL,
+                                pca = NULL,
+                                y = NULL){
+	
+    ## Get full posterior covariance matrix for Bayesian Wald Test
+    ## Need the full posterior covariance matrix for the Bayesian Wald test,
+    ## to get the posterior uncertainty for each point estimate
+    lambda = fit.lmm$lambda_MLE
+    ## Cstar = diag(lambda * pca$d^2 / (lambda * pca$d^2 + 1))
+    ## For the null model, the posterior mean and variance (may be slow!)
+    ## astar = t(y) %*% y - t(y) %*% XX %*% fit.lmm$Ebeta
+    pca.Ebeta <- diag(1/(1/(fit.lmm$prefered.lambda) + pca$d^2)) %*% t(pca$x) %*% y
+    XE <- pca$x %*% pca.Ebeta
+    astar <- crossprod(y) - t(y) %*% XE
+    ## csqxty <-  diag(1/sqrt(1/(fit.lmm$prefered.lambda) + pca$d^2)) %*% t(pca$x) %*% y
+    ## astar = crossprod(y) - crossprod(csqxty)
+    dstar = length(y)
+    tau = as.numeric((dstar-2)/astar)
+    
+    ## rotation = t(pca$rotation[,1:npcs])
+    ## Based on the PCA rotations of raw genetic diversity
+    ## pca.Ebeta = rotation %*% fit.lmm$Ebeta
+    ## pca.Ebeta <- diag(1/sqrt(1/(fit.lmm$prefered.lambda) + pca$d^2)) %*% csqxty
+    
+    ## rtr = tcrossprod(rotation, rotation); # Should be n (sample size) by n
+    ## rv = rotation %*% svd.XX$v; # Should be n by n
+    ## rv = crossprod(pca$rotation); # Should be n by n
+    ## rtr <- rv <- diag(nrow(rotation)) # Since rotation is an orthogonal matrix
+    ## pca.Vbeta = rv %*% Cstar; # Should be n by n
+    ## pca.Vbeta = tcrossprod(pca.Vbeta,rv); # Should be n by n
+    ## pca.Vbeta = lambda/tau * (rtr - pca.Vbeta); # Should be n by n
+    pca.Vbeta <- lambda/tau * diag(1 - (lambda * pca$d^2 / (lambda * pca$d^2 + 1)))
+    
+    return(list("Ebeta" = pca.Ebeta, "Vbeta" = pca.Vbeta, "XE"=XE))    
+}
