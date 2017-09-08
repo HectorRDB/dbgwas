@@ -3,9 +3,16 @@
 
 
 High priority TODO:
+  -Annotation and sequence columns should be smaller, but scrollable
+
+  -Fix qvalue default min and max to min and max of the components
+
   -Make the annotation process optional and also check if blastn is on the path
     -Or we can also pack blastn and makeblastdb in the app
         -This can be good since then we enforce the blast and makeblast versions... And that is additional 50 MBs
+            -Integrate it!
+    -In the index page, show only the annotation on the significant nodes ordered by blast score;
+
   -Allow users to input their own annotation database (Christine's example)
     -The problem is the standardization on FASTA headers... I guess if we do this, we should not force the users to standardize it
         -We can define two TAGs on the fasta header:
@@ -14,21 +21,35 @@ High priority TODO:
         which is what is going to be shown on the index and graph pages. If these tags are not found in the header, then we just set both values to the full header.
         This way people can provide their own database, and they customize it or not...
     -Maybe with this we won't need to blast to online database - the annotation is as good as the database provided by the user...
-  -Show other info output by blast on the index page/graph page?
-    -Order the genes by these info?
+    -Add blast nucleotide to protein
+
   -Fix the error we get when the filter has no rules in the index page
+
   -Write the nb of significant patterns and significant unitigs in the index page
+    -Job title
+    -Nb of strains
     -Maybe just show all the arguments of the execution
-  -Show the original genomes as paths in the graph?
+
   -newick file should be optional (R script and software)
   -remove the patterns with maf < maf.filter in C++
+    -ok for now (done in R)
   -treat NA better
+    -We just removed from the input for now
   -svd and pca steps are probably redundant in cdbg_lin_loc as XX is centered. Check that they produce the same set of eigenvectors and remove the pca steps (call to prcomp uses more memory than svd).
+    -check with laurent
   -fix output folder from being fixed to being a parameter
       -Need a fix on Gemma/Bugwas output folder first
 
 
+
 Low priority TODO:
+  -Multiple alignment on the node sequences that are selected?
+    http://msa.biojs.net/
+  -Transparency switch
+  -Assemble the heaviest path of the DBG and blast it (or the path going through the largest number of significant unitigs)
+  -Save the blast results on some file?
+  -Adding metadata to features (like what each genome mean, species, etc)
+    -Show the original genomes as paths in the graph?
   - When the strains input file is missing, we return an error:
       [FATAL ERROR] Error opening file
       Could it be a little more detailed? Eg, which file (there are two inputs), and whether the format is wrong or the file was not found.
