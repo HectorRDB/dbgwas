@@ -89,6 +89,9 @@ INSTALL (FILES   ${CMAKE_CURRENT_SOURCE_DIR}/README.md                     DESTI
 INSTALL (FILES   ${PROJECT_SOURCE_DIR}/csjs/cytoscape_template.html  DESTINATION ./bin/)
 INSTALL (PROGRAMS   ${PROJECT_SOURCE_DIR}/gemma/gemma.0.93b  DESTINATION ./bin/)
 INSTALL (PROGRAMS   ${PROJECT_SOURCE_DIR}/phantomjs/phantomjs  DESTINATION ./bin/)
+INSTALL (PROGRAMS   ${PROJECT_SOURCE_DIR}/blast/blastn  DESTINATION ./bin/)
+INSTALL (PROGRAMS   ${PROJECT_SOURCE_DIR}/blast/blastx  DESTINATION ./bin/)
+INSTALL (PROGRAMS   ${PROJECT_SOURCE_DIR}/blast/makeblastdb  DESTINATION ./bin/)
 INSTALL (FILES   ${PROJECT_SOURCE_DIR}/phantomjs/render_graph.js  DESTINATION ./bin/)
 INSTALL (FILES   ${PROJECT_SOURCE_DIR}/bugwas_scripts/build_bmx_data.R  DESTINATION ./bin/)
 INSTALL (FILES   ${PROJECT_SOURCE_DIR}/bugwas_scripts/cdbg_all_plots.R  DESTINATION ./bin/)
@@ -100,6 +103,5 @@ INSTALL (FILES   ${PROJECT_SOURCE_DIR}/html_templates/index_table_template.html 
 INSTALL (DIRECTORY   ${PROJECT_SOURCE_DIR}/sample_example  DESTINATION .)
 INSTALL (DIRECTORY   ${PROJECT_SOURCE_DIR}/csjs/lib  DESTINATION ./bin/)
 INSTALL (DIRECTORY   ${PROJECT_SOURCE_DIR}/sharedobjects  DESTINATION ./bin/)
-INSTALL (DIRECTORY   ${PROJECT_SOURCE_DIR}/blastdb  DESTINATION ./bin/)
 
 include (CPack)

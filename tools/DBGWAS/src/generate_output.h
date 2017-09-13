@@ -47,6 +47,8 @@
 #include "global.h"
 #include "PhenoCounter.h"
 
+#define UNIQUE_SYMBOL_MARKER "#@#-322"
+
 using namespace std;
 
 class UnitigStats {

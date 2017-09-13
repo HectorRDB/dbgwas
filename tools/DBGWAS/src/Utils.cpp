@@ -306,6 +306,23 @@ void checkParametersGenerateOutput(Tool *tool) {
     }
     SFF = n;
   }
+
+  //check the nucleotide DB
+  if (tool->getInput()->get(STR_NUCLEOTIDE_DB)) {
+    //there is a nucleotide DB - try to create it
+    string commandLine = string("makeblastdb -dbtype nucl -in ") + tool->getInput()->getStr(STR_NUCLEOTIDE_DB);
+    executeCommand(commandLine);
+    thereIsNucleotideDB=true;
+    nucleotideDBPath = tool->getInput()->getStr(STR_NUCLEOTIDE_DB);
+  }
+  //check the protein DB
+  if (tool->getInput()->get(STR_PROTEIN_DB)) {
+    //there is a protein DB - try to create it
+    string commandLine = string("makeblastdb -dbtype prot -in ") + tool->getInput()->getStr(STR_PROTEIN_DB);
+    executeCommand(commandLine);
+    thereIsProteinDB=true;
+    proteinDBPath = tool->getInput()->getStr(STR_PROTEIN_DB);
+  }
 }
 
 
@@ -319,7 +336,7 @@ void fatalError (const string &message) {
 void executeCommand(const string &command, bool verbose) {
   // run a process and create a streambuf that reads its stdout and stderr
   if (verbose)
-    cout << "Executing " << command << "..." << endl;
+    cerr << "Executing " << command << "..." << endl;
 
   //create the process
   redi::ipstream proc(command, redi::pstreams::pstdout | redi::pstreams::pstderr);
@@ -345,7 +362,7 @@ void executeCommand(const string &command, bool verbose) {
       fatalError(ss.str());
     }
     if (verbose)
-      cout << "Executing " << command << " - Done!" << endl;
+      cerr << "Executing " << command << " - Done!" << endl;
   }
   else
     fatalError("On executeCommand()");

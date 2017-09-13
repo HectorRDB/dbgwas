@@ -220,7 +220,7 @@ function fillTable() {
                     node.data('pheno1'),
                     //TODO: NA temporarily removed
                     //node.data('NA'),
-                    node.data('genes').toString(),
+                    node.data('tags').toString(),
                     node.data('significant'),
                     node.data('qValue'),
                     node.data('weight'),
@@ -281,7 +281,7 @@ function makeFile (text, file, fileType) {
 
 //***************************************************************
 //MAIN FUNCTIONS
-function buildPage(graphElements, genes2nodes)
+function buildPage(graphElements, DBGWAS_graph_tag2nodes)
 {
     //this is basically main()
     $(function(){ // on dom ready
@@ -413,23 +413,23 @@ function buildPage(graphElements, genes2nodes)
         });
 
 
-        //populate the dropdown list for the genes
-        Object.keys(genes2nodes).forEach(function(key) {
-            $('#geneSelect').append($('<option>', {
+        //populate the dropdown list for the tags
+        Object.keys(DBGWAS_graph_tag2nodes).forEach(function(key) {
+            $('#DBGWAS_graph_tag_Select').append($('<option>', {
                 value: key,
                 text: key,
 
             }));
         })
 
-        //highlight the gene nodes
-        $('#geneSelect').change(function(){
-            var gene = $(this).val();
+        //highlight the tag nodes
+        $('#DBGWAS_graph_tag_Select').change(function(){
+            var tag = $(this).val();
             var nodesToHighlight=[];
 
-            if (gene!="clear") {
+            if (tag!="clear") {
                 cy.nodes().forEach(function (node) {
-                    if (genes2nodes[gene].includes(node.id()))
+                    if (DBGWAS_graph_tag2nodes[tag].includes(node.id()))
                         nodesToHighlight.push(node)
                 })
             }

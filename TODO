@@ -1,27 +1,38 @@
-﻿To check:
-    -Fixed a small bug on the annotation filtering in the index page (genes between parenthesis)
-
-
-High priority TODO:
-  -Annotation and sequence columns should be smaller, but scrollable
-
-  -Fix qvalue default min and max to min and max of the components
-
-  -Make the annotation process optional and also check if blastn is on the path
-    -Or we can also pack blastn and makeblastdb in the app
-        -This can be good since then we enforce the blast and makeblast versions... And that is additional 50 MBs
-            -Integrate it!
-    -In the index page, show only the annotation on the significant nodes ordered by blast score;
-
+﻿Done:
+  -Integrate blast executables in the app
+    TODO: test blastx
   -Allow users to input their own annotation database (Christine's example)
     -The problem is the standardization on FASTA headers... I guess if we do this, we should not force the users to standardize it
         -We can define two TAGs on the fasta header:
-            -DBGWAS_index_tag=<value>
-            -DBGWAS_graph_tag=<value>
+            -DBGWAS_index_tag=<value>;
+            -DBGWAS_graph_tag=<value>;
         which is what is going to be shown on the index and graph pages. If these tags are not found in the header, then we just set both values to the full header.
         This way people can provide their own database, and they customize it or not...
-    -Maybe with this we won't need to blast to online database - the annotation is as good as the database provided by the user...
-    -Add blast nucleotide to protein
+    -TODO: test
+  -Make the annotation process optional
+    -TODO: test
+  -Show the annotation only for the significant nodes in the index page
+    -TODO: test
+  -Fix the annotation filtering problems (i.e. one annotation substring of the other)
+    -TODO: test
+  -Blast output is now saved in tmp folder for each component (nice for debugging)
+    -TODO: test
+
+
+
+
+
+High priority TODO:
+  -In the index page, order the annotation of the significant nodes by blast score and show the blast score;
+
+  -Allow the user to provide an already built database, instead of calling makeblastdb always
+
+  -Replace spaces in FASTA headers because BLAST just considers the headers up to the first space
+    -Make a copy of the file, and replace this in the copy, in order to do not modify the users' annotation
+
+  -Annotation and sequence columns should be smaller, but scrollable
+
+  -Fix qvalue default min and max to min and max of the components
 
   -Fix the error we get when the filter has no rules in the index page
 
