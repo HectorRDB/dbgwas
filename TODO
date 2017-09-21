@@ -3,6 +3,8 @@
 
 
 High priority TODO:
+  - Add LBBE and biomerieux names (or logos) to the webpages (result pages + mention on gitlab ?) 
+
   -Annotation and sequence columns should be smaller, but scrollable
 
   -Fix qvalue default min and max to min and max of the components
