@@ -25,6 +25,8 @@
 High priority TODO:
   -Center the screen on the highlighted nodes of a gene
 
+  -Arrumar icones do filter
+
   -In the index page, order the annotation of the significant nodes by blast score and show the blast score;
 
   -Allow the user to provide an already built database, instead of calling makeblastdb always

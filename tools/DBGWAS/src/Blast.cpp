@@ -24,12 +24,21 @@ BlastRecord BlastRecord::parseString (const string &str) {
   } catch (const ValueNotFound &e) {
     record.DBGWAS_index_tag = header;
   }
+  if (record.DBGWAS_index_tag.size()==0) {
+    cerr << "[WARNING] DBGWAS_index_tag of " << header << " is empty! Setting to <EMPTY>";
+    record.DBGWAS_index_tag = "<EMPTY>";
+  }
+
 
   //parse DBGWAS_graph_tag
   try {
     record.DBGWAS_graph_tag = extractValue(header, "DBGWAS_graph_tag");
   } catch (const ValueNotFound &e) {
     record.DBGWAS_graph_tag = header;
+  }
+  if (record.DBGWAS_graph_tag.size()==0) {
+    cerr << "[WARNING] DBGWAS_graph_tag of " << header << " is empty! Setting to <EMPTY>";
+    record.DBGWAS_graph_tag = "<EMPTY>";
   }
 
   return record;
@@ -40,10 +49,11 @@ string BlastRecord::extractValue (const string &header, const string &tag) {
   if (header.find(tag) != string::npos) {
     //found the tag, extract the value
     auto posDBGWASIndexTag = header.find(tag);
-    auto posSemicolon = header.find(";", posDBGWASIndexTag+1);
+    auto posSemicolon = header.find_first_of("; \t\n\r", posDBGWASIndexTag+1);
     if (posSemicolon==string::npos) posSemicolon = header.length();
     auto posStartValue = posDBGWASIndexTag+string(tag).length()+1;
     string value = header.substr(posStartValue, posSemicolon-posStartValue);
+    boost::trim(value);
     return value;
   }
 
@@ -66,9 +76,7 @@ vector<BlastRecord> Blast::blast (const string &command, const string &queryPath
   {
     auto recordsAsStringVector = getVectorStringFromFile(outFilePath);
     for (const auto& recordString : recordsAsStringVector) {
-      if (recordString.length()>0) {
-        records.push_back(BlastRecord::parseString(recordString));
-      }
+      records.push_back(BlastRecord::parseString(recordString));
     }
   }
 
