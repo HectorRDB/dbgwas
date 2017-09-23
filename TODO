@@ -23,6 +23,8 @@
 
 
 High priority TODO:
+  -Center the screen on the highlighted nodes of a gene
+
   -In the index page, order the annotation of the significant nodes by blast score and show the blast score;
 
   -Allow the user to provide an already built database, instead of calling makeblastdb always
@@ -56,6 +58,8 @@ High priority TODO:
 Low priority TODO:
   -Multiple alignment on the node sequences that are selected?
     http://msa.biojs.net/
+    -There are several JS plugins to show the multiple alignment, but none to do it
+        -If we want, we will either need to implement ourselves or run a local web server that does this calling a program to do it
   -Transparency switch
   -Assemble the heaviest path of the DBG and blast it (or the path going through the largest number of significant unitigs)
   -Save the blast results on some file?
