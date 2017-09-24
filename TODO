@@ -10,8 +10,12 @@
     -TODO: test
   -Fix the annotation filtering problems in the index page (i.e. one annotation substring of the other)
     -TODO: test
+  -Added expand/collapse buttons for the parameters and filters on the index page
+    -TODO: test
 
 -Graph page:
+    -Center the screen on the highlighted nodes of a gene
+    -Annotation and sequence columns should be smaller, but scrollable
 
 -Core:
   -Integrate blast executables in the app
@@ -35,7 +39,7 @@
 
 
 High priority TODO:
-  -Center the screen on the highlighted nodes of a gene
+  -Is there any graph produced by the statistical part that would be relevant to show also in the visualisation?
 
   -In the index page, order the annotation of the significant nodes by blast score and show the blast score;
 
@@ -43,8 +47,6 @@ High priority TODO:
 
   -Replace spaces in FASTA headers because BLAST just considers the headers up to the first space
     -Make a copy of the file, and replace this in the copy, in order to do not modify the users' annotation
-
-  -Annotation and sequence columns should be smaller, but scrollable
 
   -Fix qvalue default min and max to min and max of the components
 

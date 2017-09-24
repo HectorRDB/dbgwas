@@ -32,7 +32,7 @@
     <meta charset=utf-8 />
     <link rel="stylesheet" href="components/lib/css/bootstrap.min.css">
     <link rel="stylesheet" href="components/lib/css/query-builder.default.min.css">
-    <link rel="stylesheet" href="components/lib/css/styles.css">
+    <link rel="stylesheet" href="components/lib/css/style.css">
     <style>
         img {
             max-width: 200px;
@@ -99,10 +99,10 @@
 
         $(function(){
             $('#arguments').on('hide.bs.collapse', function () {
-                $('#argumentsButton').html('<span class="glyphicon glyphicon-collapse-down"></span> Show command line used to produce these results');
+                $('#argumentsButton').html('<span class="glyphicon glyphicon-collapse-down"></span> Show arguments used to produce these results');
             })
             $('#arguments').on('show.bs.collapse', function () {
-                $('#argumentsButton').html('<span class="glyphicon glyphicon-collapse-up"></span> Hide command line used to produce these results');
+                $('#argumentsButton').html('<span class="glyphicon glyphicon-collapse-up"></span> Hide arguments used to produce these results');
             })
         })
 
@@ -121,10 +121,10 @@
 <h1>Your DBGWAS results</h1>
 
 <button id="argumentsButton" type="button" class="btn btn-primary" data-toggle="collapse" data-target="#arguments">
-    <span class="glyphicon glyphicon-collapse-down"></span> Show command line used to produce these results
+    <span class="glyphicon glyphicon-collapse-down"></span> Show arguments used to produce these results
 </button>
 <div id="arguments" class="collapse">
-<textarea class="code" readonly>
+<textarea class="code" rows="10" style="margin:0 auto; width:90%;" readonly>
 <command_line>
 </textarea>
 </div>
