@@ -88,7 +88,7 @@ void generate_output::createIndexFile(int numberOfComponents, const string &outp
 
       if (idComponent2DBGWAS_index_tag_signNodesOnly[i].size()==0) {
         ssPreview << "<b>No annotations found.</b>";
-        ss << "No annotations found";
+        ss << UNIQUE_SYMBOL_MARKER << "No annotations found" << UNIQUE_SYMBOL_MARKER << " ";
       }else {
         ssPreview << "<select size=\"3\">";
         for (string tag : idComponent2DBGWAS_index_tag_signNodesOnly[i]) {
