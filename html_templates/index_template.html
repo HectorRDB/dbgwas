@@ -83,7 +83,14 @@
         function showObjects() {
             var objectDiv = $('#showItemsDiv');
             objectDiv.html('Working...');
-            var sql = 'SELECT preview FROM ? WHERE ' + $('#builder').queryBuilder('getSQL', false).sql + ' ORDER BY ' + $('#sortTerm').val() + ' ' + $('#asc_desc').val();
+
+            var sql=""
+            if ($('#builder').queryBuilder('getSQL', false).sql.length == 0) {
+                sql = 'SELECT preview FROM ? ORDER BY ' + $('#sortTerm').val() + ' ' + $('#asc_desc').val();
+            }else {
+                sql = 'SELECT preview FROM ? WHERE ' + $('#builder').queryBuilder('getSQL', false).sql + ' ORDER BY ' + $('#sortTerm').val() + ' ' + $('#asc_desc').val();
+            }
+
             var objects = alasql(sql, [data]);
             objectDiv.html(buildObjectsHTML(objects));
         }
@@ -93,8 +100,13 @@
 <body>
 <h1>Your DBGWAS results</h1>
 
+<h3>Command line used to produce these results:</h3>
+<textarea class="code" readonly>
+<command_line>
+</textarea>
 
-<div style="margin:0 auto; width:60%;">
+
+<div style="margin:0 auto; width:90%;">
     <h3> Filters: </h3>
     <div id="builder"></div>
 

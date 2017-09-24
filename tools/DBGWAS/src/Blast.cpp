@@ -25,8 +25,8 @@ BlastRecord BlastRecord::parseString (const string &str) {
     record.DBGWAS_index_tag = header;
   }
   if (record.DBGWAS_index_tag.size()==0) {
-    cerr << "[WARNING] DBGWAS_index_tag of " << header << " is empty! Setting to <EMPTY>" << endl;
-    record.DBGWAS_index_tag = "<EMPTY>";
+    cerr << "[WARNING] DBGWAS_index_tag of " << header << " is empty! Setting to EMPTY" << endl;
+    record.DBGWAS_index_tag = "EMPTY";
   }
 
 
@@ -37,8 +37,8 @@ BlastRecord BlastRecord::parseString (const string &str) {
     record.DBGWAS_graph_tag = header;
   }
   if (record.DBGWAS_graph_tag.size()==0) {
-    cerr << "[WARNING] DBGWAS_graph_tag of " << header << " is empty! Setting to <EMPTY>" << endl;
-    record.DBGWAS_graph_tag = "<EMPTY>";
+    cerr << "[WARNING] DBGWAS_graph_tag of " << header << " is empty! Setting to EMPTY" << endl;
+    record.DBGWAS_graph_tag = "EMPTY";
   }
 
   return record;

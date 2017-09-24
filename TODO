@@ -1,4 +1,19 @@
-﻿Done:
+﻿Doing:
+-Index page:
+  -Show the annotation only for the significant nodes in the index page
+    -TODO: test
+  -Fixed a bug when no condition is set on the filter in the index page
+    -TODO: test
+  -The arguments used to create the visualisation are now in the index page
+    -TODO: test
+  -Fixed some icons on the index page related to the filter
+    -TODO: test
+  -Fix the annotation filtering problems in the index page (i.e. one annotation substring of the other)
+    -TODO: test
+
+-Graph page:
+
+-Core:
   -Integrate blast executables in the app
     TODO: test blastx
   -Allow users to input their own annotation database (Christine's example)
@@ -8,12 +23,10 @@
             -DBGWAS_graph_tag=<value>;
         which is what is going to be shown on the index and graph pages. If these tags are not found in the header, then we just set both values to the full header.
         This way people can provide their own database, and they customize it or not...
+    -If the tags are not available, the full header is taken as the tags;
+    -If the tags are available, but empty, a value of EMPTY is set;
     -TODO: test
   -Make the annotation process optional
-    -TODO: test
-  -Show the annotation only for the significant nodes in the index page
-    -TODO: test
-  -Fix the annotation filtering problems (i.e. one annotation substring of the other)
     -TODO: test
   -Blast output is now saved in tmp folder for each component (nice for debugging)
     -TODO: test
@@ -21,11 +34,8 @@
 
 
 
-
 High priority TODO:
   -Center the screen on the highlighted nodes of a gene
-
-  -Arrumar icones do filter
 
   -In the index page, order the annotation of the significant nodes by blast score and show the blast score;
 
@@ -38,12 +48,9 @@ High priority TODO:
 
   -Fix qvalue default min and max to min and max of the components
 
-  -Fix the error we get when the filter has no rules in the index page
 
-  -Write the nb of significant patterns and significant unitigs in the index page
-    -Job title
-    -Nb of strains
-    -Maybe just show all the arguments of the execution
+
+
 
   -newick file should be optional (R script and software)
   -remove the patterns with maf < maf.filter in C++

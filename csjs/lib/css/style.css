@@ -117,3 +117,12 @@ a:hover {
     border-color: maroon !important;
     border-radius: 5px !important;
 }
+
+.font_size_images {
+  height: 1em;
+  width: 1em;
+}
+
+.code {
+  font-family: "Courier New", Courier, monospace
+}

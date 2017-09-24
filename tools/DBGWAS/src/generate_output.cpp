@@ -55,7 +55,7 @@ generate_output::generate_output ()  : Tool ("generate_output") //give a name to
   populateParser(this);
 }
 
-void createIndexFile(int numberOfComponents, const string &outputFolder, const vector<vector<int> > &nodesInComponent, graph_t& newGraph,
+void generate_output::createIndexFile(int numberOfComponents, const string &outputFolder, const vector<vector<int> > &nodesInComponent, graph_t& newGraph,
                      map<int, set<string> > &idComponent2DBGWAS_index_tag_signNodesOnly, const vector<const PatternFromStats*> &unitigToPatternStats) {
   cerr << "[Creating index file...]" << endl;
   //create the thumbnails
@@ -142,6 +142,16 @@ void createIndexFile(int numberOfComponents, const string &outputFolder, const v
   string templatePath = pathToExecParent + string("/index_template.html");
   string indexOutput = readFileAsString(templatePath.c_str());
 
+
+  //put the command-line in the index page
+  string commandLineAsStr;
+  {
+    stringstream ss;
+    ss << getInput();
+    commandLineAsStr = ss.str();
+  }
+  boost::replace_all(indexOutput, "<command_line>", commandLineAsStr);
+
   //put the info in the template file
   boost::replace_all(indexOutput, "<previews>", ssPreview.str());
 
@@ -170,7 +180,7 @@ void createIndexFile(int numberOfComponents, const string &outputFolder, const v
 }
 
 
-void generateCytoscapeOutput(const graph_t &graph, const vector<int> &nodes, const string &typeOfGraph, int i,
+void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector<int> &nodes, const string &typeOfGraph, int i,
                              const string &outputFolder, const vector<int> &selectedUnitigs, int nbPheno0, int nbPheno1,
                               map<int, set<string> > &idComponent2DBGWAS_index_tag_signNodesOnly) {
   cerr << "Rendering " << typeOfGraph << "_" << i << "..." << endl;
