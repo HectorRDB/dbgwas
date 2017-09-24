@@ -147,7 +147,29 @@ void generate_output::createIndexFile(int numberOfComponents, const string &outp
   string commandLineAsStr;
   {
     stringstream ss;
-    ss << getInput();
+
+    class PrintCommandLine : public IPropertiesVisitor {
+    private:
+        stringstream &ss;
+    public:
+        PrintCommandLine(stringstream &ss):ss(ss) {}
+
+        /** Called before the true visit of the IProperty instance. */
+        virtual void visitBegin    () {}
+
+        /** Visit of the IProperty instance.
+         * \param[in] prop : the instance to be visited.
+         */
+        virtual void visitProperty (IProperty* prop)  {
+          ss << prop->key << " = " << prop->value << endl;
+        }
+
+        /** Called after the true visit of the IProperty instance. */
+        virtual void visitEnd      () {}
+    };
+    PrintCommandLine printCommandLine(ss);
+    getInput()->accept(&printCommandLine);
+
     commandLineAsStr = ss.str();
   }
   boost::replace_all(indexOutput, "<command_line>", commandLineAsStr);
