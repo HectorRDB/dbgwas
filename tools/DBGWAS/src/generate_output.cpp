@@ -161,7 +161,10 @@ void generate_output::createIndexFile(int numberOfComponents, const string &outp
          * \param[in] prop : the instance to be visited.
          */
         virtual void visitProperty (IProperty* prop)  {
-          ss << prop->key << " = " << prop->value << endl;
+          ss << prop->key;
+          if (prop->value.size())
+            ss << " = " << prop->value;
+          ss << endl;
         }
 
         /** Called after the true visit of the IProperty instance. */
