@@ -28,6 +28,7 @@
 
 #include "Utils.h"
 #include "global.h"
+#include "Blast.h"
 
 using namespace std;
 
@@ -309,19 +310,16 @@ void checkParametersGenerateOutput(Tool *tool) {
 
   //check the nucleotide DB
   if (tool->getInput()->get(STR_NUCLEOTIDE_DB)) {
-    //there is a nucleotide DB - try to create it
-    string commandLine = string("makeblastdb -dbtype nucl -in ") + tool->getInput()->getStr(STR_NUCLEOTIDE_DB);
-    executeCommand(commandLine);
+    //build the nucleotide DB
+    nucleotideDBPath = Blast::makeblastdb("nucl", tool->getInput()->getStr(STR_NUCLEOTIDE_DB));
     thereIsNucleotideDB=true;
-    nucleotideDBPath = tool->getInput()->getStr(STR_NUCLEOTIDE_DB);
   }
+
   //check the protein DB
   if (tool->getInput()->get(STR_PROTEIN_DB)) {
-    //there is a protein DB - try to create it
-    string commandLine = string("makeblastdb -dbtype prot -in ") + tool->getInput()->getStr(STR_PROTEIN_DB);
-    executeCommand(commandLine);
+    //build the protein DB
+    proteinDBPath = Blast::makeblastdb("prot", tool->getInput()->getStr(STR_PROTEIN_DB));
     thereIsProteinDB=true;
-    proteinDBPath = tool->getInput()->getStr(STR_PROTEIN_DB);
   }
 }
 

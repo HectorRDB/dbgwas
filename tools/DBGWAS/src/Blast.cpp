@@ -82,3 +82,20 @@ vector<BlastRecord> Blast::blast (const string &command, const string &queryPath
 
   return records;
 }
+
+
+string Blast::makeblastdb (const string &dbtype, const string &originalDBPath) {
+  string fixedDBPath = originalDBPath + ".DBGWAS.fasta";
+
+  //replace spaces for underscores in the FASTA file, as this could create some problems...
+  string commandLineFixSpaces = string("tr ' ' '_' <") + originalDBPath + " >" + fixedDBPath;
+  executeCommand(commandLineFixSpaces);
+
+  //create the DB using the fixed FASTA
+  string commandLineMakeblastdb = string("makeblastdb -dbtype ") + dbtype +  " -in " + fixedDBPath;
+  executeCommand(commandLineMakeblastdb);
+
+  //return the fixed db path
+  return fixedDBPath;
+
+}

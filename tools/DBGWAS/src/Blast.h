@@ -39,6 +39,10 @@ class Blast {
 public:
     //Blast (using command) the file in queryPath agains the db on dbPath and return the results as a vector<BlastRecord>
     static vector<BlastRecord> blast (const string &command, const string &queryPath, const string &dbPath);
+
+    //make the blast DB
+    //returns the path to the blast DB
+    static string makeblastdb (const string &dbtype, const string &originalDBPath);
 };
 
 
