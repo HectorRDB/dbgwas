@@ -1,44 +1,4 @@
-﻿Done:
--Index page:
-  -Show the annotation only for the significant nodes in the index page
-  -Fixed a bug when no condition is set on the filter in the index page
-  -The arguments used to create the visualisation are now in the index page
-  -Fixed some icons on the index page related to the filter
-  -Fix the annotation filtering problems in the index page (i.e. one annotation substring of the other)
-  -Added expand/collapse buttons for the parameters and filters on the index page
-
-
--Graph page:
-    -Center the screen on the highlighted nodes of a gene
-    -Annotation and sequence columns now has a limit on the number of characters that can be displayed with a modal to show the rest of the sequence
-
--Core:
-  -Allow users to input their own annotation database (Christine's example)
-    -The problem is the standardization on FASTA headers... I guess if we do this, we should not force the users to standardize it
-        -We can define two TAGs on the fasta header:
-            -DBGWAS_index_tag=<value>;
-            -DBGWAS_graph_tag=<value>;
-        which is what is going to be shown on the index and graph pages. If these tags are not found in the header, then we just set both values to the full header.
-        This way people can provide their own database, and they customize it or not...
-    -If the tags are not available, the full header is taken as the tags;
-    -If the tags are available, but empty, a value of EMPTY is set;
-  -Blast output is now saved in tmp folder for each component (nice for debugging)
-  -Make the annotation process optional
-
-  -Integrate blast executables in the app
-    TODO: test blastx
-    -Magali uniprot db will allow us to test blastx and the spaces
-    -Replace spaces in FASTA headers because BLAST just considers the headers up to the first space
-      -Make a copy of the file, and replace this in the copy, in order to do not modify the users' annotation
-
-
-
-
-
-
-
-
-High priority TODO:
+﻿High priority TODO:
   -We can get overloaded with annotation (e.g. when we add uniprot db), so I guess it would be better to have and ordering of the annotation, ordered by the number of nodes in the annotation
   -Make the step 3 multi-threaded
     -When the databases are large (e.g. uniprot), it takes a lot of time to blast it... Making it multi-threaded will make things a lot faster...
@@ -51,8 +11,6 @@ High priority TODO:
       Could it be a little more detailed? Eg, which file (there are two inputs), and whether the format is wrong or the file was not found.
   -Fix the error message when the parameters are not correct
     -We show the error 3 times, instead of 1
-
-
 
   -newick file should be optional (R script and software)
   -remove the patterns with maf < maf.filter in C++
@@ -82,6 +40,42 @@ Low priority TODO:
     -This would be a field in the input file with a collumn with whatever the user would like to put
     -Show the original genomes as paths in the graph?
   - possibility to work on unitig counts rather than presence/absence
+
+
+
+
+
+
+
+Done v 0.3.0:
+Changelog
+-Core:
+  -Protein and nucleotide annotations are now supported;
+  -Users are now allowed to input their own annotation database
+    -They can further define two TAGs in their fasta headers:
+            -DBGWAS_index_tag=<value>;
+            -DBGWAS_graph_tag=<value>;
+        Which is what is going to be shown on the index and graph pages. If these tags are not found in the header, then the full header is considered
+        If the tags are available, but empty, a value of EMPTY is set;
+  -Blast output is now saved in tmp folder for each component;
+  -The annotation process is optional;
+  -Spaces in FASTA headers of the annotations DB are replaced for underscore because BLAST just considers the headers up to the first space
+    -A copy of the DB is made, and the spaces are replaced in this copy, in order to do not modify the users' annotations
+  -Blast executables are now integrated in the tool
+
+
+-Index page:
+  -Annotations only for the significant nodes are shown in the index page
+  -Fixed a bug when no condition is set on the filter in the index page
+  -The arguments used to create the visualisation are now in the index page
+  -Fixed some icons on the index page related to the filter
+  -Fix the annotation filtering problems in the index page (i.e. one annotation substring of the other)
+  -Added expand/collapse buttons for the parameters and filters on the index page
+
+
+-Graph page:
+    -When a gene/tag is selected in the graph page, the screen in centered on these nodes
+    -Annotation and sequence columns now has a limit on the number of characters that can be displayed with a modal to show the rest of the sequence
 
 
 

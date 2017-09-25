@@ -88,6 +88,7 @@ string Blast::makeblastdb (const string &dbtype, const string &originalDBPath) {
   string fixedDBPath = originalDBPath + ".DBGWAS.fasta";
 
   //replace spaces for underscores in the FASTA file, as this could create some problems...
+  cout << "[WARNING] Copying and replacing spaces for _ in your DB " << originalDBPath << endl;
   string commandLineFixSpaces = string("tr ' ' '_' <") + originalDBPath + " >" + fixedDBPath;
   executeCommand(commandLineFixSpaces);
 
