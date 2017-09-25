@@ -1,21 +1,18 @@
-﻿Doing:
+﻿Done:
 -Index page:
   -Show the annotation only for the significant nodes in the index page
-    -TODO: test
   -Fixed a bug when no condition is set on the filter in the index page
-    -TODO: test
   -The arguments used to create the visualisation are now in the index page
-    -TODO: test
   -Fixed some icons on the index page related to the filter
-    -TODO: test
   -Fix the annotation filtering problems in the index page (i.e. one annotation substring of the other)
-    -TODO: test
   -Added expand/collapse buttons for the parameters and filters on the index page
-    -TODO: test
+
 
 -Graph page:
     -Center the screen on the highlighted nodes of a gene
-    -Annotation and sequence columns should be smaller, but scrollable
+        -TODO: test
+    -Annotation and sequence columns now has a limit on the number of characters that can be displayed with a modal to show the rest of the sequence
+        -TODO: test
 
 -Core:
   -Integrate blast executables in the app
@@ -40,17 +37,16 @@
 
 High priority TODO:
   -Is there any graph produced by the statistical part that would be relevant to show also in the visualisation?
-
   -In the index page, order the annotation of the significant nodes by blast score and show the blast score;
-
   -Allow the user to provide an already built database, instead of calling makeblastdb always
-
   -Replace spaces in FASTA headers because BLAST just considers the headers up to the first space
     -Make a copy of the file, and replace this in the copy, in order to do not modify the users' annotation
-
   -Fix qvalue default min and max to min and max of the components
-
-
+  -When the strains input file is missing, we return an error:
+      [FATAL ERROR] Error opening file
+      Could it be a little more detailed? Eg, which file (there are two inputs), and whether the format is wrong or the file was not found.
+  -Fix the error message when the parameters are not correct
+    -We show the error 3 times, instead of 1
 
 
 
@@ -68,21 +64,20 @@ High priority TODO:
 
 Low priority TODO:
   -Multiple alignment on the node sequences that are selected?
-    http://msa.biojs.net/
-    -There are several JS plugins to show the multiple alignment, but none to do it
-        -If we want, we will either need to implement ourselves or run a local web server that does this calling a program to do it
+    -http://msa.biojs.net/
+    -There are several JS plugins to *show* the multiple alignment, but none to do it
+        -If we want, we will either need to implement it ourselves in javascript or run a local web server which will provide a way of calling a proper program to do this
   -Transparency switch
+    -Non-significant nodes lose transparency
+  -Detach the table to a larger view (it can help people if it is too small)
+    -It hardly is too small I think
   -Assemble the heaviest path of the DBG and blast it (or the path going through the largest number of significant unitigs)
+    -I think we will need a good amount of effort here, and I do not know if it is an essential feature... To discuss...
   -Save the blast results on some file?
   -Adding metadata to features (like what each genome mean, species, etc)
+    -This would be a field in the input file with a collumn with whatever the user would like to put
     -Show the original genomes as paths in the graph?
-  - When the strains input file is missing, we return an error:
-      [FATAL ERROR] Error opening file
-      Could it be a little more detailed? Eg, which file (there are two inputs), and whether the format is wrong or the file was not found.
   - possibility to work on unitig counts rather than presence/absence
-  - memory bottleneck right now when do.lineage=TRUE is in computing the correlations between all PCs and variants. Could be improved but not trivial. Second bottleneck is in computing SVD.
-
-
 
 
 

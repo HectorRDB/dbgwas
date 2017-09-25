@@ -253,6 +253,28 @@ function fillTable() {
         table.render();
     }, 100); // may have to adjust this val
 }
+
+
+
+function selectNodesFromATag (option, cy, DBGWAS_graph_tag2nodes) {
+  var tag = $(option).val();
+
+  if (tag=="clear") {
+    unselectAllNodes();
+    cy.fit()
+  }else {
+    var nodesToHighlight=[];
+
+    cy.nodes().forEach(function (node) {
+        if (DBGWAS_graph_tag2nodes[tag].includes(node.id()))
+            nodesToHighlight.push(node)
+    })
+    
+    unselectAllNodes();
+    cy.collection(nodesToHighlight).select();
+    cy.fit(cy.collection(nodesToHighlight))
+  }
+}
 //FUNCTIONS OF SELECT/UNSELECT
 //************************************************************
 
@@ -276,6 +298,35 @@ function makeFile (text, file, fileType) {
 }
 //FUNCTIONS OF EXPORTING
 //************************************************************
+
+
+
+
+//************************************************************
+//FUNCTIONS FOR RENDERING LARGE COLUMNS ON THE HANDSONTABLE
+function showFullString (event, title, longString) {
+  $("#showLongStringDialog").html("<textarea class=\"code\" rows=\"10\" style=\"width: 100%\" readonly>"+ longString + "</textarea>")
+  $("#showLongStringDialog").dialog({ title: title, position: {my: "left top", at: "left bottom", of: event.srcElement}})
+}
+
+function longColumnRenderer (instance, td, row, col, prop, value, cellProperties) {
+  var longString = Handsontable.helper.stringify(value);
+  
+
+  if (longString.length>20) {
+    //modify it
+    longString = longString.substring(0, 20) + "<span>...<img class=\"font_size_images\" src=\"lib/resources/enlarge.png\" onclick=\"showFullString(event, '" + instance.getColHeader(col) + "', '"+longString+"')\"/></span>"
+  }
+  
+  
+  td.innerHTML = longString;
+  return td;
+}
+//FUNCTIONS FOR RENDERING LARGE COLLUMNS ON THE HANDSONTABLE
+//************************************************************
+
+
+
 
 
 
@@ -418,24 +469,12 @@ function buildPage(graphElements, DBGWAS_graph_tag2nodes)
             $('#DBGWAS_graph_tag_Select').append($('<option>', {
                 value: key,
                 text: key,
-
             }));
         })
 
         //highlight the tag nodes
         $('#DBGWAS_graph_tag_Select').change(function(){
-            var tag = $(this).val();
-            var nodesToHighlight=[];
-
-            if (tag!="clear") {
-                cy.nodes().forEach(function (node) {
-                    if (DBGWAS_graph_tag2nodes[tag].includes(node.id()))
-                        nodesToHighlight.push(node)
-                })
-            }
-
-            unselectAllNodes();
-            cy.collection(nodesToHighlight).select();
+            selectNodesFromATag(this, cy, DBGWAS_graph_tag2nodes)
         });
 
         //say we are drawing the layout
@@ -558,13 +597,13 @@ function buildPage(graphElements, DBGWAS_graph_tag2nodes)
                 //TODO: NA temporarily removed
                 //{type: 'text'},
                 {type: 'text'},
+                {renderer: longColumnRenderer},
                 {type: 'text'},
                 {type: 'text'},
                 {type: 'text'},
                 {type: 'text'},
                 {type: 'text'},
-                {type: 'text'},
-                {type: 'text'}
+                {renderer: longColumnRenderer}
             ],
             colHeaders: [
                 'Node ID',
