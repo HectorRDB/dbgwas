@@ -15,9 +15,6 @@ BlastRecord BlastRecord::parseString (const string &str) {
   string header;
   stream >> record.nodeId >> header >> record.qcovs >> record.bitscore >> record.pident >> record.evalue;
 
-  //escape '
-  boost::replace_all(header, "'", "\\'");
-
   //parse DBGWAS_index_tag
   try {
     record.DBGWAS_index_tag = extractValue(header, "DBGWAS_index_tag");
@@ -28,6 +25,7 @@ BlastRecord BlastRecord::parseString (const string &str) {
     cerr << "[WARNING] DBGWAS_index_tag of " << header << " is empty! Setting to EMPTY" << endl;
     record.DBGWAS_index_tag = "EMPTY";
   }
+  htmlEncode(record.DBGWAS_index_tag); //escape to HTML
 
 
   //parse DBGWAS_graph_tag
@@ -40,6 +38,7 @@ BlastRecord BlastRecord::parseString (const string &str) {
     cerr << "[WARNING] DBGWAS_graph_tag of " << header << " is empty! Setting to EMPTY" << endl;
     record.DBGWAS_graph_tag = "EMPTY";
   }
+  htmlEncode(record.DBGWAS_graph_tag); //escape to HTML
 
   return record;
 }

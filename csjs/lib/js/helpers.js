@@ -617,7 +617,7 @@ function buildPage(graphElements, DBGWAS_graph_tag2nodes)
                 'q-Value',
                 'Est effect',
                 'Wald stat',
-                'Sequence Length',
+                'Seq Length',
                 'Sequence'
             ],
             copyColsLimit: 1000000,

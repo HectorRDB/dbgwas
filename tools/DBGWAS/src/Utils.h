@@ -74,6 +74,9 @@ void openFileForWriting(const string &filePath, ofstream &stream);
 void createFolder(const string &path);
 
 
+void htmlEncode (string &data);
+
+
 
 //global vars used by all programs
 class UnitigIdStrandPos {
