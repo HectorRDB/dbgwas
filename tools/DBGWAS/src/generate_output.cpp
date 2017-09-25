@@ -328,7 +328,7 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
 
         stringstream tagsSS;
         for (const auto& tag : setOfTags)
-          tagsSS << "'" << tag << "',";
+          tagsSS << "'" << tag << "', ";
         tagsString = tagsSS.str();
       }
 

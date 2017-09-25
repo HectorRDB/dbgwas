@@ -17,6 +17,7 @@
 -Core:
   -Integrate blast executables in the app
     TODO: test blastx
+    -Magali uniprot db will allow us to test blastx and the spaces
   -Allow users to input their own annotation database (Christine's example)
     -The problem is the standardization on FASTA headers... I guess if we do this, we should not force the users to standardize it
         -We can define two TAGs on the fasta header:

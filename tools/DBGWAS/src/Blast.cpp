@@ -63,7 +63,7 @@ string BlastRecord::extractValue (const string &header, const string &tag) {
 
 
 vector<BlastRecord> Blast::blast (const string &command, const string &queryPath, const string &dbPath) {
-  string outFilePath = queryPath+string(".blastOut");
+  string outFilePath = queryPath+"."+command+"Out";
 
   //build the command line
   stringstream ss;
