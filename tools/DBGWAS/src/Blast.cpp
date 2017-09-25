@@ -25,7 +25,6 @@ BlastRecord BlastRecord::parseString (const string &str) {
     cerr << "[WARNING] DBGWAS_index_tag of " << header << " is empty! Setting to EMPTY" << endl;
     record.DBGWAS_index_tag = "EMPTY";
   }
-  htmlEncode(record.DBGWAS_index_tag); //escape to HTML
 
 
   //parse DBGWAS_graph_tag
@@ -38,7 +37,6 @@ BlastRecord BlastRecord::parseString (const string &str) {
     cerr << "[WARNING] DBGWAS_graph_tag of " << header << " is empty! Setting to EMPTY" << endl;
     record.DBGWAS_graph_tag = "EMPTY";
   }
-  htmlEncode(record.DBGWAS_graph_tag); //escape to HTML
 
   return record;
 }
