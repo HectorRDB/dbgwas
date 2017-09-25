@@ -315,7 +315,7 @@ function longColumnRenderer (instance, td, row, col, prop, value, cellProperties
 
   if (longString.length>20) {
     //modify it
-    longString = longString.substring(0, 20) + "<span>...<img class=\"font_size_images\" src=\"lib/resources/enlarge.png\" onclick=\"showFullString(event, '" + instance.getColHeader(col) + "', '"+_.escape(longString)+"')\"/></span>"
+    longString = longString.substring(0, 20) + "<span>...<img class=\"font_size_images\" src=\"lib/resources/enlarge.png\" onclick=\"showFullString(event, '" + instance.getColHeader(col) + "', '"+ longString.replace("'", "\\'") +"')\"/></span>"
   }
   
   
