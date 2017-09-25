@@ -44,6 +44,8 @@ const char* STR_SKIP1 = "-skip1";
 const char* STR_SKIP2 = "-skip2";
 const char* STR_NEWICK_PATH = "-newick";
 const char* STR_SFF = "-SFF";
+const char* STR_NUCLEOTIDE_DB = "-nc_db";
+const char* STR_PROTEIN_DB = "-pt_db";
 
 //TODO: seeveral questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
 //const char* STR_COUNT_MODE = "-count";
@@ -54,6 +56,10 @@ bool skip1 = false;
 bool skip2 = false;
 bool presenceAbsenceCountMode = false;
 boost::variant< int, double > SFF;
+bool thereIsNucleotideDB = false;
+string nucleotideDBPath;
+bool thereIsProteinDB = false;
+string proteinDBPath;
 
 //global vars used by both programs
 Graph* graph;
@@ -70,6 +76,11 @@ void populateParser (Tool *tool) {
   tool->getParser()->push_front (new OptionOneParam (STR_STRAINS_FILE, "A text file describing the strains containing 3 collumns: 1) ID of the strain; 2) Phenotype (0/1/NA); 3) Path to a multi-fasta file containing the sequences of the strain. This file needs a header. Check the sample_example folder for an example.",  true));
   tool->getParser()->push_front (new OptionOneParam (STR_NEWICK_PATH, "Path to a newick tree file",  true));
   tool->getParser()->push_front (new OptionOneParam (STR_MAX_NEIGHBOURHOOD, "Denotes the maximum neighbourhood that can be viewed in the final visualization",  false, "5"));
+
+  //TODO: maybe allow also to give the DB directly, instead of building it everytime...
+  tool->getParser()->push_front (new OptionOneParam (STR_NUCLEOTIDE_DB, "A Fasta file containing annotation in a nucleotide alphabet format",  false));
+  tool->getParser()->push_front (new OptionOneParam (STR_PROTEIN_DB, "A Fasta file containing annotation in a protein alphabet format",  false));
+  //TODO: maybe allow also to give the DB directly, instead of building it everytime...
 
   //TODO: seeveral questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
   //tool->getParser()->push_front (new OptionOneParam (STR_COUNT_MODE, "The count mode. If \"01\", then the count mode is seen as presence/absence. If \"Freq\", then the count mode is seen as the frequency",  false, "01"));

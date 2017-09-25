@@ -1,36 +1,18 @@
-﻿To check:
-    -Fixed a small bug on the annotation filtering in the index page (genes between parenthesis)
-
-
-High priority TODO:
-  - Add LBBE and biomerieux names (or logos) to the webpages (result pages + mention on gitlab ?) 
-
-  -Annotation and sequence columns should be smaller, but scrollable
-
+﻿High priority TODO:
+  -We can get overloaded with annotation (e.g. when we add uniprot db), so I guess it would be better to have an ordering or filtering of the annotations
+    -e.g. we can only show the annotations on the significants unitigs or ordered by the number of nodes in the graph
+  -Make the size of the table expandable
+  -Make the step 3 multi-threaded
+    -When the databases are large (e.g. uniprot), it takes a lot of time to blast it... Making it multi-threaded will make things a lot faster...
+  -Is there any graph produced by the statistical part that would be relevant to show also in the visualisation?
+  -In the index page, order the annotation of the significant nodes by blast score and show the blast score;
+  -Allow the user to provide an already built database, instead of calling makeblastdb always
   -Fix qvalue default min and max to min and max of the components
-
-  -Make the annotation process optional and also check if blastn is on the path
-    -Or we can also pack blastn and makeblastdb in the app
-        -This can be good since then we enforce the blast and makeblast versions... And that is additional 50 MBs
-            -Integrate it!
-    -In the index page, show only the annotation on the significant nodes ordered by blast score;
-
-  -Allow users to input their own annotation database (Christine's example)
-    -The problem is the standardization on FASTA headers... I guess if we do this, we should not force the users to standardize it
-        -We can define two TAGs on the fasta header:
-            -DBGWAS_index_tag=<value>
-            -DBGWAS_graph_tag=<value>
-        which is what is going to be shown on the index and graph pages. If these tags are not found in the header, then we just set both values to the full header.
-        This way people can provide their own database, and they customize it or not...
-    -Maybe with this we won't need to blast to online database - the annotation is as good as the database provided by the user...
-    -Add blast nucleotide to protein
-
-  -Fix the error we get when the filter has no rules in the index page
-
-  -Write the nb of significant patterns and significant unitigs in the index page
-    -Job title
-    -Nb of strains
-    -Maybe just show all the arguments of the execution
+  -When the strains input file is missing, we return an error:
+      [FATAL ERROR] Error opening file
+      Could it be a little more detailed? Eg, which file (there are two inputs), and whether the format is wrong or the file was not found.
+  -Fix the error message when the parameters are not correct
+    -We show the error 3 times, instead of 1
 
   -newick file should be optional (R script and software)
   -remove the patterns with maf < maf.filter in C++
@@ -46,19 +28,56 @@ High priority TODO:
 
 Low priority TODO:
   -Multiple alignment on the node sequences that are selected?
-    http://msa.biojs.net/
+    -http://msa.biojs.net/
+    -There are several JS plugins to *show* the multiple alignment, but none to do it
+        -If we want, we will either need to implement it ourselves in javascript or run a local web server which will provide a way of calling a proper program to do this
   -Transparency switch
+    -Non-significant nodes lose transparency
+  -Detach the table to a larger view (it can help people if it is too small)
+    -It hardly is too small I think
   -Assemble the heaviest path of the DBG and blast it (or the path going through the largest number of significant unitigs)
+    -I think we will need a good amount of effort here, and I do not know if it is an essential feature... To discuss...
   -Save the blast results on some file?
   -Adding metadata to features (like what each genome mean, species, etc)
+    -This would be a field in the input file with a collumn with whatever the user would like to put
     -Show the original genomes as paths in the graph?
-  - When the strains input file is missing, we return an error:
-      [FATAL ERROR] Error opening file
-      Could it be a little more detailed? Eg, which file (there are two inputs), and whether the format is wrong or the file was not found.
   - possibility to work on unitig counts rather than presence/absence
-  - memory bottleneck right now when do.lineage=TRUE is in computing the correlations between all PCs and variants. Could be improved but not trivial. Second bottleneck is in computing SVD.
 
 
+
+
+
+
+
+Done v 0.3.0:
+Changelog
+-Core:
+  -Protein and nucleotide annotations are now supported;
+  -Users are now allowed to input their own annotation database
+    -They can further define two TAGs in their fasta headers:
+            -DBGWAS_index_tag=<value>;
+            -DBGWAS_graph_tag=<value>;
+        Which is what is going to be shown on the index and graph pages. If these tags are not found in the header, then the full header is considered
+        If the tags are available, but empty, a value of EMPTY is set;
+  -Blast output is now saved in tmp folder for each component;
+  -The annotation process is optional;
+  -Spaces in FASTA headers of the annotations DB are replaced for underscore because BLAST just considers the headers up to the first space
+    -A copy of the DB is made, and the spaces are replaced in this copy, in order to do not modify the users' annotations
+  -Blast executables are now integrated in the tool
+
+
+-Index page:
+  -Annotations only for the significant nodes are shown in the index page
+  -Fixed a bug when no condition is set on the filter in the index page
+  -The arguments used to create the visualisation are now in the index page
+  -Fixed some icons on the index page related to the filter
+  -Fix the annotation filtering problems in the index page (i.e. one annotation substring of the other)
+  -Added expand/collapse buttons for the parameters and filters on the index page
+
+
+-Graph page:
+    -When a gene/tag is selected in the graph page, the screen in centered on these nodes
+    -Annotation and sequence columns now has a limit on the number of characters that can be displayed with a modal to show the rest of the sequence
 
 
 

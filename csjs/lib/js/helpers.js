@@ -220,7 +220,7 @@ function fillTable() {
                     node.data('pheno1'),
                     //TODO: NA temporarily removed
                     //node.data('NA'),
-                    node.data('genes').toString(),
+                    node.data('tags').toString(),
                     node.data('significant'),
                     node.data('qValue'),
                     node.data('weight'),
@@ -253,6 +253,28 @@ function fillTable() {
         table.render();
     }, 100); // may have to adjust this val
 }
+
+
+
+function selectNodesFromATag (option, cy, DBGWAS_graph_tag2nodes) {
+  var tag = $(option).val();
+
+  if (tag=="clear") {
+    unselectAllNodes();
+    cy.fit()
+  }else {
+    var nodesToHighlight=[];
+
+    cy.nodes().forEach(function (node) {
+        if (DBGWAS_graph_tag2nodes[tag].includes(node.id()))
+            nodesToHighlight.push(node)
+    })
+    
+    unselectAllNodes();
+    cy.collection(nodesToHighlight).select();
+    cy.fit(cy.collection(nodesToHighlight))
+  }
+}
 //FUNCTIONS OF SELECT/UNSELECT
 //************************************************************
 
@@ -279,9 +301,38 @@ function makeFile (text, file, fileType) {
 
 
 
+
+//************************************************************
+//FUNCTIONS FOR RENDERING LARGE COLUMNS ON THE HANDSONTABLE
+function showFullString (event, title, longString) {
+  $("#showLongStringDialog").html("<textarea class=\"code\" rows=\"10\" style=\"width: 100%\" readonly>"+ longString + "</textarea>")
+  $("#showLongStringDialog").dialog({ title: title, position: {my: "left top", at: "left bottom", of: event.srcElement}})
+}
+
+function longColumnRenderer (instance, td, row, col, prop, value, cellProperties) {
+  var longString = Handsontable.helper.stringify(value);
+  
+
+  if (longString.length>20) {
+    //modify it
+    longString = longString.substring(0, 20) + "<span>...<img class=\"font_size_images\" src=\"lib/resources/enlarge.png\" onclick=\"showFullString(event, '" + instance.getColHeader(col) + "', '"+ longString.replace("'", "\\'") +"')\"/></span>"
+  }
+  
+  
+  td.innerHTML = longString;
+  return td;
+}
+//FUNCTIONS FOR RENDERING LARGE COLLUMNS ON THE HANDSONTABLE
+//************************************************************
+
+
+
+
+
+
 //***************************************************************
 //MAIN FUNCTIONS
-function buildPage(graphElements, genes2nodes)
+function buildPage(graphElements, DBGWAS_graph_tag2nodes)
 {
     //this is basically main()
     $(function(){ // on dom ready
@@ -413,29 +464,17 @@ function buildPage(graphElements, genes2nodes)
         });
 
 
-        //populate the dropdown list for the genes
-        Object.keys(genes2nodes).forEach(function(key) {
-            $('#geneSelect').append($('<option>', {
+        //populate the dropdown list for the tags
+        Object.keys(DBGWAS_graph_tag2nodes).forEach(function(key) {
+            $('#DBGWAS_graph_tag_Select').append($('<option>', {
                 value: key,
                 text: key,
-
             }));
         })
 
-        //highlight the gene nodes
-        $('#geneSelect').change(function(){
-            var gene = $(this).val();
-            var nodesToHighlight=[];
-
-            if (gene!="clear") {
-                cy.nodes().forEach(function (node) {
-                    if (genes2nodes[gene].includes(node.id()))
-                        nodesToHighlight.push(node)
-                })
-            }
-
-            unselectAllNodes();
-            cy.collection(nodesToHighlight).select();
+        //highlight the tag nodes
+        $('#DBGWAS_graph_tag_Select').change(function(){
+            selectNodesFromATag(this, cy, DBGWAS_graph_tag2nodes)
         });
 
         //say we are drawing the layout
@@ -558,13 +597,13 @@ function buildPage(graphElements, genes2nodes)
                 //TODO: NA temporarily removed
                 //{type: 'text'},
                 {type: 'text'},
+                {renderer: longColumnRenderer},
                 {type: 'text'},
                 {type: 'text'},
                 {type: 'text'},
                 {type: 'text'},
                 {type: 'text'},
-                {type: 'text'},
-                {type: 'text'}
+                {renderer: longColumnRenderer}
             ],
             colHeaders: [
                 'Node ID',
@@ -578,7 +617,7 @@ function buildPage(graphElements, genes2nodes)
                 'q-Value',
                 'Est effect',
                 'Wald stat',
-                'Sequence Length',
+                'Seq Length',
                 'Sequence'
             ],
             copyColsLimit: 1000000,

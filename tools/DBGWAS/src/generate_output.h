@@ -47,6 +47,8 @@
 #include "global.h"
 #include "PhenoCounter.h"
 
+#define UNIQUE_SYMBOL_MARKER "#@#-322"
+
 using namespace std;
 
 class UnitigStats {
@@ -234,6 +236,12 @@ public:
 
     // Actual job done by the tool is here
     void execute();
+private:
+    void generateCytoscapeOutput(const graph_t &graph, const vector<int> &nodes, const string &typeOfGraph, int i,
+                                                  const string &outputFolder, const vector<int> &selectedUnitigs, int nbPheno0, int nbPheno1,
+                                                  map<int, set<string> > &idComponent2DBGWAS_index_tag_signNodesOnly);
+    void createIndexFile(int numberOfComponents, const string &outputFolder, const vector<vector<int> > &nodesInComponent, graph_t& newGraph,
+                                          map<int, set<string> > &idComponent2DBGWAS_index_tag_signNodesOnly, const vector<const PatternFromStats*> &unitigToPatternStats);
 };
 
 

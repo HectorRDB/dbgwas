@@ -48,6 +48,8 @@ extern const char* STR_SKIP1;
 extern const char* STR_SKIP2;
 extern const char* STR_NEWICK_PATH;
 extern const char* STR_SFF;
+extern const char* STR_NUCLEOTIDE_DB;
+extern const char* STR_PROTEIN_DB;
 
 //TODO: seeveral questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
 //extern const char* STR_COUNT_MODE;
@@ -57,6 +59,10 @@ extern string pathToExecParent;
 extern bool skip1;
 extern bool skip2;
 extern bool presenceAbsenceCountMode;
+extern bool thereIsNucleotideDB;
+extern string nucleotideDBPath;
+extern bool thereIsProteinDB;
+extern string proteinDBPath;
 extern boost::variant< int, double > SFF;
 
 void populateParser (Tool *tool);

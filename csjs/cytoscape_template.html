@@ -50,11 +50,8 @@
     <script src="lib/js/jquery.min.js"></script>
     <script src="lib/js/bootstrap.min.js"></script>
     <script src="lib/js/bootstrap-slider.min.js"></script>
-    <script src="lib/js/cola.v3.min.js"></script>
     <script src="lib/js/cytoscape.min.js"></script>
     <script src="lib/js/jquery.qtip.min.js"></script>
-    <script src="lib/js/cytoscape-qtip.js"></script>
-    <script src="lib/js/cytoscape-cola.js"></script>
     <script src="lib/js/cytoscape-panzoom.js"></script>
     <script src="lib/js/jquery-ui.min.js"></script>
     <script src="lib/js/cytoscape-ngraph.forcelayout.js"></script>
@@ -62,11 +59,11 @@
     <script src="lib/js/handsontable.full.min.js"></script>
     <script src="lib/js/helpers.js"></script>
     <script type="text/javascript">
-        var genes2nodes;
+        var DBGWAS_graph_tag2nodes;
         $(function(){ // on dom ready
             var elements = [ <elementsTag> ]
-            genes2nodes = <genes2nodesTag>
-            buildPage(elements, genes2nodes)
+            DBGWAS_graph_tag2nodes = <DBGWAS_graph_tag2nodesTag>
+            buildPage(elements, DBGWAS_graph_tag2nodes)
         });
     </script>
 </head>
@@ -117,8 +114,8 @@
                 <td>
                     <p style="margin-bottom: 2cm;"'></p>
                     Annotation:<br/>
-                    Select nodes contained in Gene
-                    <select id="geneSelect" style="background-color: grey;">
+                    Select nodes contained in tag
+                    <select id="DBGWAS_graph_tag_Select" style="background-color: grey;">
                         <option selected value="clear">
                             Clear selection
                         </option>
@@ -144,5 +141,9 @@
 
 <!-- Div for the node table -->
 <div id="nodeTable" style='overflow: hidden; z-index: 2; position: fixed; top: 80%; left: 0;' ></div>
+
+<!-- Div to show the long strings -->
+<div id="showLongStringDialog"/>
+
 </body>
 </html>

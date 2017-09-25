@@ -32,6 +32,7 @@
     <meta charset=utf-8 />
     <link rel="stylesheet" href="components/lib/css/bootstrap.min.css">
     <link rel="stylesheet" href="components/lib/css/query-builder.default.min.css">
+    <link rel="stylesheet" href="components/lib/css/style.css">
     <style>
         img {
             max-width: 200px;
@@ -43,28 +44,26 @@
             border-collapse: collapse;
         }
 	
-	<!-- tr:nth-child(even) {background-color: #f2f2f2} -->
-	
         td,tr{
             border: 1px solid gray;
             border-collapse: collapse;
         }
-	
-	<!-- th { -->
-	<!-- background-color: #31708F; -->
-	<!-- color: white; -->
-	<!-- } -->
-	
+
         .centeredbtn{
             margin:auto;
             display:block;
             width: 50%;
+        }
+
+        body {
+            overflow-y: scroll;
         }
     </style>
 
 
 
     <script src="components/lib/js/jquery.min.js"></script>
+    <script src="components/lib/js/bootstrap.min.js"></script>
     <script src="components/lib/js/query-builder.standalone.min.js"></script>
     <script src="components/lib/js/alasql.min.js"></script>
     <script type="text/javascript">
@@ -83,18 +82,56 @@
         function showObjects() {
             var objectDiv = $('#showItemsDiv');
             objectDiv.html('Working...');
-            var sql = 'SELECT preview FROM ? WHERE ' + $('#builder').queryBuilder('getSQL', false).sql + ' ORDER BY ' + $('#sortTerm').val() + ' ' + $('#asc_desc').val();
+
+            var sql=""
+            if ($('#builder').queryBuilder('getSQL', false).sql.length == 0) {
+                sql = 'SELECT preview FROM ? ORDER BY ' + $('#sortTerm').val() + ' ' + $('#asc_desc').val();
+            }else {
+                sql = 'SELECT preview FROM ? WHERE ' + $('#builder').queryBuilder('getSQL', false).sql + ' ORDER BY ' + $('#sortTerm').val() + ' ' + $('#asc_desc').val();
+            }
+
             var objects = alasql(sql, [data]);
             objectDiv.html(buildObjectsHTML(objects));
         }
+
+        $(function(){
+            $('#arguments').on('hide.bs.collapse', function () {
+                $('#argumentsButton').html('<span class="glyphicon glyphicon-collapse-down"></span> Show arguments used to produce these results');
+            })
+            $('#arguments').on('show.bs.collapse', function () {
+                $('#argumentsButton').html('<span class="glyphicon glyphicon-collapse-up"></span> Hide arguments used to produce these results');
+            })
+        })
+
+        $(function(){
+            $('#filters').on('hide.bs.collapse', function () {
+                $('#filtersButton').html('<span class="glyphicon glyphicon-collapse-down"></span> Show filters');
+            })
+            $('#filters').on('show.bs.collapse', function () {
+                $('#filtersButton').html('<span class="glyphicon glyphicon-collapse-up"></span> Hide filters');
+            })
+        })
     </script>
     <title>Your DBGWAS results</title>
 </head>
 <body>
 <h1>Your DBGWAS results</h1>
 
+<button id="argumentsButton" type="button" class="btn btn-primary" data-toggle="collapse" data-target="#arguments">
+    <span class="glyphicon glyphicon-collapse-down"></span> Show arguments used to produce these results
+</button>
+<div id="arguments" class="collapse">
+<textarea class="code" rows="10" style="margin:0 auto; width:90%;" readonly>
+<command_line>
+</textarea>
+</div>
 
-<div style="margin:0 auto; width:60%;">
+<p style="margin-top: 1cm; clear: both;"/>
+
+<button id="filtersButton" type="button" class="btn btn-primary" data-toggle="collapse" data-target="#filters">
+    <span class="glyphicon glyphicon-collapse-up"></span> Hide filters
+</button>
+<div id="filters" style="margin:0 auto; width:90%;" class="collapse in">
     <h3> Filters: </h3>
     <div id="builder"></div>
 
@@ -107,14 +144,15 @@
             var queryBuilder = $('#builder').queryBuilder({
                 filters: [
                     {id: 'qvalue', type: 'string', label: 'q-value', input: 'text', operators: ['equal', 'not_equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal', 'between']},
-                    {id: 'annotations', type: 'string', label: 'Annotations', input: 'select', operators: ['contains', 'not_contains'], values: <all_genes_in_all_components>}
+                    {id: 'annotations', type: 'string', label: 'Annotations', input: 'select', operators: ['contains', 'not_contains'], values: <all_tags_in_all_components>}
                 ],
                 rules: [{
                     condition: 'AND',
                     id: 'qvalue',
                     operator: 'between',
                     value: ['0.0', '1.0']
-                }]
+                }],
+                allow_empty: true
             });
 
             showObjects();

@@ -28,6 +28,7 @@
 
 #include "Utils.h"
 #include "global.h"
+#include "Blast.h"
 
 using namespace std;
 
@@ -306,6 +307,20 @@ void checkParametersGenerateOutput(Tool *tool) {
     }
     SFF = n;
   }
+
+  //check the nucleotide DB
+  if (tool->getInput()->get(STR_NUCLEOTIDE_DB)) {
+    //build the nucleotide DB
+    nucleotideDBPath = Blast::makeblastdb("nucl", tool->getInput()->getStr(STR_NUCLEOTIDE_DB));
+    thereIsNucleotideDB=true;
+  }
+
+  //check the protein DB
+  if (tool->getInput()->get(STR_PROTEIN_DB)) {
+    //build the protein DB
+    proteinDBPath = Blast::makeblastdb("prot", tool->getInput()->getStr(STR_PROTEIN_DB));
+    thereIsProteinDB=true;
+  }
 }
 
 
@@ -319,7 +334,7 @@ void fatalError (const string &message) {
 void executeCommand(const string &command, bool verbose) {
   // run a process and create a streambuf that reads its stdout and stderr
   if (verbose)
-    cout << "Executing " << command << "..." << endl;
+    cerr << "Executing " << command << "..." << endl;
 
   //create the process
   redi::ipstream proc(command, redi::pstreams::pstdout | redi::pstreams::pstderr);
@@ -345,7 +360,7 @@ void executeCommand(const string &command, bool verbose) {
       fatalError(ss.str());
     }
     if (verbose)
-      cout << "Executing " << command << " - Done!" << endl;
+      cerr << "Executing " << command << " - Done!" << endl;
   }
   else
     fatalError("On executeCommand()");
