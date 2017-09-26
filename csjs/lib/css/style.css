@@ -126,3 +126,8 @@ a:hover {
 .code {
   font-family: "Courier New", Courier, monospace
 }
+
+select {
+  width: 350px;
+  overflow: auto;
+}
