@@ -322,13 +322,17 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
       //get the tag string
       string tagsString = "";
       {
-        set<string> setOfTags; //remove eventual duplicates and ordering
-        for (const auto &blastRecord : node2BlastRecords[node])
-          setOfTags.insert(blastRecord.DBGWAS_graph_tag);
+        //order the tags by occurences to put it on the graph page in order
+        vector< pair<string, int> > tagsOrderedByNumberOfOccurences;
+        for (const auto& DBGWAS_graph_tag2nodesElem : DBGWAS_graph_tag2nodes)
+          tagsOrderedByNumberOfOccurences.push_back(make_pair(DBGWAS_graph_tag2nodesElem.first, DBGWAS_graph_tag2nodesElem.second.size()));
+        sort(tagsOrderedByNumberOfOccurences.begin(), tagsOrderedByNumberOfOccurences.end(), [](const pair<string, int> & a, const pair<string, int> & b) -> bool {
+              return a.second > b.second; });
 
+        //get the tag string
         stringstream tagsSS;
-        for (const auto& tag : setOfTags)
-          tagsSS << "'" << tag << "', ";
+        for (const auto& tag : tagsOrderedByNumberOfOccurences)
+          tagsSS << "'(" << tag.second << ") " << tag.first << "', ";
         tagsString = tagsSS.str();
       }
 
