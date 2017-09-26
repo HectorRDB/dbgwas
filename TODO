@@ -1,15 +1,4 @@
-﻿-Doing
-  -The annotations in the graph pages are now sorted in decreasing order by the number of nodes it maps to in the graph
-    -The number of nodes is also displayed in parenthesis before the annotation
-     -Test
-  -Fix very wide selects in the index page (put a horizontal scroll)
-    -Increased the height of select as well
-    -Test
-  -Selecting a gene now only centers the screen on the nodes of that gene, without zooming
-    -Test
-
-
-High priority TODO:
+﻿High priority TODO:
   -Add LBBE and biomerieux names (or logos) to the webpages (result pages + mention on gitlab ?)
   -Make the size of the table expandable
     -Sometimes the size of the table is only 3 rows, which is not nice...
@@ -57,6 +46,12 @@ Low priority TODO:
 
 
 
+Done v 0.3.1:
+-The annotations in the graph pages are now sorted in decreasing order by the number of nodes it maps to in the graph
+  -The number of nodes is also displayed in parenthesis before the annotation
+-Fix very wide selects in the index page (put a horizontal scroll)
+  -Increased the height of select as well
+-Selecting a gene now only centers the screen on the nodes of that gene, without zooming
 
 
 
