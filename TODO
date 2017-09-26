@@ -3,6 +3,7 @@
     -The number of nodes is also displayed in parenthesis before the annotation
      -Test
   -Fix very wide selects in the index page (put a horizontal scroll)
+    -Increased the height of select as well
     -Test
   -Selecting a gene now only centers the screen on the nodes of that gene, without zooming
     -Test

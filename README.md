@@ -104,18 +104,19 @@ DBGWAS makes use of several thirdparty libraries:
 2. Boost C++ Libraries (http://www.boost.org/)
 3. Bugwas (https://github.com/sgearle/bugwas)
 4. GEMMA (https://github.com/genetics-statistics/GEMMA)
-5. Cytoscape.js (http://js.cytoscape.org/) and these extensions:
+5. Blast (https://blast.ncbi.nlm.nih.gov/Blast.cgi)
+6. Cytoscape.js (http://js.cytoscape.org/) and these extensions:
    1. cytoscape.js-cxtmenu (https://github.com/cytoscape/cytoscape.js-cxtmenu)
    2. cytoscape-ngraph.forcelayout (https://github.com/Nickolasmv/cytoscape-ngraph.forcelayout)
    3. cytoscape.js-panzoom (https://github.com/cytoscape/cytoscape.js-panzoom)
-6. PhantomJS (http://phantomjs.org/)
-7. PStreams (http://pstreams.sourceforge.net/)
-8. Alasql (https://github.com/agershun/alasql)
-9. Handsontable (https://github.com/handsontable/handsontable)
-10. Bootstrap (http://getbootstrap.com/javascript/)
-11. JQuery (https://jquery.com/)
-12. jQuery QueryBuilder (http://querybuilder.js.org/)
-13. Fastclick (https://github.com/ftlabs/fastclick)
+7. PhantomJS (http://phantomjs.org/)
+8. PStreams (http://pstreams.sourceforge.net/)
+9. Alasql (https://github.com/agershun/alasql)
+10. Handsontable (https://github.com/handsontable/handsontable)
+11. Bootstrap (http://getbootstrap.com/javascript/)
+12. JQuery (https://jquery.com/)
+13. jQuery QueryBuilder (http://querybuilder.js.org/)
+14. Fastclick (https://github.com/ftlabs/fastclick)
 
 
 # How to cite
