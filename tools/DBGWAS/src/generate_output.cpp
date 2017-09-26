@@ -328,10 +328,16 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
       //get the tag string
       string tagsString = "";
       {
-        //get the tag string
         stringstream tagsSS;
-        for (const auto& tag : DBGWAS_graph_tagsOrderedByNumberOfOccurences)
-          tagsSS << "'" << tag.first << "', ";
+        for (const auto& tag : DBGWAS_graph_tagsOrderedByNumberOfOccurences) { //goes through all the tags sorted by number of occurences
+          //if the tag is in this node
+          if (find_if(node2BlastRecords[node].begin(), node2BlastRecords[node].end(), [&](const BlastRecord &record) -> bool {
+              return record.DBGWAS_graph_tag == tag.first;
+          }) != node2BlastRecords[node].end()) {
+            //add the tag
+            tagsSS << "'" << tag.first << "', ";
+          }
+        }
         tagsString = tagsSS.str();
       }
 
