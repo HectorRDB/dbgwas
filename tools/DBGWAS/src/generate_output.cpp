@@ -331,7 +331,7 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
         //get the tag string
         stringstream tagsSS;
         for (const auto& tag : DBGWAS_graph_tagsOrderedByNumberOfOccurences)
-          tagsSS << tag.first << "', ";
+          tagsSS << "'" << tag.first << "', ";
         tagsString = tagsSS.str();
       }
 
