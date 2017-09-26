@@ -3,7 +3,9 @@
       -e.g. we can only show the annotations on the significants unitigs or ordered by the number of nodes in the graph
        -For now, we will implement an ordering of the annotations by the number of nodes it contains in the graph page
   -Fix very wide selects in the index page (put a horizontal scroll)
-  -fix the zooming on 1 or 2 nodes (maybe just centering?)
+    -Test
+  -Selecting a gene now only centers the screen on the nodes of that gene, without zooming
+    -Test
 
 
 High priority TODO:
