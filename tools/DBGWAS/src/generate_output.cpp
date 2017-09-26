@@ -90,7 +90,7 @@ void generate_output::createIndexFile(int numberOfComponents, const string &outp
         ssPreview << "<b>No annotations found.</b>";
         ss << UNIQUE_SYMBOL_MARKER << "No annotations found" << UNIQUE_SYMBOL_MARKER << " ";
       }else {
-        ssPreview << "<select size=\"3\">";
+        ssPreview << "<select size=\"6\">";
         for (string tag : idComponent2DBGWAS_index_tag_signNodesOnly[i]) {
           ssPreview << "<option>" << tag << "</option>";
           ss << UNIQUE_SYMBOL_MARKER << tag << UNIQUE_SYMBOL_MARKER << " ";
@@ -221,8 +221,8 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
   map<int, vector<BlastRecord> > node2BlastRecords;
   //an index from DBGWAS_graph_tag to all node ids (BOOST node id) that mapped to that DBGWAS_graph_tag - will help to know all the nodes mapping to a DBGWAS_graph_tag
   map <string, set<int>> DBGWAS_graph_tag2nodes;
-
-
+  //here we have the DBGWAS_graph_tags ordered by the number of occurences. We always give this ordering from the most important annotation to the least
+  vector< pair<string, int> > DBGWAS_graph_tagsOrderedByNumberOfOccurences;
 
   if (thereIsNucleotideDB || thereIsProteinDB) {
     cerr << "Annotating..." << endl;
@@ -268,6 +268,12 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
       for (const auto &blastRecord : node2BlastRecord.second)
         DBGWAS_graph_tag2nodes[blastRecord.DBGWAS_graph_tag].insert(nodeId);
     }
+
+    //populate DBGWAS_graph_tagsOrderedByNumberOfOccurences
+    for (const auto& DBGWAS_graph_tag2nodesElem : DBGWAS_graph_tag2nodes)
+      DBGWAS_graph_tagsOrderedByNumberOfOccurences.push_back(make_pair(DBGWAS_graph_tag2nodesElem.first, DBGWAS_graph_tag2nodesElem.second.size()));
+    sort(DBGWAS_graph_tagsOrderedByNumberOfOccurences.begin(), DBGWAS_graph_tagsOrderedByNumberOfOccurences.end(), [](const pair<string, int> & a, const pair<string, int> & b) -> bool {
+        return a.second > b.second; });
 
     //will contain the DBGWAS_index_tag of the significant nodes in this component
     for (const auto &node2BlastRecord : node2BlastRecords) {
@@ -322,13 +328,16 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
       //get the tag string
       string tagsString = "";
       {
-        set<string> setOfTags; //remove eventual duplicates and ordering
-        for (const auto &blastRecord : node2BlastRecords[node])
-          setOfTags.insert(blastRecord.DBGWAS_graph_tag);
-
         stringstream tagsSS;
-        for (const auto& tag : setOfTags)
-          tagsSS << "'" << tag << "', ";
+        for (const auto& tag : DBGWAS_graph_tagsOrderedByNumberOfOccurences) { //goes through all the tags sorted by number of occurences
+          //if the tag is in this node
+          if (find_if(node2BlastRecords[node].begin(), node2BlastRecords[node].end(), [&](const BlastRecord &record) -> bool {
+              return record.DBGWAS_graph_tag == tag.first;
+          }) != node2BlastRecords[node].end()) {
+            //add the tag
+            tagsSS << "'" << tag.first << "', ";
+          }
+        }
         tagsString = tagsSS.str();
       }
 
@@ -381,16 +390,13 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
 
 
 
-
-
-
-  //get all  DBGWAS_graph_tag in this component to populate the dropdown list
+  //get all  DBGWAS_graph_tag in this component to populate the annotation dropdown list
   stringstream DBGWAS_graph_tag2nodesSS;
   {
     DBGWAS_graph_tag2nodesSS << "{";
-    for (const auto &DBGWAS_graph_tag2nodesItem : DBGWAS_graph_tag2nodes) {
-      DBGWAS_graph_tag2nodesSS << "'" << DBGWAS_graph_tag2nodesItem.first << "' : [";
-      for (const auto &nodeId : DBGWAS_graph_tag2nodesItem.second)
+    for (const auto& tag : DBGWAS_graph_tagsOrderedByNumberOfOccurences) {
+      DBGWAS_graph_tag2nodesSS << "'(" << tag.second << ") " << tag.first << "' : [";
+      for (const auto &nodeId : DBGWAS_graph_tag2nodes[tag.first])
         DBGWAS_graph_tag2nodesSS << "'n" << nodeId << "',";
       DBGWAS_graph_tag2nodesSS << "], ";
     }

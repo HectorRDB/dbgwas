@@ -255,25 +255,24 @@ function fillTable() {
 }
 
 
+function selectNodesFromATag(option, cy, DBGWAS_graph_tag2nodes) {
+    var tag = $(option).val();
 
-function selectNodesFromATag (option, cy, DBGWAS_graph_tag2nodes) {
-  var tag = $(option).val();
+    if (tag == "clear") {
+        unselectAllNodes();
+        cy.center()
+    } else {
+        var nodesToHighlight = [];
 
-  if (tag=="clear") {
-    unselectAllNodes();
-    cy.fit()
-  }else {
-    var nodesToHighlight=[];
+        cy.nodes().forEach(function (node) {
+            if (DBGWAS_graph_tag2nodes[tag].includes(node.id()))
+                nodesToHighlight.push(node)
+        })
 
-    cy.nodes().forEach(function (node) {
-        if (DBGWAS_graph_tag2nodes[tag].includes(node.id()))
-            nodesToHighlight.push(node)
-    })
-    
-    unselectAllNodes();
-    cy.collection(nodesToHighlight).select();
-    cy.fit(cy.collection(nodesToHighlight))
-  }
+        unselectAllNodes();
+        cy.collection(nodesToHighlight).select();
+        cy.center(cy.collection(nodesToHighlight))
+    }
 }
 //FUNCTIONS OF SELECT/UNSELECT
 //************************************************************
@@ -315,7 +314,7 @@ function longColumnRenderer (instance, td, row, col, prop, value, cellProperties
 
   if (longString.length>20) {
     //modify it
-    longString = longString.substring(0, 20) + "<span>...<img class=\"font_size_images\" src=\"lib/resources/enlarge.png\" onclick=\"showFullString(event, '" + instance.getColHeader(col) + "', '"+ longString.replace("'", "\\'") +"')\"/></span>"
+    longString = longString.substring(0, 20) + "<span>...<img class=\"font_size_images\" src=\"lib/resources/enlarge.png\" onclick=\"showFullString(event, '" + instance.getColHeader(col) + "', '"+ longString.replace(/'/g, "\\'") +"')\"/></span>"
   }
   
   
