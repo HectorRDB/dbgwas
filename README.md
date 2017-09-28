@@ -17,12 +17,14 @@ Phenotypes are taken from Jaillard M at al. ,"Correlation between
 phenotypic antibiotic susceptibility and the resistome in Pseudomonas
 aeruginosa". IJAA , 50 (2017) 210-218.
 
+The graph nodes on the visualisation were annotated with an in-house bacterial resistance database and the UniProt database (http://www.uniprot.org/).
+
 The output can be found here: http://leoisl.gitlab.io/DBGWAS_support/full_dataset_visualization/
 
 # Downloading, installing and running
 ## Downloading the precompiled binaries
 This is the easiest way to run the tool since it is already precompiled for Linux AMD64 machines.
-Download the latest binary here: https://gitlab.com/leoisl/dbgwas/raw/master/precompiled_binaries/DBGWAS-0.0.3-Linux.tar.gz
+Download the latest binary here: https://gitlab.com/leoisl/dbgwas/raw/master/precompiled_binaries/DBGWAS-0.3.2-Linux.tar.gz
 
 ## Compiling
 If you still want to compile, clone the repository and execute inside the repository directory:
@@ -114,32 +116,33 @@ DBGWAS makes use of several thirdparty libraries:
 9. Alasql (https://github.com/agershun/alasql)
 10. Handsontable (https://github.com/handsontable/handsontable)
 11. Bootstrap (http://getbootstrap.com/javascript/)
-12. JQuery (https://jquery.com/)
+12. jQuery (https://jquery.com/)
 13. jQuery QueryBuilder (http://querybuilder.js.org/)
-14. Fastclick (https://github.com/ftlabs/fastclick)
+14. jQuery Layout (http://layout.jquery-dev.com/)
+15. Fastclick (https://github.com/ftlabs/fastclick)
 
 
 # How to cite
 Magali Jaillard, Maud Tournoud, Leandro Lima, Vincent Lacroix, Jean-Baptiste Veyrieras and Laurent Jacob, "Representing Genetic Determinants in Bacterial GWAS with Compacted De Bruijn Graphs", 2017,  Cold Spring Harbor Labs Journals, doi:10.1101/113563.
 
 # License
-Copyright (C) <2017>  <bioMerieux, Universite Claude Bernard Lyon 1, 
-Centre National de la Recherche Scientifique> 
+Copyright (C) <2017>  <bioMerieux, Universite Claude Bernard Lyon 1,
+Centre National de la Recherche Scientifique>
 
-1. This program is free software: you can redistribute it and/or modify 
-it under the terms of the GNU Affero General Public License as published 
-by the Free Software Foundation version 3 of the  License and under the 
+1. This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation version 3 of the  License and under the
 terms of article 2 below.
 
-2. This program is distributed in the hope that it will be useful, but 
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+2. This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
 or FITNESS FOR A PARTICULAR PURPOSE. See below the GNU Affero General Public License for more details.
-You should have received a copy of the GNU Affero General Public License 
+You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-3. Communication to the public by any means, in particular in the form of 
-a scientific paper, a poster, a slideshow, an internet page, or a patent, 
-of a result obtained directly or indirectly by running this program must 
-cite the following paper :   
+3. Communication to the public by any means, in particular in the form of
+a scientific paper, a poster, a slideshow, an internet page, or a patent,
+of a result obtained directly or indirectly by running this program must
+cite the following paper :
 
 Magali Jaillard, Maud Tournoud, Leandro Lima, Vincent Lacroix, Jean-Baptiste Veyrieras and Laurent Jacob, "Representing Genetic Determinants in Bacterial GWAS with Compacted De Bruijn Graphs", 2017, Cold Spring Harbor Labs Journals, doi:10.1101/113563.(url: http://www.biorxiv.org/content/early/2017/03/03/113563).
