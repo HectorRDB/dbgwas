@@ -1,11 +1,4 @@
-﻿Doing v 0.3.2:
-  -Changed the layout of the graph page - now we have 3 panels, where the south and east panel are resizable and closable
-  -Removed ratio from the legend
-  -Reduced size of high allelle frequency
-  -Reduced the width of the tables in the index page
-
-
-High priority TODO:
+﻿High priority TODO:
   -Add LBBE and biomerieux names (or logos) to the webpages (result pages + mention on gitlab ?)
   -nb-cores defaults to 1
   -Fix the error message when the parameters are not correct
@@ -27,8 +20,6 @@ High priority TODO:
   -In the index page, order the annotation of the significant nodes by blast score and show the blast score;
   -Allow the user to provide an already built database, instead of calling makeblastdb always
   -Fix qvalue default min and max to min and max of the components
-
-
   -newick file should be optional (R script and software)
   -remove the patterns with maf < maf.filter in C++
     -ok for now (done in R)
@@ -53,8 +44,6 @@ Low priority TODO:
     -Or do we need to implement MSA ourselves in javascript or run a local web server which will provide a way of calling a proper program to do this
   -Transparency switch
     -Non-significant nodes lose transparency
-  -Detach the table to a larger view (it can help people if it is too small)
-    -It hardly is too small I think
   -Assemble the heaviest path of the DBG and blast it (or the path going through the largest number of significant unitigs)
     -I think we will need a good amount of effort here, and I do not know if it is an essential feature... To discuss...
   -Save the blast results on some file?
@@ -62,6 +51,16 @@ Low priority TODO:
     -This would be a field in the input file with a collumn with whatever the user would like to put
     -Show the original genomes as paths in the graph?
   - possibility to work on unitig counts rather than presence/absence
+
+
+
+
+Done v 0.3.2:
+  -Changed the layout of the graph page - now we have 3 panels, where the south and east panel are resizable and closable
+  -Removed ratio from the legend
+  -Reduced size of high allelle frequency
+  -Reduced the width of the tables in the index page
+
 
 
 
