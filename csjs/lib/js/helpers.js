@@ -312,7 +312,7 @@ function showFullString (event, title, longString) {
 
 function longColumnRenderer (instance, td, row, col, prop, value, cellProperties) {
   var longString = Handsontable.helper.stringify(value);
-  var maxLength=50
+  var maxLength=40
 
   if (longString.length>maxLength) {
     //modify it
@@ -328,6 +328,8 @@ function longColumnRenderer (instance, td, row, col, prop, value, cellProperties
 
 
 
+//************************************************************
+//FUNCTIONS CONCERNING THE DIALOGS
 function createCytoscapeExportDialog() {
   //create the cytoscape dialog
   $("<div>").html("\
@@ -381,6 +383,10 @@ function createInstructionsDialog() {
       maxHeight: 0.8*$(window).height()
   });
 }
+//FUNCTIONS CONCERNING THE DIALOGS
+//************************************************************
+
+
 
 
 
@@ -401,7 +407,7 @@ function buildPage(graphElements, DBGWAS_graph_tag2nodes)
         , south__size: .25
         , south__minSize: .1
         , south__maxSize: .5
-        , east__size: .15
+        , east__size: .2
         , east__maxSize: .5
         , east__spacing_closed:     21      // wider space when closed
         , east__spacing_open:     6      // wider space when closed
