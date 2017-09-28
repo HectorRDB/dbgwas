@@ -10,15 +10,9 @@ body {
   overflow: hidden;
 }
 
-#cy {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  right: 17em;
-}
-
 .config {
+  width: 100%;
+  height: 100%;
   position: absolute;
   right: 0;
   top: 0;
@@ -127,7 +121,115 @@ a:hover {
   font-family: "Courier New", Courier, monospace
 }
 
+
+/*
+* select width
+*/
 select {
-  width: 350px;
+  width: 200px;
   overflow: auto;
 }
+
+
+/*
+* invisible divs
+*/
+.invisible {
+    visibility: hidden;
+    position: absolute;
+    top: -9999px;
+}
+
+
+
+/*
+* DIVS LAYOUT DEFINITIONS
+*/
+.pane-south ,
+.pane-east {
+  overflow:   hidden;
+}
+
+.pane-east {
+  overflow-y:scroll;
+}
+
+.resizer-south-dragging ,
+.resizer-south    { background: url(../resources/D1E6FC_40x100_textures_10_dots_medium_90.png) repeat-x center; }
+  
+.resizer-east-dragging ,
+.resizer-east-open  { background: url(../resources/D1E6FC_40x100_textures_10_dots_medium_90.png) repeat-y center; }
+
+.resizer-dragging-limit { background: #FF3300 !important; }
+
+/* IE6 * HACK - always show resizer graphics because IE6 cannot understand elem:hover */
+/** html .resizer-north   { background: url(../resources/resizable-n.gif) repeat-x center !important; } */
+* html .resizer-south   { background: url(../resources/D1E6FC_40x100_textures_10_dots_medium_90.png) repeat-x center !important; }
+* html .resizer-east-open { background: url(../resources/D1E6FC_40x100_textures_10_dots_medium_90.png) repeat-y center !important; }
+/** html .resizer-north , */
+* html .resizer-south ,
+* html .resizer-east-open {
+  opacity: 0.1 !important;
+  filter: alpha(opacity=10) !important;
+}
+
+/*
+* SIMPLE TOGGLER BUTTONS (used on Outer Layout North/South only)
+*/
+
+.toggler-south-closed     { background: url(../resources/go-up-on.gif) no-repeat center bottom; }
+.toggler-south-open       { background: url(../resources/toggle-dn.gif) no-repeat center top; }
+.toggler-east-closed      { background: url(../resources/go-lt-on.gif) no-repeat center right; }
+.toggler-east-open        { background: url(../resources/toggle-rt.gif) no-repeat center left; }
+
+/*
+* extJS-STYLE RESIZER/SLIDER-BAR (CLOSED)
+*/
+.resizer-east-closed {
+  background: #D1E6FC url(../resources/D1E6FC_40x100_textures_10_dots_medium_90.png) 0 0 repeat;
+  border-top: 1px solid #777;
+  border-bottom: 1px solid #777;
+}
+.resizer-east-closed:hover {
+  background: #D1E6FC;
+}
+.resizer-south-closed {
+  background: #D1E6FC url(../resources/D1E6FC_40x100_textures_10_dots_medium_90.png) 0 0 repeat;
+  border-top: 1px solid #777;
+  border-bottom: 1px solid #777;
+}
+.resizer-south-closed:hover {
+  background: #D1E6FC;
+}
+
+/*
+ *  extJS-STYLE TOGGLE & PIN BUTTONS
+ *
+ *  these 'extra buttons' are INSIDE the east/west panes
+ */
+
+/* CUSTOM pin/close buttons */
+span.button-pin ,
+span.button-close {
+  position: absolute;
+  top:    0;
+  width:    20px;
+  height:   20px;
+  z-index:  2;
+  display:  block;
+  cursor:   pointer;
+}
+span.button-close-east  { right: 0; }
+span.button-pin-east  { left:  1px; }
+
+/* CUSTOM close-buttons */
+span.button-close-east      { background: url(../resources/go-rt-off.gif) no-repeat center; }
+span.button-close-east:hover  { background: url(../resources/go-rt-on.gif)  no-repeat center; }
+span.button-close-south      { background: url(../resources/go-dn-off.gif) no-repeat center; }
+span.button-close-south:hover  { background: url(../resources/go-dn-on.gif)  no-repeat center; }
+
+/* STANDARD toggler-buttons - when the east/west panes are 'closed' */
+.toggler-east-closed    { background: url(../resources/go-lt-off.gif) no-repeat center; }
+.toggler-east-closed:hover  { background: url(../resources/go-lt-on.gif)  no-repeat center; }
+.toggler-south-closed    { background: url(../resources/go-up-off.gif) no-repeat center; }
+.toggler-south-closed:hover  { background: url(../resources/go-up-on.gif)  no-repeat center; }

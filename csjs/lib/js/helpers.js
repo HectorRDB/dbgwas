@@ -36,9 +36,6 @@ var heightTable= parseInt(0.2*$(window).height(), 10);
 var timeout = null
 
 //some variables to deal with user interaction
-var dialogGetFASTANodes;
-var dialogInstructions;
-var cytoscapeExportDialog;
 var cytoscapeDesktopGraph = null;
 var colors = ['red', 'blue', 'green', 'yellow', 'fuchsia', 'brown', 'lime', 'aqua', 'Aquamarine', 'BlueViolet', 'CadetBlue', 'DarkBlue', 'DarkCyan', 'DarkGoldenRod', 'DarkGray', 'DarkGreen', 'DarkMagenta', 'DarkSlateBlue', 'DarkSeaGreen', 'DarkSalmon', 'DarkViolet', 'DarkTurquoise'];
 //declare some global variables
@@ -168,7 +165,7 @@ function drawAlleles() {
     var ctx = c.getContext("2d");
 
     ctx.beginPath();
-    ctx.arc(50, 50, 50, 0, 2 * Math.PI, false);
+    ctx.arc(50, 50, 40, 0, 2 * Math.PI, false);
     ctx.fillStyle = 'white';
     ctx.fill();
 
@@ -304,17 +301,22 @@ function makeFile (text, file, fileType) {
 //************************************************************
 //FUNCTIONS FOR RENDERING LARGE COLUMNS ON THE HANDSONTABLE
 function showFullString (event, title, longString) {
-  $("#showLongStringDialog").html("<textarea class=\"code\" rows=\"10\" style=\"width: 100%\" readonly>"+ longString + "</textarea>")
-  $("#showLongStringDialog").dialog({ title: title, position: {my: "left top", at: "left bottom", of: event.srcElement}})
+  $("<div>").html("<textarea class=\"code\" rows=\"10\" style=\"width: 100%\" readonly>"+ longString + "</textarea>").dialog({
+    title: title,
+    position: {my: "left top", at: "left bottom", of: event.srcElement},
+    close: function() {
+      $(this).dialog('destroy').remove();
+    }
+  })
 }
 
 function longColumnRenderer (instance, td, row, col, prop, value, cellProperties) {
   var longString = Handsontable.helper.stringify(value);
-  
+  var maxLength=50
 
-  if (longString.length>20) {
+  if (longString.length>maxLength) {
     //modify it
-    longString = longString.substring(0, 20) + "<span>...<img class=\"font_size_images\" src=\"lib/resources/enlarge.png\" onclick=\"showFullString(event, '" + instance.getColHeader(col) + "', '"+ longString.replace(/'/g, "\\'") +"')\"/></span>"
+    longString = longString.substring(0, maxLength) + "<span>...<img class=\"font_size_images\" src=\"lib/resources/enlarge.png\" onclick=\"showFullString(event, '" + instance.getColHeader(col) + "', '"+ longString.replace(/'/g, "\\'") +"')\"/></span>"
   }
   
   
@@ -326,6 +328,59 @@ function longColumnRenderer (instance, td, row, col, prop, value, cellProperties
 
 
 
+function createCytoscapeExportDialog() {
+  //create the cytoscape dialog
+  $("<div>").html("\
+          1. Download the graph <a download=\"graph2cytoscapeDesktop.json\" id=\"graph_cytoscape\"><b><u>here</u></b></a>, save it, and load it into Cytoscape (File > Import > Network > File...) <br/>\
+          2. After the graph is loaded, download the style <a href=\"lib/xml/DBGWAS_cytoscape_style.xml\" download=\"DBGWAS_cytoscape_style.xml\"><b><u>here</u></b></a>, save it, and load it into Cytoscape (File > Import > Styles...) <br/>\
+          3. To apply the style, go to the Style tab in the Control Panel and select DBGWAS_cytoscape_style.").
+  dialog({
+    close: function() {
+      $(this).dialog('destroy').remove();
+    },
+      modal: true,
+      width: 0.8*$(window).width(),
+      maxHeight: 0.8*$(window).height()
+  });
+
+  //add the listeners to the download buttons in the cytoscape dialog instructions
+  document.getElementById('graph_cytoscape').addEventListener('click', function () {
+      var link = document.getElementById('graph_cytoscape');
+      link.href = makeFile(JSON.stringify(cy.json()), cytoscapeDesktopGraph, 'application/json');
+  }, false);          
+}
+
+function createInstructionsDialog() {
+  //create the instructions dialog
+  //fills the instruction
+  $("<div>").html("\
+    <ul>\
+        <li>Navigation</li>\
+        <ul>\
+            <li>-Click and drag to move the screen;</li>\
+            <li>-Click and drag a node to move it;</li>\
+            <li>Use mouse wheel to zoom;</li>\
+            <li>You can also use the navigation panel in the up left to navigate;</li>\
+        </ul>\
+        <li>Selecting a node</li>\
+        <ul>      \
+            <li>Press on a node to select it</li>\
+            <li>Selecting a node will add it to the Node table in the bottom of the screen</li>\
+            <li>To make a selection box, hold Ctrl and draw the box</li>\
+            <li>You can easily select and unselect all nodes by right-clicking anywhere in the graph;</li>\
+            <li>Press on a selected node to unselect it</li>\
+            <li>Press anywhere in the graph to unselect all nodes</li>\
+        </ul>\
+    </ul>").
+  dialog({
+      close: function() {
+        $(this).dialog('destroy').remove();
+      },
+      modal: true,
+      width: 0.8*$(window).width(),
+      maxHeight: 0.8*$(window).height()
+  });
+}
 
 
 
@@ -335,31 +390,31 @@ function buildPage(graphElements, DBGWAS_graph_tag2nodes)
 {
     //this is basically main()
     $(function(){ // on dom ready
+        //configure the window
+        $('body').layout({
+          fxName:                       "slide"
+        , fxSpeed:                      "slow"
+        , paneClass:        "pane"    // default = 'ui-layout-pane'
+        , resizerClass:     "resizer" // default = 'ui-layout-resizer'
+        , togglerClass:     "toggler" // default = 'ui-layout-toggler'
+        , buttonClass:      "button"  // default = 'ui-layout-button'        
+        , south__size: .25
+        , south__minSize: .1
+        , south__maxSize: .5
+        , east__size: .15
+        , east__maxSize: .5
+        , east__spacing_closed:     21      // wider space when closed
+        , east__spacing_open:     6      // wider space when closed
+        , east__togglerLength_closed: 21      // make toggler 'square' - 21x21
+        , south__spacing_closed:     21      // wider space when closed
+        , south__spacing_open:     6      // wider space when closed
+        , south__togglerLength_closed: 21      // make toggler 'square' - 21x21
+        , south__onresize_end: function(){
+          table.render();
+        }
+        });
+
         $("#config button").prop("disabled", true); //disable the buttons
-
-        //create the get fasta dialog
-        dialogGetFASTANodes = $('#dialogGetFASTANodes').dialog({
-            autoOpen: false,
-            modal: true,
-            maxWidth: 0.8*$(window).width(),
-            maxHeight: 0.8*$(window).height()
-        });
-
-        //create the instructions dialog
-        dialogInstructions = $('#dialogInstructions').dialog({
-            autoOpen: false,
-            modal: true,
-            width: 0.8*$(window).width(),
-            maxHeight: 0.8*$(window).height()
-        });
-
-        //create the cytoscape dialog
-        cytoscapeExportDialog = $('#cytoscapeExportDialog').dialog({
-            autoOpen: false,
-            modal: true,
-            width: 0.8*$(window).width(),
-            maxHeight: 0.8*$(window).height()
-        });
 
         //create cytoscape graph
         cy = cytoscape({
@@ -552,40 +607,6 @@ function buildPage(graphElements, DBGWAS_graph_tag2nodes)
         //run the layout
         layout.run();
 
-        //fills the instruction
-        $("#dialogInstructions").html("\
-    <ul>\
-        <li>Navigation</li>\
-        <ul>\
-            <li>-Click and drag to move the screen;</li>\
-            <li>-Click and drag a node to move it;</li>\
-            <li>Use mouse wheel to zoom;</li>\
-            <li>You can also use the navigation panel in the up left to navigate;</li>\
-        </ul>\
-        <li>Selecting a node</li>\
-        <ul>      \
-            <li>Press on a node to select it</li>\
-            <li>Selecting a node will add it to the Node table in the bottom of the screen</li>\
-            <li>To make a selection box, hold Ctrl and draw the box</li>\
-            <li>You can easily select and unselect all nodes by right-clicking anywhere in the graph;</li>\
-            <li>Press on a selected node to unselect it</li>\
-            <li>Press anywhere in the graph to unselect all nodes</li>\
-        </ul>\
-    </ul>");
-
-        //fills the cytoscape dialog instructions
-        $("#cytoscapeExportDialog").html("\
-          1. Download the graph <a download=\"graph2cytoscapeDesktop.json\" id=\"graph_cytoscape\"><b><u>here</u></b></a>, save it, and load it into Cytoscape (File > Import > Network > File...) <br/>\
-          2. After the graph is loaded, download the style <a href=\"lib/xml/DBGWAS_cytoscape_style.xml\" download=\"DBGWAS_cytoscape_style.xml\"><b><u>here</u></b></a>, save it, and load it into Cytoscape (File > Import > Styles...) <br/>\
-          3. To apply the style, go to the Style tab in the Control Panel and select DBGWAS_cytoscape_style.")
-
-        //add the listeners to the download buttons in the cytoscape dialog instructions
-        document.getElementById('graph_cytoscape').addEventListener('click', function () {
-            var link = document.getElementById('graph_cytoscape');
-            link.href = makeFile(JSON.stringify(cy.json()), cytoscapeDesktopGraph, 'application/json');
-        }, false);
-
-
         //create the node table
         var tableSettings = {
             data: nodeTableData,
@@ -633,17 +654,10 @@ function buildPage(graphElements, DBGWAS_graph_tag2nodes)
             autoWrapRow: true,
             manualColumnResize: true,
             renderAllRows: true,
-            width: widthTable,
-            height: heightTable,
             columnSorting: true
         };
 
         var tableContainer = document.getElementById('nodeTable');
-        var addedStyle = "width:" + widthTable.toString() + "px; " +
-            "max-width:" + widthTable.toString() + "px; " +
-            "height: " + heightTable.toString() + "px;"
-        "max-height: " + heightTable.toString() + "px;"
-        tableContainer.setAttribute("style", tableContainer.getAttribute("style") + addedStyle);
         table = new Handsontable(tableContainer, tableSettings);
 
         drawGradient();
