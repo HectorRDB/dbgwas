@@ -1,18 +1,33 @@
-﻿High priority TODO:
+﻿Doing v 0.3.2:
+  -Changed the layout of the graph page - now we have 3 panels, where the south and east panel are resizable and closable
+  -Removed ratio from the legend
+  -Reduced size of high allelle frequency
+  -Reduced the width of the tables in the index page
   -Add LBBE and biomerieux names (or logos) to the webpages (result pages + mention on gitlab ?)
-  -Make the size of the table expandable
-    -Sometimes the size of the table is only 3 rows, which is not nice...
-  -Make the step 3 multi-threaded
-    -When the databases are large (e.g. uniprot), it takes a lot of time to blast it... Making it multi-threaded will make things a lot faster...
-  -Is there any graph produced by the statistical part that would be relevant to show also in the visualisation?
-  -In the index page, order the annotation of the significant nodes by blast score and show the blast score;
-  -Allow the user to provide an already built database, instead of calling makeblastdb always
-  -Fix qvalue default min and max to min and max of the components
+
+
+High priority TODO:
+  -nb-cores defaults to 1
+  -Fix the error message when the parameters are not correct
+    -We show the error 3 times, instead of 1
   -When the strains input file is missing, we return an error:
       [FATAL ERROR] Error opening file
       Could it be a little more detailed? Eg, which file (there are two inputs), and whether the format is wrong or the file was not found.
-  -Fix the error message when the parameters are not correct
-    -We show the error 3 times, instead of 1
+  -What to do for the publication?
+  -Is there any graph produced by the statistical part that would be relevant to show also in the visualisation?
+  -reimplement the -nt_db and -pt_db parameters
+    -change to just -annot_db parameter
+    -list a files ordered by priority
+        -Primary is the first and so on
+    -each one has a color
+    -they can be either nt or pt, and we guess from the sequences what it is
+    -e.g.: -annot_db db1.fasta,db2.fasta,db3.fasta,etc...
+  -Make the step 3 multi-threaded
+    -When the databases are large (e.g. uniprot), it takes a lot of time to blast it... Making it multi-threaded will make things a lot faster...
+  -In the index page, order the annotation of the significant nodes by blast score and show the blast score;
+  -Allow the user to provide an already built database, instead of calling makeblastdb always
+  -Fix qvalue default min and max to min and max of the components
+
 
   -newick file should be optional (R script and software)
   -remove the patterns with maf < maf.filter in C++
@@ -27,10 +42,15 @@
 
 
 Low priority TODO:
+  -Hovering a node should highlight it in the table if it is in the table
   -Multiple alignment on the node sequences that are selected?
-    -http://msa.biojs.net/
-    -There are several JS plugins to *show* the multiple alignment, but none to do it
-        -If we want, we will either need to implement it ourselves in javascript or run a local web server which will provide a way of calling a proper program to do this
+    -Maybe this allow us to run the MSA:
+        -https://en.wikipedia.org/wiki/Asm.js
+        -https://en.wikipedia.org/wiki/Emscripten
+        -https://en.wikipedia.org/wiki/Google_Native_Client
+    -To view the MSA, there are several JS plugins
+        -http://msa.biojs.net/
+    -Or do we need to implement MSA ourselves in javascript or run a local web server which will provide a way of calling a proper program to do this
   -Transparency switch
     -Non-significant nodes lose transparency
   -Detach the table to a larger view (it can help people if it is too small)
