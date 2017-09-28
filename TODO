@@ -3,10 +3,10 @@
   -Removed ratio from the legend
   -Reduced size of high allelle frequency
   -Reduced the width of the tables in the index page
-  -Add LBBE and biomerieux names (or logos) to the webpages (result pages + mention on gitlab ?)
 
 
 High priority TODO:
+  -Add LBBE and biomerieux names (or logos) to the webpages (result pages + mention on gitlab ?)
   -nb-cores defaults to 1
   -Fix the error message when the parameters are not correct
     -We show the error 3 times, instead of 1
