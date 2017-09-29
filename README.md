@@ -1,7 +1,7 @@
 # About DBGWAS
 DBGWAS is a tool for quick and efficient bacterial GWAS. It uses a compacted De Bruijn Graph (cDBG) structure to represent the variability within all bacterial genome assemblies given as input. Then cDBG nodes are tested for association with a phenotype of interest and the resulting associated nodes are then re-mapped on the cDBG. The output of DBGWAS consists of regions of the cDBG around statistically significant nodes with several informations related to the phenotypes, offering a representation helping in the interpretation. The output can be viewed with any modern web browser, and thus easily shared.
 
-**Important: DBGWAS only works on Linux for the moment.**
+**IMPORTANT: DBGWAS ONLY WORKS ON LINUX FOR THE MOMENT.**
 
 # DBGWAS in a nutshell
 
@@ -17,12 +17,22 @@ Phenotypes are taken from Jaillard M at al. ,"Correlation between
 phenotypic antibiotic susceptibility and the resistome in Pseudomonas
 aeruginosa". IJAA , 50 (2017) 210-218.
 
+For reproducibility reasons, you can find all the strains' sequences along with DBGWAS' required files here: https://www.dropbox.com/s/0g1llvdbfv1jys6/pseudomonas_aeruginosa_full_dataset.zip?dl=1
+
+The graph nodes were annotated with a resistance database composed by four sources (ResFinders, MEGAres, ArgAnnot and CARD) and the UniProt database of bacterial proteins (http://www.uniprot.org/).
+The specific databases can be found here:
+
+Resistance database: https://www.dropbox.com/s/mt3g4oh0bt5jwmr/Resistance_DB_for_DBGWAS.fasta?dl=1
+
+UniProt database: https://www.dropbox.com/s/9y1p0yw918ips6k/uniprot_sprot_bacteria_for_DBGWAS.fasta?dl=1
+
+
 The output can be found here: http://leoisl.gitlab.io/DBGWAS_support/full_dataset_visualization/
 
 # Downloading, installing and running
 ## Downloading the precompiled binaries
 This is the easiest way to run the tool since it is already precompiled for Linux AMD64 machines.
-Download the latest binary here: https://gitlab.com/leoisl/dbgwas/raw/master/precompiled_binaries/DBGWAS-0.0.3-Linux.tar.gz
+Download the latest binary here: https://www.dropbox.com/s/vd4kjl1obrkfmey/DBGWAS-0.3.2-Linux.tar.gz?dl=1
 
 ## Compiling
 If you still want to compile, clone the repository and execute inside the repository directory:
@@ -114,32 +124,33 @@ DBGWAS makes use of several thirdparty libraries:
 9. Alasql (https://github.com/agershun/alasql)
 10. Handsontable (https://github.com/handsontable/handsontable)
 11. Bootstrap (http://getbootstrap.com/javascript/)
-12. JQuery (https://jquery.com/)
+12. jQuery (https://jquery.com/)
 13. jQuery QueryBuilder (http://querybuilder.js.org/)
-14. Fastclick (https://github.com/ftlabs/fastclick)
+14. jQuery Layout (http://layout.jquery-dev.com/)
+15. Fastclick (https://github.com/ftlabs/fastclick)
 
 
 # How to cite
 Magali Jaillard, Maud Tournoud, Leandro Lima, Vincent Lacroix, Jean-Baptiste Veyrieras and Laurent Jacob, "Representing Genetic Determinants in Bacterial GWAS with Compacted De Bruijn Graphs", 2017,  Cold Spring Harbor Labs Journals, doi:10.1101/113563.
 
 # License
-Copyright (C) <2017>  <bioMerieux, Universite Claude Bernard Lyon 1, 
-Centre National de la Recherche Scientifique> 
+Copyright (C) <2017>  <bioMerieux, Universite Claude Bernard Lyon 1,
+Centre National de la Recherche Scientifique>
 
-1. This program is free software: you can redistribute it and/or modify 
-it under the terms of the GNU Affero General Public License as published 
-by the Free Software Foundation version 3 of the  License and under the 
+1. This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation version 3 of the  License and under the
 terms of article 2 below.
 
-2. This program is distributed in the hope that it will be useful, but 
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+2. This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
 or FITNESS FOR A PARTICULAR PURPOSE. See below the GNU Affero General Public License for more details.
-You should have received a copy of the GNU Affero General Public License 
+You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-3. Communication to the public by any means, in particular in the form of 
-a scientific paper, a poster, a slideshow, an internet page, or a patent, 
-of a result obtained directly or indirectly by running this program must 
-cite the following paper :   
+3. Communication to the public by any means, in particular in the form of
+a scientific paper, a poster, a slideshow, an internet page, or a patent,
+of a result obtained directly or indirectly by running this program must
+cite the following paper :
 
 Magali Jaillard, Maud Tournoud, Leandro Lima, Vincent Lacroix, Jean-Baptiste Veyrieras and Laurent Jacob, "Representing Genetic Determinants in Bacterial GWAS with Compacted De Bruijn Graphs", 2017, Cold Spring Harbor Labs Journals, doi:10.1101/113563.(url: http://www.biorxiv.org/content/early/2017/03/03/113563).
