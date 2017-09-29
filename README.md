@@ -154,3 +154,8 @@ of a result obtained directly or indirectly by running this program must
 cite the following paper :
 
 Magali Jaillard, Maud Tournoud, Leandro Lima, Vincent Lacroix, Jean-Baptiste Veyrieras and Laurent Jacob, "Representing Genetic Determinants in Bacterial GWAS with Compacted De Bruijn Graphs", 2017, Cold Spring Harbor Labs Journals, doi:10.1101/113563.(url: http://www.biorxiv.org/content/early/2017/03/03/113563).
+
+# Affiliations:
+bioMérieux (http://www.biomerieux.fr/)
+LBBE (https://lbbe.univ-lyon1.fr/?lang=en)
+Erable (https://team.inria.fr/erable/en/)

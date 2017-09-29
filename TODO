@@ -1,5 +1,8 @@
-﻿Paper (Deadline: 24th October):
-  -STOP uploading the binary to gitlab
+﻿-Doing v0.3.3:
+  -Added LBBE, Biomerieux and Erable logos to the index and result pages;
+  -Added LBBE, Biomerieux and Erable affiliations to GitLab (README page)
+
+Paper (Deadline: 24th October):
   -New parameters:
     -Lineage
     -MAF filter
@@ -7,7 +10,8 @@
       -Need a fix on Gemma/Bugwas output folder first
   -Check the outputs of the experiments to get more ideas
   -Add statistical figures to the index page
-  -Add LBBE and biomerieux names (or logos) to the webpages (result pages + mention on gitlab ?)
+
+
   -nb-cores defaults to 1
   -Fix the error message when the parameters are not correct
     -We show the error 3 times, instead of 1
