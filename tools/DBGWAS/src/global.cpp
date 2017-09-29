@@ -73,6 +73,7 @@ void populateParser (Tool *tool) {
   //TODO: we should put this back. I put it out and forced the output folder to be always ./output because gemma forcibly uses this directory. If there are 2 executions of the tool, this could bugs because of gemma
 
   tool->getParser()->push_front (new OptionOneParam (STR_KSKMER_SIZE, "K-mer size",  false, "31"));
+  tool->getParser()->push_front (new OptionOneParam (STR_NBCORES, "Number of cores",  false, "1"));
   tool->getParser()->push_front (new OptionOneParam (STR_STRAINS_FILE, "A text file describing the strains containing 3 collumns: 1) ID of the strain; 2) Phenotype (0/1/NA); 3) Path to a multi-fasta file containing the sequences of the strain. This file needs a header. Check the sample_example folder for an example.",  true));
   tool->getParser()->push_front (new OptionOneParam (STR_NEWICK_PATH, "Path to a newick tree file",  true));
   tool->getParser()->push_front (new OptionOneParam (STR_MAX_NEIGHBOURHOOD, "Denotes the maximum neighbourhood that can be viewed in the final visualization",  false, "5"));
