@@ -1,6 +1,15 @@
 ﻿-Doing v0.3.3:
   -Added LBBE, Biomerieux and Erable logos to the index and result pages;
   -Added LBBE, Biomerieux and Erable affiliations to GitLab (README page)
+  -nb-cores defaults to 1
+  -When the strains input file is missing, we return an error:
+      [FATAL ERROR] Error opening file
+      Could it be a little more detailed? Eg, which file (there are two inputs), and whether the format is wrong or the file was not found.
+      -This was fixed in a previous commit
+  -Fixed the error message when the parameters are not correct
+    -We used to show the error 3 times, instead of 1
+
+
 
 Paper (Deadline: 24th October):
   -New parameters:
@@ -10,14 +19,6 @@ Paper (Deadline: 24th October):
       -Need a fix on Gemma/Bugwas output folder first
   -Check the outputs of the experiments to get more ideas
   -Add statistical figures to the index page
-
-
-  -nb-cores defaults to 1
-  -Fix the error message when the parameters are not correct
-    -We show the error 3 times, instead of 1
-  -When the strains input file is missing, we return an error:
-      [FATAL ERROR] Error opening file
-      Could it be a little more detailed? Eg, which file (there are two inputs), and whether the format is wrong or the file was not found.
   -reimplement the -nt_db and -pt_db parameters
     -change to just -annot_db parameter
     -list a files ordered by priority
@@ -46,7 +47,6 @@ High priority TODO:
 
 
 Low priority TODO:
-  -C++ memory optimization
   -Hovering a node should highlight it in the table if it is in the table
   -Multiple alignment on the node sequences that are selected?
     -Maybe this allow us to run the MSA:
@@ -60,11 +60,11 @@ Low priority TODO:
     -Non-significant nodes lose transparency
   -Assemble the heaviest path of the DBG and blast it (or the path going through the largest number of significant unitigs)
     -I think we will need a good amount of effort here, and I do not know if it is an essential feature... To discuss...
-  -Save the blast results on some file?
   -Adding metadata to features (like what each genome mean, species, etc)
     -This would be a field in the input file with a collumn with whatever the user would like to put
     -Show the original genomes as paths in the graph?
-  - possibility to work on unitig counts rather than presence/absence
+  -C++ memory optimization
+  -Possibility to work on unitig counts rather than presence/absence
 
 
 
