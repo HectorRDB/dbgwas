@@ -129,28 +129,25 @@ genVars = NULL, cutoffCor = NULL,  npcs = NULL, phenotype = NULL,
   
   sampleCount = length(phenotype)
   m = match(o[pc.lim], which.mtp.pc)
-
-    ## Not sure it makes sense when using unitigs rather than SNPs: no
-    ## linear chromosome structure. Skip for now.
     
-  ##   ##Bayesian Wald test for genome-wide PCs
-  ##   p.genomewidepc = bugwas:::.testGenomeWidePCs(prefix = prefix,
-  ##                                                pc.lim = pc.lim,
-  ##                                                pca = pca,
-  ##                                                bippat = bippat,
-  ##                                                ipat = ipat,
-  ##                                                o = o)
-  ## message("Bayesian Wald test for genome-wide PCs has been completed successfully.")
+    ##Bayesian Wald test for genome-wide PCs
+    p.genomewidepc = bugwas:::.testGenomeWidePCs(prefix = prefix,
+                                                 pc.lim = pc.lim,
+                                                 pca = pca,
+                                                 bippat = bippat,
+                                                 ipat = ipat,
+                                                 o = o)
+  message("Bayesian Wald test for genome-wide PCs has been completed successfully.")
   
-  ## #The barplot for the Bayesian wald test for genome-wide PCs
-  ## bugwas:::.BayesianWaldTestPCsBarplot(prefix = prefix,
-  ##                             p.pca.bwt = p.pca.bwt,
-  ##                             colourPalette = colourPalette,
-  ##                             o = o,
-  ##                             m = m,
-  ##                             p.genomewidepc = p.genomewidepc,
-  ##                             pc.lim = pc.lim)
-  ##  message("The barplot for the Bayesian wald test for genome-wide PCs has been completed successfully.")
+  #The barplot for the Bayesian wald test for genome-wide PCs
+  bugwas:::.BayesianWaldTestPCsBarplot(prefix = prefix,
+                              p.pca.bwt = p.pca.bwt,
+                              colourPalette = colourPalette,
+                              o = o,
+                              m = m,
+                              p.genomewidepc = p.genomewidepc,
+                              pc.lim = pc.lim)
+   message("The barplot for the Bayesian wald test for genome-wide PCs has been completed successfully.")
        
     snpColours = cdbg_getSNPColours(sampleCount = sampleCount,
                                    colourPalette = colourPalette,
@@ -174,37 +171,40 @@ genVars = NULL, cutoffCor = NULL,  npcs = NULL, phenotype = NULL,
   }
   
   snpType = c(rep(1,bipCount),rep(2,ttpCount))
-  
-  #The Manhattan plot for SNP GWAS using logistic regerssion
-  logregPvalues = NULL
-  logregPos = NULL
-  if(!is.null(fit.lm)){
-  	
-  	logregPos = c(fit.lm$ps,fit.lm.tritetra$ps)
-    logregPvalues = c(fit.lm$negLog10,fit.lm.tritetra$negLog10)
-    bugwas:::.manhattanPlot(prefix = paste0(prefix,"_ManhattanRawPvalues"),
-                  snpPos = logregPos,
-                  pValues = logregPvalues,
-                  snpType = snpType,
-                  main = "Logistic Regression SNPs Manhattan Plot",
-                  col = c(snpColours$bip, snpColours$ttp))
-                  
-    message("The Manhattan plot for SNP GWAS using logistic regerssion has been completed successfully.")
-                  
-  }
-  
-  
-  #The Manhattan plot for SNP GWAS using LMM
-  lmmPos = c(fit.lmm$ps,fit.lmm.tritetra$ps)
-  lmmPvalues = c(-log10(fit.lmm$p_lrt),-log10(as.numeric(fit.lmm.tritetra$pvals)))
-  bugwas:::.manhattanPlot(prefix = paste0(prefix,"_ManhattanLMMPvalues"),
-                snpPos = lmmPos,
-                pValues = lmmPvalues,
-                snpType = snpType,
-                main = "LMM SNPs Manhattan Plot",
-                col = c(snpColours$bip, snpColours$ttp))
-                
-  message("The Manhattan plot for SNP GWAS using LMM has been completed successfully.")
+
+    ## Not sure it makes sense when using unitigs rather than SNPs: no
+    ## linear chromosome structure. Skip for now.
+
+    ## #The Manhattan plot for SNP GWAS using logistic regerssion
+    logregPvalues = NULL
+    logregPos = NULL
+    if(!is.null(fit.lm)){
+        
+    	logregPos = c(fit.lm$ps,fit.lm.tritetra$ps)
+        logregPvalues = c(fit.lm$negLog10,fit.lm.tritetra$negLog10)
+        ## bugwas:::.manhattanPlot(prefix = paste0(prefix,"_ManhattanRawPvalues"),
+        ##                         snpPos = logregPos,
+        ##                         pValues = logregPvalues,
+        ##                         snpType = snpType,
+        ##                         main = "Logistic Regression SNPs Manhattan Plot",
+        ##                         col = c(snpColours$bip, snpColours$ttp))
+        
+        ## message("The Manhattan plot for SNP GWAS using logistic regerssion has been completed successfully.")
+    
+    }
+    
+    
+    ## #The Manhattan plot for SNP GWAS using LMM
+    lmmPos = c(fit.lmm$ps,fit.lmm.tritetra$ps)
+    lmmPvalues = c(-log10(fit.lmm$p_lrt),-log10(as.numeric(fit.lmm.tritetra$pvals)))
+    ## bugwas:::.manhattanPlot(prefix = paste0(prefix,"_ManhattanLMMPvalues"),
+    ##               snpPos = lmmPos,
+    ##               pValues = lmmPvalues,
+    ##               snpType = snpType,
+    ##               main = "LMM SNPs Manhattan Plot",
+  ##               col = c(snpColours$bip, snpColours$ttp))
+    
+    ## message("The Manhattan plot for SNP GWAS using LMM has been completed successfully.")
   
   
   #The plot of logistic regression P-values vs. LMM P-values for SNP GWAS
@@ -232,14 +232,14 @@ genVars = NULL, cutoffCor = NULL,  npcs = NULL, phenotype = NULL,
    message("The reduced space plot of the sample on the top two significant additive PCs been completed successfully.")                    
                        
   
-  ## #The plot with true and predicted phenotype on the tree
-  ## bugwas:::.trueAndPredPhenoOnTreePlot(prefix = prefix, tree = tree, which.mtp.pc = unlist(which.mtp.pc), #Check with SGE
-  ##                            max.mtp.cor.pc = max.mtp.cor.pc, cutoffCor = cutoffCor, treepat = treepat,
-  ##                            pcOrder = o, p.genomewidepc = p.genomewidepc, phenotype = phenotype, 
-  ##                            XX.comid = XX.comid, colourPalette = colourPalette,
-  ##                            pc.lim = pc.lim, pred2 = pred2)
+  #The plot with true and predicted phenotype on the tree
+  bugwas:::.trueAndPredPhenoOnTreePlot(prefix = prefix, tree = tree, which.mtp.pc = unlist(which.mtp.pc), #Check with SGE
+                             max.mtp.cor.pc = max.mtp.cor.pc, cutoffCor = cutoffCor, treepat = treepat,
+                             pcOrder = o, p.genomewidepc = p.genomewidepc, phenotype = phenotype, 
+                             XX.comid = XX.comid, colourPalette = colourPalette,
+                             pc.lim = pc.lim, pred2 = pred2)
                              
-  ##  message("The plot with true and predicted phenotype on the tree has been completed successfully.")                         
+   message("The plot with true and predicted phenotype on the tree has been completed successfully.")                         
   
   #The plots of PCs loadings
   bugwas:::.pcLoadingsPlot(prefix = prefix, pca = pca, pc.lim = pc.lim, 
