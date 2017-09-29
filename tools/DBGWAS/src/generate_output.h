@@ -46,6 +46,7 @@
 #include <boost/graph/subgraph.hpp>
 #include "global.h"
 #include "PhenoCounter.h"
+#include <cstdlib>
 
 #define UNIQUE_SYMBOL_MARKER "#@#-322"
 
@@ -236,6 +237,15 @@ public:
 
     // Actual job done by the tool is here
     void execute();
+
+    //overriding this in order to exit the tool when finding a problem with the arguments
+    IProperties* run (int argc, char* argv[])
+    {
+        IProperties* toReturn = Tool::run(argc, argv);
+        if (!toReturn)
+            std::exit(1);
+        return toReturn;
+    }
 private:
     void generateCytoscapeOutput(const graph_t &graph, const vector<int> &nodes, const string &typeOfGraph, int i,
                                                   const string &outputFolder, const vector<int> &selectedUnitigs, int nbPheno0, int nbPheno1,
