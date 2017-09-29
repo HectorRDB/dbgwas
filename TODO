@@ -3,6 +3,7 @@
   -nb-cores defaults to 1
   -Fix the error message when the parameters are not correct
     -We show the error 3 times, instead of 1
+  -Memory optimization
   -When the strains input file is missing, we return an error:
       [FATAL ERROR] Error opening file
       Could it be a little more detailed? Eg, which file (there are two inputs), and whether the format is wrong or the file was not found.
