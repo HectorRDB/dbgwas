@@ -8,13 +8,13 @@
       -This was fixed in a previous commit
   -Fixed the error message when the parameters are not correct
     -We used to show the error 3 times, instead of 1
-
+  -Added a new parameter: -maf
+    -Minor allele frequency filter, defaults to 0.1
 
 
 Paper (Deadline: 24th October):
   -New parameters:
     -Lineage
-    -MAF filter
     -fix output folder from being fixed to being a parameter
       -Need a fix on Gemma/Bugwas output folder first
   -Check the outputs of the experiments to get more ideas
