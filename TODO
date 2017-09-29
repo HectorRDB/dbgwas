@@ -1,14 +1,19 @@
-﻿High priority TODO:
+﻿Paper (Deadline: 24th October):
+  -STOP uploading the binary to gitlab
+  -New parameters:
+    -Lineage
+    -MAF filter
+    -fix output folder from being fixed to being a parameter
+      -Need a fix on Gemma/Bugwas output folder first
+  -Check the outputs of the experiments to get more ideas
+  -Add statistical figures to the index page
   -Add LBBE and biomerieux names (or logos) to the webpages (result pages + mention on gitlab ?)
   -nb-cores defaults to 1
   -Fix the error message when the parameters are not correct
     -We show the error 3 times, instead of 1
-  -Memory optimization
   -When the strains input file is missing, we return an error:
       [FATAL ERROR] Error opening file
       Could it be a little more detailed? Eg, which file (there are two inputs), and whether the format is wrong or the file was not found.
-  -What to do for the publication?
-  -Is there any graph produced by the statistical part that would be relevant to show also in the visualisation?
   -reimplement the -nt_db and -pt_db parameters
     -change to just -annot_db parameter
     -list a files ordered by priority
@@ -16,9 +21,14 @@
     -each one has a color
     -they can be either nt or pt, and we guess from the sequences what it is
     -e.g.: -annot_db db1.fasta,db2.fasta,db3.fasta,etc...
+    -give also the other option
   -Make the step 3 multi-threaded
     -When the databases are large (e.g. uniprot), it takes a lot of time to blast it... Making it multi-threaded will make things a lot faster...
   -In the index page, order the annotation of the significant nodes by blast score and show the blast score;
+
+
+
+High priority TODO:
   -Allow the user to provide an already built database, instead of calling makeblastdb always
   -Fix qvalue default min and max to min and max of the components
   -newick file should be optional (R script and software)
@@ -28,12 +38,11 @@
     -We just removed from the input for now
   -svd and pca steps are probably redundant in cdbg_lin_loc as XX is centered. Check that they produce the same set of eigenvectors and remove the pca steps (call to prcomp uses more memory than svd).
     -check with laurent
-  -fix output folder from being fixed to being a parameter
-      -Need a fix on Gemma/Bugwas output folder first
 
 
 
 Low priority TODO:
+  -C++ memory optimization
   -Hovering a node should highlight it in the table if it is in the table
   -Multiple alignment on the node sequences that are selected?
     -Maybe this allow us to run the MSA:
