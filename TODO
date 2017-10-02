@@ -10,15 +10,18 @@
     -We used to show the error 3 times, instead of 1
   -Added a new parameter: -maf
     -Minor allele frequency filter, defaults to 0.1
+  -Add statistical figures to the index page
+        - PREFIX_SNPs_PC_manhattan_annot_pos-top.png:
+            p-values of tested unitigs sorted by principal component (each unitig is associated with the closest PC).
+        - PREFIX_barplot_BayesianWald_PCs.png:
+            p-value of each principal component, whose association with the phenotype is tested using a Bayesian Wald test.
+        - PREFIX_tree_branchescolouredbyPC​.png:
+            Phylogenetic tree annotated with the principal components which were found significantly associated with the phenotype using a Bayesian Wald test. [à compléter par Magali si tu te souviens de comment ils font l'annotation].
 
 
 Paper (Deadline: 24th October):
-  -New parameters:
-    -Lineage
-    -fix output folder from being fixed to being a parameter
-      -Need a fix on Gemma/Bugwas output folder first
-  -Check the outputs of the experiments to get more ideas
-  -Add statistical figures to the index page
+TODO soon:
+  -In the index page, order the annotation of the significant nodes by blast score and show the blast score;
   -reimplement the -nt_db and -pt_db parameters
     -change to just -annot_db parameter
     -list a files ordered by priority
@@ -27,9 +30,23 @@ Paper (Deadline: 24th October):
     -they can be either nt or pt, and we guess from the sequences what it is
     -e.g.: -annot_db db1.fasta,db2.fasta,db3.fasta,etc...
     -give also the other option
+      -do the 2 things
+  -Check the outputs of the experiments to get more ideas
+
+Later:
+  -New parameters:
+    -Lineage
+    -fix output folder from being fixed to being a parameter
+      -Need a fix on Gemma/Bugwas output folder first
   -Make the step 3 multi-threaded
     -When the databases are large (e.g. uniprot), it takes a lot of time to blast it... Making it multi-threaded will make things a lot faster...
-  -In the index page, order the annotation of the significant nodes by blast score and show the blast score;
+
+
+
+
+
+
+
 
 
 
@@ -43,6 +60,8 @@ High priority TODO:
     -We just removed from the input for now
   -svd and pca steps are probably redundant in cdbg_lin_loc as XX is centered. Check that they produce the same set of eigenvectors and remove the pca steps (call to prcomp uses more memory than svd).
     -check with laurent
+
+
 
 
 
@@ -69,13 +88,40 @@ Low priority TODO:
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Done v 0.3.2:
   -Changed the layout of the graph page - now we have 3 panels, where the south and east panel are resizable and closable
   -Removed ratio from the legend
   -Reduced size of high allelle frequency
   -Reduced the width of the tables in the index page
-
-
 
 
 
