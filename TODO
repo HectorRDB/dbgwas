@@ -12,8 +12,11 @@
   -Blast executions now use multiple cores
     -This was done by simply adding -num_threads to the blast call
     -Step 3 is not yet fully parallelized - just the blast executions
+  -nb-cores defaults to 1
 
--Doing v0.3.3:
+
+Paper (Deadline: 24th October):
+TODO soon:
   -Add statistical figures to the index page
         - PREFIX_SNPs_PC_manhattan_annot_pos-top.png:
             p-values of tested unitigs sorted by principal component (each unitig is associated with the closest PC).
@@ -21,12 +24,6 @@
             p-value of each principal component, whose association with the phenotype is tested using a Bayesian Wald test.
         - PREFIX_tree_branchescolouredbyPC​.png:
             Phylogenetic tree annotated with the principal components which were found significantly associated with the phenotype using a Bayesian Wald test. [à compléter par Magali si tu te souviens de comment ils font l'annotation].
-  -nb-cores defaults to 1
-  -newick should be optional
-    -Just needed if -lineage is true
-
-Paper (Deadline: 24th October):
-TODO soon:
   -In the index page, order the annotation of the significant nodes by blast score and show the blast score;
   -reimplement the -nt_db and -pt_db parameters
     -change to just -annot_db parameter
@@ -43,6 +40,8 @@ Later:
     -Lineage
     -fix output folder from being fixed to being a parameter
       -Need a fix on Gemma/Bugwas output folder first
+    -newick should be optional
+      -Just needed if -lineage is true
 
 
 
