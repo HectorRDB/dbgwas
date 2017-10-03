@@ -62,12 +62,12 @@ string BlastRecord::extractValue (const string &header, const string &tag) {
 }
 
 
-vector<BlastRecord> Blast::blast (const string &command, const string &queryPath, const string &dbPath) {
+vector<BlastRecord> Blast::blast (const string &command, const string &queryPath, const string &dbPath, int nbCores) {
   string outFilePath = queryPath+"."+command+"Out";
 
   //build the command line
   stringstream ss;
-  ss << "./" << command << " -query " << queryPath << " -db " << dbPath << " -out " << outFilePath << " -outfmt '6 qseqid sseqid qcovs bitscore pident evalue'";
+  ss << "./" << command << " -query " << queryPath << " -db " << dbPath << " -out " << outFilePath << " -num_threads " << nbCores << " -outfmt '6 qseqid sseqid qcovs bitscore pident evalue'";
   string commandLine=ss.str();
   executeCommand(commandLine);
 

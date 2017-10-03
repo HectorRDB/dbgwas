@@ -17,7 +17,9 @@
             p-value of each principal component, whose association with the phenotype is tested using a Bayesian Wald test.
         - PREFIX_tree_branchescolouredbyPC​.png:
             Phylogenetic tree annotated with the principal components which were found significantly associated with the phenotype using a Bayesian Wald test. [à compléter par Magali si tu te souviens de comment ils font l'annotation].
-
+  -Blast executions now use multiple cores
+    -This was done by simply adding -num_threads to the blast call
+    -Step 3 is not yet fully parallelized - just the blast executions
 
 Paper (Deadline: 24th October):
 TODO soon:
@@ -32,13 +34,12 @@ TODO soon:
     -give also the other option
       -do the 2 things
   -Check the outputs of the experiments to get more ideas
-
 Later:
   -New parameters:
     -Lineage
     -fix output folder from being fixed to being a parameter
       -Need a fix on Gemma/Bugwas output folder first
-  -Make the step 3 multi-threaded
+
     -When the databases are large (e.g. uniprot), it takes a lot of time to blast it... Making it multi-threaded will make things a lot faster...
 
 
@@ -84,7 +85,8 @@ Low priority TODO:
     -Show the original genomes as paths in the graph?
   -C++ memory optimization
   -Possibility to work on unitig counts rather than presence/absence
-
+  -Make the step 3 fully multi-threaded
+    -Phantom.js takes a bunch of time and could be easily parallelized
 
 
 
