@@ -1,7 +1,6 @@
-﻿-Doing v0.3.3:
+﻿-Done v0.3.3:
   -Added LBBE, Biomerieux and Erable logos to the index and result pages;
   -Added LBBE, Biomerieux and Erable affiliations to GitLab (README page)
-  -nb-cores defaults to 1
   -When the strains input file is missing, we return an error:
       [FATAL ERROR] Error opening file
       Could it be a little more detailed? Eg, which file (there are two inputs), and whether the format is wrong or the file was not found.
@@ -9,7 +8,12 @@
   -Fixed the error message when the parameters are not correct
     -We used to show the error 3 times, instead of 1
   -Added a new parameter: -maf
-    -Minor allele frequency filter, defaults to 0.1
+    -Minor allele frequency filter, defaults to 0.01
+  -Blast executions now use multiple cores
+    -This was done by simply adding -num_threads to the blast call
+    -Step 3 is not yet fully parallelized - just the blast executions
+
+-Doing v0.3.3:
   -Add statistical figures to the index page
         - PREFIX_SNPs_PC_manhattan_annot_pos-top.png:
             p-values of tested unitigs sorted by principal component (each unitig is associated with the closest PC).
@@ -17,9 +21,9 @@
             p-value of each principal component, whose association with the phenotype is tested using a Bayesian Wald test.
         - PREFIX_tree_branchescolouredbyPC​.png:
             Phylogenetic tree annotated with the principal components which were found significantly associated with the phenotype using a Bayesian Wald test. [à compléter par Magali si tu te souviens de comment ils font l'annotation].
-  -Blast executions now use multiple cores
-    -This was done by simply adding -num_threads to the blast call
-    -Step 3 is not yet fully parallelized - just the blast executions
+  -nb-cores defaults to 1
+  -newick should be optional
+    -Just needed if -lineage is true
 
 Paper (Deadline: 24th October):
 TODO soon:
@@ -39,8 +43,6 @@ Later:
     -Lineage
     -fix output folder from being fixed to being a parameter
       -Need a fix on Gemma/Bugwas output folder first
-
-    -When the databases are large (e.g. uniprot), it takes a lot of time to blast it... Making it multi-threaded will make things a lot faster...
 
 
 
