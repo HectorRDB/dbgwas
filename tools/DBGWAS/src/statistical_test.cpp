@@ -43,6 +43,7 @@ void statistical_test::execute () {
   //string outputFolder = getInput()->getStr(STR_OUTPUT);
   string outputFolder("output");
   string newickTreeFilePath = getInput()->getStr(STR_NEWICK_PATH);
+  double mafFilter = getInput()->getDouble(STR_MAF_FILTER);
 
   //execute the statistical test
   //To do so, we need to create an output folder inside the outputFolder
@@ -54,7 +55,7 @@ void statistical_test::execute () {
   executeCommand(string("Rscript --vanilla DBGWAS.R ") + outputFolder +
                  " " + outputFolder + "/bugwas_input.id_phenotype " +
                  newickTreeFilePath + " " + outputFolder +"/bugwas_out_ " +
-                     pathToExecParent + "gemma.0.93b 0.01 2>&1");
+                     pathToExecParent + "gemma.0.93b " + to_string(mafFilter) + " 2>&1");
 
 
 

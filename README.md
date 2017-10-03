@@ -17,17 +17,19 @@ Phenotypes are taken from Jaillard M at al. ,"Correlation between
 phenotypic antibiotic susceptibility and the resistome in Pseudomonas
 aeruginosa". IJAA , 50 (2017) 210-218.
 
-For reproducibility reasons, you can find all the strains' sequences along with DBGWAS' required files here: https://www.dropbox.com/s/0g1llvdbfv1jys6/pseudomonas_aeruginosa_full_dataset.zip?dl=1
-
 The graph nodes were annotated with a resistance database composed by four sources (ResFinders, MEGAres, ArgAnnot and CARD) and the UniProt database of bacterial proteins (http://www.uniprot.org/).
-The specific databases can be found here:
-
-Resistance database: https://www.dropbox.com/s/mt3g4oh0bt5jwmr/Resistance_DB_for_DBGWAS.fasta?dl=1
-
-UniProt database: https://www.dropbox.com/s/9y1p0yw918ips6k/uniprot_sprot_bacteria_for_DBGWAS.fasta?dl=1
-
 
 The output can be found here: http://leoisl.gitlab.io/DBGWAS_support/full_dataset_visualization/
+
+For reproducibility reasons, in the following you have easily the input data, annotation databases and command-line to generate the above output:
+
+1. Strains' sequences along with DBGWAS' required files (input): https://www.dropbox.com/s/0g1llvdbfv1jys6/pseudomonas_aeruginosa_full_dataset.zip?dl=1
+2. Resistance database: https://www.dropbox.com/s/mt3g4oh0bt5jwmr/Resistance_DB_for_DBGWAS.fasta?dl=1
+3. UniProt database: https://www.dropbox.com/s/9y1p0yw918ips6k/uniprot_sprot_bacteria_for_DBGWAS.fasta?dl=1
+4. Extract everything in the bin folder and execute DBGWAS as:
+```
+./DBGWAS -strains pseudomonas_aeruginosa_full_dataset/strains -newick pseudomonas_aeruginosa_full_dataset/strains.newick -nc_db Resistance_DB_for_DBGWAS.fasta -pt_db uniprot_sprot_bacteria_for_DBGWAS.fasta
+```
 
 # Downloading, installing and running
 ## Downloading the precompiled binaries
@@ -154,3 +156,8 @@ of a result obtained directly or indirectly by running this program must
 cite the following paper :
 
 Magali Jaillard, Maud Tournoud, Leandro Lima, Vincent Lacroix, Jean-Baptiste Veyrieras and Laurent Jacob, "Representing Genetic Determinants in Bacterial GWAS with Compacted De Bruijn Graphs", 2017, Cold Spring Harbor Labs Journals, doi:10.1101/113563.(url: http://www.biorxiv.org/content/early/2017/03/03/113563).
+
+# Affiliations:
+bioMérieux (http://www.biomerieux.fr/)
+LBBE (https://lbbe.univ-lyon1.fr/?lang=en)
+Erable (https://team.inria.fr/erable/en/)
