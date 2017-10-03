@@ -1,21 +1,4 @@
-﻿-Done v0.3.3:
-  -Added LBBE, Biomerieux and Erable logos to the index and result pages;
-  -Added LBBE, Biomerieux and Erable affiliations to GitLab (README page)
-  -When the strains input file is missing, we return an error:
-      [FATAL ERROR] Error opening file
-      Could it be a little more detailed? Eg, which file (there are two inputs), and whether the format is wrong or the file was not found.
-      -This was fixed in a previous commit
-  -Fixed the error message when the parameters are not correct
-    -We used to show the error 3 times, instead of 1
-  -Added a new parameter: -maf
-    -Minor allele frequency filter, defaults to 0.01
-  -Blast executions now use multiple cores
-    -This was done by simply adding -num_threads to the blast call
-    -Step 3 is not yet fully parallelized - just the blast executions
-  -nb-cores defaults to 1
-
-
-Paper (Deadline: 24th October):
+﻿Paper (Deadline: 24th October):
 TODO soon:
   -Add statistical figures to the index page
         - PREFIX_SNPs_PC_manhattan_annot_pos-top.png:
@@ -105,7 +88,21 @@ Low priority TODO:
 
 
 
-
+-Done v0.3.3:
+  -Added LBBE, Biomerieux and Erable logos to the index and result pages;
+  -Added LBBE, Biomerieux and Erable affiliations to GitLab (README page)
+  -When the strains input file is missing, we return an error:
+      [FATAL ERROR] Error opening file
+      Could it be a little more detailed? Eg, which file (there are two inputs), and whether the format is wrong or the file was not found.
+      -This was fixed in a previous commit
+  -Fixed the error message when the parameters are not correct
+    -We used to show the error 3 times, instead of 1
+  -Added a new parameter: -maf
+    -Minor allele frequency filter, defaults to 0.01
+  -Blast executions now use multiple cores
+    -This was done by simply adding -num_threads to the blast call
+    -Step 3 is not yet fully parallelized - just the blast executions
+  -nb-cores defaults to 1
 
 
 
