@@ -167,7 +167,7 @@ struct PatternFromStats {
     long double qValue;
     long double weight;
     long double normalizedWeight;
-    long double waldStatistic;
+    string waldStatistic;
 
     bool operator < (const PatternFromStats& other) const {
       return this->qValue < other.qValue;
