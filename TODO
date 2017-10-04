@@ -80,7 +80,8 @@ Low priority TODO:
 
 
 
-
+Done v0.3.4:
+    -Fixed bugs with pvalues 0 and wald statistics Inf
 
 
 

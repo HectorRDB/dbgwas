@@ -57,7 +57,7 @@ private:
     long double qValue;
     long double weight;
     long double normalizedWeight;
-    long double waldStatistic;
+    string waldStatistic;
     bool valid;
 public:
     UnitigStats():valid(false){} //default constructor
@@ -109,11 +109,8 @@ public:
     }
 
     string getWaldStatisticAsStr() const {
-        stringstream ss;
-        ss << scientific;
         if (valid) {
-            ss << waldStatistic;
-            return ss.str();
+            return waldStatistic;
         } else {
             return string("NA");
         }
