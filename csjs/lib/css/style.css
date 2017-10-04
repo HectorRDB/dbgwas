@@ -233,3 +233,25 @@ span.button-close-south:hover  { background: url(../resources/go-dn-on.gif)  no-
 .toggler-east-closed:hover  { background: url(../resources/go-lt-on.gif)  no-repeat center; }
 .toggler-south-closed    { background: url(../resources/go-up-off.gif) no-repeat center; }
 .toggler-south-closed:hover  { background: url(../resources/go-up-on.gif)  no-repeat center; }
+
+
+
+
+/*logos positioning*/
+#logoContainer {
+    position: absolute;
+    top: 0px;
+    right: 0px;  
+}
+.logo {
+    position: relative;
+    float:right;
+    max-height: 75px;
+    margin-left: 20px;
+}
+.small_logo {
+  position: relative;
+  float:left;
+  max-height: 50px;
+  margin-left: 10px;
+}

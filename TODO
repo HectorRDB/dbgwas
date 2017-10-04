@@ -1,19 +1,13 @@
 ﻿Paper (Deadline: 24th October):
-  -STOP uploading the binary to gitlab
-  -New parameters:
-    -Lineage
-    -MAF filter
-    -fix output folder from being fixed to being a parameter
-      -Need a fix on Gemma/Bugwas output folder first
-  -Check the outputs of the experiments to get more ideas
+TODO soon:
   -Add statistical figures to the index page
-  -Add LBBE and biomerieux names (or logos) to the webpages (result pages + mention on gitlab ?)
-  -nb-cores defaults to 1
-  -Fix the error message when the parameters are not correct
-    -We show the error 3 times, instead of 1
-  -When the strains input file is missing, we return an error:
-      [FATAL ERROR] Error opening file
-      Could it be a little more detailed? Eg, which file (there are two inputs), and whether the format is wrong or the file was not found.
+        - PREFIX_SNPs_PC_manhattan_annot_pos-top.png:
+            p-values of tested unitigs sorted by principal component (each unitig is associated with the closest PC).
+        - PREFIX_barplot_BayesianWald_PCs.png:
+            p-value of each principal component, whose association with the phenotype is tested using a Bayesian Wald test.
+        - PREFIX_tree_branchescolouredbyPC​.png:
+            Phylogenetic tree annotated with the principal components which were found significantly associated with the phenotype using a Bayesian Wald test. [à compléter par Magali si tu te souviens de comment ils font l'annotation].
+  -In the index page, order the annotation of the significant nodes by blast score and show the blast score;
   -reimplement the -nt_db and -pt_db parameters
     -change to just -annot_db parameter
     -list a files ordered by priority
@@ -22,9 +16,22 @@
     -they can be either nt or pt, and we guess from the sequences what it is
     -e.g.: -annot_db db1.fasta,db2.fasta,db3.fasta,etc...
     -give also the other option
-  -Make the step 3 multi-threaded
-    -When the databases are large (e.g. uniprot), it takes a lot of time to blast it... Making it multi-threaded will make things a lot faster...
-  -In the index page, order the annotation of the significant nodes by blast score and show the blast score;
+      -do the 2 things
+  -Check the outputs of the experiments to get more ideas
+Later:
+  -New parameters:
+    -Lineage
+    -fix output folder from being fixed to being a parameter
+      -Need a fix on Gemma/Bugwas output folder first
+    -newick should be optional
+      -Just needed if -lineage is true
+
+
+
+
+
+
+
 
 
 
@@ -41,8 +48,9 @@ High priority TODO:
 
 
 
+
+
 Low priority TODO:
-  -C++ memory optimization
   -Hovering a node should highlight it in the table if it is in the table
   -Multiple alignment on the node sequences that are selected?
     -Maybe this allow us to run the MSA:
@@ -56,11 +64,55 @@ Low priority TODO:
     -Non-significant nodes lose transparency
   -Assemble the heaviest path of the DBG and blast it (or the path going through the largest number of significant unitigs)
     -I think we will need a good amount of effort here, and I do not know if it is an essential feature... To discuss...
-  -Save the blast results on some file?
   -Adding metadata to features (like what each genome mean, species, etc)
     -This would be a field in the input file with a collumn with whatever the user would like to put
     -Show the original genomes as paths in the graph?
-  - possibility to work on unitig counts rather than presence/absence
+  -C++ memory optimization
+  -Possibility to work on unitig counts rather than presence/absence
+  -Make the step 3 fully multi-threaded
+    -Phantom.js takes a bunch of time and could be easily parallelized
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-Done v0.3.3:
+  -Added LBBE, Biomerieux and Erable logos to the index and result pages;
+  -Added LBBE, Biomerieux and Erable affiliations to GitLab (README page)
+  -When the strains input file is missing, we return an error:
+      [FATAL ERROR] Error opening file
+      Could it be a little more detailed? Eg, which file (there are two inputs), and whether the format is wrong or the file was not found.
+      -This was fixed in a previous commit
+  -Fixed the error message when the parameters are not correct
+    -We used to show the error 3 times, instead of 1
+  -Added a new parameter: -maf
+    -Minor allele frequency filter, defaults to 0.01
+  -Blast executions now use multiple cores
+    -This was done by simply adding -num_threads to the blast call
+    -Step 3 is not yet fully parallelized - just the blast executions
+  -nb-cores defaults to 1
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -70,8 +122,6 @@ Done v 0.3.2:
   -Removed ratio from the legend
   -Reduced size of high allelle frequency
   -Reduced the width of the tables in the index page
-
-
 
 
 

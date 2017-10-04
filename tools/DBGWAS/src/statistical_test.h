@@ -28,7 +28,7 @@
 
 #ifndef CDBGGWAS_STATISTICAL_TEST_H
 #define CDBGGWAS_STATISTICAL_TEST_H
-
+#include <cstdlib>
 #include <gatb/gatb_core.hpp>
 using namespace std;
 
@@ -40,6 +40,15 @@ public:
 
     // Actual job done by the tool is here
     void execute();
+
+    //overriding this in order to exit the tool when finding a problem with the arguments
+    IProperties* run (int argc, char* argv[])
+    {
+        IProperties* toReturn = Tool::run(argc, argv);
+        if (!toReturn)
+            std::exit(1);
+        return toReturn;
+    }
 };
 
 

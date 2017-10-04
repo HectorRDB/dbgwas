@@ -50,6 +50,7 @@ extern const char* STR_NEWICK_PATH;
 extern const char* STR_SFF;
 extern const char* STR_NUCLEOTIDE_DB;
 extern const char* STR_PROTEIN_DB;
+extern const char* STR_MAF_FILTER;
 
 //TODO: seeveral questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
 //extern const char* STR_COUNT_MODE;

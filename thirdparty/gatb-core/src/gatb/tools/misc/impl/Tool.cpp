@@ -55,7 +55,13 @@ Tool::Tool (const std::string& name) : userDisplayHelp(0), _helpTarget(0),userDi
     /** We create an options parser. */
     setParser (new OptionsParser(name));
 
-    getParser()->push_back (new OptionOneParam (STR_NB_CORES,    "number of cores",      false, "0"  ));
+    //TODO
+    //This is something I changed by hand, but I should not do this
+    //It would be better to inheritance from this class and do this myself
+    //TODO in refactoring
+    //getParser()->push_back (new OptionOneParam (STR_NB_CORES,    "number of cores",      false, "0"  ));
+    getParser()->push_back (new OptionOneParam (STR_NB_CORES,    "number of cores",      false, "1"  ));
+    //TODO
     getParser()->push_back (new OptionOneParam (STR_VERBOSE,     "verbosity level",      false, "1"  ));
 	
 	getParser()->push_back (new OptionNoParam (STR_VERSION, "version", false));

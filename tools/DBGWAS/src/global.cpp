@@ -46,6 +46,7 @@ const char* STR_NEWICK_PATH = "-newick";
 const char* STR_SFF = "-SFF";
 const char* STR_NUCLEOTIDE_DB = "-nc_db";
 const char* STR_PROTEIN_DB = "-pt_db";
+const char* STR_MAF_FILTER = "-maf";
 
 //TODO: seeveral questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
 //const char* STR_COUNT_MODE = "-count";
@@ -73,6 +74,8 @@ void populateParser (Tool *tool) {
   //TODO: we should put this back. I put it out and forced the output folder to be always ./output because gemma forcibly uses this directory. If there are 2 executions of the tool, this could bugs because of gemma
 
   tool->getParser()->push_front (new OptionOneParam (STR_KSKMER_SIZE, "K-mer size",  false, "31"));
+  tool->getParser()->push_front (new OptionOneParam (STR_NBCORES, "Number of cores",  false, "1"));
+  tool->getParser()->push_front (new OptionOneParam (STR_MAF_FILTER, "Minor Allele Frequency Filter",  false, "0.01"));
   tool->getParser()->push_front (new OptionOneParam (STR_STRAINS_FILE, "A text file describing the strains containing 3 collumns: 1) ID of the strain; 2) Phenotype (0/1/NA); 3) Path to a multi-fasta file containing the sequences of the strain. This file needs a header. Check the sample_example folder for an example.",  true));
   tool->getParser()->push_front (new OptionOneParam (STR_NEWICK_PATH, "Path to a newick tree file",  true));
   tool->getParser()->push_front (new OptionOneParam (STR_MAX_NEIGHBOURHOOD, "Denotes the maximum neighbourhood that can be viewed in the final visualization",  false, "5"));

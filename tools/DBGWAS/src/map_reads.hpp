@@ -28,7 +28,7 @@
 
 #ifndef _TOOL_map_reads_HPP_
 #define _TOOL_map_reads_HPP_
-
+#include <cstdlib>
 /********************************************************************************/
 #include <gatb/gatb_core.hpp>
 /********************************************************************************/
@@ -42,6 +42,15 @@ public:
 
     // Actual job done by the tool is here
     void execute ();
+
+    //overriding this in order to exit the tool when finding a problem with the arguments
+    IProperties* run (int argc, char* argv[])
+    {
+        IProperties* toReturn = Tool::run(argc, argv);
+        if (!toReturn)
+            std::exit(1);
+        return toReturn;
+    }
 };
 
 /********************************************************************************/

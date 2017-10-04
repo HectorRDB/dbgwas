@@ -38,7 +38,7 @@ private:
 class Blast {
 public:
     //Blast (using command) the file in queryPath agains the db on dbPath and return the results as a vector<BlastRecord>
-    static vector<BlastRecord> blast (const string &command, const string &queryPath, const string &dbPath);
+    static vector<BlastRecord> blast (const string &command, const string &queryPath, const string &dbPath, int nbCores);
 
     //make the blast DB
     //returns the path to the blast DB

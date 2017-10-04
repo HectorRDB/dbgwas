@@ -207,7 +207,7 @@ void generate_output::createIndexFile(int numberOfComponents, const string &outp
 
 void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector<int> &nodes, const string &typeOfGraph, int i,
                              const string &outputFolder, const vector<int> &selectedUnitigs, int nbPheno0, int nbPheno1,
-                              map<int, set<string> > &idComponent2DBGWAS_index_tag_signNodesOnly) {
+                              map<int, set<string> > &idComponent2DBGWAS_index_tag_signNodesOnly, int nbCores) {
   cerr << "Rendering " << typeOfGraph << "_" << i << "..." << endl;
 
 
@@ -249,11 +249,11 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
     //execute the blast
     vector <BlastRecord> records;
     if (thereIsNucleotideDB) {
-      vector <BlastRecord> blastnRecords = Blast::blast("blastn", blastInputPath, nucleotideDBPath);
+      vector <BlastRecord> blastnRecords = Blast::blast("blastn", blastInputPath, nucleotideDBPath, nbCores);
       records.insert(records.end(), blastnRecords.begin(), blastnRecords.end());
     }
     if (thereIsProteinDB) {
-      vector <BlastRecord> blastxRecords = Blast::blast("blastx", blastInputPath, proteinDBPath);
+      vector <BlastRecord> blastxRecords = Blast::blast("blastx", blastInputPath, proteinDBPath, nbCores);
       records.insert(records.end(), blastxRecords.begin(), blastxRecords.end());
     }
 
@@ -455,8 +455,7 @@ void generate_output::execute () {
   int neighbourhood = getInput()->getInt(STR_MAX_NEIGHBOURHOOD);
   //string outputFolder = getInput()->getStr(STR_OUTPUT);
   string outputFolder("output");
-  //TODO: use several cores here?
-  //int nbCores = getInput()->getInt(STR_NBCORES);
+  int nbCores = getInput()->getInt(STR_NBCORES);
 
 
   //get the nbContigs
@@ -678,7 +677,7 @@ void generate_output::execute () {
     }
 
     for (int i = 0; i < nodesInComponent.size(); i++) {
-      generateCytoscapeOutput(newGraph, nodesInComponent[i], "comp", i, outputFolder, selectedUnitigs, nbPheno0, nbPheno1, idComponent2DBGWAS_index_tag_signNodesOnly);
+      generateCytoscapeOutput(newGraph, nodesInComponent[i], "comp", i, outputFolder, selectedUnitigs, nbPheno0, nbPheno1, idComponent2DBGWAS_index_tag_signNodesOnly, nbCores);
     }
     numberOfComponents = nodesInComponent.size();
   }
