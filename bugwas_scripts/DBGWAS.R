@@ -224,6 +224,9 @@ data <- cdbg_lin_loc(SNPdata=SNPdata,
 ## multiple testing correction procedure.
 
 lmm.result <- read.table(file=file.path(step1.output, sprintf('%s_biallelic_lmmout_patterns.assoc.txt', prefix)), as.is=TRUE, header=TRUE)
+## In case of a perfect association, gemma returns a p_lrt -nan instead of 0.
+lmm.result$p_lrt[is.nan(lmm.result$p_lrt) & is.infinite(lmm.result$logl_H1)] <- 0
+
 bh.pv <- p.adjust(lmm.result$p_lrt, method='BH')
 
 ## bh.pv.mask <- (bh.pv < bh.thr)

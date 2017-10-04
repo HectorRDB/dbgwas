@@ -253,17 +253,17 @@ genVars = NULL, cutoffCor = NULL,  npcs = NULL, phenotype = NULL,
   new.pat <- c(ipat, unlist(new.pat))
   
   #The Manhattan plot organised by PCs for SNP GWAS
-  bugwas:::.plot_pc_manhattan(o = o, 
-                   which.pc = c(cor.XX$which.pc, cor.tritetra$which.pc), 
-                   pattern = new.pat, 
-                   p.pca.bwt = p.pca.bwt, 
-                   pc.lim = pc_order$pc.lim, 
-                   negLog10 = c(fit.lmm$negLog10, fit.lmm.tritetra$negLog10), 
-                   pat.weight = c(bippat, snppat), 
-                   prefix=paste0(prefix,"_SNPs"),
-                   colourPalette = colourPalette,
-                   npcs = npcs)
-   message("The Manhattan plot organised by PCs for SNP GWAS has been completed successfully.")                
+    .plot_pc_manhattan(o = o, 
+                       which.pc = c(cor.XX$which.pc, cor.tritetra$which.pc), 
+                       pattern = new.pat, 
+                       p.pca.bwt = p.pca.bwt, 
+                       pc.lim = pc_order$pc.lim, 
+                       negLog10 = c(fit.lmm$negLog10, fit.lmm.tritetra$negLog10), 
+                       pat.weight = c(bippat, snppat), 
+                       prefix=paste0(prefix,"_SNPs"),
+                       colourPalette = colourPalette,
+                       npcs = npcs)
+    message("The Manhattan plot organised by PCs for SNP GWAS has been completed successfully.")                
   
   
   #The plots for general genetic variants
@@ -307,4 +307,105 @@ cdbg_getSNPColours = function(sampleCount = NULL,
   
   return(list(bip = COL ,ttp = NULL))
   
+}
+
+###################################################################
+## Plot manhattan plot ordered on the x-axis by PCs
+## @o: PCs in order of significance
+## @which.pc: For each pattern, which PC is it most correlated to
+## @pattern: For each variant, what pattern it is
+## @p.pca.bwt: Bayesian Wald test results for each PC
+## @pc.lim: Which PCs are significant by the BWT
+## @lmm: LMM results matrix
+## @pat.weight: How many variants does each pattern represent
+## @prefix: output prefix
+## Outputs:
+## Manhattan plot with the x-axis ordered by PCs
+##
+## Changelog:
+## Deal with infinite negLog10 which sometimes arise when pvalues
+## are 0.
+###################################################################
+.plot_pc_manhattan <- function(o = NULL,
+                               which.pc = NULL,
+                               pattern = NULL,
+                               p.pca.bwt = NULL,
+                               pc.lim = NULL,
+                               negLog10 = NULL,
+                               pat.weight = NULL,
+                               prefix = NULL,
+                               colourPalette = NULL,
+                               npcs = NULL){
+    ## Find which PCs have a variant that is most correlated to it
+    m <- match(o,unique(which.pc))
+    o.pats <- o[which(is.na(m)==FALSE)]
+    ## Subset the Bayesian Wald Test -log10(p) to those PCs which have kmers most correlated to them
+    p.pca.bwt.pats <- p.pca.bwt[o.pats]
+    
+    
+    num.variants <- sapply(o.pats, function(x, pat.weight=NULL, which.pc = NULL)
+        sum(pat.weight[which(which.pc==x)]),pat.weight = pat.weight,
+        which.pc = which.pc, USE.NAMES=FALSE)
+    
+    cols.pcs <- rep_len(c("#5a5a5a","#c6c6c6"), length.out = length(o.pats))
+    if(!is.null(pc.lim)){
+        cols.pcs[1:length(pc.lim)] <- colourPalette[1:length(pc.lim)]
+    }
+    m <- match(which.pc,o.pats)
+    cols <- cols.pcs[m[pattern]]
+    ##cols[which(max.cor.pc[which(which.pc==o.pats[i])]<0.3)]="grey50"
+    
+    
+    pos.gap <- sapply(num.variants, function(x) 10000/x, USE.NAMES=FALSE)
+    pos.gap[num.variants > 10000] <- 1
+    if(!is.null(pc.lim)){
+        pos.gap[is.na(match(o.pats, o[pc.lim]))] <- pos.gap[is.na(match(o.pats, o[pc.lim]))]/ (npcs/10)
+    } else {
+        pos.gap[21:length(pos.gap)] <- pos.gap[21:length(pos.gap)] / (npcs/10)
+    }
+    
+    pos <- rep(0,length(negLog10))
+    max.pos <- 0
+    plot.lines <- matrix(rep(0, length(o.pats)*2), ncol=2)
+    
+    which.pc <- which.pc[pattern]
+    
+    for(i in 1:length(o.pats)){
+        
+        s = seq(from = (max.pos+pos.gap[i]), by = pos.gap[i], length.out = num.variants[i])
+        if(num.variants[i]>1){
+            pos[which(which.pc==o.pats[i])] <- sample(s, num.variants[i], replace=FALSE)
+        } else {
+            pos[which(which.pc==o.pats[i])] <- s
+        }
+        max.pos <- max(s)
+        plot.lines[i,] <- c((max.pos-pos.gap[i]*num.variants[i]+((num.variants[i]*0.15)*pos.gap[i])), (max.pos-((num.variants[i]*0.15)*pos.gap[i])))
+        
+    }
+    
+    neg.log.pv <- c(p.pca.bwt.pats, negLog10)    
+    ## Replace infinite values by maximal finite value. Keep track of
+    ## their indices to mark them by a special symbol in the plot.    
+    ymax = max(neg.log.pv[!is.infinite(neg.log.pv)])
+    pca.inf <- which(is.infinite(p.pca.bwt.pats))
+    negLog10.inf <- which(is.infinite(negLog10))
+    p.pca.bwt.pats[pca.inf] <- negLog10[negLog10.inf] <- ymax
+    
+    bugwas:::.pl2(paste0(prefix,"_PC_manhattan"),{
+        plot(x = pos, y = negLog10, col = cols, pch = c(1,18)[1 + (1:length(pos) %in% negLog10.inf)],
+             xlab = "", ylab = "LMM -log10(p)",
+             ylim = c(0, ymax), xaxt = "n")
+        
+        for(i in 1:length(o.pats)){
+            lines(x = c(plot.lines[i, ]), y = c(p.pca.bwt.pats[i], p.pca.bwt.pats[i]),
+                  type = "l", col = cols.pcs[i], lty = (1 + (i %in% pca.inf)), lwd=2)
+            if(i<=20){
+                text(x = c(plot.lines[i, 1]+((plot.lines[i, 2]-plot.lines[i, 1])/2)),
+                     y = c(p.pca.bwt.pats[i]+(max(negLog10)/90)), labels = o.pats[i],
+                     col = cols.pcs[i], font = 2, cex = 0.9)
+            }
+        }
+    })
+    
+
 }
