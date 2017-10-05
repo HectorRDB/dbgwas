@@ -48,10 +48,18 @@ void mapReadToTheGraphCore(const string &read, const Graph &graph, const vector<
             //TODO: However, Kmers containing Ns are NOT included in any unitig (i.e. the graph builder does not convert an N to a G, and build the graph. It simply disregards kmers containing Ns)
             //TODO: this is a sanity check to also discard Kmers containing Ns
             //TODO: check this with GATB team
-            //skip the Kmers containing Ns
-            if (LRKmer.find('N') != std::string::npos) {
+
+            //TODO: UPDATE
+            //TODO: Magali had a dataset where we had the base 'K' in the fasta file
+            //TODO: So I am just discarding all reads that are not composed by ACGT
+            if (boost::all(LRKmer, [](char c) -> bool {
+                return c=='A' || c=='a' || c=='C' || c=='c' || c=='G' || c=='g' ||c=='T' || c=='t';
+            })) {
+                cout << "Kmer " << LRKmer << " does not satify the ACGT constraints." << endl;
                 continue;
             }
+
+
 
             //build the node
             Node node = graph.buildNode(LRKmer.c_str());
