@@ -39,6 +39,7 @@
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
 #undef BOOST_NO_CXX11_SCOPED_ENUMS
+#include "version.h"
 
 using namespace std;
 
@@ -194,7 +195,14 @@ void generate_output::createIndexFile(int numberOfComponents, const string &outp
     boost::replace_all(indexOutput, "<all_tags_in_all_components>", ss.str());
   }
 
+  //put the version on the index page
+  boost::replace_all(indexOutput, "<version>", VERSION);
 
+  //copy the figures to the stat folder
+  boost::filesystem::create_directories(outputFolder + string("/visualisations/components/stats/"));
+  boost::filesystem::copy_file(outputFolder + string("/bugwas_out__SNPs_PC_manhattan.png"), outputFolder + string("/visualisations/components/stats/bugwas_out__SNPs_PC_manhattan.png"));
+  boost::filesystem::copy_file(outputFolder + string("/bugwas_out__barplot_BayesianWald_PCs.png"), outputFolder + string("/visualisations/components/stats/bugwas_out__barplot_BayesianWald_PCs.png"));
+  boost::filesystem::copy_file(outputFolder + string("/bugwas_out__tree_branchescolouredbyPC.png"), outputFolder + string("/visualisations/components/stats/bugwas_out__tree_branchescolouredbyPC.png"));
 
   //output the file
   ofstream indexFile;

@@ -255,3 +255,9 @@ span.button-close-south:hover  { background: url(../resources/go-dn-on.gif)  no-
   max-height: 50px;
   margin-left: 10px;
 }
+
+.statImage {
+    max-width: 50%;
+    height: auto;
+    width: auto\9; /* ie8 */
+}

@@ -1,6 +1,6 @@
 ﻿v0.3.6:
   -put DBGWAS version on the index page
-  
+
   -Add statistical figures to the index page
         - PREFIX_SNPs_PC_manhattan_annot_pos-top.png:
             p-values of tested unitigs sorted by principal component (each unitig is associated with the closest PC).
