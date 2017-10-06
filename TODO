@@ -1,5 +1,6 @@
-﻿Paper (Deadline: 24th October):
-TODO soon:
+﻿v0.3.6:
+  -put DBGWAS version on the index page
+  
   -Add statistical figures to the index page
         - PREFIX_SNPs_PC_manhattan_annot_pos-top.png:
             p-values of tested unitigs sorted by principal component (each unitig is associated with the closest PC).
@@ -7,26 +8,22 @@ TODO soon:
             p-value of each principal component, whose association with the phenotype is tested using a Bayesian Wald test.
         - PREFIX_tree_branchescolouredbyPC​.png:
             Phylogenetic tree annotated with the principal components which were found significantly associated with the phenotype using a Bayesian Wald test. [à compléter par Magali si tu te souviens de comment ils font l'annotation].
-  -In the index page, order the annotation of the significant nodes by blast score and show the blast score;
-  -reimplement the -nt_db and -pt_db parameters
-    -change to just -annot_db parameter
-    -list a files ordered by priority
-        -Primary is the first and so on
-    -each one has a color
-    -they can be either nt or pt, and we guess from the sequences what it is
-    -e.g.: -annot_db db1.fasta,db2.fasta,db3.fasta,etc...
-    -give also the other option
-      -do the 2 things
-  -Check the outputs of the experiments to get more ideas
-Later:
+
+
+Paper (Deadline: 24th October):
+  -Annotation:
+    @see https://mail.google.com/mail/u/0/#sent/15ef32ae22f37ec4
+
   -New parameters:
     -Lineage
-    -fix output folder from being fixed to being a parameter
+        -If the user provides a newick file, give the newick file and run the statistical test with do.lineage = TRUE
+        -If he does not provide, create an empty newick file, and run the statistical test with do.lineage = FALSE
+        -This requires that the do.lineage to be a parameter in the R code
+        -Change the parameter from -newick to -lineage
+    -Fix output folder from being fixed to being a parameter
       -Need a fix on Gemma/Bugwas output folder first
-    -newick should be optional
-      -Just needed if -lineage is true
 
-
+  -Check the outputs of the experiments to get more ideas
 
 
 
@@ -38,9 +35,6 @@ Later:
 High priority TODO:
   -Allow the user to provide an already built database, instead of calling makeblastdb always
   -Fix qvalue default min and max to min and max of the components
-  -newick file should be optional (R script and software)
-  -remove the patterns with maf < maf.filter in C++
-    -ok for now (done in R)
   -treat NA better
     -We just removed from the input for now
   -svd and pca steps are probably redundant in cdbg_lin_loc as XX is centered. Check that they produce the same set of eigenvectors and remove the pca steps (call to prcomp uses more memory than svd).
@@ -51,6 +45,8 @@ High priority TODO:
 
 
 Low priority TODO:
+  -remove the patterns with maf < maf.filter in C++
+    -ok for now (done in R)
   -Hovering a node should highlight it in the table if it is in the table
   -Multiple alignment on the node sequences that are selected?
     -Maybe this allow us to run the MSA:
@@ -68,9 +64,12 @@ Low priority TODO:
     -This would be a field in the input file with a collumn with whatever the user would like to put
     -Show the original genomes as paths in the graph?
   -C++ memory optimization
-  -Possibility to work on unitig counts rather than presence/absence
+  -Work on unitig counts rather than presence/absence
   -Make the step 3 fully multi-threaded
     -Phantom.js takes a bunch of time and could be easily parallelized
+
+
+
 
 
 
