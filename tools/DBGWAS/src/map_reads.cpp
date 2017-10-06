@@ -30,6 +30,7 @@
 #include "map_reads.hpp"
 #include "Utils.h"
 #include "PhenoCounter.h"
+#include <boost/algorithm/string/predicate.hpp>
 #include <map>
 #define NB_OF_READS_NOTIFICATION_MAP_AND_PHASE 10 //Nb of reads that the map and phase must process for notification
 using namespace std;
