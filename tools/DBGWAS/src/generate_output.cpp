@@ -199,10 +199,10 @@ void generate_output::createIndexFile(int numberOfComponents, const string &outp
   boost::replace_all(indexOutput, "<version>", VERSION);
 
   //copy the figures to the stat folder
-  boost::create_directories(outputFolder + string("/visualisations/components/stats/"));
-  boost::copy_file(outputFolder + string("/bugwas_out__SNPs_PC_manhattan.png"), outputFolder + string("/visualisations/components/stats/bugwas_out__SNPs_PC_manhattan.png"));
-  boost::copy_file(outputFolder + string("/bugwas_out__barplot_BayesianWald_PCs.png"), outputFolder + string("/visualisations/components/stats/bugwas_out__barplot_BayesianWald_PCs.png"));
-  boost::copy_file(outputFolder + string("/bugwas_out__tree_branchescolouredbyPC.png"), outputFolder + string("/visualisations/components/stats/bugwas_out__tree_branchescolouredbyPC.png"));
+  boost::filesystem::create_directories(outputFolder + string("/visualisations/components/stats/"));
+  boost::filesystem::copy_file(outputFolder + string("/bugwas_out__SNPs_PC_manhattan.png"), outputFolder + string("/visualisations/components/stats/bugwas_out__SNPs_PC_manhattan.png"));
+  boost::filesystem::copy_file(outputFolder + string("/bugwas_out__barplot_BayesianWald_PCs.png"), outputFolder + string("/visualisations/components/stats/bugwas_out__barplot_BayesianWald_PCs.png"));
+  boost::filesystem::copy_file(outputFolder + string("/bugwas_out__tree_branchescolouredbyPC.png"), outputFolder + string("/visualisations/components/stats/bugwas_out__tree_branchescolouredbyPC.png"));
 
   //output the file
   ofstream indexFile;
