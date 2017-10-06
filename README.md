@@ -37,8 +37,11 @@ This is the easiest way to run the tool since it is already precompiled for Linu
 Download the latest binary here (v0.3.5): https://www.dropbox.com/s/b2jgqqicymxb93x/DBGWAS-0.3.5-Linux.tar.gz?dl=1
 
 Pre-compiled versions history:
+
 DBGWAS v0.3.4: https://www.dropbox.com/s/0wvxgv6s2tapbk0/DBGWAS-0.3.4-Linux.tar.gz?dl=1
+
 DBGWAS v0.3.3: https://www.dropbox.com/s/538o8p8vyalcsia/DBGWAS-0.3.3-Linux.tar.gz?dl=1
+
 DBGWAS v0.3.2: https://www.dropbox.com/s/vd4kjl1obrkfmey/DBGWAS-0.3.2-Linux.tar.gz?dl=1
 
 
