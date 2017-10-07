@@ -1,16 +1,4 @@
-﻿v0.3.6:
-  -put DBGWAS version on the index page
-
-  -Add statistical figures to the index page
-        - PREFIX_SNPs_PC_manhattan_annot_pos-top.png:
-            p-values of tested unitigs sorted by principal component (each unitig is associated with the closest PC).
-        - PREFIX_barplot_BayesianWald_PCs.png:
-            p-value of each principal component, whose association with the phenotype is tested using a Bayesian Wald test.
-        - PREFIX_tree_branchescolouredbyPC​.png:
-            Phylogenetic tree annotated with the principal components which were found significantly associated with the phenotype using a Bayesian Wald test. [à compléter par Magali si tu te souviens de comment ils font l'annotation].
-
-
-Paper (Deadline: 24th October):
+﻿Paper (Deadline: 24th October):
   -Annotation:
     @see https://mail.google.com/mail/u/0/#sent/15ef32ae22f37ec4
 
@@ -75,20 +63,31 @@ Low priority TODO:
 
 
 
+
+
+
+
+
+
+
+Previous changelogs:
+Done v0.3.6:
+  -put DBGWAS version on the index page
+  -Add statistical figures to the index page
+        - PREFIX_SNPs_PC_manhattan_annot_pos-top.png:
+            p-values of tested unitigs sorted by principal component (each unitig is associated with the closest PC).
+        - PREFIX_barplot_BayesianWald_PCs.png:
+            p-value of each principal component, whose association with the phenotype is tested using a Bayesian Wald test.
+        - PREFIX_tree_branchescolouredbyPC​.png:
+            Phylogenetic tree annotated with the principal components which were found significantly associated with the phenotype using a Bayesian Wald test. [à compléter par Magali si tu te souviens de comment ils font l'annotation].
+
+
 Done v0.3.5:
     -Fixed a bug when the input fasta files contain other bases besides A, C, G, T and N
 
 
-
-
-
 Done v0.3.4:
     -Fixed bugs with pvalues 0 and wald statistics Inf
-
-
-
-
-
 
 
 -Done v0.3.3:
@@ -108,24 +107,11 @@ Done v0.3.4:
   -nb-cores defaults to 1
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 Done v 0.3.2:
   -Changed the layout of the graph page - now we have 3 panels, where the south and east panel are resizable and closable
   -Removed ratio from the legend
   -Reduced size of high allelle frequency
   -Reduced the width of the tables in the index page
-
 
 
 Done v 0.3.1:
@@ -134,7 +120,6 @@ Done v 0.3.1:
 -Fix very wide selects in the index page (put a horizontal scroll)
   -Increased the height of select as well
 -Selecting a gene now only centers the screen on the nodes of that gene, without zooming
-
 
 
 Done v 0.3.0:
