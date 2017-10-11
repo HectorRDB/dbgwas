@@ -98,7 +98,7 @@ string Blast::makeblastdb (const string &dbtype, const string &originalDBPath, c
     stringstream ss;
     ss << "cat " << originalDBPath << " > " << concatenatedDBPath;
     catCommand = ss.str();
-    boost::replace_all(catCommand, ",", " ");
+    boost::replace_all(catCommand, ",", " <(echo) ");
     executeCommand(catCommand);
   }
 
