@@ -94,11 +94,17 @@ string Blast::makeblastdb (const string &dbtype, const string &originalDBPath, c
 
   //concatenate all DBs into one
   {
+    //TODO: I don't know why <(echo) is not allowed in the cat command, so we have to use this ugly thing...
+    //create an empty file with only a newline
+    string newlineFilepath = outputFolderPath + "/newline";
+    executeCommand(string("echo > ") + newlineFilepath);
+    //TODO: I don't know why <(echo) is not allowed in the cat command, so we have to use this ugly thing...
+
     string catCommand;
     stringstream ss;
     ss << "cat " << originalDBPath << " > " << concatenatedDBPath;
     catCommand = ss.str();
-    boost::replace_all(catCommand, ",", " <(echo) ");
+    boost::replace_all(catCommand, ",", string(" ") + newlineFilepath + " ");
     executeCommand(catCommand);
   }
 
