@@ -208,6 +208,8 @@ void checkParametersBuildDBG(Tool *tool) {
   //check if we skip or not
   skip1 = tool->getInput()->get(STR_SKIP1) != 0;
   skip2 = tool->getInput()->get(STR_SKIP2) != 0;
+  hasNewickFile = tool->getInput()->get(STR_NEWICK_PATH) != 0;
+
   if (skip2) skip1=true;
 
   if (skip1) {
@@ -255,12 +257,14 @@ void checkParametersStatisticalTest(Tool *tool) {
   }
 
   //check if newickTreeFilePath exists
-  string newickTreeFilePath = tool->getInput()->getStr(STR_NEWICK_PATH);
-  boost::filesystem::path p(newickTreeFilePath.c_str());
-  if (!boost::filesystem::exists(p)) {
-    stringstream ss;
-    ss << "Error locating newick tree file path: " << newickTreeFilePath;
-    fatalError(ss.str());
+  if (hasNewickFile) {
+    string newickTreeFilePath = tool->getInput()->getStr(STR_NEWICK_PATH);
+    boost::filesystem::path p(newickTreeFilePath.c_str());
+    if (!boost::filesystem::exists(p)) {
+      stringstream ss;
+      ss << "Error locating newick tree file path: " << newickTreeFilePath;
+      fatalError(ss.str());
+    }
   }
 }
 

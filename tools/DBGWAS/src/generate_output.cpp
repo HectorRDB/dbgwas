@@ -198,11 +198,22 @@ void generate_output::createIndexFile(int numberOfComponents, const string &outp
   //put the version on the index page
   boost::replace_all(indexOutput, "<version>", VERSION);
 
-  //copy the figures to the stat folder
-  boost::filesystem::create_directories(outputFolder + string("/visualisations/components/stats/"));
-  boost::filesystem::copy_file(outputFolder + string("/bugwas_out__SNPs_PC_manhattan.png"), outputFolder + string("/visualisations/components/stats/bugwas_out__SNPs_PC_manhattan.png"));
-  boost::filesystem::copy_file(outputFolder + string("/bugwas_out__barplot_BayesianWald_PCs.png"), outputFolder + string("/visualisations/components/stats/bugwas_out__barplot_BayesianWald_PCs.png"));
-  boost::filesystem::copy_file(outputFolder + string("/bugwas_out__tree_branchescolouredbyPC.png"), outputFolder + string("/visualisations/components/stats/bugwas_out__tree_branchescolouredbyPC.png"));
+  //put the statistical figures in the output if the -newick parameter was given
+  if (hasNewickFile) {
+    boost::replace_all(indexOutput, "<stats_images_html>",
+        "    p-values of tested unitigs sorted by principal component (each unitig is associated with the closest PC):<br/>\n"
+        "    <img class=\"statImage\" src=\"components/stats/bugwas_out__SNPs_PC_manhattan.png\" /><br/><br/><br/>\n"
+        "    p-value of each principal component, whose association with the phenotype is tested using a Bayesian Wald test:<br/>\n"
+        "    <img class=\"statImage\" src=\"components/stats/bugwas_out__barplot_BayesianWald_PCs.png\" /><br/><br/><br/>\n"
+        "    Phylogenetic tree annotated with the principal components which were found significantly associated with the phenotype using a Bayesian Wald test:<br/>\n"
+        "    <img class=\"statImage\" src=\"components/stats/bugwas_out__tree_branchescolouredbyPC.png\" />");
+    boost::filesystem::create_directories(outputFolder + string("/visualisations/components/stats/"));
+    boost::filesystem::copy_file(outputFolder + string("/bugwas_out__SNPs_PC_manhattan.png"), outputFolder + string("/visualisations/components/stats/bugwas_out__SNPs_PC_manhattan.png"));
+    boost::filesystem::copy_file(outputFolder + string("/bugwas_out__barplot_BayesianWald_PCs.png"), outputFolder + string("/visualisations/components/stats/bugwas_out__barplot_BayesianWald_PCs.png"));
+    boost::filesystem::copy_file(outputFolder + string("/bugwas_out__tree_branchescolouredbyPC.png"), outputFolder + string("/visualisations/components/stats/bugwas_out__tree_branchescolouredbyPC.png"));
+  }else {
+    boost::replace_all(indexOutput, "<stats_images_html>", "Re-run DBGWAS with a newick tree file (-newick parameter) to view some statistical images.");
+  }
 
   //output the file
   ofstream indexFile;

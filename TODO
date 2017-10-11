@@ -9,13 +9,11 @@
         -In the pop-up annotation from the table, add the e-value after each annotation.
     ???
         -In the visualisation (both the index and graph page) provide an annotation panel that allow the user to select which annotation DBs he/she wants to consider and also to select a threshold such that all hits above such threshold are disregarded.
+    -Each step must have a separate folder to where the temp files are created
+        -like this we can easily remove old files when using -skipn
+
 
   -New parameters:
-    -Lineage
-        -If the user provides a newick file, give the newick file and run the statistical test with do.lineage = TRUE
-        -If he does not provide, create an empty newick file, and run the statistical test with do.lineage = FALSE
-        -This requires that the do.lineage to be a parameter in the R code
-        -Change the parameter from -newick to -lineage
     -Fix output folder from being fixed to being a parameter
       -Need a fix on Gemma/Bugwas output folder first
 
@@ -79,6 +77,13 @@ Low priority TODO:
 
 
 Previous changelogs:
+Done v0.3.7:
+     -newick parameter is now optional, and do.lineage = TRUE if a newick file is given. Otherwise, it is set to false;
+     -Fixed a bug where we tried to copy some plots that are non-existant if do.lineage = FALSE
+     -Fixed a bug on the -nb-cores option appearing twice in the help
+
+
+
 Done v0.3.6:
   -put DBGWAS version on the index page
   -Add statistical figures to the index page

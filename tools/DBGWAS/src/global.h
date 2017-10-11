@@ -59,6 +59,7 @@ extern const char* STR_MAF_FILTER;
 extern string pathToExecParent;
 extern bool skip1;
 extern bool skip2;
+extern bool hasNewickFile;
 extern bool presenceAbsenceCountMode;
 extern bool thereIsNucleotideDB;
 extern string nucleotideDBPath;
