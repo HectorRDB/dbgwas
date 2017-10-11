@@ -42,7 +42,6 @@ void statistical_test::execute () {
   if (skip2) return;
   //string outputFolder = getInput()->getStr(STR_OUTPUT);
   string outputFolder("output");
-  string newickTreeFilePath = getInput()->getStr(STR_NEWICK_PATH);
   double mafFilter = getInput()->getDouble(STR_MAF_FILTER);
 
   //execute the statistical test
@@ -60,7 +59,7 @@ void statistical_test::execute () {
             << pathToExecParent << "gemma.0.93b "
             << mafFilter << " ";
   if (hasNewickFile)
-    ssCommand << newickTreeFilePath << " ";
+    ssCommand << getInput()->getStr(STR_NEWICK_PATH) << " ";
   ssCommand << "2>&1";
 
   //execute the command line

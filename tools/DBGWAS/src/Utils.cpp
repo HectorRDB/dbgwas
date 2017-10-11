@@ -257,12 +257,14 @@ void checkParametersStatisticalTest(Tool *tool) {
   }
 
   //check if newickTreeFilePath exists
-  string newickTreeFilePath = tool->getInput()->getStr(STR_NEWICK_PATH);
-  boost::filesystem::path p(newickTreeFilePath.c_str());
-  if (!boost::filesystem::exists(p)) {
-    stringstream ss;
-    ss << "Error locating newick tree file path: " << newickTreeFilePath;
-    fatalError(ss.str());
+  if (hasNewickFile) {
+    string newickTreeFilePath = tool->getInput()->getStr(STR_NEWICK_PATH);
+    boost::filesystem::path p(newickTreeFilePath.c_str());
+    if (!boost::filesystem::exists(p)) {
+      stringstream ss;
+      ss << "Error locating newick tree file path: " << newickTreeFilePath;
+      fatalError(ss.str());
+    }
   }
 }
 
