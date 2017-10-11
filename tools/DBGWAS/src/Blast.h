@@ -42,7 +42,7 @@ public:
 
     //make the blast DB
     //returns the path to the blast DB
-    static string makeblastdb (const string &dbtype, const string &originalDBPath);
+    static string makeblastdb (const string &dbtype, const string &originalDBPath, const string &outputFolderPath);
 };
 
 

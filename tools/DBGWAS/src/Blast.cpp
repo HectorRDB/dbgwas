@@ -84,19 +84,38 @@ vector<BlastRecord> Blast::blast (const string &command, const string &queryPath
 }
 
 
-string Blast::makeblastdb (const string &dbtype, const string &originalDBPath) {
-  string fixedDBPath = originalDBPath + ".DBGWAS.fasta";
+string Blast::makeblastdb (const string &dbtype, const string &originalDBPath, const string &outputFolderPath) {
+  string concatenatedDBPath;
+  {
+    stringstream ss;
+    ss << outputFolderPath << "/" << dbtype << "_db";
+    concatenatedDBPath = ss.str();
+  }
 
-  //replace spaces for underscores in the FASTA file, as this could create some problems...
-  cout << "[WARNING] Copying and replacing spaces for _ in your DB " << originalDBPath << endl;
-  string commandLineFixSpaces = string("tr ' ' '_' <") + originalDBPath + " >" + fixedDBPath;
-  executeCommand(commandLineFixSpaces);
+  //concatenate all DBs into one
+  {
+    string catCommand;
+    stringstream ss;
+    ss << "cat " << originalDBPath << " > " << concatenatedDBPath;
+    catCommand = ss.str();
+    boost::replace_all(catCommand, ",", " ");
+    executeCommand(catCommand);
+  }
+
+  //replace spaces for underscores in the concatenated files, as this could create some problems...
+  string fixedDBPath(concatenatedDBPath);
+  fixedDBPath += "_fixed";
+  {
+    string commandLineFixSpaces = string("tr ' ' '_' <") + concatenatedDBPath + " >" + fixedDBPath;
+    executeCommand(commandLineFixSpaces);
+  }
 
   //create the DB using the fixed FASTA
-  string commandLineMakeblastdb = string("./makeblastdb -dbtype ") + dbtype +  " -in " + fixedDBPath;
-  executeCommand(commandLineMakeblastdb);
+  {
+    string commandLineMakeblastdb = string("./makeblastdb -dbtype ") + dbtype + " -in " + fixedDBPath;
+    executeCommand(commandLineMakeblastdb);
+  }
 
   //return the fixed db path
   return fixedDBPath;
-
 }
