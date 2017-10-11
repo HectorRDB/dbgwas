@@ -1,6 +1,14 @@
 ﻿Paper (Deadline: 24th October):
   -Annotation:
     @see https://mail.google.com/mail/u/0/#sent/15ef32ae22f37ec4
+    -nt_db and -pt_db must receive a list of DBs, and not only one
+    ???
+        -Significant node annotation ordered by e-value (index page)
+        -Add a parameter to set a e-value cutoff
+        -E-value ordering ot hits for each node (in the table below the component graph)
+        -In the pop-up annotation from the table, add the e-value after each annotation.
+    ???
+        -In the visualisation (both the index and graph page) provide an annotation panel that allow the user to select which annotation DBs he/she wants to consider and also to select a threshold such that all hits above such threshold are disregarded.
 
   -New parameters:
     -Lineage
