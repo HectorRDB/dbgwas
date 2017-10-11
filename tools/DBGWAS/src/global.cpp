@@ -55,6 +55,7 @@ const char* STR_MAF_FILTER = "-maf";
 string pathToExecParent = "";
 bool skip1 = false;
 bool skip2 = false;
+bool hasNewickFile = false;
 bool presenceAbsenceCountMode = false;
 boost::variant< int, double > SFF;
 bool thereIsNucleotideDB = false;
@@ -74,10 +75,9 @@ void populateParser (Tool *tool) {
   //TODO: we should put this back. I put it out and forced the output folder to be always ./output because gemma forcibly uses this directory. If there are 2 executions of the tool, this could bugs because of gemma
 
   tool->getParser()->push_front (new OptionOneParam (STR_KSKMER_SIZE, "K-mer size",  false, "31"));
-  tool->getParser()->push_front (new OptionOneParam (STR_NBCORES, "Number of cores",  false, "1"));
   tool->getParser()->push_front (new OptionOneParam (STR_MAF_FILTER, "Minor Allele Frequency Filter",  false, "0.01"));
   tool->getParser()->push_front (new OptionOneParam (STR_STRAINS_FILE, "A text file describing the strains containing 3 collumns: 1) ID of the strain; 2) Phenotype (0/1/NA); 3) Path to a multi-fasta file containing the sequences of the strain. This file needs a header. Check the sample_example folder for an example.",  true));
-  tool->getParser()->push_front (new OptionOneParam (STR_NEWICK_PATH, "Path to a newick tree file",  true));
+  tool->getParser()->push_front (new OptionOneParam (STR_NEWICK_PATH, "Optional path to a newick tree file. If (and only if) a newick file is provided, the lineage effect analysis is computed and PCs figures are generated.",  false));
   tool->getParser()->push_front (new OptionOneParam (STR_MAX_NEIGHBOURHOOD, "Denotes the maximum neighbourhood that can be viewed in the final visualization",  false, "5"));
 
   //TODO: maybe allow also to give the DB directly, instead of building it everytime...

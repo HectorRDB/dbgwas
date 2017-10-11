@@ -51,15 +51,20 @@ void statistical_test::execute () {
   //We also need to create this other folder... bizzare...
   createFolder(string("output/bugwas_out__PCloadings/output"));
 
-  //execute the statistical test itself...
-  executeCommand(string("Rscript --vanilla DBGWAS.R ") + outputFolder +
-                 " " + outputFolder + "/bugwas_input.id_phenotype " +
-                 newickTreeFilePath + " " + outputFolder +"/bugwas_out_ " +
-                     pathToExecParent + "gemma.0.93b " + to_string(mafFilter) + " 2>&1");
+  //create the command line
+  stringstream ssCommand;
+  ssCommand << "Rscript --vanilla --no-save --no-restore DBGWAS.R "
+            << outputFolder << " "
+            << outputFolder << "/bugwas_input.id_phenotype "
+            << outputFolder << "/bugwas_out_ "
+            << pathToExecParent << "gemma.0.93b "
+            << mafFilter << " ";
+  if (hasNewickFile)
+    ssCommand << newickTreeFilePath << " ";
+  ssCommand << "2>&1";
 
-
-
-
+  //execute the command line
+  executeCommand(ssCommand.str());
 
   //sort the file by q-value and output it to output/patterns.txt
   //read

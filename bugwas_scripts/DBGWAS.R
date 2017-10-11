@@ -33,33 +33,39 @@ source('cdbg_all_plots.R')
 
 cleanMem <- function(n=50) { for (i in 1:n) gc() }
 
+## mandatory:
 ## step1.output <- './output'
 ## pheno.file <- 'output/bugwas_input.id_phenotype'
-## tree.file <- '../sample_example/strains.newick'
-## ## tree.file <- '../../../data/bmx/bmx.newick'
 ## prefix <- 'output/bugwas_out_'
 ## gem.path <- './gemma.0.93b'
 ## ## bh.thr <- 0.02
 ## maf.filter <- 0.01
+## optional:
+## tree.file <- '../sample_example/strains.newick'
+## ## tree.file <- '../../../data/bmx/bmx.newick'
 
 args = commandArgs(trailingOnly=TRUE)
-if (length(args) < 6) {
-  stop("Six arguments must be supplied.", call.=FALSE)
+if (length(args) < 5 || length(args) > 6) {
+  stop("Number of arguments must be 5 (no lineage effect study) or 
+    6 (for lineage effect study).", call.=FALSE)
 }
 
 step1.output <- args[1]
 pheno.file <- args[2]
-tree.file <- args[3]
-prefix <- args[4]
-gem.path <- args[5]
-maf.filter <- as.numeric(args[6])
+prefix <- args[3]
+gem.path <- args[4]
+maf.filter <- as.numeric(args[5])
 
+## If a newick file is provided, estimate lineage effect and generate related
+## plots. Otherwise skip tree management, svd, pca and plots. 
 
-## If this is TRUE, estimate lineage effect and generate related
-## plots. Otherwise skip tree management (the input file can be
-## empty), svd, pca and plots. Could be an input of the script.
+do.lineage <- FALSE
+tree.file <- ""
 
-do.lineage <- TRUE
+if (length(args) == 6) {
+  tree.file <- args[6]
+  do.lineage <- TRUE
+}
     
 output.dir <- '.' # must be '.' as gemma automatically writes in ./output.
 
@@ -101,6 +107,7 @@ write.table(pheno.mat, file=restr.pheno.file, row.names=FALSE, col.names=TRUE, q
 XX.ID <- colnames(gen)
 
 if(do.lineage){
+    message(sprintf('[DBGWAS] Preparing tree for lineage effect analysis from %s', tree.file))
     ## Restrict tree
     library(ape)
     bmx.tree <- read.tree(tree.file)

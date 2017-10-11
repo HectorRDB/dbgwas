@@ -208,6 +208,8 @@ void checkParametersBuildDBG(Tool *tool) {
   //check if we skip or not
   skip1 = tool->getInput()->get(STR_SKIP1) != 0;
   skip2 = tool->getInput()->get(STR_SKIP2) != 0;
+  hasNewickFile = tool->getInput()->get(STR_NEWICK_PATH) != 0;
+
   if (skip2) skip1=true;
 
   if (skip1) {
