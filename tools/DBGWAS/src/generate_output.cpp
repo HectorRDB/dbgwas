@@ -212,7 +212,7 @@ void generate_output::createIndexFile(int numberOfComponents, const string &outp
     boost::filesystem::copy_file(outputFolder + string("/bugwas_out__barplot_BayesianWald_PCs.png"), outputFolder + string("/visualisations/components/stats/bugwas_out__barplot_BayesianWald_PCs.png"));
     boost::filesystem::copy_file(outputFolder + string("/bugwas_out__tree_branchescolouredbyPC.png"), outputFolder + string("/visualisations/components/stats/bugwas_out__tree_branchescolouredbyPC.png"));
   }else {
-    boost::replace_all(indexOutput, "<stats_images_html>", "Re-run DBGWAS with a newick tree file (-newick parameter) to view some statistical images."
+    boost::replace_all(indexOutput, "<stats_images_html>", "Re-run DBGWAS with a newick tree file (-newick parameter) to view some statistical images.");
   }
 
   //output the file
