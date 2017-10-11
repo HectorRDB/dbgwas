@@ -52,7 +52,7 @@ void statistical_test::execute () {
 
   //create the command line
   stringstream ssCommand;
-  ssCommand << "Rscript --vanilla --no-save --no-restore DBGWAS.R "
+  ssCommand << "Rscript --vanilla DBGWAS.R "
             << outputFolder << " "
             << outputFolder << "/bugwas_input.id_phenotype "
             << outputFolder << "/bugwas_out_ "
