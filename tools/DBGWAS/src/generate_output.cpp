@@ -57,7 +57,7 @@ generate_output::generate_output ()  : Tool ("generate_output") //give a name to
 }
 
 void generate_output::createIndexFile(int numberOfComponents, const string &outputFolder, const vector<vector<int> > &nodesInComponent, graph_t& newGraph,
-                     map<int, set<string> > &idComponent2DBGWAS_index_tag_signNodesOnly, const vector<const PatternFromStats*> &unitigToPatternStats) {
+                     map<int, AnnotationRecord > &idComponent2AnnotationRecord, const vector<const PatternFromStats*> &unitigToPatternStats) {
   cerr << "[Creating index file...]" << endl;
   //create the thumbnails
   for (int i=0;i<numberOfComponents;i++) {
@@ -82,52 +82,35 @@ void generate_output::createIndexFile(int numberOfComponents, const string &outp
 
   for (int i=0;i<numberOfComponents;i++) {
     string idString = std::to_string(i);
-    string annotations="";
-    string annotationsPreview="";
-    {
-      stringstream ssPreview, ss;
+    string annotationsSQL=idComponent2AnnotationRecord[i].getSQLRepresentation();
+    string annotationsHTML=idComponent2AnnotationRecord[i].getHTMLRepresentationForIndexPage(i);
 
-      if (idComponent2DBGWAS_index_tag_signNodesOnly[i].size()==0) {
-        ssPreview << "<b>No annotations found.</b>";
-        ss << UNIQUE_SYMBOL_MARKER << "No annotations found" << UNIQUE_SYMBOL_MARKER << " ";
-      }else {
-        ssPreview << "<select size=\"6\">";
-        for (string tag : idComponent2DBGWAS_index_tag_signNodesOnly[i]) {
-          ssPreview << "<option>" << tag << "</option>";
-          ss << UNIQUE_SYMBOL_MARKER << tag << UNIQUE_SYMBOL_MARKER << " ";
-        }
-        ssPreview << "</select>";
-      }
-      annotationsPreview = ssPreview.str();
-      annotations = ss.str();
-    }
-
-    //get the q-value
-    long double smallerQValue = std::numeric_limits<long double>::max();
+    //get the lowest qvalue of the nodes in the component
+    long double lowestQValue = std::numeric_limits<long double>::max();
     for(const auto &node : nodesInComponent[i]) {
       MyVertex v = vertex(node, newGraph);
       int id = newGraph[v].id;
 
       //check if the patterns exists
       if (unitigToPatternStats[id])
-        smallerQValue=min(smallerQValue, unitigToPatternStats[id]->qValue);
+        lowestQValue=min(lowestQValue, unitigToPatternStats[id]->qValue);
     }
 
     //add the true values to this preview
     string thisPreview(templatePreview);
     boost::replace_all(thisPreview, "<id>", idString);
-    boost::replace_all(thisPreview, "<annotations>", annotationsPreview);
-    string qValueAsStr;
+    boost::replace_all(thisPreview, "<annotations>", annotationsHTML);
+    string lowestQValueAsStr;
     {
       stringstream ss;
       ss << scientific;
-      ss << smallerQValue;
-      ss >> qValueAsStr;
+      ss << lowestQValue;
+      ss >> lowestQValueAsStr;
     }
-    boost::replace_all(thisPreview, "<q-value>", qValueAsStr);
+    boost::replace_all(thisPreview, "<q-value>", lowestQValueAsStr);
 
     //add this preview to all previews
-    previews.push_back(ObjectPreview(smallerQValue, annotations, thisPreview));
+    previews.push_back(ObjectPreview(lowestQValue, annotationsSQL, thisPreview));
   }
 
 
@@ -185,8 +168,11 @@ void generate_output::createIndexFile(int numberOfComponents, const string &outp
   {
     set<string> allTags;
     allTags.insert("No annotations found");
-    for (const auto &pair : idComponent2DBGWAS_index_tag_signNodesOnly)
-      allTags.insert(pair.second.begin(), pair.second.end());
+    for (const auto &idComponent2AnnotationRecordPair : idComponent2AnnotationRecord) {
+      auto tagsOfThisComponent = idComponent2AnnotationRecordPair.second.getAllAnnotationsNames();
+      allTags.insert(tagsOfThisComponent.begin(), tagsOfThisComponent.end());
+    }
+
     stringstream ss;
     ss << "{";
     for (const auto &tag : allTags)
@@ -212,7 +198,7 @@ void generate_output::createIndexFile(int numberOfComponents, const string &outp
     boost::filesystem::copy_file(outputFolder + string("/bugwas_out__barplot_BayesianWald_PCs.png"), outputFolder + string("/visualisations/components/stats/bugwas_out__barplot_BayesianWald_PCs.png"));
     boost::filesystem::copy_file(outputFolder + string("/bugwas_out__tree_branchescolouredbyPC.png"), outputFolder + string("/visualisations/components/stats/bugwas_out__tree_branchescolouredbyPC.png"));
   }else {
-    boost::replace_all(indexOutput, "<stats_images_html>", "Re-run DBGWAS with a newick tree file (-newick parameter) to view some statistical images.");
+    boost::replace_all(indexOutput, "<stats_images_html>", "Re-run DBGWAS with a newick tree file (-newick parameter) to view figures on lineage effect.");
   }
 
   //output the file
@@ -226,7 +212,8 @@ void generate_output::createIndexFile(int numberOfComponents, const string &outp
 
 void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector<int> &nodes, const string &typeOfGraph, int i,
                              const string &outputFolder, const vector<int> &selectedUnitigs, int nbPheno0, int nbPheno1,
-                              map<int, set<string> > &idComponent2DBGWAS_index_tag_signNodesOnly, int nbCores) {
+                             map<int, AnnotationRecord > &idComponent2AnnotationRecord,
+                             int nbCores) {
   cerr << "Rendering " << typeOfGraph << "_" << i << "..." << endl;
 
 
@@ -238,10 +225,9 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
   //some indexes to help gathering info later
   //an index from node id (BOOST node id) to Blast Record - will help to know which annotation are in each node
   map<int, vector<BlastRecord> > node2BlastRecords;
-  //an index from DBGWAS_graph_tag to all node ids (BOOST node id) that mapped to that DBGWAS_graph_tag - will help to know all the nodes mapping to a DBGWAS_graph_tag
-  map <string, set<int>> DBGWAS_graph_tag2nodes;
-  //here we have the DBGWAS_graph_tags ordered by the number of occurences. We always give this ordering from the most important annotation to the least
-  vector< pair<string, int> > DBGWAS_graph_tagsOrderedByNumberOfOccurences;
+
+  AnnotationRecord annotationRecord; //will store all the annotations in this component
+
 
   if (thereIsNucleotideDB || thereIsProteinDB) {
     cerr << "Annotating..." << endl;
@@ -280,28 +266,25 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
     for (const auto &record : records)
       node2BlastRecords[record.nodeId].push_back(record);
 
-    //populate DBGWAS_graph_tag2nodes
+    //populate annotationRecord
     for (const auto &node2BlastRecord : node2BlastRecords) {
       MyVertex v = vertex(node2BlastRecord.first, graph);
       int nodeId = graph[v].id;
-      for (const auto &blastRecord : node2BlastRecord.second)
-        DBGWAS_graph_tag2nodes[blastRecord.DBGWAS_graph_tag].insert(nodeId);
+      for (const auto &blastRecord : node2BlastRecord.second) {
+        annotationRecord.addAnnotation(blastRecord.DBGWAS_graph_tag, nodeId, blastRecord.evalue);
+      }
     }
 
-    //populate DBGWAS_graph_tagsOrderedByNumberOfOccurences
-    for (const auto& DBGWAS_graph_tag2nodesElem : DBGWAS_graph_tag2nodes)
-      DBGWAS_graph_tagsOrderedByNumberOfOccurences.push_back(make_pair(DBGWAS_graph_tag2nodesElem.first, DBGWAS_graph_tag2nodesElem.second.size()));
-    sort(DBGWAS_graph_tagsOrderedByNumberOfOccurences.begin(), DBGWAS_graph_tagsOrderedByNumberOfOccurences.end(), [](const pair<string, int> & a, const pair<string, int> & b) -> bool {
-        return a.second > b.second; });
 
-    //will contain the DBGWAS_index_tag of the significant nodes in this component
+    //populate annotationRecord of the significant nodes only in this component
     for (const auto &node2BlastRecord : node2BlastRecords) {
       MyVertex v = vertex(node2BlastRecord.first, graph);
+      int nodeId = graph[v].id;
       //checks if v is significant
       if (find(selectedUnitigs.begin(), selectedUnitigs.end(), graph[v].id) != selectedUnitigs.end()) {
         //yes
         for (const auto &blastRecord : node2BlastRecord.second)
-          idComponent2DBGWAS_index_tag_signNodesOnly[i].insert(blastRecord.DBGWAS_index_tag);
+          idComponent2AnnotationRecord[i].addAnnotation(blastRecord.DBGWAS_index_tag, nodeId, blastRecord.evalue);
       }
 
     }
@@ -344,20 +327,12 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
       MyVertex v = vertex(node, graph);
       verticesInThisComponent.insert(v);
 
-      //get the tag string
-      string tagsString = "";
+      string tagsString;
       {
-        stringstream tagsSS;
-        for (const auto& tag : DBGWAS_graph_tagsOrderedByNumberOfOccurences) { //goes through all the tags sorted by number of occurences
-          //if the tag is in this node
-          if (find_if(node2BlastRecords[node].begin(), node2BlastRecords[node].end(), [&](const BlastRecord &record) -> bool {
-              return record.DBGWAS_graph_tag == tag.first;
-          }) != node2BlastRecords[node].end()) {
-            //add the tag
-            tagsSS << "'" << tag.first << "', ";
-          }
-        }
-        tagsString = tagsSS.str();
+        stringstream ss;
+        for (const auto &tag : annotationRecord.getAllAnnotationsNames())
+          ss << "'" << tag << "', ";
+        tagsString = ss.str();
       }
 
       //print the node with the full data
@@ -408,27 +383,6 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
 
 
 
-
-  //get all  DBGWAS_graph_tag in this component to populate the annotation dropdown list
-  stringstream DBGWAS_graph_tag2nodesSS;
-  {
-    DBGWAS_graph_tag2nodesSS << "{";
-    for (const auto& tag : DBGWAS_graph_tagsOrderedByNumberOfOccurences) {
-      DBGWAS_graph_tag2nodesSS << "'(" << tag.second << ") " << tag.first << "' : [";
-      for (const auto &nodeId : DBGWAS_graph_tag2nodes[tag.first])
-        DBGWAS_graph_tag2nodesSS << "'n" << nodeId << "',";
-      DBGWAS_graph_tag2nodesSS << "], ";
-    }
-    DBGWAS_graph_tag2nodesSS << "}";
-  }
-
-  //this is what should replace <DBGWAS_graph_tag2nodesTag>
-  string DBGWAS_graph_tag2nodesStr = DBGWAS_graph_tag2nodesSS.str();
-
-
-
-
-
   //create the graph file
   //read template file
   string templatePath = pathToExecParent + string("/cytoscape_template.html");
@@ -438,7 +392,7 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
   boost::replace_all(cytoscapeOutput, "<elementsTag>", elements);
 
   //put the annotation info into the template file
-  boost::replace_all(cytoscapeOutput, "<DBGWAS_graph_tag2nodesTag>", DBGWAS_graph_tag2nodesStr);
+  boost::replace_all(cytoscapeOutput, "<componentAnnotationTag>", annotationRecord.getHTMLRepresentationForGraphPage());
 
   //output the file
   string outfilename;
@@ -677,7 +631,7 @@ void generate_output::execute () {
   //create a subgraph containing only the nodes in the neighbourhoods
   graph_t& newGraph = graph.create_subgraph();
   vector<vector<int> > nodesInComponent; //care: the nodes in this variable are the nodes in newGraph, not in the normal graph
-  map<int, set<string> > idComponent2DBGWAS_index_tag_signNodesOnly;
+  map<int, AnnotationRecord > idComponent2AnnotationRecord;
   int numberOfComponents=0;
   {
     for (auto vp = vertices(graph); vp.first != vp.second; ++vp.first) {
@@ -696,7 +650,8 @@ void generate_output::execute () {
     }
 
     for (int i = 0; i < nodesInComponent.size(); i++) {
-      generateCytoscapeOutput(newGraph, nodesInComponent[i], "comp", i, outputFolder, selectedUnitigs, nbPheno0, nbPheno1, idComponent2DBGWAS_index_tag_signNodesOnly, nbCores);
+      generateCytoscapeOutput(newGraph, nodesInComponent[i], "comp", i, outputFolder, selectedUnitigs, nbPheno0, nbPheno1,
+                              idComponent2AnnotationRecord, nbCores);
     }
     numberOfComponents = nodesInComponent.size();
   }
@@ -705,7 +660,8 @@ void generate_output::execute () {
 
 
   //create the index
-  createIndexFile(numberOfComponents, outputFolder, nodesInComponent, newGraph, idComponent2DBGWAS_index_tag_signNodesOnly, unitigToPatternStats);
+  createIndexFile(numberOfComponents, outputFolder, nodesInComponent, newGraph,
+                  idComponent2AnnotationRecord, unitigToPatternStats);
 
   //tell we are done
   cout << endl << endl <<

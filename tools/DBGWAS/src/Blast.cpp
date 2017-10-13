@@ -4,6 +4,8 @@
 
 #include "Blast.h"
 #include "Utils.h"
+#include "global.h"
+#include <algorithm>
 
 //parse a string and build a BlastRecord from it
 BlastRecord BlastRecord::parseString (const string &str) {
@@ -125,3 +127,72 @@ string Blast::makeblastdb (const string &dbtype, const string &originalDBPath, c
   //return the fixed db path
   return fixedDBPath;
 }
+
+
+void AnnotationRecord::SetOfNodesAndEvalue::addNode(int node, long double evalue) {
+  nodes.insert(node);
+  evalue=min(minEvalue, evalue);
+}
+
+
+string AnnotationRecord::getSQLRepresentation() const {
+  stringstream ss;
+  if (annotations.size()==0)
+    ss << UNIQUE_SYMBOL_MARKER << "No annotations found" << UNIQUE_SYMBOL_MARKER << " ";
+  else {
+    for (const auto & tagAndSetOfNodesAndEvalue : annotations)
+      ss << UNIQUE_SYMBOL_MARKER << tagAndSetOfNodesAndEvalue.first << UNIQUE_SYMBOL_MARKER << " ";
+  }
+  return ss.str();
+}
+
+string AnnotationRecord::getHTMLRepresentationForIndexPage(int componentId) const {
+  stringstream ss;
+  if (annotations.size()==0)
+    ss << "<b>No annotations found.</b>";
+  else {
+    ss << "<script> buildHandsonTableForAnnotationIndexPage(" << componentId << ", [";
+    for (const auto & tagAndSetOfNodesAndEvalue : annotations)
+      ss << "['" << tagAndSetOfNodesAndEvalue.first << "', " << tagAndSetOfNodesAndEvalue.second.getHTMLRepresentationForIndexPage() << "], ";
+    ss << "]) </script>";
+  }
+  return ss.str();
+}
+
+
+//transform to a javascript array
+string AnnotationRecord::SetOfNodesAndEvalue::getHTMLRepresentationForIndexPage () const {
+  stringstream ss;
+  ss << nodes.size() << ", " << minEvalue;
+  return ss.str();
+}
+
+set<string> AnnotationRecord::getAllAnnotationsNames() const {
+  set<string> allAnnotationsNames;
+  for (const auto & tagAndSetOfNodesAndEvalue : annotations)
+    allAnnotationsNames.insert(tagAndSetOfNodesAndEvalue.first);
+  return allAnnotationsNames;
+}
+
+
+//get an HTML representation of the annotation component for the graph page
+string AnnotationRecord::getHTMLRepresentationForGraphPage() const {
+  return "";
+  //TODO: implement
+  /*
+  stringstream ss;
+  {
+    ss << "{";
+    for (const auto& tag : DBGWAS_graph_tagsOrderedByNumberOfOccurences) {
+      DBGWAS_graph_tag2nodesSS << "'(" << tag.second << ") " << tag.first << "' : [";
+      for (const auto &nodeId : DBGWAS_graph_tag2nodes[tag.first])
+        DBGWAS_graph_tag2nodesSS << "'n" << nodeId << "',";
+      DBGWAS_graph_tag2nodesSS << "], ";
+    }
+    DBGWAS_graph_tag2nodesSS << "}";
+  }
+
+//this is what should replace <DBGWAS_graph_tag2nodesTag>
+  string DBGWAS_graph_tag2nodesStr = DBGWAS_graph_tag2nodesSS.str();*/
+}
+

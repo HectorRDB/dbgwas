@@ -44,11 +44,12 @@
 #include <boost/graph/reverse_graph.hpp>
 #include <boost/graph/graph_utility.hpp>
 #include <boost/graph/subgraph.hpp>
-#include "global.h"
-#include "PhenoCounter.h"
 #include <cstdlib>
 
-#define UNIQUE_SYMBOL_MARKER "#@#-322"
+#include "global.h"
+#include "PhenoCounter.h"
+#include "Blast.h"
+
 
 using namespace std;
 
@@ -245,10 +246,11 @@ public:
     }
 private:
     void generateCytoscapeOutput(const graph_t &graph, const vector<int> &nodes, const string &typeOfGraph, int i,
-                                                  const string &outputFolder, const vector<int> &selectedUnitigs, int nbPheno0, int nbPheno1,
-                                                  map<int, set<string> > &idComponent2DBGWAS_index_tag_signNodesOnly, int nbCores);
+                                 const string &outputFolder, const vector<int> &selectedUnitigs, int nbPheno0, int nbPheno1,
+                                 map<int, AnnotationRecord > &idComponent2AnnotationRecord,
+                                 int nbCores);
     void createIndexFile(int numberOfComponents, const string &outputFolder, const vector<vector<int> > &nodesInComponent, graph_t& newGraph,
-                                          map<int, set<string> > &idComponent2DBGWAS_index_tag_signNodesOnly, const vector<const PatternFromStats*> &unitigToPatternStats);
+                         map<int, AnnotationRecord > &idComponent2AnnotationRecord, const vector<const PatternFromStats*> &unitigToPatternStats);
 };
 
 

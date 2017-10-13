@@ -252,7 +252,7 @@ function fillTable() {
 }
 
 
-function selectNodesFromATag(option, cy, DBGWAS_graph_tag2nodes) {
+function selectNodesFromATag(option, cy, componentAnnotation) {
     var tag = $(option).val();
 
     if (tag == "clear") {
@@ -262,7 +262,7 @@ function selectNodesFromATag(option, cy, DBGWAS_graph_tag2nodes) {
         var nodesToHighlight = [];
 
         cy.nodes().forEach(function (node) {
-            if (DBGWAS_graph_tag2nodes[tag].includes(node.id()))
+            if (componentAnnotation[tag].includes(node.id()))
                 nodesToHighlight.push(node)
         })
 
@@ -392,7 +392,7 @@ function createInstructionsDialog() {
 
 //***************************************************************
 //MAIN FUNCTIONS
-function buildPage(graphElements, DBGWAS_graph_tag2nodes)
+function buildPage(graphElements, componentAnnotation)
 {
     //this is basically main()
     $(function(){ // on dom ready
@@ -525,7 +525,7 @@ function buildPage(graphElements, DBGWAS_graph_tag2nodes)
 
 
         //populate the dropdown list for the tags
-        Object.keys(DBGWAS_graph_tag2nodes).forEach(function(key) {
+        Object.keys(componentAnnotation).forEach(function(key) {
             $('#DBGWAS_graph_tag_Select').append($('<option>', {
                 value: key,
                 text: key,
@@ -534,7 +534,7 @@ function buildPage(graphElements, DBGWAS_graph_tag2nodes)
 
         //highlight the tag nodes
         $('#DBGWAS_graph_tag_Select').change(function(){
-            selectNodesFromATag(this, cy, DBGWAS_graph_tag2nodes)
+            selectNodesFromATag(this, cy, componentAnnotation)
         });
 
         //say we are drawing the layout

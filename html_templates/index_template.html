@@ -114,10 +114,10 @@
 
         $(function(){
             $('#stats').on('hide.bs.collapse', function () {
-                $('#statsButton').html('<span class="glyphicon glyphicon-collapse-down"></span> Show some stats');
+                $('#statsButton').html('<span class="glyphicon glyphicon-collapse-down"></span> Show figures on lineage effect');
             })
             $('#stats').on('show.bs.collapse', function () {
-                $('#statsButton').html('<span class="glyphicon glyphicon-collapse-up"></span> Hide some stats');
+                $('#statsButton').html('<span class="glyphicon glyphicon-collapse-up"></span> Hide figures on lineage effect');
             })
         })
     </script>
@@ -144,7 +144,7 @@
 <p style="margin-top: 1cm; clear: both;"/>
 
 <button id="statsButton" type="button" class="btn btn-primary" data-toggle="collapse" data-target="#stats">
-    <span class="glyphicon glyphicon-collapse-down"></span> Show some stats
+    <span class="glyphicon glyphicon-collapse-down"></span> Show figures on lineage effect
 </button>
 <div id="stats" style="margin:0 auto; width:90%;" class="collapse">
     <stats_images_html>

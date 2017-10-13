@@ -1,8 +1,10 @@
 ﻿v0.3.8:
     -nt_db and -pt_db must receive a list of DBs, and not only one
     -In the index page, allow for the sorting of the annotations by number of nodes and e-value (no need for filtering, because we already have a filter: only showing annotations on the significant nodes. This is probably good enough already - all these annotations are probably important)
+        -Simply use a handson table instead of a select and you have the sorting you want!!!
     -In the visualisation (both the index and graph page) provide an annotation panel that allow the user to select which annotation DBs he/she wants to consider and also to select a threshold such that all hits above such threshold are disregarded.
         -Also allow the user to sort the annotation by e-value or nb of nodes
+    -Changed "Show some stats" to "Show figures on lineage effect" in the index page
 
 Paper (Deadline: 24th October):
   -Annotation:
@@ -17,7 +19,7 @@ Paper (Deadline: 24th October):
 
     -Each step must have a separate folder to where the temp files are created
         -like this we can easily remove old files when using -skipn
-
+  -Hovering a node should highlight it in the table if it is in the table
 
   -New parameters:
     -Fix output folder from being fixed to being a parameter
@@ -45,9 +47,11 @@ High priority TODO:
 
 
 Low priority TODO:
+  -Use a continuous or categorical phenotype instead of a binarized phenotype (apparently, this would be more suited for virulence phenotypes);
+  -Use counts instead of pres/abs patterns for the genotypes (and one application would be to compute such analysis on transcriptome data);
+  -Add covariates (e.g. patient metadata) in the association model;
   -remove the patterns with maf < maf.filter in C++
     -ok for now (done in R)
-  -Hovering a node should highlight it in the table if it is in the table
   -Multiple alignment on the node sequences that are selected?
     -Maybe this allow us to run the MSA:
         -https://en.wikipedia.org/wiki/Asm.js
