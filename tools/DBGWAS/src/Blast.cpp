@@ -182,8 +182,6 @@ string AnnotationRecord::getHTMLRepresentationForGraphPage() const {
   for (const auto & tagAndSetOfNodesAndEvalue : annotations)
     ss << "['" << tagAndSetOfNodesAndEvalue.first << "', " << tagAndSetOfNodesAndEvalue.second.getHTMLRepresentationForIndexPage() << "], ";
   ss << "]";
-
-//this is what should replace <DBGWAS_graph_tag2nodesTag>
-  string DBGWAS_graph_tag2nodesStr = DBGWAS_graph_tag2nodesSS.str();*/
+  return ss.str();
 }
 
