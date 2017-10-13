@@ -177,20 +177,11 @@ set<string> AnnotationRecord::getAllAnnotationsNames() const {
 
 //get an HTML representation of the annotation component for the graph page
 string AnnotationRecord::getHTMLRepresentationForGraphPage() const {
-  return "";
-  //TODO: implement
-  /*
   stringstream ss;
-  {
-    ss << "{";
-    for (const auto& tag : DBGWAS_graph_tagsOrderedByNumberOfOccurences) {
-      DBGWAS_graph_tag2nodesSS << "'(" << tag.second << ") " << tag.first << "' : [";
-      for (const auto &nodeId : DBGWAS_graph_tag2nodes[tag.first])
-        DBGWAS_graph_tag2nodesSS << "'n" << nodeId << "',";
-      DBGWAS_graph_tag2nodesSS << "], ";
-    }
-    DBGWAS_graph_tag2nodesSS << "}";
-  }
+  ss << "[";
+  for (const auto & tagAndSetOfNodesAndEvalue : annotations)
+    ss << "['" << tagAndSetOfNodesAndEvalue.first << "', " << tagAndSetOfNodesAndEvalue.second.getHTMLRepresentationForIndexPage() << "], ";
+  ss << "]";
 
 //this is what should replace <DBGWAS_graph_tag2nodesTag>
   string DBGWAS_graph_tag2nodesStr = DBGWAS_graph_tag2nodesSS.str();*/

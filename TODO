@@ -1,24 +1,17 @@
 ﻿v0.3.8:
     -nt_db and -pt_db must receive a list of DBs, and not only one
+        -ok and tested
     -In the index page, allow for the sorting of the annotations by number of nodes and e-value (no need for filtering, because we already have a filter: only showing annotations on the significant nodes. This is probably good enough already - all these annotations are probably important)
         -Simply use a handson table instead of a select and you have the sorting you want!!!
-    -In the visualisation (both the index and graph page) provide an annotation panel that allow the user to select which annotation DBs he/she wants to consider and also to select a threshold such that all hits above such threshold are disregarded.
+    -In the visualisation (both the index and graph page) provide an annotation panel that allow the user to select a threshold such that all hits above such threshold are disregarded.
         -Also allow the user to sort the annotation by e-value or nb of nodes
+        -Sorting comes free with handson table!
+    -In the pop-up annotation from the table, show the annotations of the node, together with nb of nodes and e-value (the handson table itself)
     -Changed "Show some stats" to "Show figures on lineage effect" in the index page
 
 Paper (Deadline: 24th October):
-  -Annotation:
-    @see https://mail.google.com/mail/u/0/#sent/15ef32ae22f37ec4
-
-    ???
-        -Significant node annotation ordered by e-value (index page)
-        -Add a parameter to set a e-value cutoff
-        -E-value ordering ot hits for each node (in the table below the component graph)
-        -In the pop-up annotation from the table, add the e-value after each annotation.
-    ???
-
-    -Each step must have a separate folder to where the temp files are created
-        -like this we can easily remove old files when using -skipn
+  -Each step must have a separate folder to where the temp files are created
+    -like this we can easily remove old files when using -skipn
   -Hovering a node should highlight it in the table if it is in the table
 
   -New parameters:
