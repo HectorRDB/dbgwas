@@ -63,13 +63,12 @@ private:
         string getHTMLRepresentationForIndexPage () const;
     };
     map<string, SetOfNodesAndEvalue> annotations;
+    map<int, set<string> > nodeId2Annotation;
 public:
     AnnotationRecord():annotations(){}
 
     //add an annotation to this set
-    void addAnnotation(const string &tag, int node, long double evalue) {
-        annotations[tag].addNode(node, evalue);
-    }
+    void addAnnotation(const string &tag, int node, long double evalue);
 
     //get a representation of this annotation to be added to the SQL string in the index page
     string getSQLRepresentation() const;
@@ -82,6 +81,11 @@ public:
 
     //get all the annotations names
     set<string> getAllAnnotationsNames() const;
+
+    //get all the annotations names from a node
+    set<string> getAllAnnotationsNamesFromANode(int node) {
+        return nodeId2Annotation[node];
+    }
 
 };
 

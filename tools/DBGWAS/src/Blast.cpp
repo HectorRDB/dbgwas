@@ -185,3 +185,9 @@ string AnnotationRecord::getHTMLRepresentationForGraphPage() const {
   return ss.str();
 }
 
+
+//add an annotation to this set
+void AnnotationRecord::addAnnotation(const string &tag, int node, long double evalue) {
+  annotations[tag].addNode(node, evalue);
+  nodeId2Annotation[node].insert(tag);
+}

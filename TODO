@@ -8,6 +8,7 @@
         -Sorting comes free with handson table!
     -In the pop-up annotation from the table, show the annotations of the node, together with nb of nodes and e-value (the handson table itself)
     -Changed "Show some stats" to "Show figures on lineage effect" in the index page
+    -Refactoring of many parts of the code
 
 Paper (Deadline: 24th October):
   -Each step must have a separate folder to where the temp files are created

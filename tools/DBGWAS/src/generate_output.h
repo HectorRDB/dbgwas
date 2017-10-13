@@ -245,11 +245,11 @@ public:
         return toReturn;
     }
 private:
-    void generateCytoscapeOutput(const graph_t &graph, const vector<int> &nodes, const string &typeOfGraph, int i,
+    void generateCytoscapeOutput(const graph_t &graph, const vector<MyVertex> &nodes, const string &typeOfGraph, int i,
                                  const string &outputFolder, const vector<int> &selectedUnitigs, int nbPheno0, int nbPheno1,
-                                 map<int, AnnotationRecord > &idComponent2AnnotationRecord,
+                                 map<int, AnnotationRecord > &idComponent2SignificantAnnotations,
                                  int nbCores);
-    void createIndexFile(int numberOfComponents, const string &outputFolder, const vector<vector<int> > &nodesInComponent, graph_t& newGraph,
+    void createIndexFile(int numberOfComponents, const string &outputFolder, const vector<vector<MyVertex> > &nodesInComponent, graph_t& newGraph,
                          map<int, AnnotationRecord > &idComponent2AnnotationRecord, const vector<const PatternFromStats*> &unitigToPatternStats);
 };
 
