@@ -269,6 +269,8 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
       //TODO: REMOVE ME
       if (record.nodeId != graph[v].id) {
         cout << "WARNING!!!" << endl;
+        cout << record.nodeId << endl;
+        cout << graph[v].id << endl;
         exit(1);
       }
 
