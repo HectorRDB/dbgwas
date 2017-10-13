@@ -209,7 +209,7 @@ void generate_output::createIndexFile(int numberOfComponents, const string &outp
 }
 
 
-void generate_output::generateCytoscapeOutput(const graph_t &graph, const graph_t &oldGraph, const vector<MyVertex> &nodes, const string &typeOfGraph, int i,
+void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector<MyVertex> &nodes, const string &typeOfGraph, int i,
                              const string &outputFolder, const vector<int> &selectedUnitigs, int nbPheno0, int nbPheno1,
                              map<int, AnnotationRecord > &idComponent2SignificantAnnotations,
                              int nbCores) {
@@ -241,7 +241,7 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const graph_
       ofstream blastInputFile;
       openFileForWriting(blastInputPath, blastInputFile);
       for (const auto &node : nodes)
-        blastInputFile << ">" << graph[node].id << endl << graph[node].name << endl;
+        blastInputFile << ">" << node << endl << graph[node].name << endl;
       blastInputFile.close();
     }
 
@@ -263,15 +263,7 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const graph_
 
     //populate idComponent2SignificantAnnotations of the significant nodes only in this component
     for (const auto &record : records) {
-      MyVertex v = vertex(record.nodeId, oldGraph);
-
-      //TODO: REMOVE ME
-      if (record.nodeId != graph[v].id) {
-        cout << "WARNING!!!" << endl;
-        cout << record.nodeId << endl;
-        cout << graph[v].id << endl;
-        exit(1);
-      }
+      MyVertex v = vertex(record.nodeId, graph);
 
       //checks if v is significant
       if (find(selectedUnitigs.begin(), selectedUnitigs.end(), graph[v].id) != selectedUnitigs.end()) {
@@ -638,7 +630,7 @@ void generate_output::execute () {
       nodesInComponent[componentOfThisNode[i]].push_back(vertex(i, newGraph));
 
     for (int i = 0; i < nodesInComponent.size(); i++) {
-      generateCytoscapeOutput(newGraph, graph, nodesInComponent[i], "comp", i, outputFolder, selectedUnitigs, nbPheno0, nbPheno1,
+      generateCytoscapeOutput(newGraph, nodesInComponent[i], "comp", i, outputFolder, selectedUnitigs, nbPheno0, nbPheno1,
                               idComponent2SignificantAnnotations, nbCores);
     }
     numberOfComponents = nodesInComponent.size();

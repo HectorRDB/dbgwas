@@ -245,7 +245,7 @@ public:
         return toReturn;
     }
 private:
-    void generateCytoscapeOutput(const graph_t &graph, const graph_t &oldGraph, const vector<MyVertex> &nodes, const string &typeOfGraph, int i,
+    void generateCytoscapeOutput(const graph_t &graph, const vector<MyVertex> &nodes, const string &typeOfGraph, int i,
                                  const string &outputFolder, const vector<int> &selectedUnitigs, int nbPheno0, int nbPheno1,
                                  map<int, AnnotationRecord > &idComponent2SignificantAnnotations,
                                  int nbCores);
