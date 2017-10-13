@@ -88,8 +88,7 @@ void generate_output::createIndexFile(int numberOfComponents, const string &outp
     //get the lowest qvalue of the nodes in the component
     long double lowestQValue = std::numeric_limits<long double>::max();
     for(const auto &node : nodesInComponent[i]) {
-      MyVertex v = vertex(node, newGraph);
-      int id = newGraph[v].id;
+      int id = newGraph[node].id;
 
       //check if the patterns exists
       if (unitigToPatternStats[id])
@@ -210,7 +209,7 @@ void generate_output::createIndexFile(int numberOfComponents, const string &outp
 }
 
 
-void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector<MyVertex> &nodes, const string &typeOfGraph, int i,
+void generate_output::generateCytoscapeOutput(const graph_t &graph, const graph_t &oldGraph, const vector<MyVertex> &nodes, const string &typeOfGraph, int i,
                              const string &outputFolder, const vector<int> &selectedUnitigs, int nbPheno0, int nbPheno1,
                              map<int, AnnotationRecord > &idComponent2SignificantAnnotations,
                              int nbCores) {
@@ -264,7 +263,7 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
 
     //populate idComponent2SignificantAnnotations of the significant nodes only in this component
     for (const auto &record : records) {
-      MyVertex v = vertex(record.nodeId, graph);
+      MyVertex v = vertex(record.nodeId, oldGraph);
 
       //TODO: REMOVE ME
       if (record.nodeId != graph[v].id) {
@@ -639,7 +638,7 @@ void generate_output::execute () {
       nodesInComponent[componentOfThisNode[i]].push_back(vertex(i, newGraph));
 
     for (int i = 0; i < nodesInComponent.size(); i++) {
-      generateCytoscapeOutput(newGraph, nodesInComponent[i], "comp", i, outputFolder, selectedUnitigs, nbPheno0, nbPheno1,
+      generateCytoscapeOutput(newGraph, graph, nodesInComponent[i], "comp", i, outputFolder, selectedUnitigs, nbPheno0, nbPheno1,
                               idComponent2SignificantAnnotations, nbCores);
     }
     numberOfComponents = nodesInComponent.size();
