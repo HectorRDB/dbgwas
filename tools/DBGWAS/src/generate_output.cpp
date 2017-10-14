@@ -257,8 +257,12 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
     }
 
     //populate annotationsOfThisComponent
-    for (const auto &record : records)
-      annotationsOfThisComponent.addAnnotation(record.DBGWAS_graph_tag, record.nodeId, record.evalue);
+    for (const auto &record : records) {
+      //here I have to use graph[v].id instead of simply record.nodeId because the original IDs of the node is used later
+      MyVertex v = vertex(record.nodeId, graph);
+      annotationsOfThisComponent.addAnnotation(record.DBGWAS_graph_tag, graph[v].id, record.evalue);
+    }
+
 
 
     //populate idComponent2SignificantAnnotations of the significant nodes only in this component
@@ -268,7 +272,9 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
       //checks if v is significant
       if (find(selectedUnitigs.begin(), selectedUnitigs.end(), graph[v].id) != selectedUnitigs.end()) {
         //yes, add it
-        idComponent2SignificantAnnotations[i].addAnnotation(record.DBGWAS_index_tag, record.nodeId, record.evalue);
+        //here I have to use graph[v].id instead of simply record.nodeId because the original IDs of the node is used later
+        MyVertex v = vertex(record.nodeId, graph);
+        idComponent2SignificantAnnotations[i].addAnnotation(record.DBGWAS_index_tag, graph[v].id, record.evalue);
       }
     }
 
