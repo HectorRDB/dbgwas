@@ -32,6 +32,7 @@ var cy; //cytoscape object
 var nodeTableData = []; //node table data
 var table; //the table
 var annotationTable; //the annotation table
+var annotation2Nodes = [];
 var widthTable = parseInt(0.8*$(window).width(), 10);
 var heightTable= parseInt(0.2*$(window).height(), 10);
 var timeout = null
@@ -254,16 +255,16 @@ function fillTable() {
 
 
 function selectNodesFromATag(nodesToSelect) {
-  var nodesToHighlight = [];
+    var nodesToHighlight = [];
 
-  cy.nodes().forEach(function (node) {
-      if (nodesToSelect.includes(node.id()))
-          nodesToHighlight.push(node)
-  })
+    cy.nodes().forEach(function (node) {
+        if (nodesToSelect.includes(node.id()))
+            nodesToHighlight.push(node)
+    })
 
-  unselectAllNodes();
-  cy.collection(nodesToHighlight).select();
-  cy.center(cy.collection(nodesToHighlight))
+    unselectAllNodes();
+    cy.collection(nodesToHighlight).select();
+    cy.center(cy.collection(nodesToHighlight))
 }
 //FUNCTIONS OF SELECT/UNSELECT
 //************************************************************
@@ -295,27 +296,27 @@ function makeFile (text, file, fileType) {
 //************************************************************
 //FUNCTIONS FOR RENDERING LARGE COLUMNS ON THE HANDSONTABLE
 function showFullString (event, title, longString) {
-  $("<div>").html("<textarea class=\"code\" rows=\"10\" style=\"width: 100%\" readonly>"+ longString + "</textarea>").dialog({
-    title: title,
-    position: {my: "left top", at: "left bottom", of: event.srcElement},
-    close: function() {
-      $(this).dialog('destroy').remove();
-    }
-  })
+    $("<div>").html("<textarea class=\"code\" rows=\"10\" style=\"width: 100%\" readonly>"+ longString + "</textarea>").dialog({
+        title: title,
+        position: {my: "left top", at: "left bottom", of: event.srcElement},
+        close: function() {
+            $(this).dialog('destroy').remove();
+        }
+    })
 }
 
 function longColumnRenderer (instance, td, row, col, prop, value, cellProperties) {
-  var longString = Handsontable.helper.stringify(value);
-  var maxLength=40
+    var longString = Handsontable.helper.stringify(value);
+    var maxLength=40
 
-  if (longString.length>maxLength) {
-    //modify it
-    longString = longString.substring(0, maxLength) + "<span>...<img class=\"font_size_images\" src=\"lib/resources/enlarge.png\" onclick=\"showFullString(event, '" + instance.getColHeader(col) + "', '"+ longString.replace(/'/g, "\\'") +"')\"/></span>"
-  }
-  
-  
-  td.innerHTML = longString;
-  return td;
+    if (longString.length>maxLength) {
+        //modify it
+        longString = longString.substring(0, maxLength) + "<span>...<img class=\"font_size_images\" src=\"lib/resources/enlarge.png\" onclick=\"showFullString(event, '" + instance.getColHeader(col) + "', '"+ longString.replace(/'/g, "\\'") +"')\"/></span>"
+    }
+
+
+    td.innerHTML = longString;
+    return td;
 }
 //FUNCTIONS FOR RENDERING LARGE COLLUMNS ON THE HANDSONTABLE
 //************************************************************
@@ -325,31 +326,31 @@ function longColumnRenderer (instance, td, row, col, prop, value, cellProperties
 //************************************************************
 //FUNCTIONS CONCERNING THE DIALOGS
 function createCytoscapeExportDialog() {
-  //create the cytoscape dialog
-  $("<div>").html("\
+    //create the cytoscape dialog
+    $("<div>").html("\
           1. Download the graph <a download=\"graph2cytoscapeDesktop.json\" id=\"graph_cytoscape\"><b><u>here</u></b></a>, save it, and load it into Cytoscape (File > Import > Network > File...) <br/>\
           2. After the graph is loaded, download the style <a href=\"lib/xml/DBGWAS_cytoscape_style.xml\" download=\"DBGWAS_cytoscape_style.xml\"><b><u>here</u></b></a>, save it, and load it into Cytoscape (File > Import > Styles...) <br/>\
           3. To apply the style, go to the Style tab in the Control Panel and select DBGWAS_cytoscape_style.").
-  dialog({
-    close: function() {
-      $(this).dialog('destroy').remove();
-    },
-      modal: true,
-      width: 0.8*$(window).width(),
-      maxHeight: 0.8*$(window).height()
-  });
+    dialog({
+        close: function() {
+            $(this).dialog('destroy').remove();
+        },
+        modal: true,
+        width: 0.8*$(window).width(),
+        maxHeight: 0.8*$(window).height()
+    });
 
-  //add the listeners to the download buttons in the cytoscape dialog instructions
-  document.getElementById('graph_cytoscape').addEventListener('click', function () {
-      var link = document.getElementById('graph_cytoscape');
-      link.href = makeFile(JSON.stringify(cy.json()), cytoscapeDesktopGraph, 'application/json');
-  }, false);          
+    //add the listeners to the download buttons in the cytoscape dialog instructions
+    document.getElementById('graph_cytoscape').addEventListener('click', function () {
+        var link = document.getElementById('graph_cytoscape');
+        link.href = makeFile(JSON.stringify(cy.json()), cytoscapeDesktopGraph, 'application/json');
+    }, false);
 }
 
 function createInstructionsDialog() {
-  //create the instructions dialog
-  //fills the instruction
-  $("<div>").html("\
+    //create the instructions dialog
+    //fills the instruction
+    $("<div>").html("\
     <ul>\
         <li>Navigation</li>\
         <ul>\
@@ -368,14 +369,14 @@ function createInstructionsDialog() {
             <li>Press anywhere in the graph to unselect all nodes</li>\
         </ul>\
     </ul>").
-  dialog({
-      close: function() {
-        $(this).dialog('destroy').remove();
-      },
-      modal: true,
-      width: 0.8*$(window).width(),
-      maxHeight: 0.8*$(window).height()
-  });
+    dialog({
+        close: function() {
+            $(this).dialog('destroy').remove();
+        },
+        modal: true,
+        width: 0.8*$(window).width(),
+        maxHeight: 0.8*$(window).height()
+    });
 }
 //FUNCTIONS CONCERNING THE DIALOGS
 //************************************************************
@@ -392,35 +393,35 @@ function buildPage(graphElements, componentAnnotation)
     $(function(){ // on dom ready
         //configure the window
         $('body').layout({
-          fxName:                       "slide"
-        , fxSpeed:                      "slow"
-        , paneClass:        "pane"    // default = 'ui-layout-pane'
-        , resizerClass:     "resizer" // default = 'ui-layout-resizer'
-        , togglerClass:     "toggler" // default = 'ui-layout-toggler'
-        , buttonClass:      "button"  // default = 'ui-layout-button'        
-        , south__size: .25
-        , south__minSize: .1
-        , south__maxSize: .5
-        , north__size: .25
-        , north__minSize: .1
-        , north__maxSize: .5
-        , east__size: .2
-        , east__maxSize: .5
-        , east__spacing_closed:     21      // wider space when closed
-        , east__spacing_open:     6      // wider space when closed
-        , east__togglerLength_closed: 21      // make toggler 'square' - 21x21
-        , south__spacing_closed:     21      // wider space when closed
-        , south__spacing_open:     6      // wider space when closed
-        , south__togglerLength_closed: 21      // make toggler 'square' - 21x21
-        , south__onresize_end: function(){
-          table.render();
-        }
-        , north__spacing_closed:     21      // wider space when closed
-        , north__spacing_open:     6      // wider space when closed
-        , north__togglerLength_closed: 21      // make toggler 'square' - 21x21        
-        , north__onresize_end: function(){
-          annotationTable.render();
-        }
+            fxName:                       "slide"
+            , fxSpeed:                      "slow"
+            , paneClass:        "pane"    // default = 'ui-layout-pane'
+            , resizerClass:     "resizer" // default = 'ui-layout-resizer'
+            , togglerClass:     "toggler" // default = 'ui-layout-toggler'
+            , buttonClass:      "button"  // default = 'ui-layout-button'
+            , south__size: .25
+            , south__minSize: .1
+            , south__maxSize: .5
+            , north__size: .25
+            , north__minSize: .1
+            , north__maxSize: .5
+            , east__size: .2
+            , east__maxSize: .5
+            , east__spacing_closed:     21      // wider space when closed
+            , east__spacing_open:     6      // wider space when closed
+            , east__togglerLength_closed: 21      // make toggler 'square' - 21x21
+            , south__spacing_closed:     21      // wider space when closed
+            , south__spacing_open:     6      // wider space when closed
+            , south__togglerLength_closed: 21      // make toggler 'square' - 21x21
+            , south__onresize_end: function(){
+                table.render();
+            }
+            , north__spacing_closed:     21      // wider space when closed
+            , north__spacing_open:     6      // wider space when closed
+            , north__togglerLength_closed: 21      // make toggler 'square' - 21x21
+            , north__onresize_end: function(){
+                annotationTable.render();
+            }
         });
 
         $("#config button").prop("disabled", true); //disable the buttons
@@ -527,6 +528,11 @@ function buildPage(graphElements, componentAnnotation)
         });
 
 
+        //populate annotation2Nodes
+        componentAnnotation.forEach(function(item) {
+            annotation2Nodes[item[0]]=item[3]
+        });
+
         //populate the table for the graph annotation
         var annotationTableSettings = {
             data: componentAnnotation,
@@ -554,13 +560,15 @@ function buildPage(graphElements, componentAnnotation)
             autoWrapRow: true,
             manualColumnResize: true,
             renderAllRows: true,
-            columnSorting: true,
-            afterSelection: function (r, c, r2, c2, preventScrolling) {
-              selectNodesFromATag(componentAnnotation[r][3]);
-            }
+            columnSorting: true
         };
         var annotationTableContainer = document.getElementById('DBGWAS_graph_tag_table');
         annotationTable = new Handsontable(annotationTableContainer, annotationTableSettings);
+
+        annotationTable.view.wt.update('onCellDblClick', function () {
+            row=annotationTable.getSelected()[0]
+            selectNodesFromATag(annotation2Nodes[annotationTable.getDataAtRow(row)[0]]);
+        });
 
 
         //say we are drawing the layout
