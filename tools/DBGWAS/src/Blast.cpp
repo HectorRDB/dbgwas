@@ -163,7 +163,10 @@ string AnnotationRecord::getHTMLRepresentationForIndexPage(int componentId) cons
 //transform to a javascript array
 string AnnotationRecord::SetOfNodesAndEvalue::getHTMLRepresentationForIndexPage () const {
   stringstream ss;
-  ss << nodes.size() << ", " << minEvalue;
+  ss << nodes.size() << ", " << minEvalue << ", [";
+  for (const auto &node : nodes)
+    ss << "'n" << node << "', ";
+  ss << "]";
   return ss.str();
 }
 

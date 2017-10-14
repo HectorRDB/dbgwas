@@ -107,18 +107,6 @@
             <tr>
                 <td>
                     <p style="margin-bottom: 2cm;"'></p>
-                    Annotation:<br/>
-                    Select nodes contained in tag
-                    <select id="DBGWAS_graph_tag_Select" style="background-color: grey;">
-                        <option selected value="clear">
-                            Clear selection
-                        </option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <p style="margin-bottom: 2cm;"'></p>
                     <button class="btn btn-default" type="button" onclick="createCytoscapeExportDialog();">View this on Cytoscape Desktop</button>
                 </td>
             </tr>
@@ -144,7 +132,13 @@
     </div>
 </div>
 
-<!-- Div for the node table -->
+<!-- Div for the annotation -->
+<div class="ui-layout-north">
+    Annotation selector (you can sort by name, number of nodes and e-value clicking on the collumns. Double-clicking on any cell will select the annotation):<br/>
+    <div id="DBGWAS_graph_tag_table"></div>
+</div>
+
+
 <div id="nodeTable" class="ui-layout-south"></div>
 </body>
 </html>

@@ -31,6 +31,7 @@
 var cy; //cytoscape object
 var nodeTableData = []; //node table data
 var table; //the table
+var annotationTable; //the annotation table
 var widthTable = parseInt(0.8*$(window).width(), 10);
 var heightTable= parseInt(0.2*$(window).height(), 10);
 var timeout = null
@@ -252,24 +253,17 @@ function fillTable() {
 }
 
 
-function selectNodesFromATag(option, cy, componentAnnotation) {
-    var tag = $(option).val();
+function selectNodesFromATag(nodesToSelect) {
+  var nodesToHighlight = [];
 
-    if (tag == "clear") {
-        unselectAllNodes();
-        cy.center()
-    } else {
-        var nodesToHighlight = [];
+  cy.nodes().forEach(function (node) {
+      if (nodesToSelect.includes(node.id()))
+          nodesToHighlight.push(node)
+  })
 
-        cy.nodes().forEach(function (node) {
-            if (componentAnnotation[tag].includes(node.id()))
-                nodesToHighlight.push(node)
-        })
-
-        unselectAllNodes();
-        cy.collection(nodesToHighlight).select();
-        cy.center(cy.collection(nodesToHighlight))
-    }
+  unselectAllNodes();
+  cy.collection(nodesToHighlight).select();
+  cy.center(cy.collection(nodesToHighlight))
 }
 //FUNCTIONS OF SELECT/UNSELECT
 //************************************************************
@@ -407,6 +401,9 @@ function buildPage(graphElements, componentAnnotation)
         , south__size: .25
         , south__minSize: .1
         , south__maxSize: .5
+        , north__size: .25
+        , north__minSize: .1
+        , north__maxSize: .5
         , east__size: .2
         , east__maxSize: .5
         , east__spacing_closed:     21      // wider space when closed
@@ -417,6 +414,12 @@ function buildPage(graphElements, componentAnnotation)
         , south__togglerLength_closed: 21      // make toggler 'square' - 21x21
         , south__onresize_end: function(){
           table.render();
+        }
+        , north__spacing_closed:     21      // wider space when closed
+        , north__spacing_open:     6      // wider space when closed
+        , north__togglerLength_closed: 21      // make toggler 'square' - 21x21        
+        , north__onresize_end: function(){
+          annotationTable.render();
         }
         });
 
@@ -524,18 +527,41 @@ function buildPage(graphElements, componentAnnotation)
         });
 
 
-        //populate the dropdown list for the tags
-        Object.keys(componentAnnotation).forEach(function(key) {
-            $('#DBGWAS_graph_tag_Select').append($('<option>', {
-                value: key,
-                text: key,
-            }));
-        })
+        //populate the table for the graph annotation
+        var annotationTableSettings = {
+            data: componentAnnotation,
+            columns: [
+                {type: 'text'},
+                {type: 'numeric'},
+                {type: 'numeric'}
+            ],
+            colHeaders: [
+                'Annotation',
+                '# nodes',
+                'E-value'
+            ],
+            copyColsLimit: 1000000,
+            copyRowsLimitNumber: 1000000,
+            readOnly: true,
+            stretchH: 'all',
+            wordWrap: false,
+            allowInsertColumn: false,
+            allowInsertRow: false,
+            allowRemoveColumn: false,
+            allowRemoveRow: false,
+            autoColumnSize: {useHeaders: true},
+            autoWrapCol: true,
+            autoWrapRow: true,
+            manualColumnResize: true,
+            renderAllRows: true,
+            columnSorting: true,
+            afterSelection: function (r, c, r2, c2, preventScrolling) {
+              selectNodesFromATag(componentAnnotation[r][3]);
+            }
+        };
+        var annotationTableContainer = document.getElementById('DBGWAS_graph_tag_table');
+        annotationTable = new Handsontable(annotationTableContainer, annotationTableSettings);
 
-        //highlight the tag nodes
-        $('#DBGWAS_graph_tag_Select').change(function(){
-            selectNodesFromATag(this, cy, componentAnnotation)
-        });
 
         //say we are drawing the layout
         $("#PlWarning").html("Drawing layout...");
