@@ -83,7 +83,6 @@ void generate_output::createIndexFile(int numberOfComponents, const string &outp
   for (int i=0;i<numberOfComponents;i++) {
     string idString = std::to_string(i);
     string annotationsSQL=idComponent2SignificantAnnotations[i].getSQLRepresentation();
-    string annotationsHTML=idComponent2SignificantAnnotations[i].getHTMLRepresentationForIndexPage(i);
 
     //get the lowest qvalue of the nodes in the component
     long double lowestQValue = std::numeric_limits<long double>::max();
@@ -99,15 +98,6 @@ void generate_output::createIndexFile(int numberOfComponents, const string &outp
     string thisPreview(templatePreview);
     boost::replace_all(thisPreview, "<id>", idString);
 
-    string annotationsHTML2;
-    {
-      stringstream ss;
-      ss << "<div id=\"annot_comp_" << i << "\"></div>";
-      annotationsHTML2=ss.str();
-    }
-
-    boost::replace_all(thisPreview, "<annotations>", annotationsHTML2);
-    //boost::replace_all(thisPreview, "<annotations>", annotationsHTML);
     string lowestQValueAsStr;
     {
       stringstream ss;
@@ -117,8 +107,10 @@ void generate_output::createIndexFile(int numberOfComponents, const string &outp
     }
     boost::replace_all(thisPreview, "<q-value>", lowestQValueAsStr);
 
+    string annotationsJS=idComponent2SignificantAnnotations[i].getJSToFillAnnotationTableInIndexPage(i);
+
     //add this preview to all previews
-    previews.push_back(ObjectPreview(lowestQValue, annotationsSQL, thisPreview));
+    previews.push_back(ObjectPreview(lowestQValue, annotationsSQL, thisPreview, annotationsJS));
   }
 
 

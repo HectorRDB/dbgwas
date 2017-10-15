@@ -77,7 +77,7 @@ public:
     string getSQLRepresentation() const;
 
     //get an HTML representation of the annotation component for the index page
-    string getHTMLRepresentationForIndexPage(int componentId) const;
+    string getJSToFillAnnotationTableInIndexPage(int componentId) const;
 
     //get an HTML representation of the annotation component for the graph page
     string getHTMLRepresentationForGraphPage() const;

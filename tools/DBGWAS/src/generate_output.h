@@ -174,14 +174,16 @@ private:
     double qvalue;
     string annotations;
     string preview;
+    string callBuildHandsonTableForAnnotationIndexPage;
 public:
-    ObjectPreview(double qvalue, const string &annotations, const string &preview):
-        qvalue(qvalue), annotations(annotations), preview(preview){}
+    ObjectPreview(double qvalue, const string &annotations, const string &preview, const string &callBuildHandsonTableForAnnotationIndexPage):
+        qvalue(qvalue), annotations(annotations), preview(preview), callBuildHandsonTableForAnnotationIndexPage(callBuildHandsonTableForAnnotationIndexPage){}
 
 
     string toJSObject () const {
         stringstream ss;
-        ss << "{qvalue: " << qvalue << ", annotations: '" << annotations << "', preview: '" << preview << "'}";
+        ss << "{qvalue: " << qvalue << ", annotations: '" << annotations << "', preview: '" << preview << "'"
+        << ", annScript: '" << callBuildHandsonTableForAnnotationIndexPage << "'}";
         return ss.str();
     }
 };

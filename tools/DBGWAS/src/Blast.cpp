@@ -146,22 +146,18 @@ string AnnotationRecord::getSQLRepresentation() const {
   return ss.str();
 }
 
-string AnnotationRecord::getHTMLRepresentationForIndexPage(int componentId) const {
+string AnnotationRecord::getJSToFillAnnotationTableInIndexPage(int componentId) const {
   stringstream ss;
-  if (annotations.size()==0)
-    ss << "<b>No annotations found.</b>";
-  else {
-    ss << "<script> buildHandsonTableForAnnotationIndexPage(" << componentId << ", [";
-    for (const auto & tagAndSetOfNodesAndEvalue : annotations)
-    {
-      string tag = tagAndSetOfNodesAndEvalue.first;
-      //escape '
-      boost::replace_all(tag, "'", "\\'");
-      ss << "[\\\'" << tag << "\\\', " << tagAndSetOfNodesAndEvalue.second.getHTMLRepresentationForIndexPage() << "], ";
-    }
-
-    ss << "]) </script>";
+  ss << "buildHandsonTableForAnnotationIndexPage(" << componentId << ", [";
+  for (const auto & tagAndSetOfNodesAndEvalue : annotations)
+  {
+    string tag = tagAndSetOfNodesAndEvalue.first;
+    //escape '
+    boost::replace_all(tag, "'", "\\'");
+    ss << "[\\'" << tag << "\\', " << tagAndSetOfNodesAndEvalue.second.getHTMLRepresentationForIndexPage() << "], ";
   }
+  ss << "])";
+
   return ss.str();
 }
 
