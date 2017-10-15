@@ -565,11 +565,19 @@ function buildPage(graphElements, componentAnnotation)
         var annotationTableContainer = document.getElementById('DBGWAS_graph_tag_table');
         annotationTable = new Handsontable(annotationTableContainer, annotationTableSettings);
 
-        annotationTable.view.wt.update('onCellDblClick', function () {
-            row=annotationTable.getSelected()[0]
-            selectNodesFromATag(annotation2Nodes[annotationTable.getDataAtRow(row)[0]]);
-        });
-
+        annotationTable.updateSettings({
+            contextMenu: {
+                callback: function (key, options) {
+                    if (key === 'show_annotation') {
+                        row = annotationTable.getSelected()[0]
+                        selectNodesFromATag(annotation2Nodes[annotationTable.getDataAtRow(row)[0]]);
+                    }
+                },
+                items: {
+                    'show_annotation': {name: 'Show nodes in this annotation'}
+                }
+            }
+        })
 
         //say we are drawing the layout
         $("#PlWarning").html("Drawing layout...");
