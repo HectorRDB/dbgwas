@@ -98,7 +98,16 @@ void generate_output::createIndexFile(int numberOfComponents, const string &outp
     //add the true values to this preview
     string thisPreview(templatePreview);
     boost::replace_all(thisPreview, "<id>", idString);
-    boost::replace_all(thisPreview, "<annotations>", annotationsHTML);
+
+    string annotationsHTML2;
+    {
+      stringstream ss;
+      ss << "<div id=\"annot_comp_" << i << "\"></div>";
+      annotationsHTML2=ss.str();
+    }
+
+    boost::replace_all(thisPreview, "<annotations>", annotationsHTML2);
+    //boost::replace_all(thisPreview, "<annotations>", annotationsHTML);
     string lowestQValueAsStr;
     {
       stringstream ss;
