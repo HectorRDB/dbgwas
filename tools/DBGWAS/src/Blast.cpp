@@ -153,7 +153,13 @@ string AnnotationRecord::getHTMLRepresentationForIndexPage(int componentId) cons
   else {
     ss << "<script> buildHandsonTableForAnnotationIndexPage(" << componentId << ", [";
     for (const auto & tagAndSetOfNodesAndEvalue : annotations)
-      ss << "[\\\'" << tagAndSetOfNodesAndEvalue.first << "\\\', " << tagAndSetOfNodesAndEvalue.second.getHTMLRepresentationForIndexPage() << "], ";
+    {
+      string tag = tagAndSetOfNodesAndEvalue.first;
+      //escape '
+      boost::replace_all(tag, "'", "\\'");
+      ss << "[\\\'" << tag << "\\\', " << tagAndSetOfNodesAndEvalue.second.getHTMLRepresentationForIndexPage() << "], ";
+    }
+
     ss << "]) </script>";
   }
   return ss.str();
