@@ -33,19 +33,20 @@
     <link rel="stylesheet" href="components/lib/css/bootstrap.min.css">
     <link rel="stylesheet" href="components/lib/css/query-builder.default.min.css">
     <link rel="stylesheet" href="components/lib/css/style.css">
+    <link href="components/lib/css/handsontable.full.min.css" rel="stylesheet" type="text/css" />
     <style>
-        .preview img {
-            max-width: 200px;
+        .preview {
+            max-width: 300px;
             height: auto;
         }
 
-        .componentTable table {
+        .componentTable {
             border: 1px solid black;
             border-collapse: collapse;
             float: left;
             margin-left: 20px;
             margin-bottom: 20px;
-            width: 250px;
+            width: 300px;
             height: 300px;
         }
 
@@ -54,14 +55,11 @@
             border-collapse: collapse;
         }
 
+
         .centeredbtn{
             margin:auto;
             display:block;
             width: 50%;
-        }
-
-        .hotIndexTable{
-            overflow-y:scroll;
         }
 
         body {
@@ -118,7 +116,6 @@
             };
             var annotationTableContainer = document.getElementById('annot_comp_'+componentId.toString());
             var annotationTable = new Handsontable(annotationTableContainer, annotationTableSettings);
-            console.log('here')
         }
 
         function buildObjectsHTML(objects) {
@@ -151,7 +148,6 @@
             var annotationsJS = alasql('SELECT annScript' + sqlAfterSelect, [data]);
 
             annotationsJS.forEach(function(annotationJS){
-                console.log(annotationJS.annScript)
                 eval(annotationJS.annScript)
             });
         }
