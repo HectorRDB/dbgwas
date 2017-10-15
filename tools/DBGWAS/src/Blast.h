@@ -60,6 +60,9 @@ private:
         long double getMinEvalue () const { return minEvalue; }
 
         //transform to a javascript array
+        string getHTMLRepresentationForGraphPage () const;
+
+        //transform to a javascript array
         string getHTMLRepresentationForIndexPage () const;
     };
     map<string, SetOfNodesAndEvalue> annotations;

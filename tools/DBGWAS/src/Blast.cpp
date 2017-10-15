@@ -153,7 +153,7 @@ string AnnotationRecord::getHTMLRepresentationForIndexPage(int componentId) cons
   else {
     ss << "<script> buildHandsonTableForAnnotationIndexPage(" << componentId << ", [";
     for (const auto & tagAndSetOfNodesAndEvalue : annotations)
-      ss << "['" << tagAndSetOfNodesAndEvalue.first << "', " << tagAndSetOfNodesAndEvalue.second.getHTMLRepresentationForIndexPage() << "], ";
+      ss << "[\\\'" << tagAndSetOfNodesAndEvalue.first << "\\\', " << tagAndSetOfNodesAndEvalue.second.getHTMLRepresentationForIndexPage() << "], ";
     ss << "]) </script>";
   }
   return ss.str();
@@ -161,12 +161,19 @@ string AnnotationRecord::getHTMLRepresentationForIndexPage(int componentId) cons
 
 
 //transform to a javascript array
-string AnnotationRecord::SetOfNodesAndEvalue::getHTMLRepresentationForIndexPage () const {
+string AnnotationRecord::SetOfNodesAndEvalue::getHTMLRepresentationForGraphPage () const {
   stringstream ss;
   ss << nodes.size() << ", " << minEvalue << ", [";
   for (const auto &node : nodes)
     ss << "'n" << node << "', ";
   ss << "]";
+  return ss.str();
+}
+
+//transform to a javascript array
+string AnnotationRecord::SetOfNodesAndEvalue::getHTMLRepresentationForIndexPage () const {
+  stringstream ss;
+  ss << nodes.size() << ", " << minEvalue;
   return ss.str();
 }
 
@@ -183,7 +190,7 @@ string AnnotationRecord::getHTMLRepresentationForGraphPage() const {
   stringstream ss;
   ss << "[";
   for (const auto & tagAndSetOfNodesAndEvalue : annotations)
-    ss << "['" << tagAndSetOfNodesAndEvalue.first << "', " << tagAndSetOfNodesAndEvalue.second.getHTMLRepresentationForIndexPage() << "], ";
+    ss << "['" << tagAndSetOfNodesAndEvalue.first << "', " << tagAndSetOfNodesAndEvalue.second.getHTMLRepresentationForGraphPage() << "], ";
   ss << "]";
   return ss.str();
 }
