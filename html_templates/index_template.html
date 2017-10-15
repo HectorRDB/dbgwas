@@ -34,17 +34,22 @@
     <link rel="stylesheet" href="components/lib/css/query-builder.default.min.css">
     <link rel="stylesheet" href="components/lib/css/style.css">
     <style>
-        img {
+        .preview img {
             max-width: 200px;
             height: auto;
         }
 
-        table{
+        .componentTable table {
             border: 1px solid black;
             border-collapse: collapse;
+            float: left;
+            margin-left: 20px;
+            margin-bottom: 20px;
+            width: 250px;
+            height: 300px;
         }
 
-        td,tr{
+        .componentTable td,tr{
             border: 1px solid gray;
             border-collapse: collapse;
         }
@@ -53,6 +58,10 @@
             margin:auto;
             display:block;
             width: 50%;
+        }
+
+        .hotIndexTable{
+            overflow-y:scroll;
         }
 
         body {
@@ -66,8 +75,51 @@
     <script src="components/lib/js/bootstrap.min.js"></script>
     <script src="components/lib/js/query-builder.standalone.min.js"></script>
     <script src="components/lib/js/alasql.min.js"></script>
+    <script src="components/lib/js/handsontable.full.min.js"></script>
     <script type="text/javascript">
         var data;
+
+        function buildHandsonTableForAnnotationIndexPage(componentId, annotations) {
+            if (annotations.length==0) {
+                $('#annot_comp_'+componentId.toString()).html("<b>No annotations found.</b>")
+                return;
+            }
+
+            //populate the table for the graph annotation
+            var annotationTableSettings = {
+                data: annotations,
+                columns: [
+                    {type: 'text'},
+                    {type: 'numeric'},
+                    {type: 'numeric'}
+                ],
+                colHeaders: [
+                    'Annotation',
+                    '# nodes',
+                    'E-value'
+                ],
+                copyColsLimit: 1000000,
+                copyRowsLimitNumber: 1000000,
+                readOnly: true,
+                stretchH: 'all',
+                wordWrap: false,
+                allowInsertColumn: false,
+                allowInsertRow: false,
+                allowRemoveColumn: false,
+                allowRemoveRow: false,
+                autoColumnSize: {useHeaders: true},
+                autoWrapCol: true,
+                autoWrapRow: true,
+                manualColumnResize: true,
+                renderAllRows: true,
+                columnSorting: true,
+                width: 300,
+                height: 100
+            };
+            var annotationTableContainer = document.getElementById('annot_comp_'+componentId.toString());
+            var annotationTable = new Handsontable(annotationTableContainer, annotationTableSettings);
+            console.log('here')
+        }
 
         function buildObjectsHTML(objects) {
             var html="";
@@ -83,15 +135,25 @@
             var objectDiv = $('#showItemsDiv');
             objectDiv.html('Working...');
 
-            var sql=""
+            //get the sql
+            var sqlAfterSelect = ""
             if ($('#builder').queryBuilder('getSQL', false).sql.length == 0) {
-                sql = 'SELECT preview FROM ? ORDER BY ' + $('#sortTerm').val() + ' ' + $('#asc_desc').val();
+                sqlAfterSelect = ' FROM ? ORDER BY ' + $('#sortTerm').val() + ' ' + $('#asc_desc').val();
             }else {
-                sql = 'SELECT preview FROM ? WHERE ' + $('#builder').queryBuilder('getSQL', false).sql + ' ORDER BY ' + $('#sortTerm').val() + ' ' + $('#asc_desc').val();
+                sqlAfterSelect = ' FROM ? WHERE ' + $('#builder').queryBuilder('getSQL', false).sql + ' ORDER BY ' + $('#sortTerm').val() + ' ' + $('#asc_desc').val();
             }
 
-            var objects = alasql(sql, [data]);
+            //retrieve the selected objects
+            var objects = alasql('SELECT preview' + sqlAfterSelect, [data]);
             objectDiv.html(buildObjectsHTML(objects));
+
+            //execute the js to fill in the annotations
+            var annotationsJS = alasql('SELECT annScript' + sqlAfterSelect, [data]);
+
+            annotationsJS.forEach(function(annotationJS){
+                console.log(annotationJS.annScript)
+                eval(annotationJS.annScript)
+            });
         }
 
         $(function(){
