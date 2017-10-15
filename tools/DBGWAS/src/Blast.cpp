@@ -153,7 +153,7 @@ string AnnotationRecord::getHTMLRepresentationForIndexPage(int componentId) cons
   else {
     ss << "<script> buildHandsonTableForAnnotationIndexPage(" << componentId << ", [";
     for (const auto & tagAndSetOfNodesAndEvalue : annotations)
-      ss << "[\\\'" << tagAndSetOfNodesAndEvalue.first << "\\\', " << tagAndSetOfNodesAndEvalue.second.getHTMLRepresentationForIndexPage() << "], ";
+      ss << "['" << tagAndSetOfNodesAndEvalue.first << "', " << tagAndSetOfNodesAndEvalue.second.getHTMLRepresentationForIndexPage() << "], ";
     ss << "]) </script>";
   }
   return ss.str();
@@ -165,7 +165,7 @@ string AnnotationRecord::SetOfNodesAndEvalue::getHTMLRepresentationForIndexPage 
   stringstream ss;
   ss << nodes.size() << ", " << minEvalue << ", [";
   for (const auto &node : nodes)
-    ss << "\\\'n" << node << "\\\', ";
+    ss << "'n" << node << "', ";
   ss << "]";
   return ss.str();
 }
