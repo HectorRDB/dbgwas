@@ -1,4 +1,8 @@
-﻿v0.3.8:
+﻿Bugs:
+    infinity e-value
+    # nodes in the index just consider the significant nodes...
+
+v0.3.8:
     -nt_db and -pt_db must receive a list of DBs, and not only one
         -ok and tested
     -In the index page, allow for the sorting of the annotations by number of nodes and e-value (no need for filtering, because we already have a filter: only showing annotations on the significant nodes. This is probably good enough already - all these annotations are probably important)
@@ -9,6 +13,7 @@
     -In the pop-up annotation from the table, show the annotations of the node, together with nb of nodes and e-value (the handson table itself)
     -Changed "Show some stats" to "Show figures on lineage effect" in the index page
     -Refactoring of many parts of the code
+    -Added a check to verify that there is at least one genome with Phenotype 0 and one with Phenotype 1
 
 Paper (Deadline: 24th October):
   -Each step must have a separate folder to where the temp files are created
@@ -29,6 +34,9 @@ Paper (Deadline: 24th October):
 
 
 High priority TODO:
+  -Select nodes using the newick tree
+  -show the newick tree and the unitigs (genotypes)
+    -@see: https://mail.google.com/mail/u/0/#sent/15f1663316ff5dec
   -Allow the user to provide an already built database, instead of calling makeblastdb always
   -Fix qvalue default min and max to min and max of the components
   -treat NA better

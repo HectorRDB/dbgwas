@@ -560,7 +560,8 @@ function buildPage(graphElements, componentAnnotation)
             autoWrapRow: true,
             manualColumnResize: true,
             renderAllRows: true,
-            columnSorting: true
+            columnSorting: true,
+            sortIndicator: true
         };
         var annotationTableContainer = document.getElementById('DBGWAS_graph_tag_table');
         annotationTable = new Handsontable(annotationTableContainer, annotationTableSettings);
@@ -578,6 +579,8 @@ function buildPage(graphElements, componentAnnotation)
                 }
             }
         })
+
+        annotationTable.sort(1, false)
 
         //say we are drawing the layout
         $("#PlWarning").html("Drawing layout...");
@@ -702,7 +705,8 @@ function buildPage(graphElements, componentAnnotation)
             autoWrapRow: true,
             manualColumnResize: true,
             renderAllRows: true,
-            columnSorting: true
+            columnSorting: true,
+            sortIndicator: true
         };
 
         var tableContainer = document.getElementById('nodeTable');

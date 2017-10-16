@@ -165,6 +165,7 @@ string AnnotationRecord::getJSToFillAnnotationTableInIndexPage(int componentId) 
 //transform to a javascript array
 string AnnotationRecord::SetOfNodesAndEvalue::getHTMLRepresentationForGraphPage () const {
   stringstream ss;
+  ss << scientific;
   ss << nodes.size() << ", " << minEvalue << ", [";
   for (const auto &node : nodes)
     ss << "'n" << node << "', ";
@@ -175,6 +176,7 @@ string AnnotationRecord::SetOfNodesAndEvalue::getHTMLRepresentationForGraphPage 
 //transform to a javascript array
 string AnnotationRecord::SetOfNodesAndEvalue::getHTMLRepresentationForIndexPage () const {
   stringstream ss;
+  ss << scientific;
   ss << nodes.size() << ", " << minEvalue;
   return ss.str();
 }

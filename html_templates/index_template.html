@@ -112,10 +112,12 @@
                 renderAllRows: true,
                 columnSorting: true,
                 width: 300,
-                height: 100
+                height: 100,
+                sortIndicator: true
             };
             var annotationTableContainer = document.getElementById('annot_comp_'+componentId.toString());
             var annotationTable = new Handsontable(annotationTableContainer, annotationTableSettings);
+            annotationTable.sort(1, false);
         }
 
         function buildObjectsHTML(objects) {
