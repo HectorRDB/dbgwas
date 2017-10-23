@@ -14,6 +14,8 @@ v0.3.8:
     -Changed "Show some stats" to "Show figures on lineage effect" in the index page
     -Refactoring of many parts of the code
     -Added a check to verify that there is at least one genome with Phenotype 0 and one with Phenotype 1
+    -Show the significant and the non-significant nodes in the index table, sortable by nb of nodes and e-value
+    -Allow the user to select nodes based on rows selection on table
 
 Paper (Deadline: 24th October):
   -Each step must have a separate folder to where the temp files are created
