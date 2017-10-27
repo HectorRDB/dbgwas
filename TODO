@@ -4,11 +4,11 @@
 
 v0.3.8:
     -In the visualisation (both the index and graph page) put the annotations on a spreadsheet so that it is sortable by e-value and node
-        -Also have a filter for the significant nodes only in the index page - we will need to show the annotations in all nodes in fact!
+        -We now also show the annotation for all nodes in the index
     -nt_db and -pt_db must receive a list of DBs, and not only one
         -ok and tested
-    -In the index page, allow for the sorting of the annotations by number of nodes and e-value (no need for filtering, because we already have a filter: only showing annotations on the significant nodes. This is probably good enough already - all these annotations are probably important)
-        -Simply use a handson table instead of a select and you have the sorting you want!!!
+    -In the graph page, when selecting the nodes from an annotation, a nice zoom is now given;
+        -If the zoom is way too much, we zoom out so that we nicely show the part of the graph corresponding to the annotation
     -In the pop-up annotation from the table, show the annotations of the node, together with nb of nodes and e-value (the handson table itself)
     -Changed "Show some stats" to "Show figures on lineage effect" in the index page
     -Refactoring of many parts of the code

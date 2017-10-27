@@ -156,8 +156,6 @@ select {
   overflow:   hidden;
 }
 
-.pane-south ,
-.pane-north ,
 .pane-east {
   overflow-y:scroll;
 }

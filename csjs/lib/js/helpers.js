@@ -180,6 +180,27 @@ function drawAlleles() {
 
 //************************************************************
 //FUNCTIONS OF SELECT/UNSELECT
+//select the nodes in the collection given and do a nice zoom where the node with the smallest width in the selected nodes must have a size covering at most 10% of the screen
+function selectNodesAndDoANiceZoom(nodesToSelectAsCYCollection) {
+    nodeWithSmallestWidth = nodesToSelectAsCYCollection[0];
+    nodesToSelectAsCYCollection.forEach(function(node) {
+      if (node.width() < nodeWithSmallestWidth.width())
+        nodeWithSmallestWidth = node;
+    })
+
+    unselectAllNodes();
+    nodesToSelectAsCYCollection.select();
+
+    //do the first fit: this might be way too zoomed
+    cy.fit(nodesToSelectAsCYCollection)
+
+    //adjust the fit so that the node with the smallest width have a size covering at most 10% of the screen
+    padding=10
+    while (nodeWithSmallestWidth.width()/cy.extent().w>0.1) {
+      cy.fit(nodesToSelectAsCYCollection, padding)
+      padding+=10
+    }
+}
 
 var selectedNodeEqualsToNodeTableDataNodeFunction = function selectedNodeEqualsToNodeTableDataNode(selectedNode, nodeTableDataNode) {
     return nodeTableDataNode[0] == selectedNode.id()
@@ -253,7 +274,6 @@ function fillTable() {
     }, 100); // may have to adjust this val
 }
 
-
 function selectNodesFromATag(nodesToSelect) {
     var nodesToHighlight = [];
 
@@ -261,10 +281,8 @@ function selectNodesFromATag(nodesToSelect) {
         if (nodesToSelect.includes(node.id()))
             nodesToHighlight.push(node)
     })
-
-    unselectAllNodes();
-    cy.collection(nodesToHighlight).select();
-    cy.center(cy.collection(nodesToHighlight))
+    nodesToHighlight = cy.collection(nodesToHighlight);
+    selectNodesAndDoANiceZoom(nodesToHighlight)
 }
 //FUNCTIONS OF SELECT/UNSELECT
 //************************************************************
@@ -559,7 +577,6 @@ function buildPage(graphElements, componentAnnotation)
             autoWrapCol: true,
             autoWrapRow: true,
             manualColumnResize: true,
-            renderAllRows: true,
             columnSorting: true,
             sortIndicator: true
         };
@@ -703,7 +720,6 @@ function buildPage(graphElements, componentAnnotation)
             autoWrapCol: true,
             autoWrapRow: true,
             manualColumnResize: true,
-            renderAllRows: true,
             columnSorting: true,
             sortIndicator: true
         };
