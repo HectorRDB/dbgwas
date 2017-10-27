@@ -57,7 +57,7 @@ generate_output::generate_output ()  : Tool ("generate_output") //give a name to
 }
 
 void generate_output::createIndexFile(int numberOfComponents, const string &outputFolder, const vector<vector<MyVertex> > &nodesInComponent, graph_t& newGraph,
-                     map<int, AnnotationRecord > &idComponent2SignificantAnnotations, const vector<const PatternFromStats*> &unitigToPatternStats) {
+                     map<int, AnnotationRecord > &idComponent2Annotations, const vector<const PatternFromStats*> &unitigToPatternStats) {
   cerr << "[Creating index file...]" << endl;
   //create the thumbnails
   for (int i=0;i<numberOfComponents;i++) {
@@ -82,7 +82,7 @@ void generate_output::createIndexFile(int numberOfComponents, const string &outp
 
   for (int i=0;i<numberOfComponents;i++) {
     string idString = std::to_string(i);
-    string annotationsSQL=idComponent2SignificantAnnotations[i].getSQLRepresentation();
+    string annotationsSQL=idComponent2Annotations[i].getSQLRepresentation();
 
     //get the lowest qvalue of the nodes in the component
     long double lowestQValue = std::numeric_limits<long double>::max();
@@ -107,7 +107,7 @@ void generate_output::createIndexFile(int numberOfComponents, const string &outp
     }
     boost::replace_all(thisPreview, "<q-value>", lowestQValueAsStr);
 
-    string annotationsJS=idComponent2SignificantAnnotations[i].getJSToFillAnnotationTableInIndexPage(i);
+    string annotationsJS=idComponent2Annotations[i].getJSToFillAnnotationTableInIndexPage(i);
 
     //add this preview to all previews
     previews.push_back(ObjectPreview(lowestQValue, annotationsSQL, thisPreview, annotationsJS));
@@ -168,8 +168,8 @@ void generate_output::createIndexFile(int numberOfComponents, const string &outp
   {
     set<string> allTags;
     allTags.insert("No annotations found");
-    for (const auto &idComponent2SignificantAnnotationsPair : idComponent2SignificantAnnotations) {
-      auto tagsOfThisComponent = idComponent2SignificantAnnotationsPair.second.getAllAnnotationsNames();
+    for (const auto &idComponent2AnnotationsPair : idComponent2Annotations) {
+      auto tagsOfThisComponent = idComponent2AnnotationsPair.second.getAllAnnotationsNames();
       allTags.insert(tagsOfThisComponent.begin(), tagsOfThisComponent.end());
     }
 
@@ -212,7 +212,7 @@ void generate_output::createIndexFile(int numberOfComponents, const string &outp
 
 void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector<MyVertex> &nodes, const string &typeOfGraph, int i,
                              const string &outputFolder, const vector<int> &selectedUnitigs, int nbPheno0, int nbPheno1,
-                             map<int, AnnotationRecord > &idComponent2SignificantAnnotations,
+                             map<int, AnnotationRecord > &idComponent2Annotations,
                              int nbCores) {
   cerr << "Rendering " << typeOfGraph << "_" << i << "..." << endl;
 
@@ -262,21 +262,6 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
       //here I have to use graph[v].id instead of simply record.nodeId because the original IDs of the node is used later
       MyVertex v = vertex(record.nodeId, graph);
       annotationsOfThisComponent.addAnnotation(record.DBGWAS_graph_tag, graph[v].id, record.evalue);
-    }
-
-
-
-    //populate idComponent2SignificantAnnotations of the significant nodes only in this component
-    for (const auto &record : records) {
-      MyVertex v = vertex(record.nodeId, graph);
-
-      //checks if v is significant
-      if (find(selectedUnitigs.begin(), selectedUnitigs.end(), graph[v].id) != selectedUnitigs.end()) {
-        //yes, add it
-        //here I have to use graph[v].id instead of simply record.nodeId because the original IDs of the node is used later
-        MyVertex v = vertex(record.nodeId, graph);
-        idComponent2SignificantAnnotations[i].addAnnotation(record.DBGWAS_index_tag, graph[v].id, record.evalue);
-      }
     }
 
     cerr << "Annotating... - Done!" << endl;
@@ -407,6 +392,9 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+  //copy this annotation to idComponent2Annotations
+  idComponent2Annotations[i] = annotationsOfThisComponent;
 
   cerr << "Rendering " << typeOfGraph << "_" << i << "... - Done!" << endl;
 }
@@ -619,7 +607,7 @@ void generate_output::execute () {
   //create a subgraph containing only the nodes in the neighbourhoods
   graph_t& newGraph = graph.create_subgraph();
   vector<vector<MyVertex> > nodesInComponent; //care: the nodes in this variable are the nodes in newGraph, not in the normal graph
-  map<int, AnnotationRecord > idComponent2SignificantAnnotations;
+  map<int, AnnotationRecord > idComponent2Annotations;
   int numberOfComponents=0;
   {
     for (auto vp = vertices(graph); vp.first != vp.second; ++vp.first) {
@@ -638,7 +626,7 @@ void generate_output::execute () {
 
     for (int i = 0; i < nodesInComponent.size(); i++) {
       generateCytoscapeOutput(newGraph, nodesInComponent[i], "comp", i, outputFolder, selectedUnitigs, nbPheno0, nbPheno1,
-                              idComponent2SignificantAnnotations, nbCores);
+                              idComponent2Annotations, nbCores);
     }
     numberOfComponents = nodesInComponent.size();
   }
@@ -648,7 +636,7 @@ void generate_output::execute () {
 
   //create the index
   createIndexFile(numberOfComponents, outputFolder, nodesInComponent, newGraph,
-                  idComponent2SignificantAnnotations, unitigToPatternStats);
+                  idComponent2Annotations, unitigToPatternStats);
 
   //tell we are done
   cout << endl << endl <<

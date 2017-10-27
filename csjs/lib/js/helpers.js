@@ -538,8 +538,8 @@ function buildPage(graphElements, componentAnnotation)
             data: componentAnnotation,
             columns: [
                 {type: 'text'},
-                {type: 'numeric'},
-                {type: 'numeric'}
+                {type: 'text'},
+                {type: 'text'}
             ],
             colHeaders: [
                 'Annotation',
@@ -579,7 +579,6 @@ function buildPage(graphElements, componentAnnotation)
                 }
             }
         })
-
         annotationTable.sort(1, false)
 
         //say we are drawing the layout
