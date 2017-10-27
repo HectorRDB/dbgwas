@@ -3,18 +3,16 @@
     # nodes in the index just consider the significant nodes...
 
 v0.3.8:
+    -In the visualisation (both the index and graph page) put the annotations on a spreadsheet so that it is sortable by e-value and node
+        -Also have a filter for the significant nodes only in the index page - we will need to show the annotations in all nodes in fact!
     -nt_db and -pt_db must receive a list of DBs, and not only one
         -ok and tested
     -In the index page, allow for the sorting of the annotations by number of nodes and e-value (no need for filtering, because we already have a filter: only showing annotations on the significant nodes. This is probably good enough already - all these annotations are probably important)
         -Simply use a handson table instead of a select and you have the sorting you want!!!
-    -In the visualisation (both the index and graph page) provide an annotation panel that allow the user to select a threshold such that all hits above such threshold are disregarded.
-        -Also allow the user to sort the annotation by e-value or nb of nodes
-        -Sorting comes free with handson table!
     -In the pop-up annotation from the table, show the annotations of the node, together with nb of nodes and e-value (the handson table itself)
     -Changed "Show some stats" to "Show figures on lineage effect" in the index page
     -Refactoring of many parts of the code
     -Added a check to verify that there is at least one genome with Phenotype 0 and one with Phenotype 1
-    -Show the significant and the non-significant nodes in the index table, sortable by nb of nodes and e-value
     -Allow the user to select nodes based on rows selection on table
 
 Paper (Deadline: 24th October):

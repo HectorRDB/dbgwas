@@ -137,7 +137,7 @@ struct MapAndPhase
 
         // We loop over sequences.
         unsigned long readIndex = 0;
-        map<int,int> unitigIdToCount;
+        map<int,int> unitigIdToCount; //TODO: change this to a vector
         for (it.first(); !it.isDone(); it.next()) {
             string read = (it.item()).toString();
             //transform the read to upper case

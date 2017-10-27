@@ -131,7 +131,7 @@ string Blast::makeblastdb (const string &dbtype, const string &originalDBPath, c
 
 void AnnotationRecord::SetOfNodesAndEvalue::addNode(int node, long double evalue) {
   nodes.insert(node);
-  evalue=min(minEvalue, evalue);
+  minEvalue = min(minEvalue, evalue);
 }
 
 
