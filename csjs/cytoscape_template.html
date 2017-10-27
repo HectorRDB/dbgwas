@@ -59,6 +59,7 @@
     <script src="lib/js/handsontable.full.min.js"></script>
     <script src="lib/js/helpers.js"></script>
     <script src="lib/js/jquery.layout-latest.js"></script>
+    <script src="lib/js/jquery.blockUI.js"></script>
     <script type="text/javascript">
         var componentAnnotation;
         $(function(){ // on dom ready
@@ -92,7 +93,7 @@
             </tr>
             <tr>
                 <td>
-                    <canvas id="gradientCanvas" width="150" height="50"></canvas> <br/>
+                    <canvas id="gradientCanvas" width="150" height="25"></canvas> <br/>
                     <span style="color:blue">Pheno0 &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp </span><span style="color:red">Pheno1</span>
                 </td>
             </tr>
@@ -100,14 +101,14 @@
                 <td>
                     <p style="margin-bottom: 1cm;"'></p>
                     Allele frequency: <br/>
-                    <canvas id="alleleCanvas" width="250" height="100"></canvas> <br/>
+                    <canvas id="alleleCanvas" width="250" height="50"></canvas> <br/>
                     &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp High &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Low
                 </td>
             </tr>
             <tr>
                 <td>
-                    <p style="margin-bottom: 2cm;"'></p>
-                    <button class="btn btn-default" type="button" onclick="createCytoscapeExportDialog();">View this on Cytoscape Desktop</button>
+                    <p style="margin-bottom: 1cm;"'></p>
+                    <button class="btn btn-default" type="button" onclick="createCytoscapeExportDialog();">View graph on Cytoscape Desktop</button>
                 </td>
             </tr>
             <tr>
@@ -133,12 +134,9 @@
 </div>
 
 <!-- Div for the annotation -->
-<div class="ui-layout-north">
-    Annotation selector (you can sort by name, number of nodes and e-value clicking on the collumns. Right-click allows you to select the nodes of an annotation in the graph):<br/>
-    <div id="DBGWAS_graph_tag_table"></div>
-</div>
+<div id="DBGWAS_graph_tag_table" class="ui-layout-north"></div>
 
-
+<!-- Div for the nodes -->
 <div id="nodeTable" class="ui-layout-south"></div>
 </body>
 </html>

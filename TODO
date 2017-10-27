@@ -1,10 +1,10 @@
 ﻿Bugs:
-    infinity e-value
     # nodes in the index just consider the significant nodes...
 
 v0.3.8:
-    -In the visualisation (both the index and graph page) put the annotations on a spreadsheet so that it is sortable by e-value and node
-        -We now also show the annotation for all nodes in the index
+    -In the visualisation (both the index and graph page), put the annotations on a spreadsheet so that it is sortable by e-value and node;
+        -We now also show the annotation for all nodes in the index page;
+        -The annotations come sorted by nb of nodes;
     -nt_db and -pt_db must receive a list of DBs, and not only one
         -ok and tested
     -In the graph page, when selecting the nodes from an annotation, a nice zoom is now given;

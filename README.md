@@ -144,7 +144,8 @@ DBGWAS makes use of several thirdparty libraries:
 12. jQuery (https://jquery.com/)
 13. jQuery QueryBuilder (http://querybuilder.js.org/)
 14. jQuery Layout (http://layout.jquery-dev.com/)
-15. Fastclick (https://github.com/ftlabs/fastclick)
+15. jQuery BlockUI Plugin (https://github.com/malsup/blockui/)
+16. Fastclick (https://github.com/ftlabs/fastclick)
 
 
 # How to cite

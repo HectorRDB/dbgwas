@@ -158,7 +158,7 @@ function drawGradient(){
     grd.addColorStop(1, "red");
 
     ctx.fillStyle = grd;
-    ctx.fillRect(0, 0, 150, 50);
+    ctx.fillRect(0, 0, 150, 25);
 }
 
 
@@ -167,11 +167,11 @@ function drawAlleles() {
     var ctx = c.getContext("2d");
 
     ctx.beginPath();
-    ctx.arc(50, 50, 40, 0, 2 * Math.PI, false);
+    ctx.arc(50, 25, 25, 0, 2 * Math.PI, false);
     ctx.fillStyle = 'white';
     ctx.fill();
 
-    ctx.arc(175, 50, 5, 0, 2 * Math.PI, false);
+    ctx.arc(175, 25, 5, 0, 2 * Math.PI, false);
     ctx.fillStyle = 'white';
     ctx.fill();
 }
@@ -180,7 +180,7 @@ function drawAlleles() {
 
 //************************************************************
 //FUNCTIONS OF SELECT/UNSELECT
-//select the nodes in the collection given and do a nice zoom where the node with the smallest width in the selected nodes must have a size covering at most 10% of the screen
+//select the nodes in the collection given and do a nice zoom where the node with the smallest width in the selected nodes must have a size covering at most 5% of the screen
 function selectNodesAndDoANiceZoom(nodesToSelectAsCYCollection) {
     nodeWithSmallestWidth = nodesToSelectAsCYCollection[0];
     nodesToSelectAsCYCollection.forEach(function(node) {
@@ -194,9 +194,9 @@ function selectNodesAndDoANiceZoom(nodesToSelectAsCYCollection) {
     //do the first fit: this might be way too zoomed
     cy.fit(nodesToSelectAsCYCollection)
 
-    //adjust the fit so that the node with the smallest width have a size covering at most 10% of the screen
+    //adjust the fit so that the node with the smallest width have a size covering at most 5% of the screen
     padding=10
-    while (nodeWithSmallestWidth.width()/cy.extent().w>0.1) {
+    while (nodeWithSmallestWidth.width()/cy.extent().w>0.05) {
       cy.fit(nodesToSelectAsCYCollection, padding)
       padding+=10
     }
@@ -407,6 +407,18 @@ function createInstructionsDialog() {
 //MAIN FUNCTIONS
 function buildPage(graphElements, componentAnnotation)
 {
+    $.blockUI({
+      message: '<img width="25px" src="lib/resources/busy.gif" /> Loading resources and drawing the graph<br/>Please wait...' ,
+      css: { 
+            border: 'none', 
+            padding: '15px', 
+            backgroundColor: '#000', 
+            '-webkit-border-radius': '10px', 
+            '-moz-border-radius': '10px', 
+            opacity: .5, 
+            color: '#fff' 
+        }
+      }); 
     //this is basically main()
     $(function(){ // on dom ready
         //configure the window
@@ -441,8 +453,6 @@ function buildPage(graphElements, componentAnnotation)
                 annotationTable.render();
             }
         });
-
-        $("#config button").prop("disabled", true); //disable the buttons
 
         //create cytoscape graph
         cy = cytoscape({
@@ -564,6 +574,7 @@ function buildPage(graphElements, componentAnnotation)
                 '# nodes',
                 'E-value'
             ],
+            colWidths: [300, 50, 50],
             copyColsLimit: 1000000,
             copyRowsLimitNumber: 1000000,
             readOnly: true,
@@ -596,7 +607,7 @@ function buildPage(graphElements, componentAnnotation)
                 }
             }
         })
-        annotationTable.sort(1, false)
+        annotationTable.sort(1, false);
 
         //say we are drawing the layout
         $("#PlWarning").html("Drawing layout...");
@@ -667,7 +678,7 @@ function buildPage(graphElements, componentAnnotation)
         layout.on('layoutstop', function(){
             //say we are ready
             $("#PlWarning").html("Ready!");
-            $("#config button").prop("disabled", false);
+            $.unblockUI()
             window.callPhantom(); //tells phantom we are ready
         })
 
