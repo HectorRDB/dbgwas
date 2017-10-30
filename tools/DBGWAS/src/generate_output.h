@@ -171,19 +171,19 @@ public:
 
 class ObjectPreview {
 private:
+    int id;
     double qvalue;
-    string annotations;
+    string annotationsConcatenated;
     string preview;
-    string callBuildHandsonTableForAnnotationIndexPage;
+    string annotationsForHOT;
 public:
-    ObjectPreview(double qvalue, const string &annotations, const string &preview, const string &callBuildHandsonTableForAnnotationIndexPage):
-        qvalue(qvalue), annotations(annotations), preview(preview), callBuildHandsonTableForAnnotationIndexPage(callBuildHandsonTableForAnnotationIndexPage){}
-
+    ObjectPreview(int id, double qvalue, const string &annotationsConcatenated, const string &preview, const string &annotationsForHOT):
+        id(id), qvalue(qvalue), annotationsConcatenated(annotationsConcatenated), preview(preview), annotationsForHOT(annotationsForHOT){}
 
     string toJSObject () const {
         stringstream ss;
-        ss << "{qvalue: " << qvalue << ", annotations: '" << annotations << "', preview: '" << preview << "'"
-        << ", annScript: '" << callBuildHandsonTableForAnnotationIndexPage << "'}";
+        ss << "{id: " << id << ",\nqvalue: " << qvalue << ",\nannCat: '" << annotationsConcatenated << "',\npreview: '" << preview << "'"
+        << ",\nannHOT: '" << annotationsForHOT << "'}";
         return ss.str();
     }
 };

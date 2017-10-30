@@ -107,10 +107,10 @@ void generate_output::createIndexFile(int numberOfComponents, const string &outp
     }
     boost::replace_all(thisPreview, "<q-value>", lowestQValueAsStr);
 
-    string annotationsJS=idComponent2Annotations[i].getJSToFillAnnotationTableInIndexPage(i);
+    string annotationsForHOT=idComponent2Annotations[i].getAnnotationsForHOT(i);
 
     //add this preview to all previews
-    previews.push_back(ObjectPreview(lowestQValue, annotationsSQL, thisPreview, annotationsJS));
+    previews.push_back(ObjectPreview(i, lowestQValue, annotationsSQL, thisPreview, annotationsForHOT));
   }
 
 

@@ -11,11 +11,12 @@ v0.3.8:
     -In the graph page, the screen is now blocked until the graph is loaded;
     -In the graph page, the user can now select nodes by selecting rows in the node table;
     -In the visualisation page, changed "Show some stats" to "Show figures on lineage effect" in the index page
+    -Better performance on the visualisation page;
 
 -Other changes:
     -nt_db and -pt_db must receive a list of DBs, and not only one
-        -ok and tested
-    -Refactoring of many parts of the code regarding the annotation (it was a mess)
+    -Refactoring of many parts of the code regarding the annotation
+        -The code was done in a rush and it was a mess
 
     TODO:
     -Added a check to verify that there is at least one genome with Phenotype 0 and one with Phenotype 1
@@ -24,7 +25,6 @@ v0.3.8:
 Paper (Deadline: 24th October):
   -Each step must have a separate folder to where the temp files are created
     -like this we can easily remove old files when using -skipn
-  -Hovering a node should highlight it in the table if it is in the table
 
   -New parameters:
     -Fix output folder from being fixed to being a parameter
@@ -32,9 +32,7 @@ Paper (Deadline: 24th October):
 
   -In the pop-up annotation from the table, show the annotations of the node, together with nb of nodes and e-value (the handson table itself)
 
-  -Check the outputs of the experiments to get more ideas
-
-
+  -put a time limit for phantom js (or how to know when it bugged?)
 
 
 

@@ -417,7 +417,8 @@ function buildPage(graphElements, componentAnnotation)
             '-moz-border-radius': '10px', 
             opacity: .5, 
             color: '#fff' 
-        }
+        },
+        fadeOut: 0
       }); 
     //this is basically main()
     $(function(){ // on dom ready
