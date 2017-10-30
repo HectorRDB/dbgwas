@@ -33,10 +33,16 @@
     <link rel="stylesheet" href="components/lib/css/bootstrap.min.css">
     <link rel="stylesheet" href="components/lib/css/query-builder.default.min.css">
     <link rel="stylesheet" href="components/lib/css/style.css">
+    <link rel="stylesheet" href="components/lib/css/bootstrap.min.css">
+    <link rel="stylesheet" href="components/lib/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="components/lib/css/bootstrap-slider.min.css">
+    <link rel="stylesheet" href="components/lib/css/font-awesome.min.css">
     <link href="components/lib/css/handsontable.full.min.css" rel="stylesheet" type="text/css" />
+    <link href="components/lib/css/jquery-ui.min.css" rel="stylesheet">
+
     <style>
         .preview {
-            max-width: 300px;
+            max-width: 350px;
             height: auto;
         }
 
@@ -46,7 +52,7 @@
             float: left;
             margin-left: 20px;
             margin-bottom: 20px;
-            width: 300px;
+            width: 350px;
             height: 300px;
         }
 
@@ -66,121 +72,14 @@
             overflow-y: scroll;
         }
     </style>
-
-
-
     <script src="components/lib/js/jquery.min.js"></script>
+    <script src="components/lib/js/jquery-ui.min.js"></script>
     <script src="components/lib/js/bootstrap.min.js"></script>
     <script src="components/lib/js/query-builder.standalone.min.js"></script>
     <script src="components/lib/js/alasql.min.js"></script>
     <script src="components/lib/js/handsontable.full.min.js"></script>
-    <script type="text/javascript">
-        var data;
-
-        function buildHandsonTableForAnnotationIndexPage(componentId, annotations) {
-            if (annotations.length==0) {
-                $('#annot_comp_'+componentId.toString()).html("<b>No annotations found.</b>")
-                return;
-            }
-
-            //populate the table for the graph annotation
-            var annotationTableSettings = {
-                data: annotations,
-                columns: [
-                    {type: 'text'},
-                    {type: 'numeric'},
-                    {type: 'numeric'}
-                ],
-                colHeaders: [
-                    'Annotation',
-                    '# nodes',
-                    'E-value'
-                ],
-                copyColsLimit: 1000000,
-                copyRowsLimitNumber: 1000000,
-                readOnly: true,
-                stretchH: 'all',
-                wordWrap: false,
-                allowInsertColumn: false,
-                allowInsertRow: false,
-                allowRemoveColumn: false,
-                allowRemoveRow: false,
-                autoColumnSize: {useHeaders: true},
-                autoWrapCol: true,
-                autoWrapRow: true,
-                manualColumnResize: true,
-                renderAllRows: true,
-                width: 300,
-                height: 100,
-                columnSorting: true,
-                sortIndicator: true
-            };
-            var annotationTableContainer = document.getElementById('annot_comp_'+componentId.toString());
-            var annotationTable = new Handsontable(annotationTableContainer, annotationTableSettings);
-            annotationTable.sort(1, false);
-        }
-
-        function buildObjectsHTML(objects) {
-            var html="";
-            var nb=0;
-            objects.forEach(function(object) {
-                html += object.preview + "\n";
-                nb += 1;
-            });
-            return "<h3>Done! Found " + nb + " components.</h3><br/><br/>" + html;
-        }
-
-        function showObjects() {
-            var objectDiv = $('#showItemsDiv');
-            objectDiv.html('Working...');
-
-            //get the sql
-            var sqlAfterSelect = ""
-            if ($('#builder').queryBuilder('getSQL', false).sql.length == 0) {
-                sqlAfterSelect = ' FROM ? ORDER BY ' + $('#sortTerm').val() + ' ' + $('#asc_desc').val();
-            }else {
-                sqlAfterSelect = ' FROM ? WHERE ' + $('#builder').queryBuilder('getSQL', false).sql + ' ORDER BY ' + $('#sortTerm').val() + ' ' + $('#asc_desc').val();
-            }
-
-            //retrieve the selected objects
-            var objects = alasql('SELECT preview' + sqlAfterSelect, [data]);
-            objectDiv.html(buildObjectsHTML(objects));
-
-            //execute the js to fill in the annotations
-            var annotationsJS = alasql('SELECT annScript' + sqlAfterSelect, [data]);
-
-            annotationsJS.forEach(function(annotationJS){
-                eval(annotationJS.annScript)
-            });
-        }
-
-        $(function(){
-            $('#arguments').on('hide.bs.collapse', function () {
-                $('#argumentsButton').html('<span class="glyphicon glyphicon-collapse-down"></span> Show arguments used to produce these results');
-            })
-            $('#arguments').on('show.bs.collapse', function () {
-                $('#argumentsButton').html('<span class="glyphicon glyphicon-collapse-up"></span> Hide arguments used to produce these results');
-            })
-        })
-
-        $(function(){
-            $('#filters').on('hide.bs.collapse', function () {
-                $('#filtersButton').html('<span class="glyphicon glyphicon-collapse-down"></span> Show filters');
-            })
-            $('#filters').on('show.bs.collapse', function () {
-                $('#filtersButton').html('<span class="glyphicon glyphicon-collapse-up"></span> Hide filters');
-            })
-        })
-
-        $(function(){
-            $('#stats').on('hide.bs.collapse', function () {
-                $('#statsButton').html('<span class="glyphicon glyphicon-collapse-down"></span> Show figures on lineage effect');
-            })
-            $('#stats').on('show.bs.collapse', function () {
-                $('#statsButton').html('<span class="glyphicon glyphicon-collapse-up"></span> Hide figures on lineage effect');
-            })
-        })
-    </script>
+    <script src="components/lib/js/functions.js"></script>
+    <script src="components/lib/js/indexJS.js"></script>
     <title>Your DBGWAS <version> results</title>
 </head>
 <body>
@@ -222,7 +121,7 @@
     <script>
         $( document ).ready(function() {
             //auto generated stuff comes here
-            data = <previews>
+            var data = <previews>
             //auto generated stuff comes here
 
             var queryBuilder = $('#builder').queryBuilder({
@@ -239,8 +138,15 @@
                 allow_empty: true
             });
 
+            //load the data in the data variable into the AlaSQL DB
+            createComponentsDB(data);
+
+            //create all spreadsheets representing the annotations
+            buildAllTables();
+
+            //show the object according to the search
             showObjects();
-        })
+            })
     </script>
 
     <h3> Sort by:

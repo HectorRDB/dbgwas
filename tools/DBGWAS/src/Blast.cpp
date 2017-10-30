@@ -150,12 +150,7 @@ string AnnotationRecord::getAnnotationsForHOT(int componentId) const {
   stringstream ss;
   ss << "[";
   for (const auto & tagAndSetOfNodesAndEvalue : annotations)
-  {
-    string tag = tagAndSetOfNodesAndEvalue.first;
-    //escape '
-    boost::replace_all(tag, "'", "\\'");
-    ss << "[\\'" << tag << "\\', " << tagAndSetOfNodesAndEvalue.second.getHTMLRepresentationForIndexPage() << "], ";
-  }
+    ss << "['" << tagAndSetOfNodesAndEvalue.first << "', " << tagAndSetOfNodesAndEvalue.second.getHTMLRepresentationForIndexPage() << "], ";
   ss << "]";
 
   return ss.str();
