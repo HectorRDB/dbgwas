@@ -1,25 +1,34 @@
-﻿Paper (Deadline: 24th October):
-  -Annotation:
-    @see https://mail.google.com/mail/u/0/#sent/15ef32ae22f37ec4
-    -nt_db and -pt_db must receive a list of DBs, and not only one
-    ???
-        -Significant node annotation ordered by e-value (index page)
-        -Add a parameter to set a e-value cutoff
-        -E-value ordering ot hits for each node (in the table below the component graph)
-        -In the pop-up annotation from the table, add the e-value after each annotation.
-    ???
-        -In the visualisation (both the index and graph page) provide an annotation panel that allow the user to select which annotation DBs he/she wants to consider and also to select a threshold such that all hits above such threshold are disregarded.
-    -Each step must have a separate folder to where the temp files are created
-        -like this we can easily remove old files when using -skipn
+﻿v0.3.8:
+-Changes to visualisation:
+    -In the visualisation (both the index and graph page), the annotations are now in a spreadsheet so that it is sortable by e-value and node;
+        -We now also show the annotation for all nodes in the index page;
+        -The annotations are sorted by nb of nodes by default;
+    -In the graph page, when selecting the nodes from an annotation, a nice zoom is now given;
+        -If the zoom is way too much, we zoom out so that we nicely show the part of the graph corresponding to the annotation;
+    -In the graph page, the screen is now blocked until the graph is loaded;
+    -In the graph page, the user can now select nodes by selecting rows in the node table;
+    -In the visualisation page, changed "Show some stats" to "Show figures on lineage effect" in the index page
+    -Better performance on the visualisation page;
 
+-Other changes:
+    -nt_db and -pt_db must receive a list of DBs, and not only one
+    -Refactoring of many parts of the code regarding the annotation
+        -The code was done in a rush and it was a mess
+
+
+Paper:
+  -Add a check to verify that there is at least one genome with Phenotype 0 and one with Phenotype 1
+
+  -Each step must have a separate folder to where the temp files are created
+    -like this we can easily remove old files when using -skipn
 
   -New parameters:
     -Fix output folder from being fixed to being a parameter
       -Need a fix on Gemma/Bugwas output folder first
 
-  -Check the outputs of the experiments to get more ideas
+  -In the pop-up annotation from the table, show the annotations of the node, together with nb of nodes and e-value (the handson table itself)
 
-
+  -put a time limit for phantom js (or how to know when it bugged?)
 
 
 
@@ -27,6 +36,9 @@
 
 
 High priority TODO:
+  -Select nodes using the newick tree
+  -show the newick tree and the unitigs (genotypes)
+    -@see: https://mail.google.com/mail/u/0/#sent/15f1663316ff5dec
   -Allow the user to provide an already built database, instead of calling makeblastdb always
   -Fix qvalue default min and max to min and max of the components
   -treat NA better
@@ -39,9 +51,11 @@ High priority TODO:
 
 
 Low priority TODO:
+  -Use a continuous or categorical phenotype instead of a binarized phenotype (apparently, this would be more suited for virulence phenotypes);
+  -Use counts instead of pres/abs patterns for the genotypes (and one application would be to compute such analysis on transcriptome data);
+  -Add covariates (e.g. patient metadata) in the association model;
   -remove the patterns with maf < maf.filter in C++
     -ok for now (done in R)
-  -Hovering a node should highlight it in the table if it is in the table
   -Multiple alignment on the node sequences that are selected?
     -Maybe this allow us to run the MSA:
         -https://en.wikipedia.org/wiki/Asm.js

@@ -315,14 +315,14 @@ void checkParametersGenerateOutput(Tool *tool) {
   //check the nucleotide DB
   if (tool->getInput()->get(STR_NUCLEOTIDE_DB)) {
     //build the nucleotide DB
-    nucleotideDBPath = Blast::makeblastdb("nucl", tool->getInput()->getStr(STR_NUCLEOTIDE_DB));
+    nucleotideDBPath = Blast::makeblastdb("nucl", tool->getInput()->getStr(STR_NUCLEOTIDE_DB), outputFolderPath);
     thereIsNucleotideDB=true;
   }
 
   //check the protein DB
   if (tool->getInput()->get(STR_PROTEIN_DB)) {
     //build the protein DB
-    proteinDBPath = Blast::makeblastdb("prot", tool->getInput()->getStr(STR_PROTEIN_DB));
+    proteinDBPath = Blast::makeblastdb("prot", tool->getInput()->getStr(STR_PROTEIN_DB), outputFolderPath);
     thereIsProteinDB=true;
   }
 }

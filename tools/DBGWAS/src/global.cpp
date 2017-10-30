@@ -81,8 +81,8 @@ void populateParser (Tool *tool) {
   tool->getParser()->push_front (new OptionOneParam (STR_MAX_NEIGHBOURHOOD, "Denotes the maximum neighbourhood that can be viewed in the final visualization",  false, "5"));
 
   //TODO: maybe allow also to give the DB directly, instead of building it everytime...
-  tool->getParser()->push_front (new OptionOneParam (STR_NUCLEOTIDE_DB, "A Fasta file containing annotation in a nucleotide alphabet format",  false));
-  tool->getParser()->push_front (new OptionOneParam (STR_PROTEIN_DB, "A Fasta file containing annotation in a protein alphabet format",  false));
+  tool->getParser()->push_front (new OptionOneParam (STR_NUCLEOTIDE_DB, "A list of Fasta files separated by comma containing annotation in a nucleotide alphabet format (e.g.: -nt path/to/file_1.fa,path/to/file_2.fa,etc)",  false));
+  tool->getParser()->push_front (new OptionOneParam (STR_PROTEIN_DB, "A list of Fasta files separated by comma containing annotation in a protein alphabet format (e.g.: -nt path/to/file_1.fa,path/to/file_2.fa,etc)",  false));
   //TODO: maybe allow also to give the DB directly, instead of building it everytime...
 
   //TODO: seeveral questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option

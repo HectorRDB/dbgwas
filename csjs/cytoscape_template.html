@@ -45,6 +45,8 @@
     <link href="lib/css/cytoscape-context-menus.css" rel="stylesheet" type="text/css" />
     <link href="lib/css/handsontable.full.min.css" rel="stylesheet" type="text/css" />
 
+
+
     <script src="lib/js/fastclick.min.js"></script>
     <script src="lib/js/lodash.min.js"></script>
     <script src="lib/js/jquery.min.js"></script>
@@ -57,14 +59,16 @@
     <script src="lib/js/cytoscape-ngraph.forcelayout.js"></script>
     <script src="lib/js/cytoscape-context-menus.js"></script>
     <script src="lib/js/handsontable.full.min.js"></script>
-    <script src="lib/js/helpers.js"></script>
     <script src="lib/js/jquery.layout-latest.js"></script>
+    <script src="lib/js/jquery.blockUI.js"></script>
+    <script src="lib/js/functions.js"></script>
+    <script src="lib/js/componentJS.js"></script>
     <script type="text/javascript">
-        var DBGWAS_graph_tag2nodes;
+        var componentAnnotation;
         $(function(){ // on dom ready
             var elements = [ <elementsTag> ]
-            DBGWAS_graph_tag2nodes = <DBGWAS_graph_tag2nodesTag>
-            buildPage(elements, DBGWAS_graph_tag2nodes)
+            componentAnnotation = <componentAnnotationTag>
+            buildPage(elements, componentAnnotation)
         });
     </script>
 </head>
@@ -92,7 +96,7 @@
             </tr>
             <tr>
                 <td>
-                    <canvas id="gradientCanvas" width="150" height="50"></canvas> <br/>
+                    <canvas id="gradientCanvas" width="150" height="25"></canvas> <br/>
                     <span style="color:blue">Pheno0 &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp </span><span style="color:red">Pheno1</span>
                 </td>
             </tr>
@@ -100,26 +104,14 @@
                 <td>
                     <p style="margin-bottom: 1cm;"'></p>
                     Allele frequency: <br/>
-                    <canvas id="alleleCanvas" width="250" height="100"></canvas> <br/>
+                    <canvas id="alleleCanvas" width="250" height="50"></canvas> <br/>
                     &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp High &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Low
                 </td>
             </tr>
             <tr>
                 <td>
-                    <p style="margin-bottom: 2cm;"'></p>
-                    Annotation:<br/>
-                    Select nodes contained in tag
-                    <select id="DBGWAS_graph_tag_Select" style="background-color: grey;">
-                        <option selected value="clear">
-                            Clear selection
-                        </option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <p style="margin-bottom: 2cm;"'></p>
-                    <button class="btn btn-default" type="button" onclick="createCytoscapeExportDialog();">View this on Cytoscape Desktop</button>
+                    <p style="margin-bottom: 1cm;"'></p>
+                    <button class="btn btn-default" type="button" onclick="createCytoscapeExportDialog();">View graph on Cytoscape Desktop</button>
                 </td>
             </tr>
             <tr>
@@ -133,7 +125,7 @@
             <tr>
                 <td>
                     <p style="margin-bottom: 3cm;"'></p>
-                    <div style="background-color: white; overflow:hidden; width: 230px">
+                    <div class="logos">
                         <a target="_blank" href="https://team.inria.fr/erable/en/"><img class="small_logo" src="lib/resources/erable_logo.png" /></a>
                         <a target="_blank" href="https://lbbe.univ-lyon1.fr/?lang=en"><img class="small_logo" src="lib/resources/lbbe_logo.png" /></a>
                         <a target="_blank" href="http://www.biomerieux.fr/"><img class="small_logo" src="lib/resources/biomerieux_logo.png" /></a>
@@ -144,7 +136,10 @@
     </div>
 </div>
 
-<!-- Div for the node table -->
+<!-- Div for the annotation -->
+<div id="DBGWAS_graph_tag_table" class="ui-layout-north"></div>
+
+<!-- Div for the nodes -->
 <div id="nodeTable" class="ui-layout-south"></div>
 </body>
 </html>

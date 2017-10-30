@@ -1,4 +1,4 @@
-<table style="float: left; margin-left: 20px; margin-bottom: 20px; width: 250px; height: 300px">
+<table class="componentTable" id="table_comp_<id>">
 <tr>
     <td>
         <center><strong>Comp_<id></strong></center>
@@ -11,14 +11,14 @@
 </tr>
 <tr>
     <td>
-        Annotations on significant nodes: <annotations>
+        Annotations on significant nodes: <div id="annot_comp_<id>" class="hotIndexTable"></div>
     </td>
 </tr>
 <tr>
     <td>
         Preview (click to open) <br/>
         <center>
-            <img id="img_<id>" onclick="window.open(\'components/comp_<id>.html\', \'_blank\')" src="components/comp_<id>.html.png"/>
+            <img class="preview" id="img_<id>" onclick="window.open(\'components/comp_<id>.html\', \'_blank\')" src="components/comp_<id>.html.png"/>
         </center>
     </td>
 </tr>

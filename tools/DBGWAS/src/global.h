@@ -31,6 +31,8 @@
 #include <gatb/gatb_core.hpp>
 #include "Utils.h"
 
+#define UNIQUE_SYMBOL_MARKER "#@#-322"
+
 //global vars
 extern Graph* graph;
 extern vector< UnitigIdStrandPos >* nodeIdToUnitigId;

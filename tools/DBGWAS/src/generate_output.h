@@ -44,11 +44,12 @@
 #include <boost/graph/reverse_graph.hpp>
 #include <boost/graph/graph_utility.hpp>
 #include <boost/graph/subgraph.hpp>
-#include "global.h"
-#include "PhenoCounter.h"
 #include <cstdlib>
 
-#define UNIQUE_SYMBOL_MARKER "#@#-322"
+#include "global.h"
+#include "PhenoCounter.h"
+#include "Blast.h"
+
 
 using namespace std;
 
@@ -170,17 +171,19 @@ public:
 
 class ObjectPreview {
 private:
+    int id;
     double qvalue;
-    string annotations;
+    string annotationsConcatenated;
     string preview;
+    string annotationsForHOT;
 public:
-    ObjectPreview(double qvalue, const string &annotations, const string &preview):
-        qvalue(qvalue), annotations(annotations), preview(preview){}
-
+    ObjectPreview(int id, double qvalue, const string &annotationsConcatenated, const string &preview, const string &annotationsForHOT):
+        id(id), qvalue(qvalue), annotationsConcatenated(annotationsConcatenated), preview(preview), annotationsForHOT(annotationsForHOT){}
 
     string toJSObject () const {
         stringstream ss;
-        ss << "{qvalue: " << qvalue << ", annotations: '" << annotations << "', preview: '" << preview << "'}";
+        ss << "{id: " << id << ",\nqvalue: " << qvalue << ",\nannCat: '" << annotationsConcatenated << "',\npreview: '" << preview << "'"
+        << ",\nannHOT: " << annotationsForHOT << "}\n";
         return ss.str();
     }
 };
@@ -244,11 +247,12 @@ public:
         return toReturn;
     }
 private:
-    void generateCytoscapeOutput(const graph_t &graph, const vector<int> &nodes, const string &typeOfGraph, int i,
-                                                  const string &outputFolder, const vector<int> &selectedUnitigs, int nbPheno0, int nbPheno1,
-                                                  map<int, set<string> > &idComponent2DBGWAS_index_tag_signNodesOnly, int nbCores);
-    void createIndexFile(int numberOfComponents, const string &outputFolder, const vector<vector<int> > &nodesInComponent, graph_t& newGraph,
-                                          map<int, set<string> > &idComponent2DBGWAS_index_tag_signNodesOnly, const vector<const PatternFromStats*> &unitigToPatternStats);
+    void generateCytoscapeOutput(const graph_t &graph, const vector<MyVertex> &nodes, const string &typeOfGraph, int i,
+                                 const string &outputFolder, const vector<int> &selectedUnitigs, int nbPheno0, int nbPheno1,
+                                 map<int, AnnotationRecord > &idComponent2SignificantAnnotations,
+                                 int nbCores);
+    void createIndexFile(int numberOfComponents, const string &outputFolder, const vector<vector<MyVertex> > &nodesInComponent, graph_t& newGraph,
+                         map<int, AnnotationRecord > &idComponent2AnnotationRecord, const vector<const PatternFromStats*> &unitigToPatternStats);
 };
 
 

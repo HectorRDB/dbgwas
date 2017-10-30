@@ -4,6 +4,8 @@
 
 #include "Blast.h"
 #include "Utils.h"
+#include "global.h"
+#include <algorithm>
 
 //parse a string and build a BlastRecord from it
 BlastRecord BlastRecord::parseString (const string &str) {
@@ -84,19 +86,117 @@ vector<BlastRecord> Blast::blast (const string &command, const string &queryPath
 }
 
 
-string Blast::makeblastdb (const string &dbtype, const string &originalDBPath) {
-  string fixedDBPath = originalDBPath + ".DBGWAS.fasta";
+string Blast::makeblastdb (const string &dbtype, const string &originalDBPath, const string &outputFolderPath) {
+  string concatenatedDBPath;
+  {
+    stringstream ss;
+    ss << outputFolderPath << "/" << dbtype << "_db";
+    concatenatedDBPath = ss.str();
+  }
 
-  //replace spaces for underscores in the FASTA file, as this could create some problems...
-  cout << "[WARNING] Copying and replacing spaces for _ in your DB " << originalDBPath << endl;
-  string commandLineFixSpaces = string("tr ' ' '_' <") + originalDBPath + " >" + fixedDBPath;
-  executeCommand(commandLineFixSpaces);
+  //concatenate all DBs into one
+  {
+    //TODO: I don't know why <(echo) is not allowed in the cat command, so we have to use this ugly thing...
+    //create an empty file with only a newline
+    string newlineFilepath = outputFolderPath + "/newline";
+    executeCommand(string("echo > ") + newlineFilepath);
+    //TODO: I don't know why <(echo) is not allowed in the cat command, so we have to use this ugly thing...
+
+    string catCommand;
+    stringstream ss;
+    ss << "cat " << originalDBPath << " > " << concatenatedDBPath;
+    catCommand = ss.str();
+    boost::replace_all(catCommand, ",", string(" ") + newlineFilepath + " ");
+    executeCommand(catCommand);
+  }
+
+  //replace spaces for underscores in the concatenated files, as this could create some problems...
+  string fixedDBPath(concatenatedDBPath);
+  fixedDBPath += "_fixed";
+  {
+    string commandLineFixSpaces = string("tr ' ' '_' <") + concatenatedDBPath + " >" + fixedDBPath;
+    executeCommand(commandLineFixSpaces);
+  }
 
   //create the DB using the fixed FASTA
-  string commandLineMakeblastdb = string("./makeblastdb -dbtype ") + dbtype +  " -in " + fixedDBPath;
-  executeCommand(commandLineMakeblastdb);
+  {
+    string commandLineMakeblastdb = string("./makeblastdb -dbtype ") + dbtype + " -in " + fixedDBPath;
+    executeCommand(commandLineMakeblastdb);
+  }
 
   //return the fixed db path
   return fixedDBPath;
+}
 
+
+void AnnotationRecord::SetOfNodesAndEvalue::addNode(int node, long double evalue) {
+  nodes.insert(node);
+  minEvalue = min(minEvalue, evalue);
+}
+
+
+string AnnotationRecord::getSQLRepresentation() const {
+  stringstream ss;
+  if (annotations.size()==0)
+    ss << UNIQUE_SYMBOL_MARKER << "No annotations found" << UNIQUE_SYMBOL_MARKER << " ";
+  else {
+    for (const auto & tagAndSetOfNodesAndEvalue : annotations)
+      ss << UNIQUE_SYMBOL_MARKER << tagAndSetOfNodesAndEvalue.first << UNIQUE_SYMBOL_MARKER << " ";
+  }
+  return ss.str();
+}
+
+string AnnotationRecord::getAnnotationsForHOT(int componentId) const {
+  stringstream ss;
+  ss << "[";
+  for (const auto & tagAndSetOfNodesAndEvalue : annotations)
+    ss << "['" << tagAndSetOfNodesAndEvalue.first << "', " << tagAndSetOfNodesAndEvalue.second.getHTMLRepresentationForIndexPage() << "], ";
+  ss << "]";
+
+  return ss.str();
+}
+
+
+//transform to a javascript array
+string AnnotationRecord::SetOfNodesAndEvalue::getHTMLRepresentationForGraphPage () const {
+  stringstream ss;
+  ss << scientific;
+  ss << nodes.size() << ", " << minEvalue << ", [";
+  for (const auto &node : nodes)
+    ss << "'n" << node << "', ";
+  ss << "]";
+  return ss.str();
+}
+
+//transform to a javascript array
+string AnnotationRecord::SetOfNodesAndEvalue::getHTMLRepresentationForIndexPage () const {
+  stringstream ss;
+  ss << scientific;
+  ss << nodes.size() << ", " << minEvalue;
+  return ss.str();
+}
+
+set<string> AnnotationRecord::getAllAnnotationsNames() const {
+  set<string> allAnnotationsNames;
+  for (const auto & tagAndSetOfNodesAndEvalue : annotations)
+    allAnnotationsNames.insert(tagAndSetOfNodesAndEvalue.first);
+  return allAnnotationsNames;
+}
+
+
+//get an HTML representation of the annotation component for the graph page
+string AnnotationRecord::getHTMLRepresentationForGraphPage() const {
+  stringstream ss;
+  ss << "[";
+  for (const auto & tagAndSetOfNodesAndEvalue : annotations)
+    ss << "['" << tagAndSetOfNodesAndEvalue.first << "', " << tagAndSetOfNodesAndEvalue.second.getHTMLRepresentationForGraphPage() << "], ";
+  ss << "]";
+  return ss.str();
+}
+
+
+//add an annotation to this set
+void AnnotationRecord::addAnnotation(const string &tag, int node, long double evalue) {
+  annotations[tag].addNode(node, evalue);
+  nodeId2Annotation[node].insert(tag);
 }
