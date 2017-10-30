@@ -152,7 +152,8 @@ string AnnotationRecord::getJSToFillAnnotationTableInIndexPage(int componentId) 
   for (const auto & tagAndSetOfNodesAndEvalue : annotations)
   {
     string tag = tagAndSetOfNodesAndEvalue.first;
-    //escape '
+    //escape \\ and '
+    boost::replace_all(tag, "\\", "\\\\");
     boost::replace_all(tag, "'", "\\'");
     ss << "[\\'" << tag << "\\', " << tagAndSetOfNodesAndEvalue.second.getHTMLRepresentationForIndexPage() << "], ";
   }

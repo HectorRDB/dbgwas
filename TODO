@@ -2,23 +2,24 @@
     # nodes in the index just consider the significant nodes...
 
 v0.3.8:
-    -In the visualisation (both the index and graph page), put the annotations on a spreadsheet so that it is sortable by e-value and node;
+-Changes to visualisation:
+    -In the visualisation (both the index and graph page), the annotations are now in a spreadsheet so that it is sortable by e-value and node;
         -We now also show the annotation for all nodes in the index page;
-        -The annotations come sorted by nb of nodes;
+        -The annotations come sorted by nb of nodes by default;
+    -In the graph page, when selecting the nodes from an annotation, a nice zoom is now given;
+        -If the zoom is way too much, we zoom out so that we nicely show the part of the graph corresponding to the annotation;
+    -In the graph page, the screen is now blocked until the graph is loaded;
+    -In the graph page, the user can now select nodes by selecting rows in the node table;
+    -In the visualisation page, changed "Show some stats" to "Show figures on lineage effect" in the index page
+
+-Other changes:
     -nt_db and -pt_db must receive a list of DBs, and not only one
         -ok and tested
-    -In the graph page, when selecting the nodes from an annotation, a nice zoom is now given;
-        -If the zoom is way too much, we zoom out so that we nicely show the part of the graph corresponding to the annotation
-    -The screen is now blocked until the graph is loaded;
-    -Changed "Show some stats" to "Show figures on lineage effect" in the index page
-    -Refactoring of many parts of the code
-    -The user can now select nodes by selecting rows in the node table
-
+    -Refactoring of many parts of the code regarding the annotation (it was a mess)
 
     TODO:
     -Added a check to verify that there is at least one genome with Phenotype 0 and one with Phenotype 1
 
-    -In the pop-up annotation from the table, show the annotations of the node, together with nb of nodes and e-value (the handson table itself)
 
 Paper (Deadline: 24th October):
   -Each step must have a separate folder to where the temp files are created
@@ -28,6 +29,8 @@ Paper (Deadline: 24th October):
   -New parameters:
     -Fix output folder from being fixed to being a parameter
       -Need a fix on Gemma/Bugwas output folder first
+
+  -In the pop-up annotation from the table, show the annotations of the node, together with nb of nodes and e-value (the handson table itself)
 
   -Check the outputs of the experiments to get more ideas
 
