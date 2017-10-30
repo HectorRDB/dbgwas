@@ -31,24 +31,37 @@ var maxLengthColumnRenderer = 20;
 var pathToLib = "components/lib/"
 
 
-//create the preview of a component
-function buildComponentPreview(componentId, preview, annotationsHOT) {
-    //add the preview and hide it
-    $("#showItemsDiv").append(preview);
-    $("#table_comp_"+componentId.toString()).hide();
+//block the UI for the first time
+function blockForTheFirstTime() {
+  $.blockUI({
+        message: '<img width="25px" src="components/lib/resources/busy.gif" /> Loading components for the first time<br/>Please wait...' ,
+        css: { 
+              border: 'none', 
+              padding: '15px', 
+              backgroundColor: '#000', 
+              '-webkit-border-radius': '10px', 
+              '-moz-border-radius': '10px', 
+              opacity: .5, 
+              color: '#fff' 
+          }
+        }); 
+}
 
-    //get the annotation div
-    var annotationDiv = $('#annot_comp_'+componentId.toString());
+//create the preview of a component
+function buildComponentPreview(idPreviewAnn) {
+    //add the preview and hide it
+    $("#showItemsDiv").append(idPreviewAnn.preview);
+    $("#table_comp_"+idPreviewAnn.id.toString()).hide();
 
     //if there is no annotation, then it is easy
-    if (annotationsHOT.length==0) {
-        annotationDiv.html("<b>No annotations found.</b>")
+    if (idPreviewAnn.annHOT.length==0) {
+        $('#annot_comp_'+idPreviewAnn.id.toString()).html("<b>No annotations found.</b>")
     }
     else {
       //now, we gotta build the HOT containing the annotation
       //populate the table for the graph annotation
       var annotationTableSettings = {
-          data: annotationsHOT,
+          data: idPreviewAnn.annHOT,
           columns: [
               {renderer: longColumnRenderer},
               {type: 'text'},
@@ -76,10 +89,9 @@ function buildComponentPreview(componentId, preview, annotationsHOT) {
           sortIndicator: true,
           height: 200
       };
-      
-      
-      var annotationTableContainer = document.getElementById('annot_comp_'+componentId.toString());
-      annotationTable = new Handsontable(annotationTableContainer, annotationTableSettings);
+
+      var annotationContainer = document.getElementById('annot_comp_'+idPreviewAnn.id.toString())
+      annotationTable = new Handsontable(annotationContainer, annotationTableSettings);
       annotationTable.sort(1, false);
     }
 }
@@ -89,44 +101,46 @@ function buildAllComponents() {
     var idPreviewAnnOfAllTables = alasql('SELECT id, preview, annHOT FROM Components');
 
     idPreviewAnnOfAllTables.forEach(function(idPreviewAnn){
-        console.log(idPreviewAnn)
-        //buildComponentPreview
+        buildComponentPreview(idPreviewAnn)
     });
 }
 
-
-function buildObjectsHTML(objects) {
-    var html="";
-    var nb=0;
-    objects.forEach(function(object) {
-        html += object.preview + "\n";
-        nb += 1;
-    });
-    return "<h3>Done! Found " + nb + " components.</h3><br/><br/>" + html;
-}
-
-function showObjects() {
+//hide all components
+function hideAllComponents() {
     var objectDiv = $('#showItemsDiv');
-    objectDiv.html('Working...');
+
+    //retrieve all components id
+    var objects = alasql('SELECT id FROM Components');  
+
+    objects.forEach(function(object){
+      $("#table_comp_"+object.id.toString()).hide();
+    })
+}
+
+//show components according to the search filters
+function showComponents() {
+    //first hide everything
+    hideAllComponents()
+
+    //get the object div
+    var objectDiv = $('#showItemsDiv');
 
     //get the sql
     var sqlAfterSelect = ""
     if ($('#builder').queryBuilder('getSQL', false).sql.length == 0) {
-        sqlAfterSelect = ' FROM Components ORDER BY ' + $('#sortTerm').val() + ' ' + $('#asc_desc').val();
+        sqlAfterSelect = 'ORDER BY ' + $('#sortTerm').val() + ' ' + $('#asc_desc').val();
     }else {
-        sqlAfterSelect = ' FROM Components WHERE ' + $('#builder').queryBuilder('getSQL', false).sql + ' ORDER BY ' + $('#sortTerm').val() + ' ' + $('#asc_desc').val();
+        sqlAfterSelect = 'WHERE ' + $('#builder').queryBuilder('getSQL', false).sql + ' ORDER BY ' + $('#sortTerm').val() + ' ' + $('#asc_desc').val();
     }
 
-    //retrieve the selected objects
-    var objects = alasql('SELECT preview' + sqlAfterSelect);
-    objectDiv.html(buildObjectsHTML(objects));
+    //query the database
+    var objects = alasql('SELECT id FROM Components ' + sqlAfterSelect);
 
-    //execute the js to fill in the annotations
-    var annotationsJS = alasql('SELECT annScript' + sqlAfterSelect);
+    objects.forEach(function(object){
+      $("#table_comp_"+object.id.toString()).show();
+    })
 
-    annotationsJS.forEach(function(annotationJS){
-        eval(annotationJS.annScript)
-    });
+    $.unblockUI()
 }
 
 

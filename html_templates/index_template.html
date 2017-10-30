@@ -78,11 +78,18 @@
     <script src="components/lib/js/query-builder.standalone.min.js"></script>
     <script src="components/lib/js/alasql.min.js"></script>
     <script src="components/lib/js/handsontable.full.min.js"></script>
+    <script src="components/lib/js/jquery.blockUI.js"></script>
     <script src="components/lib/js/functions.js"></script>
     <script src="components/lib/js/indexJS.js"></script>
     <title>Your DBGWAS <version> results</title>
 </head>
 <body>
+
+<!-- Loading message -->
+<script>
+    blockForTheFirstTime();
+</script>
+
 <div id="logoContainer">
     <a target="_blank" href="https://team.inria.fr/erable/en/"><img class="logo" src="components/lib/resources/erable_logo.png" /></a>
     <a target="_blank" href="https://lbbe.univ-lyon1.fr/?lang=en"><img class="logo" src="components/lib/resources/lbbe_logo.png" /></a>
@@ -127,7 +134,7 @@
             var queryBuilder = $('#builder').queryBuilder({
                 filters: [
                     {id: 'qvalue', type: 'string', label: 'q-value', input: 'text', operators: ['equal', 'not_equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal', 'between']},
-                    {id: 'annotations', type: 'string', label: 'Annotations', input: 'select', operators: ['contains', 'not_contains'], values: <all_tags_in_all_components>}
+                    {id: 'annCat', type: 'string', label: 'Annotations', input: 'select', operators: ['contains', 'not_contains'], values: <all_tags_in_all_components>}
                 ],
                 rules: [{
                     condition: 'AND',
@@ -142,10 +149,10 @@
             createComponentsDB(data);
 
             //create all spreadsheets representing the annotations
-            buildAllTables();
+            buildAllComponents();
 
-            //show the object according to the search
-            showObjects();
+            //show the components according to the search
+            showComponents();
             })
     </script>
 
@@ -160,7 +167,7 @@
     </h3>
 
     <br/>
-    <button type="button" class="centeredbtn" onclick="showObjects()">Apply</button>
+    <button type="button" class="centeredbtn" onclick="showComponents();">Apply</button>
     <br/>
 </div>
 <br/>
