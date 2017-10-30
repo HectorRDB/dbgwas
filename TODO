@@ -9,11 +9,16 @@ v0.3.8:
         -ok and tested
     -In the graph page, when selecting the nodes from an annotation, a nice zoom is now given;
         -If the zoom is way too much, we zoom out so that we nicely show the part of the graph corresponding to the annotation
-    -In the pop-up annotation from the table, show the annotations of the node, together with nb of nodes and e-value (the handson table itself)
+    -The screen is now blocked until the graph is loaded;
     -Changed "Show some stats" to "Show figures on lineage effect" in the index page
     -Refactoring of many parts of the code
+    -The user can now select nodes by selecting rows in the node table
+
+
+    TODO:
     -Added a check to verify that there is at least one genome with Phenotype 0 and one with Phenotype 1
-    -Allow the user to select nodes based on rows selection on table
+
+    -In the pop-up annotation from the table, show the annotations of the node, together with nb of nodes and e-value (the handson table itself)
 
 Paper (Deadline: 24th October):
   -Each step must have a separate folder to where the temp files are created

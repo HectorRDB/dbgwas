@@ -274,7 +274,7 @@ function fillTable() {
     }, 100); // may have to adjust this val
 }
 
-function selectNodesFromATag(nodesToSelect) {
+function selectNodesFromAVectorOfIds(nodesToSelect) {
     var nodesToHighlight = [];
 
     cy.nodes().forEach(function (node) {
@@ -599,7 +599,7 @@ function buildPage(graphElements, componentAnnotation)
                 callback: function (key, options) {
                     if (key === 'show_annotation') {
                         row = annotationTable.getSelected()[0]
-                        selectNodesFromATag(annotation2Nodes[annotationTable.getDataAtRow(row)[0]]);
+                        selectNodesFromAVectorOfIds(annotation2Nodes[annotationTable.getDataAtRow(row)[0]]);
                     }
                 },
                 items: {
@@ -737,6 +737,25 @@ function buildPage(graphElements, componentAnnotation)
 
         var tableContainer = document.getElementById('nodeTable');
         table = new Handsontable(tableContainer, tableSettings);
+        table.updateSettings({
+            contextMenu: {
+                callback: function (key, options) {
+                    if (key === 'select_nodes') {
+                        selection = table.getSelected()
+                        startRow = selection[0]
+                        endRow = selection[2]
+                        nodesSelected=[]
+                        for (row=startRow; row<=endRow; row++)
+                          nodesSelected.push(table.getDataAtRow(row)[0])
+                        selectNodesFromAVectorOfIds(nodesSelected)
+                        table.selectCell(0,0,0,0)
+                    }
+                },
+                items: {
+                    'select_nodes': {name: 'Select nodes from sel. rows'}
+                }
+            }
+        })
 
         drawGradient();
         drawAlleles();
