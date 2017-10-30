@@ -183,7 +183,7 @@ public:
     string toJSObject () const {
         stringstream ss;
         ss << "{id: " << id << ",\nqvalue: " << qvalue << ",\nannCat: '" << annotationsConcatenated << "',\npreview: '" << preview << "'"
-        << ",\nannHOT: '" << annotationsForHOT << "'}";
+        << ",\nannHOT: " << annotationsForHOT << "}\n";
         return ss.str();
     }
 };

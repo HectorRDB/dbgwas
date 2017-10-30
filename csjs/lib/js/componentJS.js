@@ -325,7 +325,9 @@ function buildPage(graphElements, componentAnnotation)
         layout.on('layoutstop', function(){
             //say we are ready
             $("#PlWarning").html("Ready!");
-            $.unblockUI()
+            $.unblockUI({
+                fadeOut: 0
+            })
             window.callPhantom(); //tells phantom we are ready
         })
 
