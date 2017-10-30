@@ -60,35 +60,35 @@ function buildComponentPreview(idPreviewAnn) {
     else {
       //now, we gotta build the HOT containing the annotation
       //populate the table for the graph annotation
-      var annotationTableSettings = {
-          data: idPreviewAnn.annHOT,
-          columns: [
-              {renderer: longColumnRenderer},
-              {type: 'text'},
-              {type: 'text'}
-          ],
-          colHeaders: [
-              'Annotation',
-              '# nodes',
-              'E-value'
-          ],
-          copyColsLimit: 1000000,
-          copyRowsLimitNumber: 1000000,
-          readOnly: true,
-          wordWrap: false,
-          stretchH: 'all',
-          allowInsertColumn: false,
-          allowInsertRow: false,
-          allowRemoveColumn: false,
-          allowRemoveRow: false,
-          autoColumnSize: {useHeaders: true},
-          autoWrapCol: true,
-          autoWrapRow: true,
-          manualColumnResize: true,
-          columnSorting: true,
-          sortIndicator: true,
-          height: 200
-      };
+        var annotationTableSettings = {
+            data: idPreviewAnn.annHOT,
+            columns: [
+                {renderer: longColumnRenderer},
+                {type: 'text'},
+                {type: 'text'}
+            ],
+            colHeaders: [
+                'Annotation',
+                '# nodes',
+                'E-value'
+            ],
+            colWidths: [200, 75, 75],
+            copyColsLimit: 1000000,
+            copyRowsLimitNumber: 1000000,
+            readOnly: true,
+            wordWrap: false,
+            allowInsertColumn: false,
+            allowInsertRow: false,
+            allowRemoveColumn: false,
+            allowRemoveRow: false,
+            autoColumnSize: {useHeaders: true},
+            autoWrapCol: true,
+            autoWrapRow: true,
+            manualColumnResize: true,
+            columnSorting: true,
+            sortIndicator: true,
+            height: 200
+        };
 
       var annotationContainer = document.getElementById('annot_comp_'+idPreviewAnn.id.toString())
       annotationTable = new Handsontable(annotationContainer, annotationTableSettings);
