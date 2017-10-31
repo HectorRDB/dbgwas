@@ -90,6 +90,8 @@ void checkStrainsFile(const string &strainsFile) {
   openFileForReading(strainsFile, input);
   set<string> allIds;
 
+  bool pheno0IsPresent=false;
+  bool pheno1IsPresent=false;
   for(string line; getline( input, line ); )
   {
     //parse header
@@ -123,6 +125,14 @@ void checkStrainsFile(const string &strainsFile) {
       fatalError(ss.str());
     }
 
+    //only allowed phenotypes here, check if pheno0IsPresent
+    if (pheno=="0")
+      pheno0IsPresent=true;
+
+    //only allowed phenotypes here, check if pheno1IsPresent
+    if (pheno=="1")
+      pheno1IsPresent=true;
+
     //check if the path is ok
     ifstream file;
     openFileForReading(path, file);
@@ -142,6 +152,17 @@ void checkStrainsFile(const string &strainsFile) {
     }
   }
   input.close();
+
+  if (pheno0IsPresent==false) {
+    stringstream ss;
+    ss << "No strains with Phenotype 0 was found in input file " << strainsFile << ". Please provide at least one strain with Phenotype 0.";
+    fatalError(ss.str());
+  }
+  if (pheno1IsPresent==false) {
+    stringstream ss;
+    ss << "No strains with Phenotype 1 was found in input file " << strainsFile << ". Please provide at least one strain with Phenotype 1.";
+    fatalError(ss.str());
+  }
 
   //in the end, check if strain is null. If it is, populate it
   if (strains==NULL)

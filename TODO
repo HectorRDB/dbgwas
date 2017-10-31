@@ -1,32 +1,35 @@
 ﻿v0.4.1:
 -Fixed the small bug of the close button not displaying correctly on jquery dialog in the index page
+-Added a check to verify that there is at least one strain with Phenotype 0 and one with Phenotype 1
 
 Paper:
-  -Add a check to verify that there is at least one genome with Phenotype 0 and one with Phenotype 1
   -Each step must have a separate folder to where the temp files are created
     -like this we can easily remove old files when using -skipn
   -New parameters:
     -Fix output folder from being fixed to being a parameter
       -Need a fix on Gemma/Bugwas output folder first
   -In the pop-up annotation from the table, show the annotations of the node, together with nb of nodes and e-value (the handson table itself)
-  -put a time limit for phantom js (or how to know when it bugged?)
-  -Fix the small bug of the close button not displaying correct on jquery dialog in the index page
-
+    -order by e-value
+Discuss:
+-Select nodes using the newick tree
+    -This is used to select nodes belonging to a strain
+    -It should also show the strain path in the graph
+-Show the newick tree and the unitigs (genotypes)
+    -@see: https://mail.google.com/mail/u/0/#sent/15f1663316ff5dec
 
 
 
 
 
 High priority TODO:
-  -Select nodes using the newick tree
-  -show the newick tree and the unitigs (genotypes)
-    -@see: https://mail.google.com/mail/u/0/#sent/15f1663316ff5dec
+  -put a time limit for phantom js (or how to know when it bugged?)
   -Allow the user to provide an already built database, instead of calling makeblastdb always
   -Fix qvalue default min and max to min and max of the components
   -treat NA better
     -We just removed from the input for now
   -svd and pca steps are probably redundant in cdbg_lin_loc as XX is centered. Check that they produce the same set of eigenvectors and remove the pca steps (call to prcomp uses more memory than svd).
     -check with laurent
+
 
 
 
