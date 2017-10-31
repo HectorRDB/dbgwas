@@ -1,8 +1,4 @@
-﻿v0.4.1:
--Fixed the small bug of the close button not displaying correctly on jquery dialog in the index page
--Added a check to verify that there is at least one strain with Phenotype 0 and one with Phenotype 1
-
-Paper:
+﻿Paper:
   -Each step must have a separate folder to where the temp files are created
     -like this we can easily remove old files when using -skipn
   -New parameters:
@@ -76,6 +72,14 @@ Low priority TODO:
 
 
 Previous changelogs:
+Done v0.4.1:
+-Fixed the small bug of the close button not displaying correctly on jquery dialog in the index page
+-Added a check to verify that there is at least one strain with Phenotype 0 and one with Phenotype 1
+
+
+
+
+
 Done v0.4.0:
 -Changes to visualisation:
     -In the visualisation (both the index and graph page), the annotations are now in a spreadsheet so that it is sortable by e-value and node;
@@ -87,11 +91,14 @@ Done v0.4.0:
     -In the graph page, the user can now select nodes by selecting rows in the node table;
     -In the visualisation page, changed "Show some stats" to "Show figures on lineage effect" in the index page
     -Better performance on the visualisation page;
-
 -Other changes:
     -nt_db and -pt_db must receive a list of DBs, and not only one
     -Refactoring of many parts of the code regarding the annotation
         -The code was done in a rush and it was a mess
+
+
+
+
 
 
 
