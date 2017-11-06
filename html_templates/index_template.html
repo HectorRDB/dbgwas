@@ -48,7 +48,6 @@
         .componentTable {
             border: 1px solid black;
             border-collapse: collapse;
-            float: left;
             margin-left: 20px;
             margin-bottom: 20px;
             width: 350px;
@@ -80,8 +79,10 @@
     <script src="components/lib/js/alasql.min.js"></script>
     <script src="components/lib/js/handsontable.full.min.js"></script>
     <script src="components/lib/js/jquery.blockUI.js"></script>
+    <script src="components/lib/js/shuffle.min.js"></script>
     <script src="components/lib/js/functions.js"></script>
     <script src="components/lib/js/indexJS.js"></script>
+
     <title>Your DBGWAS <version> results</title>
 </head>
 <body>
@@ -153,7 +154,9 @@
             buildAllComponents();
 
             //show the components according to the search
-            showComponents();
+            //TODO: bug on Shuffle.js
+            //showComponents(); //calling the function just like this does not work well because Shuffle.js bugs... If we "click" the button, then it works well... God knows why...
+            $("#applyFilterButton").trigger("click");
             })
     </script>
 
@@ -168,7 +171,7 @@
     </h3>
 
     <br/>
-    <button type="button" class="centeredbtn" onclick="showComponents();">Apply</button>
+    <button id="applyFilterButton" type="button" class="centeredbtn" onclick="showComponents();">Apply</button>
     <br/>
 </div>
 <br/>

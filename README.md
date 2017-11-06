@@ -6,7 +6,7 @@ DBGWAS is a tool for quick and efficient bacterial GWAS. It uses a compacted De 
 # DBGWAS in a nutshell
 
 For a quick example on how DBGWAS works, we provide the output
-obtained from 282 bacterial genomes along with their drug sensitivity
+obtained from 282 bacterial genomes along with their drug (amikacin) resistance/sensitivity
 phenotype.
 
 Genomes are taken from van Belkum A et al., "Phylogenetic Distribution
@@ -34,9 +34,11 @@ For reproducibility reasons, in the following you have easily the input data, an
 # Downloading, installing and running
 ## Downloading the precompiled binaries
 This is the easiest way to run the tool since it is already precompiled for Linux AMD64 machines.
-Download the latest binary here (v0.4.1): https://www.dropbox.com/s/k4kq6e7xz23qu65/DBGWAS-0.4.1-Linux.tar.gz?dl=1
+Download the latest binary here (v0.4.2): https://www.dropbox.com/s/k67eym0b0koo84h/DBGWAS-0.4.2-Linux.tar.gz?dl=1
 
 Pre-compiled versions history:
+
+DBGWAS v0.4.1: https://www.dropbox.com/s/k4kq6e7xz23qu65/DBGWAS-0.4.1-Linux.tar.gz?dl=1
 
 DBGWAS v0.4.0: https://www.dropbox.com/s/q52b1xbvfy55acm/DBGWAS-0.4.0-Linux.tar.gz?dl=1
 
@@ -149,7 +151,8 @@ DBGWAS makes use of several thirdparty libraries:
 13. jQuery QueryBuilder (http://querybuilder.js.org/)
 14. jQuery Layout (http://layout.jquery-dev.com/)
 15. jQuery BlockUI Plugin (https://github.com/malsup/blockui/)
-16. Fastclick (https://github.com/ftlabs/fastclick)
+16. Shuffle.js (https://vestride.github.io/Shuffle/)
+17. Fastclick (https://github.com/ftlabs/fastclick)
 
 
 # How to cite
