@@ -34,9 +34,11 @@ For reproducibility reasons, in the following you have easily the input data, an
 # Downloading, installing and running
 ## Downloading the precompiled binaries
 This is the easiest way to run the tool since it is already precompiled for Linux AMD64 machines.
-Download the latest binary here (v0.4.1): https://www.dropbox.com/s/k4kq6e7xz23qu65/DBGWAS-0.4.1-Linux.tar.gz?dl=1
+Download the latest binary here (v0.4.2): https://www.dropbox.com/s/k67eym0b0koo84h/DBGWAS-0.4.2-Linux.tar.gz?dl=1
 
 Pre-compiled versions history:
+
+DBGWAS v0.4.1: https://www.dropbox.com/s/k4kq6e7xz23qu65/DBGWAS-0.4.1-Linux.tar.gz?dl=1
 
 DBGWAS v0.4.0: https://www.dropbox.com/s/q52b1xbvfy55acm/DBGWAS-0.4.0-Linux.tar.gz?dl=1
 
