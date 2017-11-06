@@ -6,7 +6,7 @@ DBGWAS is a tool for quick and efficient bacterial GWAS. It uses a compacted De 
 # DBGWAS in a nutshell
 
 For a quick example on how DBGWAS works, we provide the output
-obtained from 282 bacterial genomes along with their drug sensitivity
+obtained from 282 bacterial genomes along with their drug (amikacin) resistance/sensitivity
 phenotype.
 
 Genomes are taken from van Belkum A et al., "Phylogenetic Distribution
@@ -149,7 +149,8 @@ DBGWAS makes use of several thirdparty libraries:
 13. jQuery QueryBuilder (http://querybuilder.js.org/)
 14. jQuery Layout (http://layout.jquery-dev.com/)
 15. jQuery BlockUI Plugin (https://github.com/malsup/blockui/)
-16. Fastclick (https://github.com/ftlabs/fastclick)
+16. Shuffle.js (https://vestride.github.io/Shuffle/)
+17. Fastclick (https://github.com/ftlabs/fastclick)
 
 
 # How to cite

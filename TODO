@@ -72,10 +72,15 @@ Low priority TODO:
 
 
 Previous changelogs:
+Done v0.4.2:
+-Fixed the ordering of the components in the index page
+-In the "DBGWAS in a nutshell section", we now say that our example is using amikacin resistance phenotypes.
+
+
+
 Done v0.4.1:
 -Fixed the small bug of the close button not displaying correctly on jquery dialog in the index page
 -Added a check to verify that there is at least one strain with Phenotype 0 and one with Phenotype 1
-
 
 
 

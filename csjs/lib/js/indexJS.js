@@ -30,6 +30,11 @@
 var maxLengthColumnRenderer = 20;
 var pathToLib = "components/lib/"
 
+//Shuffle global vars
+var Shuffle = window.Shuffle;
+var shuffleContainer;
+var shuffleInstance;
+
 
 //block the UI for the first time
 function blockForTheFirstTime() {
@@ -48,10 +53,11 @@ function blockForTheFirstTime() {
 }
 
 //create the preview of a component
-function buildComponentPreview(idPreviewAnn) {
+function buildComponentPreview(idPreviewAnn, order) {
     //add the preview and hide it
     $("#showItemsDiv").append(idPreviewAnn.preview);
-    $("#table_comp_"+idPreviewAnn.id.toString()).hide();
+    $("#table_comp_"+idPreviewAnn.id.toString()).attr("order", order); //add the order to the component
+    $("#table_comp_"+idPreviewAnn.id.toString()).hide(); //hide the table
 
     //if there is no annotation, then it is easy
     if (idPreviewAnn.annHOT.length==0) {
@@ -98,10 +104,18 @@ function buildComponentPreview(idPreviewAnn) {
 
 //create all the components preview
 function buildAllComponents() {
+    //select all the components
     var idPreviewAnnOfAllTables = alasql('SELECT id, preview, annHOT FROM Components');
 
+    //build all the components in the order
+    var order=1;
     idPreviewAnnOfAllTables.forEach(function(idPreviewAnn){
-        buildComponentPreview(idPreviewAnn)
+        buildComponentPreview(idPreviewAnn, order++)
+    });
+
+    //put the components in the suffle container
+    shuffleContainer = document.getElementById("showItemsDiv")
+    shuffleInstance = new Shuffle(shuffleContainer, {
     });
 }
 
@@ -112,8 +126,10 @@ function hideAllComponents() {
     //retrieve all components id
     var objects = alasql('SELECT id FROM Components');  
 
+    //hide all components, and put their order very high
     objects.forEach(function(object){
       $("#table_comp_"+object.id.toString()).hide();
+      $("#table_comp_"+object.id.toString()).attr("order", objects.length+1); //the order of the component should be very high so that it does not interact with the components to be shown
     })
 }
 
@@ -136,9 +152,21 @@ function showComponents() {
     //query the database
     var objects = alasql('SELECT id FROM Components ' + sqlAfterSelect);
 
+    //show the components and set their order
+    var order=1
     objects.forEach(function(object){
       $("#table_comp_"+object.id.toString()).show();
+      $("#table_comp_"+object.id.toString()).attr("order", order++);
     })
+
+    //sort the components by order
+    function sortByOrder(element){
+      return parseInt(element.getAttribute('order'));
+    }
+    shuffleInstance.sort({
+      by: sortByOrder
+    })
+    
 
     $.unblockUI()
 }
