@@ -13,6 +13,7 @@
 -put a time limit for phantom js (or how to know when it bugged?)
 -Make the step 3 fully multi-threaded
     -Phantom.js takes a bunch of time and could be easily parallelized
+-Try to remove the "lib" folder and the bin/gatb-h5dump from the final package
 
 -Summary
   -Remove "Annotations on significant nodes"
