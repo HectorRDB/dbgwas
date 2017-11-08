@@ -18,6 +18,7 @@ add_definitions (${gatb-core-flags})
 
 # We add the gatb-core include directory
 include_directories (${gatb-core-includes})
+
 # We add the BOOST include directory
 set(Boost_USE_STATIC_LIBS   ON) #This makes boost plug the libraries we specify as static libraries (not dynamic ones - the user does not even need to have boost installed in their pc)
 FIND_PACKAGE(Boost COMPONENTS filesystem system REQUIRED)
@@ -36,7 +37,7 @@ FOREACH (program ${PROGRAMS})
   include_directories (${PROGRAM_SOURCE_DIR})
   file (GLOB_RECURSE  ProjectFiles  ${PROGRAM_SOURCE_DIR}/*.cpp)
   add_executable(${program} ${ProjectFiles})
-  target_link_libraries(${program} ${gatb-core-libraries} ${Boost_LIBRARIES})
+  target_link_libraries(${program} ${gatb-core-libraries} ${Boost_LIBRARIES} -static-libgcc -static-libstdc++)
 ENDFOREACH (program)
 
 ################################################################################

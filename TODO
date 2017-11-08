@@ -72,6 +72,14 @@ Low priority TODO:
 
 
 Previous changelogs:
+Done v0.4.3:
+-Added libgcc and libstdc++ as static libraries
+    -This will avoid running problems on distributions with outdated libgcc/libstdc++, like Debian or Red-Hat distros, e.g.:
+        ./DBGWAS: /usr/lib/x86_64-linux-gnu/libstdc++.so.6: version `GLIBCXX_3.4.21' not found (required by ./DBGWAS)
+
+
+
+
 Done v0.4.2:
 -Fixed the ordering of the components in the index page
 -In the "DBGWAS in a nutshell section", we now say that our example is using amikacin resistance phenotypes.
