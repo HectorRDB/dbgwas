@@ -35,7 +35,6 @@
 #include <fstream>
 #include <algorithm>
 #include <cstdlib>
-#include <pstream.h>
 #include <ctime>
 #include <sstream>
 #include <iostream>
@@ -46,6 +45,7 @@
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
 #undef BOOST_NO_CXX11_SCOPED_ENUMS
+#include <pstream.h>
 #include <whereami.h>
 
 using namespace std;
