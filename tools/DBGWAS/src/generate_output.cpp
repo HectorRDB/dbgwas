@@ -75,7 +75,7 @@ void generate_output::createIndexFile(int numberOfComponents, const string &outp
   //get the template preview
   string templatePreview="";
   {
-    auto indexTableTemplateAsStringVector = getVectorStringFromFile(dirWhereDBGWASIsInstalled.string() + string("/index_table_template.html"));
+    auto indexTableTemplateAsStringVector = getVectorStringFromFile(dirWhereDBGWASIsInstalled + string("/index_table_template.html"));
     for (const auto &line : indexTableTemplateAsStringVector)
       templatePreview += line;
   }
@@ -123,7 +123,7 @@ void generate_output::createIndexFile(int numberOfComponents, const string &outp
 
   //create the index file
   //read template file
-  string templatePath = dirWhereDBGWASIsInstalled.string() + string("/index_template.html");
+  string templatePath = dirWhereDBGWASIsInstalled + string("/index_template.html");
   string indexOutput = readFileAsString(templatePath.c_str());
 
 
@@ -358,7 +358,7 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
 
   //create the graph file
   //read template file
-  string templatePath = dirWhereDBGWASIsInstalled.string() + string("/cytoscape_template.html");
+  string templatePath = dirWhereDBGWASIsInstalled + string("/cytoscape_template.html");
   string cytoscapeOutput = readFileAsString(templatePath.c_str());
 
   //put the graph in the template file
@@ -381,7 +381,7 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
 
 
   //copy the lib folder, if it is not already copied
-  string fromLibPath = dirWhereDBGWASIsInstalled.string() + string("/lib");
+  string fromLibPath = dirWhereDBGWASIsInstalled + string("/lib");
   string toLibPath = outputFolder + string("/visualisations/components/lib");
   if (!boost::filesystem::exists(toLibPath))
     copyDirectoryRecursively(fromLibPath, toLibPath);

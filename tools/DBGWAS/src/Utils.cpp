@@ -446,8 +446,36 @@ void GetSignificantPatterns::operator()(double &qValue) const
 }
 
 
-fs::path getDirWhereDBGWASIsInstalled(char* argv0) {
-  fs::path full_path( fs::initial_path<fs::path>() );
-  full_path = fs::system_complete( fs::path( argv0) );
-  return full_path.parent_path();
+string getDirWhereDBGWASIsInstalled() {
+  char* path = NULL;
+  int length, dirname_length;
+  int i;
+  string toReturn;
+
+  length = wai_getExecutablePath(NULL, 0, &dirname_length);
+  if (length > 0)
+  {
+    path = (char*)malloc(length + 1);
+    if (!path)
+      //error, malloc did not work
+      fatalError("Error on Utils.cpp::getDirWhereDBGWASIsInstalled()");
+
+    //get the executable path
+    wai_getExecutablePath(path, length, &dirname_length);
+
+    //get the executable dir
+    path[length] = '\0';
+    path[dirname_length] = '\0';
+
+    //save it in toReturn
+    toReturn = string(path);
+
+    //free the memory
+    free(path);
+  }
+  else {
+    fatalError("Error on Utils.cpp::getDirWhereDBGWASIsInstalled()");
+  }
+
+  return toReturn;
 }

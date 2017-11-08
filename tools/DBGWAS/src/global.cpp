@@ -48,7 +48,7 @@ const char* STR_MAF_FILTER = "-maf";
 //const char* STR_COUNT_MODE = "-count";
 //TODO: seeveral questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
 
-fs::path dirWhereDBGWASIsInstalled;
+string dirWhereDBGWASIsInstalled="";
 bool skip1 = false;
 bool skip2 = false;
 bool hasNewickFile = false;

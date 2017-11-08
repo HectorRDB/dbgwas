@@ -19,6 +19,12 @@ add_definitions (${gatb-core-flags})
 # We add the gatb-core include directory
 include_directories (${gatb-core-includes})
 
+# We add the pstream include directory
+include_directories (${PROJECT_SOURCE_DIR}/pstreams/)
+
+# We add the whereami include directory
+include_directories (${PROJECT_SOURCE_DIR}/whereami/src)
+
 # We add the BOOST include directory
 set(Boost_USE_STATIC_LIBS   ON) #This makes boost plug the libraries we specify as static libraries (not dynamic ones - the user does not even need to have boost installed in their pc)
 FIND_PACKAGE(Boost COMPONENTS filesystem system REQUIRED)

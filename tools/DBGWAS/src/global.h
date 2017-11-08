@@ -54,7 +54,7 @@ extern const char* STR_MAF_FILTER;
 //extern const char* STR_COUNT_MODE;
 //TODO: seeveral questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
 
-extern fs::path dirWhereDBGWASIsInstalled;
+extern string dirWhereDBGWASIsInstalled;
 extern bool skip1;
 extern bool skip2;
 extern bool hasNewickFile;

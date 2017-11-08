@@ -46,7 +46,7 @@ int main (int argc, char* argv[])
     srand (time(NULL));
 
     //get the path to the dir were the executable is
-    dirWhereDBGWASIsInstalled = getDirWhereDBGWASIsInstalled(argv[0]);
+    dirWhereDBGWASIsInstalled = getDirWhereDBGWASIsInstalled();
     cout << "dirWhereDBGWASIsInstalled: " << dirWhereDBGWASIsInstalled << endl;
     return 0;
 
