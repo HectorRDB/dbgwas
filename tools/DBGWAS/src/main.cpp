@@ -55,6 +55,7 @@ int main (int argc, char* argv[])
         build_dbg().run(argc, argv); //this call will set up graph and nodeIdToUnitigId
         map_reads().run(argc, argv);
         cerr << "Done!" << endl;
+        return 0; //TODO: just to test if up to here is fine
 
         //Run the statistical test
         cerr << "Step 2. Running statistical test (bugwas + gemma)..." << endl;
