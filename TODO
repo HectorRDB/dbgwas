@@ -1,24 +1,56 @@
 ﻿Paper:
-  -Each step must have a separate folder to where the temp files are created
-    -like this we can easily remove old files when using -skipn
-  -New parameters:
+-TODO Code
+
+-New parameters:
     -Fix output folder from being fixed to being a parameter
       -Need a fix on Gemma/Bugwas output folder first
+        -Try to do this in C++ by changing the output directory before calling R and going back after calling R
+      -Test if DBGWAS work with only one installation
+        -ready soon
+      -Each step must have a separate folder to where the temp files are created
+          -like this we can easily remove old files when using -skipn
+          -Optimize temp file space
+-put a time limit for phantom js (or how to know when it bugged?)
+-Make the step 3 fully multi-threaded
+    -Phantom.js takes a bunch of time and could be easily parallelized
+
+-Summary
+  -Remove "Annotations on significant nodes"
+  -Use index tag on the summary (we are currently using component tag)
+  -Show only the first 3 annotations (first 3 lines)
+  -Show nb of significant unitigs and nb of total unitigs
+  -If no annotation was provided, remove
+    Annotations on significant nodes:
+    No annotations found.
+
+-Component page
+  -Right click select significant nodes
+  -Show the nb of selected nodes in the east panel
+  -Update Help
+  -Reduce annotation table to 3 lines
   -In the pop-up annotation from the table, show the annotations of the node, together with nb of nodes and e-value (the handson table itself)
     -order by e-value
-Discuss:
--Select nodes using the newick tree
-    -This is used to select nodes belonging to a strain
-    -It should also show the strain path in the graph
--Show the newick tree and the unitigs (genotypes)
-    -@see: https://mail.google.com/mail/u/0/#sent/15f1663316ff5dec
+
+
+-Other questions:
+-Can we indeed redistribute all these executables with DBGWAS?
+-Bug solving on the performance test... can we relaunch everything?
+-Update supplMaterials.pdf (4 Supplermenary Method, Part II)
+
+
+
+
+
+-Deadline 20th november - final version
+
+
+
 
 
 
 
 
 High priority TODO:
-  -put a time limit for phantom js (or how to know when it bugged?)
   -Allow the user to provide an already built database, instead of calling makeblastdb always
   -Fix qvalue default min and max to min and max of the components
   -treat NA better
@@ -32,6 +64,13 @@ High priority TODO:
 
 
 Low priority TODO:
+    -Select nodes using the newick tree
+        -This is used to select nodes belonging to a strain
+        -The newick tree should have only the strains that contains an unitig in the component
+        -It should also show the strain path in the graph
+    -Show the newick tree and the unitigs (genotypes)
+        -@see: https://mail.google.com/mail/u/0/#sent/15f1663316ff5dec
+
   -Use a continuous or categorical phenotype instead of a binarized phenotype (apparently, this would be more suited for virulence phenotypes);
   -Use counts instead of pres/abs patterns for the genotypes (and one application would be to compute such analysis on transcriptome data);
   -Add covariates (e.g. patient metadata) in the association model;
@@ -52,10 +91,8 @@ Low priority TODO:
   -Adding metadata to features (like what each genome mean, species, etc)
     -This would be a field in the input file with a collumn with whatever the user would like to put
     -Show the original genomes as paths in the graph?
-  -C++ memory optimization
   -Work on unitig counts rather than presence/absence
-  -Make the step 3 fully multi-threaded
-    -Phantom.js takes a bunch of time and could be easily parallelized
+  -C++ memory optimization
 
 
 
