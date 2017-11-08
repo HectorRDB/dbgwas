@@ -248,7 +248,7 @@ public:
     }
 private:
     void generateCytoscapeOutput(const graph_t &graph, const vector<MyVertex> &nodes, const string &typeOfGraph, int i,
-                                 const string &outputFolder, const vector<int> &selectedUnitigs, int nbPheno0, int nbPheno1,
+                                 const string &outputFolder, const string &tmpFolder, const vector<int> &selectedUnitigs, int nbPheno0, int nbPheno1,
                                  map<int, AnnotationRecord > &idComponent2SignificantAnnotations,
                                  int nbCores);
     void createIndexFile(int numberOfComponents, const string &outputFolder, const vector<vector<MyVertex> > &nodesInComponent, graph_t& newGraph,

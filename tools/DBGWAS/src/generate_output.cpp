@@ -56,12 +56,12 @@ generate_output::generate_output ()  : Tool ("generate_output") //give a name to
   populateParser(this);
 }
 
-void generate_output::createIndexFile(int numberOfComponents, const string &outputFolder, const vector<vector<MyVertex> > &nodesInComponent, graph_t& newGraph,
+void generate_output::createIndexFile(int numberOfComponents, const string &visualisationsFolder, const string &step2OutputFolder, const vector<vector<MyVertex> > &nodesInComponent, graph_t& newGraph,
                      map<int, AnnotationRecord > &idComponent2Annotations, const vector<const PatternFromStats*> &unitigToPatternStats) {
   cerr << "[Creating index file...]" << endl;
   //create the thumbnails
   for (int i=0;i<numberOfComponents;i++) {
-    string HTMLFile(boost::filesystem::canonical(outputFolder+"/visualisations/components/comp_"+std::to_string(i)+".html").string());
+    string HTMLFile(boost::filesystem::canonical(visualisationsFolder+"/components/comp_"+std::to_string(i)+".html").string());
     string PNGFile = HTMLFile+".png";
     cerr << "[Rendering thumbnail for component " << i << "...]" << endl;
     executeCommand("./phantomjs render_graph.js " + HTMLFile + " " + PNGFile, false);
@@ -75,7 +75,7 @@ void generate_output::createIndexFile(int numberOfComponents, const string &outp
   //get the template preview
   string templatePreview="";
   {
-    auto indexTableTemplateAsStringVector = getVectorStringFromFile(dirWhereDBGWASIsInstalled + string("/index_table_template.html"));
+    auto indexTableTemplateAsStringVector = getVectorStringFromFile(dirWhereDBGWASIsInstalled + DBGWAS_lib + string("/index_table_template.html"));
     for (const auto &line : indexTableTemplateAsStringVector)
       templatePreview += line;
   }
@@ -123,7 +123,7 @@ void generate_output::createIndexFile(int numberOfComponents, const string &outp
 
   //create the index file
   //read template file
-  string templatePath = dirWhereDBGWASIsInstalled + string("/index_template.html");
+  string templatePath = dirWhereDBGWASIsInstalled + DBGWAS_lib + string("/index_template.html");
   string indexOutput = readFileAsString(templatePath.c_str());
 
 
@@ -188,22 +188,22 @@ void generate_output::createIndexFile(int numberOfComponents, const string &outp
   if (hasNewickFile) {
     boost::replace_all(indexOutput, "<stats_images_html>",
         "    p-values of tested unitigs sorted by principal component (each unitig is associated with the closest PC):<br/>\n"
-        "    <img class=\"statImage\" src=\"components/stats/bugwas_out__SNPs_PC_manhattan.png\" /><br/><br/><br/>\n"
+        "    <img class=\"statImage\" src=\"components/stats/bugwas_out_SNPs_PC_manhattan.png\" /><br/><br/><br/>\n"
         "    p-value of each principal component, whose association with the phenotype is tested using a Bayesian Wald test:<br/>\n"
-        "    <img class=\"statImage\" src=\"components/stats/bugwas_out__barplot_BayesianWald_PCs.png\" /><br/><br/><br/>\n"
+        "    <img class=\"statImage\" src=\"components/stats/bugwas_out_barplot_BayesianWald_PCs.png\" /><br/><br/><br/>\n"
         "    Phylogenetic tree annotated with the principal components which were found significantly associated with the phenotype using a Bayesian Wald test:<br/>\n"
-        "    <img class=\"statImage\" src=\"components/stats/bugwas_out__tree_branchescolouredbyPC.png\" />");
-    boost::filesystem::create_directories(outputFolder + string("/visualisations/components/stats/"));
-    boost::filesystem::copy_file(outputFolder + string("/bugwas_out__SNPs_PC_manhattan.png"), outputFolder + string("/visualisations/components/stats/bugwas_out__SNPs_PC_manhattan.png"));
-    boost::filesystem::copy_file(outputFolder + string("/bugwas_out__barplot_BayesianWald_PCs.png"), outputFolder + string("/visualisations/components/stats/bugwas_out__barplot_BayesianWald_PCs.png"));
-    boost::filesystem::copy_file(outputFolder + string("/bugwas_out__tree_branchescolouredbyPC.png"), outputFolder + string("/visualisations/components/stats/bugwas_out__tree_branchescolouredbyPC.png"));
+        "    <img class=\"statImage\" src=\"components/stats/bugwas_out_tree_branchescolouredbyPC.png\" />");
+    boost::filesystem::create_directories(visualisationsFolder + string("/components/stats/"));
+    boost::filesystem::copy_file(step2OutputFolder + string("/bugwas_out_SNPs_PC_manhattan.png"), visualisationsFolder + string("/components/stats/bugwas_out_SNPs_PC_manhattan.png"));
+    boost::filesystem::copy_file(step2OutputFolder + string("/bugwas_out_barplot_BayesianWald_PCs.png"), visualisationsFolder + string("/components/stats/bugwas_out_barplot_BayesianWald_PCs.png"));
+    boost::filesystem::copy_file(step2OutputFolder + string("/bugwas_out_tree_branchescolouredbyPC.png"), visualisationsFolder + string("/components/stats/bugwas_out_tree_branchescolouredbyPC.png"));
   }else {
     boost::replace_all(indexOutput, "<stats_images_html>", "Re-run DBGWAS with a newick tree file (-newick parameter) to view figures on lineage effect.");
   }
 
   //output the file
   ofstream indexFile;
-  openFileForWriting(outputFolder+string("/visualisations/index.html"), indexFile);
+  openFileForWriting(visualisationsFolder+string("/index.html"), indexFile);
   indexFile << indexOutput;
   indexFile.close();
   cerr << "[Creating index file...] - Done!" << endl;
@@ -211,7 +211,7 @@ void generate_output::createIndexFile(int numberOfComponents, const string &outp
 
 
 void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector<MyVertex> &nodes, const string &typeOfGraph, int i,
-                             const string &outputFolder, const vector<int> &selectedUnitigs, int nbPheno0, int nbPheno1,
+                             const string &tmpFolder, const string &visualisationsFolder, const vector<int> &selectedUnitigs, int nbPheno0, int nbPheno1,
                              map<int, AnnotationRecord > &idComponent2Annotations,
                              int nbCores) {
   cerr << "Rendering " << typeOfGraph << "_" << i << "..." << endl;
@@ -233,7 +233,7 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
     string blastInputPath;
     {
       stringstream blastInputPathSS;
-      blastInputPathSS << outputFolder << "/tmp/nodes_comp_" << i << ".fasta";
+      blastInputPathSS << tmpFolder << "/nodes_comp_" << i << ".fasta";
       blastInputPath = blastInputPathSS.str();
     }
 
@@ -358,7 +358,7 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
 
   //create the graph file
   //read template file
-  string templatePath = dirWhereDBGWASIsInstalled + string("/cytoscape_template.html");
+  string templatePath = dirWhereDBGWASIsInstalled + DBGWAS_lib + string("/cytoscape_template.html");
   string cytoscapeOutput = readFileAsString(templatePath.c_str());
 
   //put the graph in the template file
@@ -371,7 +371,7 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
   string outfilename;
   {
     stringstream ss;
-    ss << outputFolder << "/visualisations/components/" << typeOfGraph << "_" << i << ".html";
+    ss << visualisationsFolder << "/components/" << typeOfGraph << "_" << i << ".html";
     outfilename=ss.str();
   }
   ofstream outFile;
@@ -381,8 +381,8 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
 
 
   //copy the lib folder, if it is not already copied
-  string fromLibPath = dirWhereDBGWASIsInstalled + string("/lib");
-  string toLibPath = outputFolder + string("/visualisations/components/lib");
+  string fromLibPath = dirWhereDBGWASIsInstalled + DBGWAS_lib + string("/lib");
+  string toLibPath = visualisationsFolder + string("/components/lib");
   if (!boost::filesystem::exists(toLibPath))
     copyDirectoryRecursively(fromLibPath, toLibPath);
   cerr << "Building Cytoscape graph... - Done!" << endl;
@@ -402,20 +402,21 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
 void generate_output::execute () {
   checkParametersGenerateOutput(this);
   int neighbourhood = getInput()->getInt(STR_MAX_NEIGHBOURHOOD);
-  //string outputFolder = getInput()->getStr(STR_OUTPUT);
-  string outputFolder("output");
+  string outputFolder = getInput()->getStr(STR_OUTPUT)+string("/step3");
+  string tmpFolder = outputFolder+string("/tmp")
+  string visualisationsFolder = getInput()->getStr(STR_OUTPUT)+string("/visualisations");
+  string step1OutputFolder = getInput()->getStr(STR_OUTPUT)+string("/step1");
+  string step2OutputFolder = getInput()->getStr(STR_OUTPUT)+string("/step2");
   int nbCores = getInput()->getInt(STR_NBCORES);
 
 
   //get the nbContigs
-  int nbContigs = getNbLinesInFile(outputFolder+string("/graph.nodes"));
-
-
+  int nbContigs = getNbLinesInFile(step1OutputFolder+string("/graph.nodes"));
 
   cerr << "[Getting the significant unitigs from the patterns...]" << endl;
 
   //read the patterns
-  auto sortedPatterns = PatternFromStats::readFile(outputFolder + "/patterns.txt", true);
+  auto sortedPatterns = PatternFromStats::readFile(step2OutputFolder + "/patterns.txt", true);
 
   //associates each unitig to its pattern stats
   vector<const PatternFromStats*> unitigToPatternStats(nbContigs, NULL);
@@ -427,7 +428,7 @@ void generate_output::execute () {
 
     //associates each unitig to its Pattern stats
     ifstream unitigToPatternFilestream;
-    openFileForReading(outputFolder + string("/gemma_input.unitig_to_pattern.binary"), unitigToPatternFilestream);
+    openFileForReading(step1OutputFolder + string("/gemma_input.unitig_to_pattern.binary"), unitigToPatternFilestream);
 
     int unitig, pattern;
     while (unitigToPatternFilestream >> unitig >> pattern) {
@@ -442,7 +443,7 @@ void generate_output::execute () {
   //read unitigToWeightCorrection
   vector<int> unitigToWeightCorrection(nbContigs);
   ifstream unitigToWeightCorrectionFilestream;
-  openFileForReading(outputFolder+string("/weight_correction"), unitigToWeightCorrectionFilestream);
+  openFileForReading(step1OutputFolder+string("/weight_correction"), unitigToWeightCorrectionFilestream);
   for (int i=0;i<unitigToWeightCorrection.size();i++)
     unitigToWeightCorrectionFilestream >> unitigToWeightCorrection[i];
   unitigToWeightCorrectionFilestream.close();
@@ -459,7 +460,7 @@ void generate_output::execute () {
     ofstream significantUnitigsFile;
     openFileForWriting(outputFolder + string("/significant_unitigs.txt"), significantUnitigsFile);
     ifstream pattern2UnitigsFile;
-    openFileForReading(outputFolder + string("/bugwas_input.unique_rows_to_all_rows.binary"), pattern2UnitigsFile);
+    openFileForReading(step1OutputFolder + string("/bugwas_input.unique_rows_to_all_rows.binary"), pattern2UnitigsFile);
 
     //read pattern2UnitigsFile
     string line;
@@ -505,7 +506,7 @@ void generate_output::execute () {
   //read the frequency file
   vector< PhenoCounter > phenotypeCounters;
   {
-    string frequencyFilename(outputFolder+string("/frequency_unitig_to_total_pheno0_pheno1_NA_count"));
+    string frequencyFilename(step1OutputFolder+string("/frequency_unitig_to_total_pheno0_pheno1_NA_count"));
     ifstream frequencyFile;
     openFileForReading(frequencyFilename, frequencyFile);
 
@@ -522,7 +523,7 @@ void generate_output::execute () {
   int nbPheno0, nbPheno1;
   {
     ifstream totalNbOfStrainsInEachPheno;
-    openFileForReading(outputFolder + string("/total_nb_of_strains_in_each_pheno"), totalNbOfStrainsInEachPheno);
+    openFileForReading(step1OutputFolder + string("/total_nb_of_strains_in_each_pheno"), totalNbOfStrainsInEachPheno);
     totalNbOfStrainsInEachPheno >> nbPheno0 >> nbPheno1;
     totalNbOfStrainsInEachPheno.close();
   }
@@ -532,7 +533,7 @@ void generate_output::execute () {
 
   //create the nodes of the graph
   //assume the graph is undirected, instead of directed
-  string nodesFile = outputFolder+string("/graph.nodes");
+  string nodesFile = step1OutputFolder+string("/graph.nodes");
   {
     ifstream nodesFileReader;
     openFileForReading(nodesFile, nodesFileReader);
@@ -553,7 +554,7 @@ void generate_output::execute () {
   }
 
   //create the edges of the graph
-  string edgesFile = outputFolder+string("/graph.edges.dbg");
+  string edgesFile = step1OutputFolder+string("/graph.edges.dbg");
   {
     ifstream edgesFileReader;
     openFileForReading(edgesFile, edgesFileReader);
@@ -573,9 +574,6 @@ void generate_output::execute () {
     edgesFileReader.close();
   }
   cerr << "[Reading input and creating BOOST graph...] - Done!" << endl;
-  //DEBUG - print the graph to a file
-  //GraphWriter::writeGraphToFile(graph, outputFolder+string("/graph.debug.cytoscape");
-  //DEBUG - print the graph to a file
 
 
   cerr << "[Computing nodes' neighbourhoods...]" << endl;
@@ -625,7 +623,7 @@ void generate_output::execute () {
       nodesInComponent[componentOfThisNode[i]].push_back(vertex(i, newGraph));
 
     for (int i = 0; i < nodesInComponent.size(); i++) {
-      generateCytoscapeOutput(newGraph, nodesInComponent[i], "comp", i, outputFolder, selectedUnitigs, nbPheno0, nbPheno1,
+      generateCytoscapeOutput(newGraph, nodesInComponent[i], "comp", i, tmpFolder, visualisationsFolder, selectedUnitigs, nbPheno0, nbPheno1,
                               idComponent2Annotations, nbCores);
     }
     numberOfComponents = nodesInComponent.size();
@@ -635,13 +633,13 @@ void generate_output::execute () {
 
 
   //create the index
-  createIndexFile(numberOfComponents, outputFolder, nodesInComponent, newGraph,
+  createIndexFile(numberOfComponents, visualisationsFolder, step2OutputFolder, nodesInComponent, newGraph,
                   idComponent2Annotations, unitigToPatternStats);
 
   //tell we are done
   cout << endl << endl <<
       "******************************************************************************" << endl <<
-      "We are done. The output can be found at " << outputFolder << "/visualisations/index.html" << endl <<
+      "We are done. The output can be found at " << visualisationsFolder << "/index.html" << endl <<
       "******************************************************************************" << endl << endl;
   cout.flush();
 }

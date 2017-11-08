@@ -238,6 +238,7 @@ void build_dbg::execute ()
     checkParametersBuildDBG(this);
     if (skip1) return;
 
+    //get the parameters
     int kmerSize = getInput()->getInt(STR_KSKMER_SIZE);
 
     //TODO: seeveral questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
@@ -245,12 +246,19 @@ void build_dbg::execute ()
     //presenceAbsenceCountMode = (countMode=="01");
     presenceAbsenceCountMode = true;
     //TODO: seeveral questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
-    //string outputFolder = getInput()->getStr(STR_OUTPUT);
-    string outputFolder("output");
+
+    //create the step1 folder in the outputfolder
+    string outputFolder = getInput()->getStr(STR_OUTPUT)+string("/step1");
+    createFolder(outputFolder);
+
+    //create the tmp folder of step1
+    string tmpFolder = outputFolder+string("/tmp")
+    createFolder(tmpFolder);
+
     int nbCores = getInput()->getInt(STR_NBCORES);
 
     //create the reads file
-    string readsFile(outputFolder+string("/tmp/readsFile"));
+    string readsFile(tmpFolder+string("/readsFile"));
     Strain::createReadsFile(readsFile, strains);
 
     //Builds the DBG using GATB

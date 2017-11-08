@@ -133,7 +133,7 @@ struct MapAndPhase
 
         //XU_strain_i = how many times each unitig map to a strain
         ofstream mappingOutputFile;
-        openFileForWriting(outputFolder+string("/tmp/XU_strain_")+to_string(i), mappingOutputFile);
+        openFileForWriting(tmpFolder+string("/XU_strain_")+to_string(i), mappingOutputFile);
 
         // We loop over sequences.
         unsigned long readIndex = 0;
@@ -325,7 +325,7 @@ void generateBugwasInput (const vector <string> &allReadFilesNames, const string
     //populate XU
     for (int j=0; j<allReadFilesNames.size(); j++) {
         ifstream inputFile;
-        openFileForReading(outputFolder+string("/tmp/XU_strain_")+to_string(j), inputFile);
+        openFileForReading(tmpFolder+string("/XU_strain_")+to_string(j), inputFile);
         for (int i = 0; i < nbContigs; i++)
             inputFile >> XU[i][j];
         inputFile.close();
@@ -395,7 +395,7 @@ void generateBugwasInput (const vector <string> &allReadFilesNames, const string
     vector<PhenoCounter > unitigs2PhenoCounter(nbContigs);
     for(int strainIndex=0;strainIndex<allReadFilesNames.size();strainIndex++) {
         ifstream unitigCountForStrain;
-        openFileForReading(outputFolder+string("/tmp/XU_strain_")+to_string(strainIndex), unitigCountForStrain);
+        openFileForReading(tmpFolder+string("/XU_strain_")+to_string(strainIndex), unitigCountForStrain);
 
         for (int unitigIndex=0; unitigIndex<nbContigs; unitigIndex++) {
             int count;
@@ -438,9 +438,10 @@ void map_reads::execute ()
 {
     if (skip1) return;
 
-    //string outputFolder = getInput()->getStr(STR_OUTPUT);
-    string outputFolder("output");
-    string longReadsFile = outputFolder+string("/tmp/readsFile");
+    //get the parameters
+    string outputFolder = getInput()->getStr(STR_OUTPUT)+string("/step1");
+    string tmpFolder = outputFolder+string("/tmp")
+    string longReadsFile = tmpFolder+string("/readsFile");
     int nbCores = getInput()->getInt(STR_NBCORES);
 
     //get the nbContigs
@@ -474,16 +475,13 @@ void map_reads::execute ()
     generateBugwasInput(allReadFilesNames, outputFolder, nbContigs);
 
     //after the mapping, free some memory that will not be needed anymore
-    #ifndef __APPLE__
-    //hdf5 bugs when freeing the graph on MAC OS. If the system is MAC, we do not free this (at least I can test on MAC like this)
     delete graph;
     delete nodeIdToUnitigId;
-    #endif
 
     //clean-up
     //remove temp directory
     //TODO: add this back
-    //boost::filesystem::remove_all(outputFolder+"/tmp");
+    //boost::filesystem::remove_all(tmpFolder);
     //TODO: add this back
 
     cerr << endl << "[Mapping process finished!]" << endl;

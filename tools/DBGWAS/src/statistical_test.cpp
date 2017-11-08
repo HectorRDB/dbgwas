@@ -40,23 +40,34 @@ void statistical_test::execute () {
   //parameters
   checkParametersStatisticalTest(this);
   if (skip2) return;
-  //string outputFolder = getInput()->getStr(STR_OUTPUT);
-  string outputFolder("output");
+
+  //get the parameters
+  //create the step2 folder in the outputfolder
+  string outputFolder = getInput()->getStr(STR_OUTPUT)+string("/step2");
+  createFolder(outputFolder);
+
+  //create the tmp folder of step2
+  string tmpFolder = outputFolder+string("/tmp")
+  createFolder(tmpFolder);
+
   double mafFilter = getInput()->getDouble(STR_MAF_FILTER);
 
   //execute the statistical test
+  //get the step1 output folder
+  string step1OutputFolder = getInput()->getStr(STR_OUTPUT)+string("/step1");
+
   //To do so, we need to create an output folder inside the outputFolder
-  createFolder(string("output/output"));
+  createFolder(outputFolder+string("/output"));
   //We also need to create this other folder... bizzare...
-  createFolder(string("output/bugwas_out__PCloadings/output"));
+  createFolder(outputFolder+string("/bugwas_out_PCloadings/output"));
 
   //create the command line
   stringstream ssCommand;
   ssCommand << "Rscript --vanilla DBGWAS.R "
-            << outputFolder << " "
-            << outputFolder << "/bugwas_input.id_phenotype "
-            << outputFolder << "/bugwas_out_ "
-            << dirWhereDBGWASIsInstalled << "gemma.0.93b "
+            << step1OutputFolder << " "
+            << step1OutputFolder << "/bugwas_input.id_phenotype "
+            << outputFolder << "/bugwas_out "
+            << (dirWhereDBGWASIsInstalled+DBGWAS_lib) << "gemma.0.93b "
             << mafFilter << " ";
   if (hasNewickFile)
     ssCommand << getInput()->getStr(STR_NEWICK_PATH) << " ";
@@ -67,7 +78,7 @@ void statistical_test::execute () {
 
   //sort the file by q-value and output it to output/patterns.txt
   //read
-  auto patterns = PatternFromStats::readFile(outputFolder + "/bugwas_out__DBGWAS_patterns.txt");
+  auto patterns = PatternFromStats::readFile(outputFolder + "/bugwas_out_DBGWAS_patterns.txt");
   //sort
   sort(patterns.begin(), patterns.end());
   //write
