@@ -47,7 +47,7 @@ void statistical_test::execute () {
   createFolder(outputFolder);
 
   //create the tmp folder of step2
-  string tmpFolder = outputFolder+string("/tmp")
+  string tmpFolder = outputFolder+string("/tmp");
   createFolder(tmpFolder);
 
   double mafFilter = getInput()->getDouble(STR_MAF_FILTER);

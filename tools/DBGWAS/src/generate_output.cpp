@@ -403,7 +403,7 @@ void generate_output::execute () {
   checkParametersGenerateOutput(this);
   int neighbourhood = getInput()->getInt(STR_MAX_NEIGHBOURHOOD);
   string outputFolder = getInput()->getStr(STR_OUTPUT)+string("/step3");
-  string tmpFolder = outputFolder+string("/tmp")
+  string tmpFolder = outputFolder+string("/tmp");
   string visualisationsFolder = getInput()->getStr(STR_OUTPUT)+string("/visualisations");
   string step1OutputFolder = getInput()->getStr(STR_OUTPUT)+string("/step1");
   string step2OutputFolder = getInput()->getStr(STR_OUTPUT)+string("/step2");

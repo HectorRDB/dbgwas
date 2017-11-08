@@ -91,6 +91,7 @@ struct MapAndPhase
     const vector<string> &allReadFilesNames;
     const Graph& graph;
     const string &outputFolder;
+    const string &tmpFolder;
     uint64_t &nbOfReadsProcessed;
     ISynchronizer* synchro;
     vector< UnitigIdStrandPos > &nodeIdToUnitigId;
@@ -116,9 +117,9 @@ struct MapAndPhase
     };
 
     MapAndPhase (const vector<string> &allReadFilesNames, const Graph& graph,
-                 const string &outputFolder, uint64_t &nbOfReadsProcessed, ISynchronizer* synchro,
+                 const string &outputFolder, const string &tmpFolder, uint64_t &nbOfReadsProcessed, ISynchronizer* synchro,
                  vector< UnitigIdStrandPos > &nodeIdToUnitigId, int nbContigs) :
-        allReadFilesNames(allReadFilesNames), graph(graph), outputFolder(outputFolder),
+        allReadFilesNames(allReadFilesNames), graph(graph), outputFolder(outputFolder), tmpFolder(tmpFolder),
         nbOfReadsProcessed(nbOfReadsProcessed), synchro(synchro), nodeIdToUnitigId(nodeIdToUnitigId),
         nbContigs(nbContigs){}
 
@@ -309,7 +310,7 @@ void generate_XU_unique(const string &filename, const vector< vector<int> > &XU,
 }
 
 //generate the bugwas input
-void generateBugwasInput (const vector <string> &allReadFilesNames, const string &outputFolder, int nbContigs) {
+void generateBugwasInput (const vector <string> &allReadFilesNames, const string &outputFolder, const string &tmpFolder, int nbContigs) {
     //Generate the XU (the bugwas input - the matrix where the unitigs are rows and the strains are columns)
     //XU_unique is XU with the duplicated rows removed
     cerr << endl << endl << "[Generating bugwas and gemma input]..." << endl;
@@ -440,7 +441,7 @@ void map_reads::execute ()
 
     //get the parameters
     string outputFolder = getInput()->getStr(STR_OUTPUT)+string("/step1");
-    string tmpFolder = outputFolder+string("/tmp")
+    string tmpFolder = outputFolder+string("/tmp");
     string longReadsFile = tmpFolder+string("/readsFile");
     int nbCores = getInput()->getInt(STR_NBCORES);
 
@@ -468,11 +469,11 @@ void map_reads::execute ()
     // We iterate the range.  NOTE: we could also use lambda expression (easing the code readability)
     uint64_t nbOfReadsProcessed = 0;
     dispatcher.iterate(allReadFilesNamesIt,
-                       MapAndPhase(allReadFilesNames, *graph, outputFolder, nbOfReadsProcessed, synchro,
+                       MapAndPhase(allReadFilesNames, *graph, outputFolder, tmpFolder, nbOfReadsProcessed, synchro,
                                    *nodeIdToUnitigId, nbContigs));
 
     //generate the bugwas input
-    generateBugwasInput(allReadFilesNames, outputFolder, nbContigs);
+    generateBugwasInput(allReadFilesNames, outputFolder, tmpFolder, nbContigs);
 
     //after the mapping, free some memory that will not be needed anymore
     delete graph;

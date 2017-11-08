@@ -252,7 +252,7 @@ void build_dbg::execute ()
     createFolder(outputFolder);
 
     //create the tmp folder of step1
-    string tmpFolder = outputFolder+string("/tmp")
+    string tmpFolder = outputFolder+string("/tmp");
     createFolder(tmpFolder);
 
     int nbCores = getInput()->getInt(STR_NBCORES);

@@ -286,14 +286,14 @@ void checkParametersStatisticalTest(Tool *tool) {
 
 void checkParametersGenerateOutput(Tool *tool) {
   //create the output folder for step 3
-  string outputFolder = getInput()->getStr(STR_OUTPUT)+string("/step3");
+  string outputFolder = tool->getInput()->getStr(STR_OUTPUT)+string("/step3");
   createFolder(outputFolder);
 
   //create the tmp folder of step 3
-  string tmpFolder = outputFolder+string("/tmp")
+  string tmpFolder = outputFolder+string("/tmp");
   createFolder(tmpFolder);
 
-  string visualisationFolder = getInput()->getStr(STR_OUTPUT)+string("/visualisations");
+  string visualisationFolder = tool->getInput()->getStr(STR_OUTPUT)+string("/visualisations");
   boost::filesystem::path visPath(visualisationFolder.c_str());
   if (boost::filesystem::exists(visPath)) {
     cerr << "[WARNING] Removing " << visualisationFolder << " because path already exists (maybe previous visualisations?). " << endl;
