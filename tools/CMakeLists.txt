@@ -20,10 +20,12 @@ add_definitions (${gatb-core-flags})
 include_directories (${gatb-core-includes})
 
 # We add the pstream include directory
-include_directories (${PROJECT_SOURCE_DIR}/pstreams/)
+set (PSTREAMS_SOURCE_DIR ${PROJECT_SOURCE_DIR}/pstreams/)
+include_directories (${PSTREAMS_SOURCE_DIR})
 
 # We add the whereami include directory
-include_directories (${PROJECT_SOURCE_DIR}/whereami/src)
+set (WHEREAMI_SOURCE_DIR ${PROJECT_SOURCE_DIR}/whereami/src)
+include_directories (${WHEREAMI_SOURCE_DIR})
 
 # We add the BOOST include directory
 set(Boost_USE_STATIC_LIBS   ON) #This makes boost plug the libraries we specify as static libraries (not dynamic ones - the user does not even need to have boost installed in their pc)
@@ -42,7 +44,7 @@ FOREACH (program ${PROGRAMS})
   set (PROGRAM_SOURCE_DIR ${PROJECT_SOURCE_DIR}/tools/${program}/src)
   include_directories (${PROGRAM_SOURCE_DIR})
   file (GLOB_RECURSE  ProjectFiles  ${PROGRAM_SOURCE_DIR}/*.cpp)
-  file (GLOB_RECURSE  WhereamiFiles  ${PROJECT_SOURCE_DIR}/whereami/src/*.c)
+  file (GLOB_RECURSE  WhereamiFiles  ${WHEREAMI_SOURCE_DIR}/*.c)
   add_executable(${program} ${ProjectFiles} ${WhereamiFiles})
   target_link_libraries(${program} ${gatb-core-libraries} ${Boost_LIBRARIES} -static-libgcc -static-libstdc++)
 ENDFOREACH (program)
