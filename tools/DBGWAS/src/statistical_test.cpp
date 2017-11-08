@@ -56,7 +56,7 @@ void statistical_test::execute () {
             << outputFolder << " "
             << outputFolder << "/bugwas_input.id_phenotype "
             << outputFolder << "/bugwas_out_ "
-            << pathToExecParent << "gemma.0.93b "
+            << dirWhereDBGWASIsInstalled << "gemma.0.93b "
             << mafFilter << " ";
   if (hasNewickFile)
     ssCommand << getInput()->getStr(STR_NEWICK_PATH) << " ";

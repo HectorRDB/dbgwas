@@ -72,6 +72,7 @@ void executeCommand(const string &command, bool verbose=true);
 void openFileForReading(const string &filePath, ifstream &stream);
 void openFileForWriting(const string &filePath, ofstream &stream);
 void createFolder(const string &path);
+fs::path getDirWhereDBGWASIsInstalled(char* argv0);
 
 
 

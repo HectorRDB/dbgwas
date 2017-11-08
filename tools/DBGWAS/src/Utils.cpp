@@ -444,3 +444,10 @@ void GetSignificantPatterns::operator()(double &qValue) const
       significantPatterns.push_back(pattern);
   }
 }
+
+
+fs::path getDirWhereDBGWASIsInstalled(char* argv0) {
+  fs::path full_path( fs::initial_path<fs::path>() );
+  full_path = fs::system_complete( fs::path( argv0) );
+  return full_path.parent_path();
+}

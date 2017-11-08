@@ -36,6 +36,7 @@ SET (CMAKE_MODULE_PATH ${GATB_CORE_HOME}/cmake)
 ################################################################################
 
 # One can uncomment this line and set the wanted values
+# TODO: set up to 256 for the final release?
 #set (KSIZE_LIST "32   64   96  128  160  192  224  256")
 set (KSIZE_LIST "32   64   96  128")
 
@@ -62,7 +63,7 @@ ADD_SUBDIRECTORY(tools)
 ################################################################################
 # We set the version number
 SET (CPACK_PACKAGE_DESCRIPTION_SUMMARY  "gatb-tool ${PROJECT_NAME}")
-SET (CPACK_PACKAGE_VENDOR               "Genscale team (INRIA)")
+SET (CPACK_PACKAGE_VENDOR               "bioMerieux; LBBE; Erable")
 SET (CPACK_PACKAGE_VERSION_MAJOR        "${gatb-tool_VERSION_MAJOR}")
 SET (CPACK_PACKAGE_VERSION_MINOR        "${gatb-tool_VERSION_MINOR}")
 SET (CPACK_PACKAGE_VERSION_PATCH        "${gatb-tool_VERSION_PATCH}")
@@ -88,24 +89,22 @@ SET (CPACK_SOURCE_IGNORE_FILES
 # Packaging the binary ; we want to include some additional files
 INSTALL (FILES   ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE                     DESTINATION .)
 INSTALL (FILES   ${CMAKE_CURRENT_SOURCE_DIR}/README.md                     DESTINATION .)
-#TODO: remove this, do we need it?
-#INSTALL (FILES   ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/THIRDPARTIES.md  DESTINATION .)
-INSTALL (FILES   ${PROJECT_SOURCE_DIR}/csjs/cytoscape_template.html  DESTINATION ./bin/)
-INSTALL (PROGRAMS   ${PROJECT_SOURCE_DIR}/gemma/gemma.0.93b  DESTINATION ./bin/)
-INSTALL (PROGRAMS   ${PROJECT_SOURCE_DIR}/phantomjs/phantomjs  DESTINATION ./bin/)
-INSTALL (PROGRAMS   ${PROJECT_SOURCE_DIR}/blast/blastn  DESTINATION ./bin/)
-INSTALL (PROGRAMS   ${PROJECT_SOURCE_DIR}/blast/blastx  DESTINATION ./bin/)
-INSTALL (PROGRAMS   ${PROJECT_SOURCE_DIR}/blast/makeblastdb  DESTINATION ./bin/)
-INSTALL (FILES   ${PROJECT_SOURCE_DIR}/phantomjs/render_graph.js  DESTINATION ./bin/)
-INSTALL (FILES   ${PROJECT_SOURCE_DIR}/bugwas_scripts/build_bmx_data.R  DESTINATION ./bin/)
-INSTALL (FILES   ${PROJECT_SOURCE_DIR}/bugwas_scripts/cdbg_all_plots.R  DESTINATION ./bin/)
-INSTALL (FILES   ${PROJECT_SOURCE_DIR}/bugwas_scripts/cdbg_lin_loc.R  DESTINATION ./bin/)
-INSTALL (FILES   ${PROJECT_SOURCE_DIR}/bugwas_scripts/cdbg_ridge_regression.R  DESTINATION ./bin/)
-INSTALL (FILES   ${PROJECT_SOURCE_DIR}/bugwas_scripts/DBGWAS.R  DESTINATION ./bin/)
-INSTALL (FILES   ${PROJECT_SOURCE_DIR}/html_templates/index_template.html  DESTINATION ./bin/)
-INSTALL (FILES   ${PROJECT_SOURCE_DIR}/html_templates/index_table_template.html  DESTINATION ./bin/)
+INSTALL (FILES   ${PROJECT_SOURCE_DIR}/csjs/cytoscape_template.html  DESTINATION ./bin/DBGWAS_lib/)
+INSTALL (PROGRAMS   ${PROJECT_SOURCE_DIR}/gemma/gemma.0.93b  DESTINATION ./bin/DBGWAS_lib/)
+INSTALL (PROGRAMS   ${PROJECT_SOURCE_DIR}/phantomjs/phantomjs  DESTINATION ./bin/DBGWAS_lib/)
+INSTALL (PROGRAMS   ${PROJECT_SOURCE_DIR}/blast/blastn  DESTINATION ./bin/DBGWAS_lib/)
+INSTALL (PROGRAMS   ${PROJECT_SOURCE_DIR}/blast/blastx  DESTINATION ./bin/DBGWAS_lib/)
+INSTALL (PROGRAMS   ${PROJECT_SOURCE_DIR}/blast/makeblastdb  DESTINATION ./bin/DBGWAS_lib/)
+INSTALL (FILES   ${PROJECT_SOURCE_DIR}/phantomjs/render_graph.js  DESTINATION ./bin/DBGWAS_lib/)
+INSTALL (FILES   ${PROJECT_SOURCE_DIR}/bugwas_scripts/build_bmx_data.R  DESTINATION ./bin/DBGWAS_lib/)
+INSTALL (FILES   ${PROJECT_SOURCE_DIR}/bugwas_scripts/cdbg_all_plots.R  DESTINATION ./bin/DBGWAS_lib/)
+INSTALL (FILES   ${PROJECT_SOURCE_DIR}/bugwas_scripts/cdbg_lin_loc.R  DESTINATION ./bin/DBGWAS_lib/)
+INSTALL (FILES   ${PROJECT_SOURCE_DIR}/bugwas_scripts/cdbg_ridge_regression.R  DESTINATION ./bin/DBGWAS_lib/)
+INSTALL (FILES   ${PROJECT_SOURCE_DIR}/bugwas_scripts/DBGWAS.R  DESTINATION ./bin/DBGWAS_lib/)
+INSTALL (FILES   ${PROJECT_SOURCE_DIR}/html_templates/index_template.html  DESTINATION ./bin/DBGWAS_lib/)
+INSTALL (FILES   ${PROJECT_SOURCE_DIR}/html_templates/index_table_template.html  DESTINATION ./bin/DBGWAS_lib/)
 INSTALL (DIRECTORY   ${PROJECT_SOURCE_DIR}/sample_example  DESTINATION .)
-INSTALL (DIRECTORY   ${PROJECT_SOURCE_DIR}/csjs/lib  DESTINATION ./bin/)
-INSTALL (DIRECTORY   ${PROJECT_SOURCE_DIR}/sharedobjects  DESTINATION ./bin/)
+INSTALL (DIRECTORY   ${PROJECT_SOURCE_DIR}/csjs/lib  DESTINATION ./bin/DBGWAS_lib/)
+INSTALL (DIRECTORY   ${PROJECT_SOURCE_DIR}/sharedobjects  DESTINATION ./bin/DBGWAS_lib/)
 
 include (CPack)
