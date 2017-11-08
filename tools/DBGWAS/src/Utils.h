@@ -46,10 +46,7 @@
 #include <boost/filesystem.hpp>
 #undef BOOST_NO_CXX11_SCOPED_ENUMS
 #include <pstream.h>
-
-extern "C"{
-  #include <whereami.h>
-};
+#include <whereami.h>
 
 
 using namespace std;
