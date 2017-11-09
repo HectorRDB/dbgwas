@@ -29,6 +29,7 @@
 #include "build_dbg.hpp"
 #include "global.h"
 #include "GraphOutput.h"
+#include "version.h"
 
 using namespace std;
 
@@ -44,6 +45,9 @@ using namespace std;
 // This name appears when one gets help in the command line or in the final output
 build_dbg::build_dbg ()  : Tool ("build_dbg") //give a name to our tool
 {
+    setVersion([](void* whatever) {
+        cout << VERSION << endl;
+    });
     populateParser(this);
 }
 
@@ -235,6 +239,7 @@ public:
 *********************************************************************/
 void build_dbg::execute ()
 {
+    cerr << "Step 1. Building DBG and mapping strains on the DBG..." << endl;
     checkParametersBuildDBG(this);
     if (skip1) return;
 

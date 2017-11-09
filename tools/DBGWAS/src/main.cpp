@@ -51,7 +51,6 @@ int main (int argc, char* argv[])
     try
     {
         //Build DBG
-        cerr << "Step 1. Building DBG and mapping strains on the DBG..." << endl;
         build_dbg().run(argc, argv); //this call will set up graph and nodeIdToUnitigId
         map_reads().run(argc, argv);
         cerr << "Done!" << endl;
