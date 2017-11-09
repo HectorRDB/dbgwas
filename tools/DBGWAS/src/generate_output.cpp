@@ -65,7 +65,7 @@ void generate_output::createIndexFile(int numberOfComponents, const string &visu
     string PNGFile = HTMLFile+".png";
     cerr << "[Rendering thumbnail for component " << i << "...]" << endl;
     stringstream commandSS;
-    commandSS << dirWhereDBGWASIsInstalled << DBGWAS_lib << "/phantomjs " << dirWhereDBGWASIsInstalled << DBGWAS_lib << "render_graph.js " << HTMLFile << " " << PNGFile;
+    commandSS << dirWhereDBGWASIsInstalled << DBGWAS_lib << "/phantomjs " << dirWhereDBGWASIsInstalled << DBGWAS_lib << "/render_graph.js " << HTMLFile << " " << PNGFile;
     executeCommand(commandSS.str(), false);
     cerr << "[Rendering thumbnail for component " << i << "...] - Done!" << endl;
   }
