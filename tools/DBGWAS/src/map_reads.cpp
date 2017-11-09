@@ -479,11 +479,11 @@ void map_reads::execute ()
     delete graph;
     delete nodeIdToUnitigId;
 
-    //clean-up
+    //clean-up - saving some disk space
     //remove temp directory
-    //TODO: add this back
-    //boost::filesystem::remove_all(tmpFolder);
-    //TODO: add this back
+    boost::filesystem::remove_all(tmpFolder);
+    //remove GATB's graph file
+    remove(outputFolder+string("/graph.h5");
 
     cerr << endl << "[Mapping process finished!]" << endl;
     cerr.flush();
