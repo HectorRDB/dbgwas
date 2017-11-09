@@ -79,7 +79,7 @@ function buildPage(graphElements, componentAnnotation)
             , south__size: .25
             , south__minSize: .1
             , south__maxSize: .5
-            , north__size: .25
+            , north__size: .13
             , north__minSize: .1
             , north__maxSize: .5
             , east__size: .2

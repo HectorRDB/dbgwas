@@ -1,36 +1,51 @@
-﻿v0.4.4:
--Test if DBGWAS work with only one installation
--Try to remove the "lib" folder and the bin/gatb-h5dump from the final package
+﻿To check:
+Les fichiers binaires test_version/DBGWAS-0.4.3-Linux/bin/testing_output_feature/step2/bugwas_out_indiv_first2signifPCs.png et correct_version/DBGWAS-0.4.3-Linux/bin/output/bugwas_out__indiv_first2signifPCs.png sont différents
+Les fichiers binaires test_version/DBGWAS-0.4.3-Linux/bin/testing_output_feature/step2/bugwas_out_SNPs_PC_manhattan.png et correct_version/DBGWAS-0.4.3-Linux/bin/output/bugwas_out__SNPs_PC_manhattan.png sont différents
 
+To check:
+Thirdparty licenses
+
+
+
+v0.4.4:
+-Core
+-Test:
+-Test if DBGWAS work with only one installation
+-Improved the contents of the final package
+-Ok:
     -Fixed output folder from being fixed to being a parameter (-output)
     -Reworked all the final and temporary files structure:
         -Each step now has a separate folder where all files from that step are written
     -DBGWAS now requires less disk space than before
 
 
+-Summary page
+-Test:
+    -Removed "Annotations on significant nodes" phrase;
+    -Showing now only the first 3 annotations in the annotation table
+    -Small fixes on the presentation of the annotation tables
+    -Fixed a bug where we were using the graph tag instead of the index tag on the summary page
+
+
+-Graph page
+-Test:
+    -Reduced the height of the annotation table when opening the graph from 25% of the screen to 13%
 
 
 
-To check:
-Les fichiers binaires test_version/DBGWAS-0.4.3-Linux/bin/testing_output_feature/step2/bugwas_out_indiv_first2signifPCs.png et correct_version/DBGWAS-0.4.3-Linux/bin/output/bugwas_out__indiv_first2signifPCs.png sont différents
-Les fichiers binaires test_version/DBGWAS-0.4.3-Linux/bin/testing_output_feature/step2/bugwas_out_SNPs_PC_manhattan.png et correct_version/DBGWAS-0.4.3-Linux/bin/output/bugwas_out__SNPs_PC_manhattan.png sont différents
+
+
+
 
 Paper:
--TODO Code
-
--put a time limit for phantom js (or how to know when it bugged?)
--Make the step 3 fully multi-threaded
-    -Phantom.js takes a bunch of time and could be easily parallelized
+-Core
+    -put a time limit for phantom js (or how to know when it bugged?)
+    -Make the step 3 fully multi-threaded
+        -Phantom.js takes a bunch of time and could be easily parallelized
 
 
 -Summary
-  -Remove "Annotations on significant nodes"
-  -Use index tag on the summary (we are currently using component tag)
-  -Show only the first 3 annotations (first 3 lines)
   -Show nb of significant unitigs and nb of total unitigs
-  -If no annotation was provided, remove
-    Annotations on significant nodes:
-    No annotations found.
 
 -Component page
   -Right click select significant nodes
@@ -41,8 +56,9 @@ Paper:
     -order by e-value
 
 
+
+
 -Other questions:
--Can we indeed redistribute all these executables with DBGWAS?
 -Bug solving on the performance test... can we relaunch everything?
 -Update supplMaterials.pdf (4 Supplermenary Method, Part II)
 -Compile kmer-size up to 256 for the final release?
@@ -66,6 +82,10 @@ High priority TODO:
     -We just removed from the input for now
   -svd and pca steps are probably redundant in cdbg_lin_loc as XX is centered. Check that they produce the same set of eigenvectors and remove the pca steps (call to prcomp uses more memory than svd).
     -check with laurent
+  -If no annotation was provided, remove the line:
+        Annotations on significant nodes:
+        No annotations found.
+    from the tables in the summary page
 
 
 
