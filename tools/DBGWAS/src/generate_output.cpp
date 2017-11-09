@@ -36,6 +36,7 @@
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string.hpp>
 #include "Blast.h"
+#include <algorithm>
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
 #undef BOOST_NO_CXX11_SCOPED_ENUMS
@@ -57,7 +58,8 @@ generate_output::generate_output ()  : Tool ("generate_output") //give a name to
 }
 
 void generate_output::createIndexFile(int numberOfComponents, const string &visualisationsFolder, const string &step2OutputFolder, const vector<vector<MyVertex> > &nodesInComponent, graph_t& newGraph,
-                     map<int, AnnotationRecord > &idComponent2Annotations, const vector<const PatternFromStats*> &unitigToPatternStats) {
+                     map<int, AnnotationRecord > &idComponent2Annotations, const vector<const PatternFromStats*> &unitigToPatternStats,
+                     const vector<int> &selectedUnitigs) {
   cerr << "[Creating index file...]" << endl;
   //create the thumbnails
   for (int i=0;i<numberOfComponents;i++) {
@@ -86,6 +88,13 @@ void generate_output::createIndexFile(int numberOfComponents, const string &visu
     string idString = std::to_string(i);
     string annotationsSQL=idComponent2Annotations[i].getSQLRepresentation();
 
+    //compute the number of nodes in this component and the number of significant nodes
+    int nbNodes = nodesInComponent[i].size();
+    int nbOfSignificantNodes = count_if(nodesInComponent[i].begin(), nodesInComponent[i].end(), [&](const MyVertex &node) {
+        return find(selectedUnitigs.begin(), selectedUnitigs.end(), newGraph[node].id) != selectedUnitigs.end();
+    });
+
+
     //get the lowest qvalue of the nodes in the component
     long double lowestQValue = std::numeric_limits<long double>::max();
     for(const auto &node : nodesInComponent[i]) {
@@ -98,6 +107,8 @@ void generate_output::createIndexFile(int numberOfComponents, const string &visu
 
     //add the true values to this preview
     string thisPreview(templatePreview);
+    boost::replace_all(thisPreview, "<nb_unitigs>", to_string(nbNodes));
+    boost::replace_all(thisPreview, "<nb_sig_unitigs>", to_string(nbOfSignificantNodes));
     boost::replace_all(thisPreview, "<id>", idString);
 
     string lowestQValueAsStr;
@@ -639,7 +650,7 @@ void generate_output::execute () {
 
   //create the index
   createIndexFile(numberOfComponents, visualisationsFolder, step2OutputFolder, nodesInComponent, newGraph,
-                  idComponent2Annotations, unitigToPatternStats);
+                  idComponent2Annotations, unitigToPatternStats, selectedUnitigs);
 
   //clean-up - saving some disk space
   //remove temp directory

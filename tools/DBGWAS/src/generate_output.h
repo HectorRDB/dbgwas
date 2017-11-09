@@ -252,7 +252,8 @@ private:
                                  map<int, AnnotationRecord > &idComponent2Annotations,
                                  int nbCores);
     void createIndexFile(int numberOfComponents, const string &visualisationsFolder, const string &step2OutputFolder, const vector<vector<MyVertex> > &nodesInComponent, graph_t& newGraph,
-                         map<int, AnnotationRecord > &idComponent2Annotations, const vector<const PatternFromStats*> &unitigToPatternStats);
+                         map<int, AnnotationRecord > &idComponent2Annotations, const vector<const PatternFromStats*> &unitigToPatternStats,
+                         const vector<int> &selectedUnitigs);
 };
 
 

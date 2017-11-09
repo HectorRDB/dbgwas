@@ -9,18 +9,16 @@ Thirdparty licenses
 
 v0.4.4:
 -Core
--Test:
--Test if DBGWAS work with only one installation
--Improved the contents of the final package
 -Ok:
     -Fixed output folder from being fixed to being a parameter (-output)
     -Reworked all the final and temporary files structure:
         -Each step now has a separate folder where all files from that step are written
     -DBGWAS now requires less disk space than before
-
+    -Test if DBGWAS work with only one installation
+    -Improved the contents of the final package
 
 -Summary page
--Test:
+-Ok:
     -Removed "Annotations on significant nodes" phrase;
     -Showing now only the first 3 annotations in the annotation table
     -Small fixes on the presentation of the annotation tables
@@ -28,7 +26,7 @@ v0.4.4:
 
 
 -Graph page
--Test:
+-Ok:
     -Reduced the height of the annotation table when opening the graph from 25% of the screen to 13%
 
 
@@ -37,21 +35,24 @@ v0.4.4:
 
 
 
-Paper:
+Paper TODO:
+-Summary
+  -Added the nb of unitigs and significant unitigs
+-Component page
+  -Right click select significant nodes
+  -Show the nb of selected nodes in the east panel
+
+
+
+TODO v0.4.5:
 -Core
     -put a time limit for phantom js (or how to know when it bugged?)
     -Make the step 3 fully multi-threaded
         -Phantom.js takes a bunch of time and could be easily parallelized
-
-
 -Summary
-  -Show nb of significant unitigs and nb of total unitigs
-
+    -Add a different mouse icon when the mouse is over the preview
 -Component page
-  -Right click select significant nodes
-  -Show the nb of selected nodes in the east panel
   -Update Help
-  -Reduce annotation table to 3 lines
   -In the pop-up annotation from the table, show the annotations of the node, together with nb of nodes and e-value (the handson table itself)
     -order by e-value
 
@@ -76,6 +77,7 @@ Paper:
 
 
 High priority TODO:
+  -Use a portable version of R to remove all dependencies?
   -Allow the user to provide an already built database, instead of calling makeblastdb always
   -Fix qvalue default min and max to min and max of the components
   -treat NA better
