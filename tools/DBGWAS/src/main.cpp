@@ -60,7 +60,6 @@ int main (int argc, char* argv[])
         cerr << "Step 2. Running statistical test (bugwas + gemma)..." << endl;
         statistical_test().run(argc, argv);
         cerr << "Done!" << endl;
-        return 0; //TODO: just to test if up to here is fine
 
         //Find the neighbourhood around significant unitigs...
         cerr << "Step 3. Building visualisation around significant unitigs..." << endl;

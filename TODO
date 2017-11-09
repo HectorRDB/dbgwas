@@ -1,8 +1,7 @@
-﻿check outputFolder
-check visualisation
+﻿To check:
+Les fichiers binaires test_version/DBGWAS-0.4.3-Linux/bin/testing_output_feature/step2/bugwas_out_indiv_first2signifPCs.png et correct_version/DBGWAS-0.4.3-Linux/bin/output/bugwas_out__indiv_first2signifPCs.png sont différents
 
-check output
-check tmp
+Les fichiers binaires test_version/DBGWAS-0.4.3-Linux/bin/testing_output_feature/step2/bugwas_out_SNPs_PC_manhattan.png et correct_version/DBGWAS-0.4.3-Linux/bin/output/bugwas_out__SNPs_PC_manhattan.png sont différents
 
 Paper:
 -TODO Code

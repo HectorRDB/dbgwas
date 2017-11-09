@@ -83,12 +83,9 @@ void statistical_test::execute () {
   //execute the command line
   //to execute it, we have to cd to this output folder and then cd back to where we were
   fs::path currentPath = fs::current_path(); //save the current path
-  cout << "[DEBUG] 1. Current path is " << fs::current_path().string() << endl;
   fs::current_path(outputFolder); //cd outputFolder
-  cout << "[DEBUG] 2. Current path is " << fs::current_path().string() << endl;
   executeCommand(ssCommand.str()); //execute the command
   fs::current_path(currentPath); //cd back
-  cout << "[DEBUG] 3. Current path is " << fs::current_path().string() << endl;
 
   //sort the file by q-value and output it to output/patterns.txt
   //read
@@ -103,4 +100,9 @@ void statistical_test::execute () {
   cout << "Stats: " << endl;
   cout << "Total number of patterns: " << patterns.size() << endl;
   cout << "################################################################################" << endl;
+
+
+  //clean-up - saving some disk space
+  //remove temp directory
+  boost::filesystem::remove_all(tmpFolder);
 }
