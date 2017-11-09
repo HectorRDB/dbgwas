@@ -638,6 +638,10 @@ void generate_output::execute () {
   createIndexFile(numberOfComponents, visualisationsFolder, step2OutputFolder, nodesInComponent, newGraph,
                   idComponent2Annotations, unitigToPatternStats);
 
+  //clean-up - saving some disk space
+  //remove temp directory
+  boost::filesystem::remove_all(tmpFolder);
+
   //tell we are done
   cout << endl << endl <<
       "******************************************************************************" << endl <<

@@ -1,21 +1,22 @@
-﻿To check:
-Les fichiers binaires test_version/DBGWAS-0.4.3-Linux/bin/testing_output_feature/step2/bugwas_out_indiv_first2signifPCs.png et correct_version/DBGWAS-0.4.3-Linux/bin/output/bugwas_out__indiv_first2signifPCs.png sont différents
+﻿v0.4.4:
+-Test if DBGWAS work with only one installation
+-Try to remove the "lib" folder and the bin/gatb-h5dump from the final package
 
+    -Fixed output folder from being fixed to being a parameter (-output)
+    -Reworked all the final and temporary files structure:
+        -Each step now has a separate folder where all files from that step are written
+    -DBGWAS now requires less disk space than before
+
+
+
+
+
+To check:
+Les fichiers binaires test_version/DBGWAS-0.4.3-Linux/bin/testing_output_feature/step2/bugwas_out_indiv_first2signifPCs.png et correct_version/DBGWAS-0.4.3-Linux/bin/output/bugwas_out__indiv_first2signifPCs.png sont différents
 Les fichiers binaires test_version/DBGWAS-0.4.3-Linux/bin/testing_output_feature/step2/bugwas_out_SNPs_PC_manhattan.png et correct_version/DBGWAS-0.4.3-Linux/bin/output/bugwas_out__SNPs_PC_manhattan.png sont différents
 
 Paper:
 -TODO Code
-
--New parameters:
-    -Fix output folder from being fixed to being a parameter
-      -Need a fix on Gemma/Bugwas output folder first
-        -Try to do this in C++ by changing the output directory before calling R and going back after calling R
-      -Test if DBGWAS work with only one installation
-        -ready soon
-      -Each step must have a separate folder to where the temp files are created
-          -like this we can easily remove old files when using -skipn
-          -Optimize temp file space
-      -Try to remove the "lib" folder and the bin/gatb-h5dump from the final package
 
 -put a time limit for phantom js (or how to know when it bugged?)
 -Make the step 3 fully multi-threaded
