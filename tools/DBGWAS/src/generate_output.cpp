@@ -266,6 +266,13 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
       annotationsOfThisComponent.addAnnotation(record.DBGWAS_graph_tag, graph[v].id, record.evalue);
     }
 
+    //populate idComponent2Annotations[i]
+    for (const auto &record : records) {
+      //here I have to use graph[v].id instead of simply record.nodeId because the original IDs of the node is used later
+      MyVertex v = vertex(record.nodeId, graph);
+      idComponent2Annotations[i].addAnnotation(record.DBGWAS_index_tag, graph[v].id, record.evalue);
+    }
+
     cerr << "Annotating... - Done!" << endl;
   }else {
     cerr << "Skipping annotation step - no DB provided" << endl;
@@ -393,10 +400,6 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
   //Cytoscape graph build step
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-  //copy this annotation to idComponent2Annotations
-  idComponent2Annotations[i] = annotationsOfThisComponent;
 
   cerr << "Rendering " << typeOfGraph << "_" << i << "... - Done!" << endl;
 }
