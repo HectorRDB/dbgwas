@@ -27,13 +27,8 @@
 
 library(bugwas)
 
-source('cdbg_lin_loc.R')
-source('cdbg_ridge_regression.R')
-source('cdbg_all_plots.R')
-
-cleanMem <- function(n=50) { for (i in 1:n) gc() }
-
 ## mandatory:
+## pathToRScripts #path to a directory containing the R scripts
 ## step1.output <- './output'
 ## pheno.file <- 'output/bugwas_input.id_phenotype'
 ## prefix <- 'output/bugwas_out_'
@@ -45,16 +40,23 @@ cleanMem <- function(n=50) { for (i in 1:n) gc() }
 ## ## tree.file <- '../../../data/bmx/bmx.newick'
 
 args = commandArgs(trailingOnly=TRUE)
-if (length(args) < 5 || length(args) > 6) {
-  stop("Number of arguments must be 5 (no lineage effect study) or 
-    6 (for lineage effect study).", call.=FALSE)
+if (length(args) < 6 || length(args) > 7) {
+  stop("Number of arguments must be 6 (no lineage effect study) or
+    7 (for lineage effect study).", call.=FALSE)
 }
 
-step1.output <- args[1]
-pheno.file <- args[2]
-prefix <- args[3]
-gem.path <- args[4]
-maf.filter <- as.numeric(args[5])
+pathToRScripts <- args[1]
+source(paste0(pathToRScripts, '/cdbg_lin_loc.R'))
+source(paste0(pathToRScripts, '/cdbg_ridge_regression.R'))
+source(paste0(pathToRScripts, '/cdbg_all_plots.R'))
+
+cleanMem <- function(n=50) { for (i in 1:n) gc() }
+
+step1.output <- args[2]
+pheno.file <- args[3]
+prefix <- args[4]
+gem.path <- args[5]
+maf.filter <- as.numeric(args[6])
 
 ## If a newick file is provided, estimate lineage effect and generate related
 ## plots. Otherwise skip tree management, svd, pca and plots. 
@@ -62,8 +64,8 @@ maf.filter <- as.numeric(args[5])
 do.lineage <- FALSE
 tree.file <- ""
 
-if (length(args) == 6) {
-  tree.file <- args[6]
+if (length(args) == 7) {
+  tree.file <- args[7]
   do.lineage <- TRUE
 }
     
