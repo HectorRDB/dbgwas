@@ -75,10 +75,10 @@ function buildComponentPreview(idPreviewAnn, order) {
             ],
             colHeaders: [
                 'Annotation',
-                '# nodes',
-                'E-value'
+                '#nodes',
+                'Evalue'
             ],
-            colWidths: [200, 75, 75],
+            colWidths: [190, 70, 70],
             copyColsLimit: 1000000,
             copyRowsLimitNumber: 1000000,
             readOnly: true,
@@ -93,7 +93,7 @@ function buildComponentPreview(idPreviewAnn, order) {
             manualColumnResize: true,
             columnSorting: true,
             sortIndicator: true,
-            height: 200
+            height: 100
         };
 
       var annotationContainer = document.getElementById('annot_comp_'+idPreviewAnn.id.toString())
