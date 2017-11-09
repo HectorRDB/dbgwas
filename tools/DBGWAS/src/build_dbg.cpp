@@ -46,7 +46,7 @@ using namespace std;
 build_dbg::build_dbg ()  : Tool ("build_dbg") //give a name to our tool
 {
     setVersion([](void* whatever) {
-        cout << VERSION << endl;
+        cout << "DBGWAS v" << VERSION << endl;
     });
     populateParser(this);
 }

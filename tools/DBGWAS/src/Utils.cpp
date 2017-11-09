@@ -258,7 +258,7 @@ void checkParametersBuildDBG(Tool *tool) {
   boost::filesystem::path p(outputFolderPath.c_str());
   if (boost::filesystem::exists(p)) {
     stringstream ss;
-    ss << "Could not create output dir " << outputFolderPath << " - path already exists. Remove it and re-run the tool.";
+    ss << "Could not create dir " << outputFolderPath << " - path already exists. Remove it and re-run the tool, or use -skip1 or -skip2 parameters.";
     fatalError(ss.str());
   }
   createFolder(p.string());
