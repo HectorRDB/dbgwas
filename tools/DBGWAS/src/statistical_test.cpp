@@ -61,11 +61,6 @@ void statistical_test::execute () {
   fs::path newickPathRelative(getInput()->getStr(STR_NEWICK_PATH));
   fs::path newickPath=fs::absolute(newickPathRelative);
 
-  //To do so, we need to create an output folder inside the outputFolder
-  //createFolder(outputFolder+string("/output"));
-  //We also need to create this other folder... bizzare...
-  //createFolder(outputFolder+string("/bugwas_out_PCloadings/output"));
-
   //create the command line
   stringstream ssCommand;
   ssCommand << "Rscript --vanilla "

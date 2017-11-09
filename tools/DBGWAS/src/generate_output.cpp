@@ -64,7 +64,9 @@ void generate_output::createIndexFile(int numberOfComponents, const string &visu
     string HTMLFile(boost::filesystem::canonical(visualisationsFolder+"/components/comp_"+std::to_string(i)+".html").string());
     string PNGFile = HTMLFile+".png";
     cerr << "[Rendering thumbnail for component " << i << "...]" << endl;
-    executeCommand("./phantomjs render_graph.js " + HTMLFile + " " + PNGFile, false);
+    stringstream commandSS;
+    commandSS << dirWhereDBGWASIsInstalled << DBGWAS_lib << "/phantomjs " << dirWhereDBGWASIsInstalled << DBGWAS_lib << "render_graph.js " << HTMLFile << " " << PNGFile;
+    executeCommand(commandSS.str(), false);
     cerr << "[Rendering thumbnail for component " << i << "...] - Done!" << endl;
   }
 

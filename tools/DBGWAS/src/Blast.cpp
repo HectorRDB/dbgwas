@@ -69,7 +69,7 @@ vector<BlastRecord> Blast::blast (const string &command, const string &queryPath
 
   //build the command line
   stringstream ss;
-  ss << "./" << command << " -query " << queryPath << " -db " << dbPath << " -out " << outFilePath << " -num_threads " << nbCores << " -outfmt '6 qseqid sseqid qcovs bitscore pident evalue'";
+  ss << dirWhereDBGWASIsInstalled << DBGWAS_lib << "/" << command << " -query " << queryPath << " -db " << dbPath << " -out " << outFilePath << " -num_threads " << nbCores << " -outfmt '6 qseqid sseqid qcovs bitscore pident evalue'";
   string commandLine=ss.str();
   executeCommand(commandLine);
 
@@ -120,7 +120,7 @@ string Blast::makeblastdb (const string &dbtype, const string &originalDBPath, c
 
   //create the DB using the fixed FASTA
   {
-    string commandLineMakeblastdb = string("./makeblastdb -dbtype ") + dbtype + " -in " + fixedDBPath;
+    string commandLineMakeblastdb = dirWhereDBGWASIsInstalled + DBGWAS_lib + string("/makeblastdb -dbtype ") + dbtype + " -in " + fixedDBPath;
     executeCommand(commandLineMakeblastdb);
   }
 
