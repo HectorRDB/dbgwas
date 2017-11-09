@@ -483,7 +483,7 @@ void map_reads::execute ()
     //remove temp directory
     boost::filesystem::remove_all(tmpFolder);
     //remove GATB's graph file
-    remove(outputFolder+string("/graph.h5"));
+    remove((outputFolder+string("/graph.h5")).c_str());
 
     cerr << endl << "[Mapping process finished!]" << endl;
     cerr.flush();
