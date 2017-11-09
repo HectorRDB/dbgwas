@@ -54,25 +54,30 @@ void statistical_test::execute () {
 
   //execute the statistical test
   //get the step1 output folder
-  string step1OutputFolder = getInput()->getStr(STR_OUTPUT)+string("/step1");
+  fs::path step1OutputFolderRelative(getInput()->getStr(STR_OUTPUT)+string("/step1"));
+  fs::path step1OutputFolder=fs::absolute(step1OutputFolderRelative);
+
+  //get the newick path
+  fs::path newickPathRelative(getInput()->getStr(STR_NEWICK_PATH));
+  fs::path newickPath=fs::absolute(newickPathRelative);
 
   //To do so, we need to create an output folder inside the outputFolder
-  createFolder(outputFolder+string("/output"));
+  //createFolder(outputFolder+string("/output"));
   //We also need to create this other folder... bizzare...
-  createFolder(outputFolder+string("/bugwas_out_PCloadings/output"));
+  //createFolder(outputFolder+string("/bugwas_out_PCloadings/output"));
 
   //create the command line
   stringstream ssCommand;
   ssCommand << "Rscript --vanilla "
             << (dirWhereDBGWASIsInstalled+DBGWAS_lib) << "/DBGWAS.R "
             << (dirWhereDBGWASIsInstalled+DBGWAS_lib) << " "
-            << step1OutputFolder << " "
-            << step1OutputFolder << "/bugwas_input.id_phenotype "
+            << step1OutputFolder.string() << " "
+            << step1OutputFolder.string() << "/bugwas_input.id_phenotype "
             << outputFolder << "/bugwas_out "
             << (dirWhereDBGWASIsInstalled+DBGWAS_lib) << "/gemma.0.93b "
             << mafFilter << " ";
   if (hasNewickFile)
-    ssCommand << getInput()->getStr(STR_NEWICK_PATH) << " ";
+    ssCommand << newickPath.string() << " ";
   ssCommand << "2>&1";
 
   //execute the command line
