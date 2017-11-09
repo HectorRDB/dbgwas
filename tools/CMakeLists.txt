@@ -52,4 +52,4 @@ ENDFOREACH (program)
 ################################################################################
 #  INSTALLATION 
 ################################################################################
-install (TARGETS ${PROGRAMS} DESTINATION bin)
+install (TARGETS ${PROGRAMS} DESTINATION bin COMPONENT precompiled)
