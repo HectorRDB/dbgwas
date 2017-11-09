@@ -73,7 +73,7 @@ void statistical_test::execute () {
             << (dirWhereDBGWASIsInstalled+DBGWAS_lib) << " "
             << step1OutputFolder.string() << " "
             << step1OutputFolder.string() << "/bugwas_input.id_phenotype "
-            << outputFolder << "/bugwas_out "
+            << "bugwas_out "
             << (dirWhereDBGWASIsInstalled+DBGWAS_lib) << "/gemma.0.93b "
             << mafFilter << " ";
   if (hasNewickFile)
