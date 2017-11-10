@@ -8,6 +8,7 @@ Paper TODO:
 TODO v0.4.5:
 -Core
     -Fixed -help messages
+    -Added how to customize databases in the readme and help messages
     -Put a time limit for phantom js (or how to know when it bugged?)
         -Sometimes it can take a lot of time... knowing if it bugged is better
         -http://phantomjs.org/api/phantom/handler/on-error.html
