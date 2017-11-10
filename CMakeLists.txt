@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 2.6)
 ################################################################################
 SET (gatb-tool_VERSION_MAJOR 0)
 SET (gatb-tool_VERSION_MINOR 4)
-SET (gatb-tool_VERSION_PATCH 4)
+SET (gatb-tool_VERSION_PATCH 5)
 
 #write the version number
 file(WRITE ${PROJECT_SOURCE_DIR}/tools/DBGWAS/src/version.h "\#define VERSION \"${gatb-tool_VERSION_MAJOR}.${gatb-tool_VERSION_MINOR}.${gatb-tool_VERSION_PATCH}\"")
