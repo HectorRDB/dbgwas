@@ -1,34 +1,28 @@
 ﻿To check:
-Les fichiers binaires test_version/DBGWAS-0.4.3-Linux/bin/testing_output_feature/step2/bugwas_out_indiv_first2signifPCs.png et correct_version/DBGWAS-0.4.3-Linux/bin/output/bugwas_out__indiv_first2signifPCs.png sont différents
-Les fichiers binaires test_version/DBGWAS-0.4.3-Linux/bin/testing_output_feature/step2/bugwas_out_SNPs_PC_manhattan.png et correct_version/DBGWAS-0.4.3-Linux/bin/output/bugwas_out__SNPs_PC_manhattan.png sont différents
-
-To check:
 Thirdparty licenses
-
 
 
 v0.4.4:
 -Core
--Ok:
     -Fixed output folder from being fixed to being a parameter (-output)
     -Reworked all the final and temporary files structure:
         -Each step now has a separate folder where all files from that step are written
     -DBGWAS now requires less disk space than before
-    -Test if DBGWAS work with only one installation
+    -DBGWAS now works with only one installation
     -Improved the contents of the final package
+    -Fixed -help and -version parameters
 
 -Summary page
--Ok:
     -Removed "Annotations on significant nodes" phrase;
     -Showing now only the first 3 annotations in the annotation table
     -Small fixes on the presentation of the annotation tables
     -Fixed a bug where we were using the graph tag instead of the index tag on the summary page
-
+    -Added the nb of unitigs and significant unitigs
 
 -Graph page
--Ok:
     -Reduced the height of the annotation table when opening the graph from 25% of the screen to 13%
-
+    -Users can now select all the significant nodes with right click on the graph
+    -The number of selected nodes is now shown in the east panel
 
 
 
@@ -36,17 +30,11 @@ v0.4.4:
 
 
 Paper TODO:
--Summary
-  -Added the nb of unitigs and significant unitigs
--Component page
-  -Right click select significant nodes
-  -Show the nb of selected nodes in the east panel
-
-
-
 TODO v0.4.5:
 -Core
-    -put a time limit for phantom js (or how to know when it bugged?)
+    -Put a time limit for phantom js (or how to know when it bugged?)
+        -Sometimes it can take a lot of time... knowing if it bugged is better
+        -http://phantomjs.org/api/phantom/handler/on-error.html
     -Make the step 3 fully multi-threaded
         -Phantom.js takes a bunch of time and could be easily parallelized
 -Summary
@@ -123,8 +111,6 @@ Low priority TODO:
     -This would be a field in the input file with a collumn with whatever the user would like to put
     -Show the original genomes as paths in the graph?
   -Work on unitig counts rather than presence/absence
-  -C++ memory optimization
-
 
 
 
