@@ -1,33 +1,8 @@
-﻿To check:
+﻿---------------------------------------------------------------------------------------------------------------------------------------------
+Prioritaire
+---------------------------------------------------------------------------------------------------------------------------------------------
+To check:
 Thirdparty licenses
-
-
-v0.4.4:
--Core
-    -Fixed output folder from being fixed to being a parameter (-output)
-    -Reworked all the final and temporary files structure:
-        -Each step now has a separate folder where all files from that step are written
-    -DBGWAS now requires less disk space than before
-    -DBGWAS now works with only one installation
-    -Improved the contents of the final package
-    -Fixed -help and -version parameters
-
--Summary page
-    -Removed "Annotations on significant nodes" phrase;
-    -Showing now only the first 3 annotations in the annotation table
-    -Small fixes on the presentation of the annotation tables
-    -Fixed a bug where we were using the graph tag instead of the index tag on the summary page
-    -Added the nb of unitigs and significant unitigs
-
--Graph page
-    -Reduced the height of the annotation table when opening the graph from 25% of the screen to 13%
-    -Users can now select all the significant nodes with right click on the graph
-    -The number of selected nodes is now shown in the east panel
-
-
-
-
-
 
 Paper TODO:
 TODO v0.4.5:
@@ -43,18 +18,10 @@ TODO v0.4.5:
   -Update Help
   -In the pop-up annotation from the table, show the annotations of the node, together with nb of nodes and e-value (the handson table itself)
     -order by e-value
-
-
-
-
 -Other questions:
 -Bug solving on the performance test... can we relaunch everything?
 -Update supplMaterials.pdf (4 Supplermenary Method, Part II)
 -Compile kmer-size up to 256 for the final release?
-
-
-
-
 -Deadline 20th november - final version
 
 
@@ -64,6 +31,20 @@ TODO v0.4.5:
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+TODO list
+---------------------------------------------------------------------------------------------------------------------------------------------
 High priority TODO:
   -Use a portable version of R to remove all dependencies?
   -Allow the user to provide an already built database, instead of calling makeblastdb always
@@ -122,10 +103,32 @@ Low priority TODO:
 
 
 
+---------------------------------------------------------------------------------------------------------------------------------------------
+Previous changelogs
+---------------------------------------------------------------------------------------------------------------------------------------------
+Done v0.4.4:
+-Core
+    -Fixed output folder from being fixed to being a parameter (-output)
+    -Reworked all the final and temporary files structure:
+        -Each step now has a separate folder where all files from that step are written
+    -DBGWAS now requires less disk space than before
+    -DBGWAS now works with only one installation
+    -Improved the contents of the final package
+    -Fixed -help and -version parameters
+-Summary page
+    -Removed "Annotations on significant nodes" phrase;
+    -Showing now only the first 3 annotations in the annotation table
+    -Small fixes on the presentation of the annotation tables
+    -Fixed a bug where we were using the graph tag instead of the index tag on the summary page
+    -Added the nb of unitigs and significant unitigs
+-Graph page
+    -Reduced the height of the annotation table when opening the graph from 25% of the screen to 13%
+    -Users can now select all the significant nodes with right click on the graph
+    -The number of selected nodes is now shown in the east panel
 
 
 
-Previous changelogs:
+
 Done v0.4.3:
 -Added libgcc and libstdc++ as static libraries
     -This will avoid running problems on distributions with outdated libgcc/libstdc++, like Debian or Red-Hat distros, e.g.:
@@ -167,12 +170,11 @@ Done v0.4.0:
 
 
 
-
-
 Done v0.3.7:
      -newick parameter is now optional, and do.lineage = TRUE if a newick file is given. Otherwise, it is set to false;
      -Fixed a bug where we tried to copy some plots that are non-existant if do.lineage = FALSE
      -Fixed a bug on the -nb-cores option appearing twice in the help
+
 
 
 
@@ -212,11 +214,16 @@ Done v0.3.4:
   -nb-cores defaults to 1
 
 
+
+
+
 Done v 0.3.2:
   -Changed the layout of the graph page - now we have 3 panels, where the south and east panel are resizable and closable
   -Removed ratio from the legend
   -Reduced size of high allelle frequency
   -Reduced the width of the tables in the index page
+
+
 
 
 Done v 0.3.1:
@@ -225,6 +232,9 @@ Done v 0.3.1:
 -Fix very wide selects in the index page (put a horizontal scroll)
   -Increased the height of select as well
 -Selecting a gene now only centers the screen on the nodes of that gene, without zooming
+
+
+
 
 
 Done v 0.3.0:
@@ -242,8 +252,6 @@ Changelog
   -Spaces in FASTA headers of the annotations DB are replaced for underscore because BLAST just considers the headers up to the first space
     -A copy of the DB is made, and the spaces are replaced in this copy, in order to do not modify the users' annotations
   -Blast executables are now integrated in the tool
-
-
 -Index page:
   -Annotations only for the significant nodes are shown in the index page
   -Fixed a bug when no condition is set on the filter in the index page
@@ -251,18 +259,6 @@ Changelog
   -Fixed some icons on the index page related to the filter
   -Fix the annotation filtering problems in the index page (i.e. one annotation substring of the other)
   -Added expand/collapse buttons for the parameters and filters on the index page
-
-
 -Graph page:
     -When a gene/tag is selected in the graph page, the screen in centered on these nodes
     -Annotation and sequence columns now has a limit on the number of characters that can be displayed with a modal to show the rest of the sequence
-
-
-
-
-
-
-
-Misc:
-Installing zlib (only for compiling):
-   sudo apt-get install libgcrypt11-dev zlib1g-dev
