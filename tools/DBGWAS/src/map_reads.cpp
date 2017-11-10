@@ -91,6 +91,7 @@ struct MapAndPhase
     const vector<string> &allReadFilesNames;
     const Graph& graph;
     const string &outputFolder;
+    const string &tmpFolder;
     uint64_t &nbOfReadsProcessed;
     ISynchronizer* synchro;
     vector< UnitigIdStrandPos > &nodeIdToUnitigId;
@@ -116,9 +117,9 @@ struct MapAndPhase
     };
 
     MapAndPhase (const vector<string> &allReadFilesNames, const Graph& graph,
-                 const string &outputFolder, uint64_t &nbOfReadsProcessed, ISynchronizer* synchro,
+                 const string &outputFolder, const string &tmpFolder, uint64_t &nbOfReadsProcessed, ISynchronizer* synchro,
                  vector< UnitigIdStrandPos > &nodeIdToUnitigId, int nbContigs) :
-        allReadFilesNames(allReadFilesNames), graph(graph), outputFolder(outputFolder),
+        allReadFilesNames(allReadFilesNames), graph(graph), outputFolder(outputFolder), tmpFolder(tmpFolder),
         nbOfReadsProcessed(nbOfReadsProcessed), synchro(synchro), nodeIdToUnitigId(nodeIdToUnitigId),
         nbContigs(nbContigs){}
 
@@ -133,7 +134,7 @@ struct MapAndPhase
 
         //XU_strain_i = how many times each unitig map to a strain
         ofstream mappingOutputFile;
-        openFileForWriting(outputFolder+string("/tmp/XU_strain_")+to_string(i), mappingOutputFile);
+        openFileForWriting(tmpFolder+string("/XU_strain_")+to_string(i), mappingOutputFile);
 
         // We loop over sequences.
         unsigned long readIndex = 0;
@@ -309,7 +310,7 @@ void generate_XU_unique(const string &filename, const vector< vector<int> > &XU,
 }
 
 //generate the bugwas input
-void generateBugwasInput (const vector <string> &allReadFilesNames, const string &outputFolder, int nbContigs) {
+void generateBugwasInput (const vector <string> &allReadFilesNames, const string &outputFolder, const string &tmpFolder, int nbContigs) {
     //Generate the XU (the bugwas input - the matrix where the unitigs are rows and the strains are columns)
     //XU_unique is XU with the duplicated rows removed
     cerr << endl << endl << "[Generating bugwas and gemma input]..." << endl;
@@ -325,7 +326,7 @@ void generateBugwasInput (const vector <string> &allReadFilesNames, const string
     //populate XU
     for (int j=0; j<allReadFilesNames.size(); j++) {
         ifstream inputFile;
-        openFileForReading(outputFolder+string("/tmp/XU_strain_")+to_string(j), inputFile);
+        openFileForReading(tmpFolder+string("/XU_strain_")+to_string(j), inputFile);
         for (int i = 0; i < nbContigs; i++)
             inputFile >> XU[i][j];
         inputFile.close();
@@ -395,7 +396,7 @@ void generateBugwasInput (const vector <string> &allReadFilesNames, const string
     vector<PhenoCounter > unitigs2PhenoCounter(nbContigs);
     for(int strainIndex=0;strainIndex<allReadFilesNames.size();strainIndex++) {
         ifstream unitigCountForStrain;
-        openFileForReading(outputFolder+string("/tmp/XU_strain_")+to_string(strainIndex), unitigCountForStrain);
+        openFileForReading(tmpFolder+string("/XU_strain_")+to_string(strainIndex), unitigCountForStrain);
 
         for (int unitigIndex=0; unitigIndex<nbContigs; unitigIndex++) {
             int count;
@@ -438,9 +439,10 @@ void map_reads::execute ()
 {
     if (skip1) return;
 
-    //string outputFolder = getInput()->getStr(STR_OUTPUT);
-    string outputFolder("output");
-    string longReadsFile = outputFolder+string("/tmp/readsFile");
+    //get the parameters
+    string outputFolder = getInput()->getStr(STR_OUTPUT)+string("/step1");
+    string tmpFolder = outputFolder+string("/tmp");
+    string longReadsFile = tmpFolder+string("/readsFile");
     int nbCores = getInput()->getInt(STR_NBCORES);
 
     //get the nbContigs
@@ -467,24 +469,21 @@ void map_reads::execute ()
     // We iterate the range.  NOTE: we could also use lambda expression (easing the code readability)
     uint64_t nbOfReadsProcessed = 0;
     dispatcher.iterate(allReadFilesNamesIt,
-                       MapAndPhase(allReadFilesNames, *graph, outputFolder, nbOfReadsProcessed, synchro,
+                       MapAndPhase(allReadFilesNames, *graph, outputFolder, tmpFolder, nbOfReadsProcessed, synchro,
                                    *nodeIdToUnitigId, nbContigs));
 
     //generate the bugwas input
-    generateBugwasInput(allReadFilesNames, outputFolder, nbContigs);
+    generateBugwasInput(allReadFilesNames, outputFolder, tmpFolder, nbContigs);
 
     //after the mapping, free some memory that will not be needed anymore
-    #ifndef __APPLE__
-    //hdf5 bugs when freeing the graph on MAC OS. If the system is MAC, we do not free this (at least I can test on MAC like this)
     delete graph;
     delete nodeIdToUnitigId;
-    #endif
 
-    //clean-up
+    //clean-up - saving some disk space
     //remove temp directory
-    //TODO: add this back
-    //boost::filesystem::remove_all(outputFolder+"/tmp");
-    //TODO: add this back
+    boost::filesystem::remove_all(tmpFolder);
+    //remove GATB's graph file
+    remove((outputFolder+string("/graph.h5")).c_str());
 
     cerr << endl << "[Mapping process finished!]" << endl;
     cerr.flush();

@@ -45,21 +45,12 @@ int main (int argc, char* argv[])
     // initialize random seed, in case we want to use rand(), we are already set
     srand (time(NULL));
 
-    //get the template path
-    pathToExecParent = argv[0];
-    pathToExecParent.replace(pathToExecParent.rfind("DBGWAS"), 6, "");
-
-    //TODO: we should remove this and deal better with the relative/absolute paths...
-    //TODO: we should remove this and deal better with the relative/absolute paths...
-    if (pathToExecParent!="./")
-        fatalError("Sorry, for the moment, to execute this tool you have to cd to the bin folder and execute as ./DBGWAS <parameters>.");
-    //TODO: we should remove this and deal better with the relative/absolute paths...
-    //TODO: we should remove this and deal better with the relative/absolute paths...
+    //get the path to the dir were the executable is
+    dirWhereDBGWASIsInstalled = getDirWhereDBGWASIsInstalled();
 
     try
     {
         //Build DBG
-        cerr << "Step 1. Building DBG and mapping strains on the DBG..." << endl;
         build_dbg().run(argc, argv); //this call will set up graph and nodeIdToUnitigId
         map_reads().run(argc, argv);
         cerr << "Done!" << endl;

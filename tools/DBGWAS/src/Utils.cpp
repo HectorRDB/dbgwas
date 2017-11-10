@@ -254,20 +254,14 @@ void checkParametersBuildDBG(Tool *tool) {
   checkStrainsFile(strainsFile);
 
   //check output
-  //string outputFolderPath = tool->getInput()->getStr(STR_OUTPUT);
-  string outputFolderPath("output");
+  string outputFolderPath = tool->getInput()->getStr(STR_OUTPUT);
   boost::filesystem::path p(outputFolderPath.c_str());
   if (boost::filesystem::exists(p)) {
     stringstream ss;
-    ss << "Could not create dir " << outputFolderPath << " - path already exists";
+    ss << "Could not create dir " << outputFolderPath << " - path already exists. Remove it and re-run the tool, or use -skip1 or -skip2 parameters.";
     fatalError(ss.str());
   }
   createFolder(p.string());
-
-  //create temp folder
-  boost::filesystem::path tempPath(p);
-  tempPath /= "tmp";
-  createFolder(tempPath.string());
 }
 
 
@@ -291,12 +285,18 @@ void checkParametersStatisticalTest(Tool *tool) {
 
 
 void checkParametersGenerateOutput(Tool *tool) {
-  //string outputFolderPath = tool->getInput()->getStr(STR_OUTPUT);
-  string outputFolderPath("output");
-  boost::filesystem::path visPath(outputFolderPath.c_str());
-  visPath /= "visualisations";
+  //create the output folder for step 3
+  string outputFolder = tool->getInput()->getStr(STR_OUTPUT)+string("/step3");
+  createFolder(outputFolder);
+
+  //create the tmp folder of step 3
+  string tmpFolder = outputFolder+string("/tmp");
+  createFolder(tmpFolder);
+
+  string visualisationFolder = tool->getInput()->getStr(STR_OUTPUT)+string("/visualisations");
+  boost::filesystem::path visPath(visualisationFolder.c_str());
   if (boost::filesystem::exists(visPath)) {
-    cerr << "[WARNING] Removing " << outputFolderPath << "/visualisations because path already exists (maybe previous visualisations?). " << endl;
+    cerr << "[WARNING] Removing " << visualisationFolder << " because path already exists (maybe previous visualisations?). " << endl;
     boost::filesystem::remove_all(visPath);
   }
   createFolder(visPath.string());
@@ -336,14 +336,14 @@ void checkParametersGenerateOutput(Tool *tool) {
   //check the nucleotide DB
   if (tool->getInput()->get(STR_NUCLEOTIDE_DB)) {
     //build the nucleotide DB
-    nucleotideDBPath = Blast::makeblastdb("nucl", tool->getInput()->getStr(STR_NUCLEOTIDE_DB), outputFolderPath);
+    nucleotideDBPath = Blast::makeblastdb("nucl", tool->getInput()->getStr(STR_NUCLEOTIDE_DB), outputFolder);
     thereIsNucleotideDB=true;
   }
 
   //check the protein DB
   if (tool->getInput()->get(STR_PROTEIN_DB)) {
     //build the protein DB
-    proteinDBPath = Blast::makeblastdb("prot", tool->getInput()->getStr(STR_PROTEIN_DB), outputFolderPath);
+    proteinDBPath = Blast::makeblastdb("prot", tool->getInput()->getStr(STR_PROTEIN_DB), outputFolder);
     thereIsProteinDB=true;
   }
 }
@@ -443,4 +443,39 @@ void GetSignificantPatterns::operator()(double &qValue) const
     if (pattern.qValue <= qValue)
       significantPatterns.push_back(pattern);
   }
+}
+
+
+string getDirWhereDBGWASIsInstalled() {
+  char* path = NULL;
+  int length, dirname_length;
+  int i;
+  string toReturn;
+
+  length = wai_getExecutablePath(NULL, 0, &dirname_length);
+  if (length > 0)
+  {
+    path = (char*)malloc(length + 1);
+    if (!path)
+      //error, malloc did not work
+      fatalError("Error on Utils.cpp::getDirWhereDBGWASIsInstalled()");
+
+    //get the executable path
+    wai_getExecutablePath(path, length, &dirname_length);
+
+    //get the executable dir
+    path[length] = '\0';
+    path[dirname_length] = '\0';
+
+    //save it in toReturn
+    toReturn = string(path);
+
+    //free the memory
+    free(path);
+  }
+  else {
+    fatalError("Error on Utils.cpp::getDirWhereDBGWASIsInstalled()");
+  }
+
+  return toReturn;
 }

@@ -39,11 +39,7 @@ extern vector< UnitigIdStrandPos >* nodeIdToUnitigId;
 extern vector< Strain >* strains;
 extern const char* STR_STRAINS_FILE;
 extern const char* STR_KSKMER_SIZE;
-
-//TODO: we should put this back. I put it out and forced the output folder to be always ./output because gemma forcibly uses this directory. If there are 2 executions of the tool, this could bugs because of gemma
-//extern const char* STR_OUTPUT;
-//TODO: we should put this back. I put it out and forced the output folder to be always ./output because gemma forcibly uses this directory. If there are 2 executions of the tool, this could bugs because of gemma
-
+extern const char* STR_OUTPUT;
 extern const char* STR_NBCORES;
 extern const char* STR_MAX_NEIGHBOURHOOD;
 extern const char* STR_SKIP1;
@@ -58,7 +54,8 @@ extern const char* STR_MAF_FILTER;
 //extern const char* STR_COUNT_MODE;
 //TODO: seeveral questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
 
-extern string pathToExecParent;
+extern string dirWhereDBGWASIsInstalled;
+extern string DBGWAS_lib;
 extern bool skip1;
 extern bool skip2;
 extern bool hasNewickFile;

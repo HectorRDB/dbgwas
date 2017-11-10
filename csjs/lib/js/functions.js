@@ -126,6 +126,11 @@ function selectAllNodes() {
     cy.nodes().select();
 };
 
+function selectSignificantNodes() {
+    cy.nodes().unselect();
+    cy.nodes('node[significant = "Yes"]').select();
+}
+
 function unselectAllNodes() {
     cy.nodes().unselect();
 };

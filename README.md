@@ -30,13 +30,16 @@ For reproducibility reasons, in the following you have easily the input data, an
 ```
 ./DBGWAS -strains pseudomonas_aeruginosa_full_dataset/strains -newick pseudomonas_aeruginosa_full_dataset/strains.newick -nc_db Resistance_DB_for_DBGWAS.fasta -pt_db uniprot_sprot_bacteria_for_DBGWAS.fasta
 ```
+5. After finishing the execution, the output can be found in the folder ```bin/output/visualisations```
 
 # Downloading, installing and running
 ## Downloading the precompiled binaries
 This is the easiest way to run the tool since it is already precompiled for Linux AMD64 machines.
-Download the latest binary here (v0.4.3): https://www.dropbox.com/s/6b7toss7h4ql6vi/DBGWAS-0.4.3-Linux.tar.gz?dl=1
+Download the latest binary here (v0.4.4): https://www.dropbox.com/s/ncf6ef4pwyzzuog/DBGWAS-0.4.4-Linux-precompiled.tar.gz?dl=1
 
 Pre-compiled versions history:
+
+DBGWAS v0.4.3: https://www.dropbox.com/s/6b7toss7h4ql6vi/DBGWAS-0.4.3-Linux.tar.gz?dl=1
 
 DBGWAS v0.4.2: https://www.dropbox.com/s/k67eym0b0koo84h/DBGWAS-0.4.2-Linux.tar.gz?dl=1
 
@@ -60,7 +63,11 @@ DBGWAS v0.3.2: https://www.dropbox.com/s/vd4kjl1obrkfmey/DBGWAS-0.3.2-Linux.tar.
 
 
 ## Compiling
-If you still want to compile, clone the repository and execute inside the repository directory:
+If you still want to compile, clone the repository:
+```
+git clone --recursive git@gitlab.com:leoisl/dbgwas.git
+```
+and execute inside the repository directory:
 ```
 mkdir build && cd build && cmake .. && make && make package
 ```
@@ -146,15 +153,16 @@ DBGWAS makes use of several thirdparty libraries:
    3. cytoscape.js-panzoom (https://github.com/cytoscape/cytoscape.js-panzoom)
 7. PhantomJS (http://phantomjs.org/)
 8. PStreams (http://pstreams.sourceforge.net/)
-9. Alasql (https://github.com/agershun/alasql)
-10. Handsontable (https://github.com/handsontable/handsontable)
-11. Bootstrap (http://getbootstrap.com/javascript/)
-12. jQuery (https://jquery.com/)
-13. jQuery QueryBuilder (http://querybuilder.js.org/)
-14. jQuery Layout (http://layout.jquery-dev.com/)
-15. jQuery BlockUI Plugin (https://github.com/malsup/blockui/)
-16. Shuffle.js (https://vestride.github.io/Shuffle/)
-17. Fastclick (https://github.com/ftlabs/fastclick)
+9. Where Am I? (https://github.com/gpakosz/whereami)
+10. Alasql (https://github.com/agershun/alasql)
+11. Handsontable (https://github.com/handsontable/handsontable)
+12. Bootstrap (http://getbootstrap.com/javascript/)
+13. jQuery (https://jquery.com/)
+14. jQuery QueryBuilder (http://querybuilder.js.org/)
+15. jQuery Layout (http://layout.jquery-dev.com/)
+16. jQuery BlockUI Plugin (https://github.com/malsup/blockui/)
+17. Shuffle.js (https://vestride.github.io/Shuffle/)
+18. Fastclick (https://github.com/ftlabs/fastclick)
 
 
 # How to cite

@@ -40,34 +40,51 @@ void statistical_test::execute () {
   //parameters
   checkParametersStatisticalTest(this);
   if (skip2) return;
-  //string outputFolder = getInput()->getStr(STR_OUTPUT);
-  string outputFolder("output");
+
+  //get the parameters
+  //create the step2 folder in the outputfolder
+  string outputFolder = getInput()->getStr(STR_OUTPUT)+string("/step2");
+  createFolder(outputFolder);
+
+  //create the tmp folder of step2
+  string tmpFolder = outputFolder+string("/tmp");
+  createFolder(tmpFolder);
+
   double mafFilter = getInput()->getDouble(STR_MAF_FILTER);
 
   //execute the statistical test
-  //To do so, we need to create an output folder inside the outputFolder
-  createFolder(string("output/output"));
-  //We also need to create this other folder... bizzare...
-  createFolder(string("output/bugwas_out__PCloadings/output"));
+  //get the step1 output folder
+  fs::path step1OutputFolderRelative(getInput()->getStr(STR_OUTPUT)+string("/step1"));
+  fs::path step1OutputFolder=fs::absolute(step1OutputFolderRelative);
+
+  //get the newick path
+  fs::path newickPathRelative(getInput()->getStr(STR_NEWICK_PATH));
+  fs::path newickPath=fs::absolute(newickPathRelative);
 
   //create the command line
   stringstream ssCommand;
-  ssCommand << "Rscript --vanilla DBGWAS.R "
-            << outputFolder << " "
-            << outputFolder << "/bugwas_input.id_phenotype "
-            << outputFolder << "/bugwas_out_ "
-            << pathToExecParent << "gemma.0.93b "
+  ssCommand << "Rscript --vanilla "
+            << (dirWhereDBGWASIsInstalled+DBGWAS_lib) << "/DBGWAS.R "
+            << (dirWhereDBGWASIsInstalled+DBGWAS_lib) << " "
+            << step1OutputFolder.string() << " "
+            << step1OutputFolder.string() << "/bugwas_input.id_phenotype "
+            << "bugwas_out "
+            << (dirWhereDBGWASIsInstalled+DBGWAS_lib) << "/gemma.0.93b "
             << mafFilter << " ";
   if (hasNewickFile)
-    ssCommand << getInput()->getStr(STR_NEWICK_PATH) << " ";
+    ssCommand << newickPath.string() << " ";
   ssCommand << "2>&1";
 
   //execute the command line
-  executeCommand(ssCommand.str());
+  //to execute it, we have to cd to this output folder and then cd back to where we were
+  fs::path currentPath = fs::current_path(); //save the current path
+  fs::current_path(outputFolder); //cd outputFolder
+  executeCommand(ssCommand.str()); //execute the command
+  fs::current_path(currentPath); //cd back
 
   //sort the file by q-value and output it to output/patterns.txt
   //read
-  auto patterns = PatternFromStats::readFile(outputFolder + "/bugwas_out__DBGWAS_patterns.txt");
+  auto patterns = PatternFromStats::readFile(outputFolder + "/bugwas_out_DBGWAS_patterns.txt");
   //sort
   sort(patterns.begin(), patterns.end());
   //write
@@ -78,4 +95,9 @@ void statistical_test::execute () {
   cout << "Stats: " << endl;
   cout << "Total number of patterns: " << patterns.size() << endl;
   cout << "################################################################################" << endl;
+
+
+  //clean-up - saving some disk space
+  //remove temp directory
+  boost::filesystem::remove_all(tmpFolder);
 }

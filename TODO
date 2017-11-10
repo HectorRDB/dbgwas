@@ -1,42 +1,56 @@
-﻿Paper:
--TODO Code
+﻿To check:
+Thirdparty licenses
 
--New parameters:
-    -Fix output folder from being fixed to being a parameter
-      -Need a fix on Gemma/Bugwas output folder first
-        -Try to do this in C++ by changing the output directory before calling R and going back after calling R
-      -Test if DBGWAS work with only one installation
-        -ready soon
-      -Each step must have a separate folder to where the temp files are created
-          -like this we can easily remove old files when using -skipn
-          -Optimize temp file space
--put a time limit for phantom js (or how to know when it bugged?)
--Make the step 3 fully multi-threaded
-    -Phantom.js takes a bunch of time and could be easily parallelized
 
+v0.4.4:
+-Core
+    -Fixed output folder from being fixed to being a parameter (-output)
+    -Reworked all the final and temporary files structure:
+        -Each step now has a separate folder where all files from that step are written
+    -DBGWAS now requires less disk space than before
+    -DBGWAS now works with only one installation
+    -Improved the contents of the final package
+    -Fixed -help and -version parameters
+
+-Summary page
+    -Removed "Annotations on significant nodes" phrase;
+    -Showing now only the first 3 annotations in the annotation table
+    -Small fixes on the presentation of the annotation tables
+    -Fixed a bug where we were using the graph tag instead of the index tag on the summary page
+    -Added the nb of unitigs and significant unitigs
+
+-Graph page
+    -Reduced the height of the annotation table when opening the graph from 25% of the screen to 13%
+    -Users can now select all the significant nodes with right click on the graph
+    -The number of selected nodes is now shown in the east panel
+
+
+
+
+
+
+Paper TODO:
+TODO v0.4.5:
+-Core
+    -Put a time limit for phantom js (or how to know when it bugged?)
+        -Sometimes it can take a lot of time... knowing if it bugged is better
+        -http://phantomjs.org/api/phantom/handler/on-error.html
+    -Make the step 3 fully multi-threaded
+        -Phantom.js takes a bunch of time and could be easily parallelized
 -Summary
-  -Remove "Annotations on significant nodes"
-  -Use index tag on the summary (we are currently using component tag)
-  -Show only the first 3 annotations (first 3 lines)
-  -Show nb of significant unitigs and nb of total unitigs
-  -If no annotation was provided, remove
-    Annotations on significant nodes:
-    No annotations found.
-
+    -Add a different mouse icon when the mouse is over the preview
 -Component page
-  -Right click select significant nodes
-  -Show the nb of selected nodes in the east panel
   -Update Help
-  -Reduce annotation table to 3 lines
   -In the pop-up annotation from the table, show the annotations of the node, together with nb of nodes and e-value (the handson table itself)
     -order by e-value
 
 
+
+
 -Other questions:
--Can we indeed redistribute all these executables with DBGWAS?
 -Bug solving on the performance test... can we relaunch everything?
 -Update supplMaterials.pdf (4 Supplermenary Method, Part II)
-
+-Compile kmer-size up to 256 for the final release?
 
 
 
@@ -51,12 +65,17 @@
 
 
 High priority TODO:
+  -Use a portable version of R to remove all dependencies?
   -Allow the user to provide an already built database, instead of calling makeblastdb always
   -Fix qvalue default min and max to min and max of the components
   -treat NA better
     -We just removed from the input for now
   -svd and pca steps are probably redundant in cdbg_lin_loc as XX is centered. Check that they produce the same set of eigenvectors and remove the pca steps (call to prcomp uses more memory than svd).
     -check with laurent
+  -If no annotation was provided, remove the line:
+        Annotations on significant nodes:
+        No annotations found.
+    from the tables in the summary page
 
 
 
@@ -92,8 +111,6 @@ Low priority TODO:
     -This would be a field in the input file with a collumn with whatever the user would like to put
     -Show the original genomes as paths in the graph?
   -Work on unitig counts rather than presence/absence
-  -C++ memory optimization
-
 
 
 

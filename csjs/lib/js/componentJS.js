@@ -79,7 +79,7 @@ function buildPage(graphElements, componentAnnotation)
             , south__size: .25
             , south__minSize: .1
             , south__maxSize: .5
-            , north__size: .25
+            , north__size: .13
             , north__minSize: .1
             , north__maxSize: .5
             , east__size: .2
@@ -148,10 +148,14 @@ function buildPage(graphElements, componentAnnotation)
         //register what to do when user selects a node
         cy.nodes().on('select', function(evt){
             fillTable();
+            var nbOfSelectedNodes = cy.nodes(':selected').length
+            $("#nodesSelectedInfo").html(nbOfSelectedNodes+" nodes selected");
         });
 
         cy.nodes().on('unselect', function(evt){
             fillTable();
+            var nbOfSelectedNodes = cy.nodes(':selected').length
+            $("#nodesSelectedInfo").html(nbOfSelectedNodes+" nodes selected");
         });
 
 
@@ -168,6 +172,18 @@ function buildPage(graphElements, componentAnnotation)
                     selector: 'node, edge',
                     onClickFunction: function (event) {
                         selectAllNodes();
+                    },
+                    hasTrailingDivider: true,
+                    coreAsWell: true
+                },
+
+                {
+                    id: 'select_sign_nodes',
+                    content: 'Select significant nodes only',
+                    tooltipText: 'Select significant nodes only',
+                    selector: 'node, edge',
+                    onClickFunction: function (event) {
+                        selectSignificantNodes();
                     },
                     hasTrailingDivider: true,
                     coreAsWell: true
@@ -256,8 +272,8 @@ function buildPage(graphElements, componentAnnotation)
         })
         annotationTable.sort(1, false);
 
-        //say we are drawing the layout
-        $("#PlWarning").html("Drawing layout...");
+        //add the text for nodesSelectedInfo
+        $("#nodesSelectedInfo").html("0 nodes selected");
 
         //define the layout
         var layout = cy.layout({
@@ -323,8 +339,7 @@ function buildPage(graphElements, componentAnnotation)
 
         //event when finishing the layout
         layout.on('layoutstop', function(){
-            //say we are ready
-            $("#PlWarning").html("Ready!");
+            //we are ready!
             $.unblockUI({
                 fadeOut: 0
             })
