@@ -151,24 +151,26 @@ GVGPHLDQYDVFIIQGTGRRRWRVGEKLQMKQHCPHPDLLQVDPFEAIIDEELEPGDILY
 ```
 If DBGWAS finds a hit to this line, it will consider the full header as its identifier, which can be too long to be shown, making the visualisation cumbersome.
 
-If you wish to give new IDs to existing lines without changing much the database, in order to make the visualisation better, and maybe to group several annotations into one single ID, you can add two tags to the headers of the database in the following format:
+If you wish to give new IDs to existing registries without changing much the database, in order to make the visualisation better, and maybe to group several annotations into one single ID, you can add two tags to the headers of the database in the following format:
 ```
 DBGWAS_index_tag=<value>;
 DBGWAS_graph_tag=<value>;
 ```
 
-```DBGWAS_index_tag``` will be the value shown for this annotation in the summary page and ```DBGWAS_graph_tag``` will be the value shown for this annotation in the graph page. For example, if we add both tags to our previous example:
+```DBGWAS_index_tag``` will be the value shown for this annotation in the summary page and ```DBGWAS_graph_tag``` will be the value shown for this annotation in the graph page. For example, if we add both tags to our previous example (scroll to the right to see the tags):
 ```
->sp|P27431|ROXA_ECOLI 50S ribosomal protein L16 3-hydroxylase OS=Escherichia coli (strain K12) GN=roxA PE=1 SV=2;**DBGWAS_index_tag=ROXA;DBGWAS_graph_tag=[uniprot] 50S ribosomal protein L16 3-hydroxylase (Escherichia coli)**
+>sp|P27431|ROXA_ECOLI 50S ribosomal protein L16 3-hydroxylase OS=Escherichia coli (strain K12) GN=roxA PE=1 SV=2;DBGWAS_index_tag=ROXA;DBGWAS_graph_tag=[uniprot] 50S ribosomal protein L16 3-hydroxylase (Escherichia coli)
 MEYQLTLNWPDFLERHWQKRPVVLKRGFNNFIDPISPDELAGLAMESEVDSRLVSHQDGK
 WQVSHGPFESYDHLGETNWSLLVQAVNHWHEPTAALMRPFRELPDWRIDDLMISFSVPGG
 GVGPHLDQYDVFIIQGTGRRRWRVGEKLQMKQHCPHPDLLQVDPFEAIIDEELEPGDILY
 ```
 
 This is what we get in the summary page:
+
 ![alt text](figures/SummaryPage.png "Summary page")
 
 And this is what we get in the graph page:
+
 ![alt text](figures/GraphPage.png "Graph page")
 
 
