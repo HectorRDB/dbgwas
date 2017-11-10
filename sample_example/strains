@@ -1,4 +1,4 @@
-ID	pheno	Path
+ID	Phenotype	Path
 WH-SGI-V-07060	0	../sample_example/GCA_001449145.1_WH-SGI-V-07060_genomic.fna
 WH-SGI-V-07058	0	../sample_example/GCA_001449155.1_WH-SGI-V-07058_genomic.fna
 WH-SGI-V-07057	NA	../sample_example/GCA_001449165.1_WH-SGI-V-07057_genomic.fna
