@@ -30,6 +30,7 @@ For reproducibility reasons, in the following you have easily the input data, an
 ```
 ./DBGWAS -strains pseudomonas_aeruginosa_full_dataset/strains -newick pseudomonas_aeruginosa_full_dataset/strains.newick -nc_db Resistance_DB_for_DBGWAS.fasta -pt_db uniprot_sprot_bacteria_for_DBGWAS.fasta
 ```
+5. After finishing the execution, the output can be found in the folder ```bin/output/visualisations```
 
 # Downloading, installing and running
 ## Downloading the precompiled binaries
