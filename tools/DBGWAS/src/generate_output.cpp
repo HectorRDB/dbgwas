@@ -59,18 +59,28 @@ generate_output::generate_output ()  : Tool ("generate_output") //give a name to
 
 void generate_output::createIndexFile(int numberOfComponents, const string &visualisationsFolder, const string &step2OutputFolder, const vector<vector<MyVertex> > &nodesInComponent, graph_t& newGraph,
                      map<int, AnnotationRecord > &idComponent2Annotations, const vector<const PatternFromStats*> &unitigToPatternStats,
-                     const vector<int> &selectedUnitigs) {
+                     const vector<int> &selectedUnitigs, int nbCores) {
   cerr << "[Creating index file...]" << endl;
-  //create the thumbnails
-  for (int i=0;i<numberOfComponents;i++) {
-    string HTMLFile(boost::filesystem::canonical(visualisationsFolder+"/components/comp_"+std::to_string(i)+".html").string());
-    string PNGFile = HTMLFile+".png";
-    cerr << "[Rendering thumbnail for component " << i << "...]" << endl;
-    stringstream commandSS;
-    commandSS << dirWhereDBGWASIsInstalled << DBGWAS_lib << "/phantomjs " << dirWhereDBGWASIsInstalled << DBGWAS_lib << "/render_graph.js " << HTMLFile << " " << PNGFile;
-    executeCommand(commandSS.str(), false);
-    cerr << "[Rendering thumbnail for component " << i << "...] - Done!" << endl;
-  }
+
+  //create the thumbnails in a multi-threaded way
+  // We create an iterator over an integer range
+  Range<int>::Iterator rangeOfComponentsIt(0, numberOfComponents - 1);
+
+  // We create a dispatcher configured for 'nbCores' cores.
+  Dispatcher dispatcher(nbCores, 1);
+
+  // We iterate the range
+  cerr << "[Rendering thumbnails...]" << endl;
+  dispatcher.iterate(rangeOfComponentsIt, [&](int i) {
+      string HTMLFile(boost::filesystem::canonical(visualisationsFolder+"/components/comp_"+std::to_string(i)+".html").string());
+      string PNGFile = HTMLFile+".png";
+      stringstream commandSS;
+      commandSS << dirWhereDBGWASIsInstalled << DBGWAS_lib << "/phantomjs " << dirWhereDBGWASIsInstalled << DBGWAS_lib << "/render_graph.js " << HTMLFile << " " << PNGFile;
+      executeCommand(commandSS.str(), false);
+  });
+  cerr << "[Rendering thumbnails...] - one!" << endl;
+
+
 
   //create the index
   //create the object previews for each component
@@ -650,7 +660,7 @@ void generate_output::execute () {
 
   //create the index
   createIndexFile(numberOfComponents, visualisationsFolder, step2OutputFolder, nodesInComponent, newGraph,
-                  idComponent2Annotations, unitigToPatternStats, selectedUnitigs);
+                  idComponent2Annotations, unitigToPatternStats, selectedUnitigs, nbCores);
 
   //clean-up - saving some disk space
   //remove temp directory
