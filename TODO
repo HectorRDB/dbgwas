@@ -8,19 +8,26 @@ Update Memory and CPU requirements section in the README (maybe add the table fr
 Paper TODO:
 TODO v0.4.5:
 -Core
+-Test:
     -Fixed -help messages
     -Added how to customize databases in the readme and help messages (please check)
+
+-TODO:
     -Put a time limit for phantom js (or how to know when it bugged?)
         -Sometimes it can take a lot of time... knowing if it bugged is better
         -http://phantomjs.org/api/phantom/handler/on-error.html
     -Make the step 3 fully multi-threaded
         -Phantom.js takes a bunch of time and could be easily parallelized
 -Summary
+Test:
     -Add a different mouse icon when the mouse is over the preview
 -Component page
   -Update Help
   -In the pop-up annotation from the table, show the annotations of the node, together with nb of nodes and e-value (the handson table itself)
     -order by e-value
+
+
+
 -Other questions:
 -Bug solving on the performance test... can we relaunch everything?
 -Update supplMaterials.pdf (4 Supplermenary Method, Part II)
