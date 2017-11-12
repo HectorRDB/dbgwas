@@ -9,18 +9,18 @@ Paper TODO:
 TODO v0.4.5:
 -Core
 -Test:
-    -Fixed -help messages
-    -Added how to customize databases in the readme and help messages (please check)
-    -Added a better error handling in phantomjs in case of problems with javascript
-    -Rendering of the thumbnails now are fully multithreaded
-    -Fixed a bug in step2 when no newick file is provided
+    ?-Fixed -help messages
+    x-Added how to customize databases in the readme and help messages (please check)
+    ?-Added a better error handling in phantomjs in case of problems with javascript
+    ?-Rendering of the thumbnails now are fully multithreaded
+    x-Fixed a bug in step2 when no newick file is provided
 -Summary
 Test:
-    -Added a different mouse icon when the mouse is over the preview
+    ?-Added a different mouse icon when the mouse is over the preview
 -Component page
 -TODO:
-  -Added the zoom-in feature when selecting all nodes or the significant nodes only
-  -Update Help
+  ?-Added the zoom-in feature when selecting all nodes or the significant nodes only
+  -Updated Help
   -In the pop-up annotation from the table, show the annotations of the node, together with nb of nodes and e-value (the handson table itself)
     -order by e-value
 
