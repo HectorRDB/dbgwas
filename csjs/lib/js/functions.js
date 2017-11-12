@@ -123,12 +123,12 @@ function rgbToHex(r, g, b) {
 //************************************************************
 //FUNCTIONS OF THE CONTEXT MENU
 function selectAllNodes() {
-    cy.nodes().select();
+    selectNodesAndDoANiceZoom(cy.nodes())
 };
 
 function selectSignificantNodes() {
     cy.nodes().unselect();
-    cy.nodes('node[significant = "Yes"]').select();
+    selectNodesAndDoANiceZoom(cy.nodes('node[significant = "Yes"]'));
 }
 
 function unselectAllNodes() {
