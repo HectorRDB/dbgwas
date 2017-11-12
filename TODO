@@ -13,6 +13,7 @@ TODO v0.4.5:
     -Added how to customize databases in the readme and help messages (please check)
     -Added a better error handling in phantomjs in case of problems with javascript
     -Rendering of the thumbnails now are fully multithreaded
+    -Fixed a bug in step2 when no newick file is provided
 -Summary
 Test:
     -Added a different mouse icon when the mouse is over the preview
