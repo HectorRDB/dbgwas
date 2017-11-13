@@ -52,7 +52,7 @@ var colors = ['red', 'blue', 'green', 'yellow', 'fuchsia', 'brown', 'lime', 'aqu
 
 //***************************************************************
 //MAIN FUNCTIONS
-function buildPage(graphElements, componentAnnotation)
+function buildPage(graphElements, allAnnotations, componentAnnotation, node2AnnotationEvalue)
 {
     $.blockUI({
       message: '<img width="25px" src="lib/resources/busy.gif" /> Loading resources and drawing the graph<br/>Please wait...' ,
@@ -228,7 +228,7 @@ function buildPage(graphElements, componentAnnotation)
         var annotationTableSettings = {
             data: componentAnnotation,
             columns: [
-                {type: 'text'},
+                {renderer: annotationId2StringRenderer},
                 {type: 'text'},
                 {type: 'text'}
             ],
@@ -359,7 +359,7 @@ function buildPage(graphElements, componentAnnotation)
                 //TODO: NA temporarily removed
                 //{type: 'text'},
                 {type: 'text'},
-                {renderer: annotationRenderer},
+                {renderer: nodeAnnotationRenderer},
                 {type: 'text'},
                 {type: 'text'},
                 {type: 'text'},

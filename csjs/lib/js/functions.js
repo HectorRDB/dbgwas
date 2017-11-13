@@ -303,54 +303,106 @@ function makeFile (text, file, fileType) {
 
 //************************************************************
 //FUNCTIONS FOR RENDERING LARGE COLUMNS ON THE HANDSONTABLE
-function showFullString (event, title, longString) {
+function showFullString (event, longString) {
     $("<div>").html("<textarea class=\"code\" rows=\"10\" style=\"width: 100%\" readonly>"+ longString + "</textarea>").dialog({
-        title: title,
         position: {my: "left top", at: "left bottom", of: event.srcElement},
         close: function() {
             $(this).dialog('destroy').remove();
         }
     })
+}
+
+function fromLongToShortString(longString) {
+  if (longString.length>maxLengthColumnRenderer) {
+      //modify it
+      longString = longString.substring(0, maxLengthColumnRenderer) + "<span>...<img class=\"font_size_images\" src=\""+ pathToLib + "resources/enlarge.png\" onclick=\"showFullString(event, '"+ longString.replace(/'/g, "\\'") +"')\"/></span>"
+  }
+  return longString;
 }
 
 function longColumnRenderer (instance, td, row, col, prop, value, cellProperties) {
     var longString = Handsontable.helper.stringify(value);
-
-    if (longString.length>maxLengthColumnRenderer) {
-        //modify it
-        longString = longString.substring(0, maxLengthColumnRenderer) + "<span>...<img class=\"font_size_images\" src=\""+ pathToLib + "resources/enlarge.png\" onclick=\"showFullString(event, '" + instance.getColHeader(col) + "', '"+ longString.replace(/'/g, "\\'") +"')\"/></span>"
-    }
-
-
-    td.innerHTML = longString;
+    td.innerHTML = fromLongToShortString(longString);
     return td;
 }
 
-function showAnnotationTableOfNode (event, title, longString) {
-    longStringArray = longString.split(",")
-    console.log(longStringArray)
-    $("<div>").html("<textarea class=\"code\" rows=\"10\" style=\"width: 100%\" readonly>"+ longString + "</textarea>").dialog({
+function showAnnotationTableOfNode (event, title, nodeId) {
+    //populate the table for the graph annotation
+    var annotationTableSettings = {
+        data: node2AnnotationEvalue[nodeId],
+        columns: [
+            {renderer: longAnnotationId2StringRenderer},
+            {type: 'text'}
+        ],
+        colHeaders: [
+            'Annotation',
+            'E-value'
+        ],
+        colWidths: [250, 100],
+        copyColsLimit: 1000000,
+        copyRowsLimitNumber: 1000000,
+        readOnly: true,
+        wordWrap: false,
+        allowInsertColumn: false,
+        allowInsertRow: false,
+        allowRemoveColumn: false,
+        allowRemoveRow: false,
+        autoColumnSize: {useHeaders: true},
+        autoWrapCol: true,
+        autoWrapRow: true,
+        manualColumnResize: true,
+        columnSorting: true,
+        sortIndicator: true
+    };
+    $("<div>").html("<div class=\"nodeAnnotationTable\" id=\"nodeAnnotationDiv_"+nodeId+"\"></div>").dialog({
         title: title,
+        width: 400,
+        height: 300,
         position: {my: "left top", at: "left bottom", of: event.srcElement},
         close: function() {
             $(this).dialog('destroy').remove();
         }
+
     })
+    var annotationTableContainer = document.getElementById("nodeAnnotationDiv_"+nodeId);
+    var nodeAnnotationTable = new Handsontable(annotationTableContainer, annotationTableSettings);
+    nodeAnnotationTable.sort(1, true);
 }
 
-function annotationRenderer (instance, td, row, col, prop, value, cellProperties) {
-    var longString = Handsontable.helper.stringify(value);
+function nodeAnnotationRenderer (instance, td, row, col, prop, value, cellProperties) {
+    var IDsAsString = Handsontable.helper.stringify(value);
+    var annotation = "";
+    var nodeId = instance.getDataAtRow(row)[0]
 
-    if (longString!="") {
-        if (longString.length>maxLengthColumnRenderer) {
-            //modify it
-            longString = longString.substring(0, maxLengthColumnRenderer)
-        }
-        longString += "<span>...<img class=\"font_size_images\" src=\""+ pathToLib + "resources/enlarge.png\" onclick=\"showAnnotationTableOfNode(event, '" + instance.getColHeader(col) + "', '"+ longString.replace(/'/g, "\\'") +"')\"/></span>"
-    }
+    if (IDsAsString != "") {
+      var IDsAsArray = IDsAsString.split(',')
+      
+      IDsAsArray.forEach(function(id){
+        annotation+=allAnnotations[id] + ","
+      });
+      
+      if (annotation.length>maxLengthColumnRenderer) {
+          //modify it
+          annotation = annotation.substring(0, maxLengthColumnRenderer)
+      }
+      annotation += "<span>...<img class=\"font_size_images\" src=\""+ pathToLib + "resources/enlarge.png\" onclick=\"showAnnotationTableOfNode(event, '" + instance.getColHeader(col) + "', '" + nodeId + "')\"/></span>"
+  }
 
+    td.innerHTML = annotation;
+    return td;
+}
 
-    td.innerHTML = longString;
+function annotationId2StringRenderer (instance, td, row, col, prop, value, cellProperties) {
+    td.innerHTML = allAnnotations[value];
+    return td;
+}
+
+function longAnnotationId2StringRenderer (instance, td, row, col, prop, value, cellProperties) {
+    //this is ugly but...
+    var oldmaxLengthColumnRenderer = maxLengthColumnRenderer;
+    maxLengthColumnRenderer = 25
+    td.innerHTML = fromLongToShortString(allAnnotations[value]);
+    maxLengthColumnRenderer = oldmaxLengthColumnRenderer
     return td;
 }
 //FUNCTIONS FOR RENDERING LARGE COLLUMNS ON THE HANDSONTABLE
