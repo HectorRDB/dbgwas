@@ -6,13 +6,17 @@ To check:
     -Thirdparty licenses
         -Can we indeed redistribute all these executable with DBGWAS?
 
+v0.4.6:
+Bugfixes:
+    -Fixed preview getting buggy if the machine is very busy;
+    -Fixed Firefox bug on modal positioning;
+    -Fixed minor bug with the node annotation table;
+
+
 Paper TODO:
 -Code
     -Fix copy and paste of cells containing annotation;
     -Fix cytoscape export button regarding annotation table
-    -Preview can get buggy if the machine is very busy
-    -Firefox bug on modal positioning
-    -Fixed minor bug with the node annotation table
 -README
     -Update Memory and CPU requirements section in the README (maybe add the table from the paper?)
         -In fact, I think the table from the paper is kind of outdated... should we relaunch everything?
