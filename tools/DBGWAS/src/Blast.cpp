@@ -249,7 +249,7 @@ string AnnotationRecord::getJSRepresentationNodeId2AnnotationsEvalueForGraphPage
     ss << "'n" << nodeId2AnnotationsIt.first << "': [";
 
     for (const auto &annotationEvalue : nodeId2AnnotationsIt.second.annotation2Evalue)
-      ss << "[" << annotationEvalue.first << ", " << annotationEvalue.second << "]";
+      ss << "[" << annotationEvalue.first << ", " << annotationEvalue.second << "], ";
 
     ss << "], ";
   }
