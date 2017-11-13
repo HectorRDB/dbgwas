@@ -35,9 +35,11 @@ For reproducibility reasons, in the following you have easily the input data, an
 # Downloading, installing and running
 ## Downloading the precompiled binaries
 This is the easiest way to run the tool since it is already precompiled for Linux AMD64 machines.
-Download the latest binary here (v0.4.4): https://www.dropbox.com/s/ncf6ef4pwyzzuog/DBGWAS-0.4.4-Linux-precompiled.tar.gz?dl=1
+Download the latest binary here (v0.4.5): https://www.dropbox.com/s/3yow59j0f5onnb7/DBGWAS-0.4.5-Linux-precompiled.tar.gz?dl=1
 
 Pre-compiled versions history:
+
+DBGWAS v0.4.4: https://www.dropbox.com/s/ncf6ef4pwyzzuog/DBGWAS-0.4.4-Linux-precompiled.tar.gz?dl=1
 
 DBGWAS v0.4.3: https://www.dropbox.com/s/6b7toss7h4ql6vi/DBGWAS-0.4.3-Linux.tar.gz?dl=1
 
@@ -139,6 +141,40 @@ do.lineage=FALSE.
 Scaling on new datasets will essentially depend on the number of
 strains and the number of unique presence/absence patterns obtained
 across unitigs, i.e., on the genetic variability in the dataset.
+
+# Customizing annotation databases
+
+You can customize annotation databases to work better with DBGWAS. For example, consider this Fasta line in the UniProt database of bacterial proteins:
+```
+>sp|P27431|ROXA_ECOLI 50S ribosomal protein L16 3-hydroxylase OS=Escherichia coli (strain K12) GN=roxA PE=1 SV=2
+MEYQLTLNWPDFLERHWQKRPVVLKRGFNNFIDPISPDELAGLAMESEVDSRLVSHQDGK
+WQVSHGPFESYDHLGETNWSLLVQAVNHWHEPTAALMRPFRELPDWRIDDLMISFSVPGG
+GVGPHLDQYDVFIIQGTGRRRWRVGEKLQMKQHCPHPDLLQVDPFEAIIDEELEPGDILY
+```
+If DBGWAS finds a hit to this line, it will consider the full header as its identifier, which can be too long to be shown, making the visualisation cumbersome.
+
+If you wish to give new IDs to existing registries without changing much the database, in order to make the visualisation better, and maybe to group several annotations into one single ID, you can add two tags to the headers of the database in the following format:
+```
+DBGWAS_index_tag=<value>;
+DBGWAS_graph_tag=<value>;
+```
+
+```DBGWAS_index_tag``` will be the value shown for this annotation in the summary page and ```DBGWAS_graph_tag``` will be the value shown for this annotation in the graph page. For example, if we add both tags to our previous example (scroll to the right to see the tags):
+```
+>sp|P27431|ROXA_ECOLI 50S ribosomal protein L16 3-hydroxylase OS=Escherichia coli (strain K12) GN=roxA PE=1 SV=2;DBGWAS_index_tag=ROXA;DBGWAS_graph_tag=[uniprot] 50S ribosomal protein L16 3-hydroxylase (Escherichia coli)
+MEYQLTLNWPDFLERHWQKRPVVLKRGFNNFIDPISPDELAGLAMESEVDSRLVSHQDGK
+WQVSHGPFESYDHLGETNWSLLVQAVNHWHEPTAALMRPFRELPDWRIDDLMISFSVPGG
+GVGPHLDQYDVFIIQGTGRRRWRVGEKLQMKQHCPHPDLLQVDPFEAIIDEELEPGDILY
+```
+
+This is what we get in the summary page:
+
+![alt text](figures/SummaryPage.png "Summary page")
+
+And this is what we get in the graph page:
+
+![alt text](figures/GraphPage.png "Graph page")
+
 
 # Thirdparties
 DBGWAS makes use of several thirdparty libraries:

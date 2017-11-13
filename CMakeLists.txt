@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 2.6)
 ################################################################################
 SET (gatb-tool_VERSION_MAJOR 0)
 SET (gatb-tool_VERSION_MINOR 4)
-SET (gatb-tool_VERSION_PATCH 4)
+SET (gatb-tool_VERSION_PATCH 5)
 
 #write the version number
 file(WRITE ${PROJECT_SOURCE_DIR}/tools/DBGWAS/src/version.h "\#define VERSION \"${gatb-tool_VERSION_MAJOR}.${gatb-tool_VERSION_MINOR}.${gatb-tool_VERSION_PATCH}\"")
@@ -36,9 +36,7 @@ SET (CMAKE_MODULE_PATH ${GATB_CORE_HOME}/cmake)
 ################################################################################
 
 # One can uncomment this line and set the wanted values
-# TODO: set up to 256 for the final release?
-#set (KSIZE_LIST "32   64   96  128  160  192  224  256")
-set (KSIZE_LIST "32   64   96  128")
+set (KSIZE_LIST "32   64   96  128  160  192  224  256")
 
 ################################################################################
 # THIRD PARTIES

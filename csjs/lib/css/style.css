@@ -147,6 +147,12 @@ select {
     width: 230px;
 }
 
+.nodeAnnotationTable{
+  width: 380px;
+  height: 300px;
+  overflow:   hidden;
+}
+
 /*
 * DIVS LAYOUT DEFINITIONS
 */

@@ -39,6 +39,10 @@ RenderUrlToFile = function(url, outFile) {
       width: 2560,
       height: 1600
   };
+  page.onError = function() {
+    console.log("Error on the webpage!");
+    phantom.exit(1);
+  }
   page.onCallback = function() {
       //get the bounding box of the cy element
       var bb = page.evaluate(function () { 

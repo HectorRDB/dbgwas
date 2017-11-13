@@ -59,18 +59,28 @@ generate_output::generate_output ()  : Tool ("generate_output") //give a name to
 
 void generate_output::createIndexFile(int numberOfComponents, const string &visualisationsFolder, const string &step2OutputFolder, const vector<vector<MyVertex> > &nodesInComponent, graph_t& newGraph,
                      map<int, AnnotationRecord > &idComponent2Annotations, const vector<const PatternFromStats*> &unitigToPatternStats,
-                     const vector<int> &selectedUnitigs) {
+                     const vector<int> &selectedUnitigs, int nbCores) {
   cerr << "[Creating index file...]" << endl;
-  //create the thumbnails
-  for (int i=0;i<numberOfComponents;i++) {
-    string HTMLFile(boost::filesystem::canonical(visualisationsFolder+"/components/comp_"+std::to_string(i)+".html").string());
-    string PNGFile = HTMLFile+".png";
-    cerr << "[Rendering thumbnail for component " << i << "...]" << endl;
-    stringstream commandSS;
-    commandSS << dirWhereDBGWASIsInstalled << DBGWAS_lib << "/phantomjs " << dirWhereDBGWASIsInstalled << DBGWAS_lib << "/render_graph.js " << HTMLFile << " " << PNGFile;
-    executeCommand(commandSS.str(), false);
-    cerr << "[Rendering thumbnail for component " << i << "...] - Done!" << endl;
-  }
+
+  //create the thumbnails in a multi-threaded way
+  // We create an iterator over an integer range
+  Range<int>::Iterator rangeOfComponentsIt(0, numberOfComponents - 1);
+
+  // We create a dispatcher configured for 'nbCores' cores.
+  Dispatcher dispatcher(nbCores, 1);
+
+  // We iterate the range
+  cerr << "[Rendering thumbnails...]" << endl;
+  dispatcher.iterate(rangeOfComponentsIt, [&](int i) {
+      string HTMLFile(boost::filesystem::canonical(visualisationsFolder+"/components/comp_"+std::to_string(i)+".html").string());
+      string PNGFile = HTMLFile+".png";
+      stringstream commandSS;
+      commandSS << dirWhereDBGWASIsInstalled << DBGWAS_lib << "/phantomjs " << dirWhereDBGWASIsInstalled << DBGWAS_lib << "/render_graph.js " << HTMLFile << " " << PNGFile;
+      executeCommand(commandSS.str(), false);
+  });
+  cerr << "[Rendering thumbnails...] - Done!" << endl;
+
+
 
   //create the index
   //create the object previews for each component
@@ -86,7 +96,7 @@ void generate_output::createIndexFile(int numberOfComponents, const string &visu
 
   for (int i=0;i<numberOfComponents;i++) {
     string idString = std::to_string(i);
-    string annotationsSQL=idComponent2Annotations[i].getSQLRepresentation();
+    string annotationsSQL=idComponent2Annotations[i].getSQLRepresentationForIndexPage();
 
     //compute the number of nodes in this component and the number of significant nodes
     int nbNodes = nodesInComponent[i].size();
@@ -120,7 +130,7 @@ void generate_output::createIndexFile(int numberOfComponents, const string &visu
     }
     boost::replace_all(thisPreview, "<q-value>", lowestQValueAsStr);
 
-    string annotationsForHOT=idComponent2Annotations[i].getAnnotationsForHOT(i);
+    string annotationsForHOT=idComponent2Annotations[i].getAnnotationsForHOTForIndexPage(i);
 
     //add this preview to all previews
     previews.push_back(ObjectPreview(i, lowestQValue, annotationsSQL, thisPreview, annotationsForHOT));
@@ -182,7 +192,7 @@ void generate_output::createIndexFile(int numberOfComponents, const string &visu
     set<string> allTags;
     allTags.insert("No annotations found");
     for (const auto &idComponent2AnnotationsPair : idComponent2Annotations) {
-      auto tagsOfThisComponent = idComponent2AnnotationsPair.second.getAllAnnotationsNames();
+      auto tagsOfThisComponent = idComponent2AnnotationsPair.second.getAnnotationIndexAsSet();
       allTags.insert(tagsOfThisComponent.begin(), tagsOfThisComponent.end());
     }
 
@@ -320,21 +330,13 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
     for (const auto &node : nodes) {
       verticesInThisComponent.insert(node);
 
-      string tagsString;
-      {
-        stringstream ss;
-        for (const auto &tag : annotationsOfThisComponent.getAllAnnotationsNamesFromANode(graph[node].id))
-          ss << "'" << tag << "', ";
-        tagsString = ss.str();
-      }
-
       //print the node with the full data
       elementsSS << "{data: {id: 'n" << graph[node].id << "'" <<
       ", name: '" << graph[node].name << "'" <<
       ", sequenceLength: '" << graph[node].name.length() << "'" <<
       ", info: '" << graph[node].id << "'" <<
       ", total: '" << graph[node].phenoCounter.getTotal() << "'" <<
-      ", tags: [" << tagsString << "]" <<
+      ", tags: " << annotationsOfThisComponent.getAllAnnotationsIDsFromANodeAsJSVector(graph[node].id) <<
       ", pheno0: '" << graph[node].phenoCounter.getPheno0() << "/" << nbPheno0 << "'" <<
       ", pheno1: '" << graph[node].phenoCounter.getPheno1() << "/" << nbPheno1 << "'" <<
       ", NA: '" << graph[node].phenoCounter.getNA() << "'" <<
@@ -384,8 +386,14 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
   //put the graph in the template file
   boost::replace_all(cytoscapeOutput, "<elementsTag>", elements);
 
+  //put the annotation names in the template file
+  boost::replace_all(cytoscapeOutput, "<allAnnotationsTag>", annotationsOfThisComponent.getAnnotationIndexAsJSVector());
+
   //put the annotation info into the template file
-  boost::replace_all(cytoscapeOutput, "<componentAnnotationTag>", annotationsOfThisComponent.getHTMLRepresentationForGraphPage());
+  boost::replace_all(cytoscapeOutput, "<componentAnnotationTag>", annotationsOfThisComponent.getJSRepresentationAnnotIdNbNodesEvalueForGraphPage());
+
+  //put the node2AnnotationEvalue info into the template file
+  boost::replace_all(cytoscapeOutput, "<node2AnnotationEvalueTag>", annotationsOfThisComponent.getJSRepresentationNodeId2AnnotationsEvalueForGraphPage());
 
   //output the file
   string outfilename;
@@ -650,7 +658,7 @@ void generate_output::execute () {
 
   //create the index
   createIndexFile(numberOfComponents, visualisationsFolder, step2OutputFolder, nodesInComponent, newGraph,
-                  idComponent2Annotations, unitigToPatternStats, selectedUnitigs);
+                  idComponent2Annotations, unitigToPatternStats, selectedUnitigs, nbCores);
 
   //clean-up - saving some disk space
   //remove temp directory

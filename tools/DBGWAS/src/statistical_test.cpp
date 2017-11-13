@@ -58,8 +58,11 @@ void statistical_test::execute () {
   fs::path step1OutputFolder=fs::absolute(step1OutputFolderRelative);
 
   //get the newick path
-  fs::path newickPathRelative(getInput()->getStr(STR_NEWICK_PATH));
-  fs::path newickPath=fs::absolute(newickPathRelative);
+  fs::path newickPath;
+  if (hasNewickFile) {
+    fs::path newickPathRelative(getInput()->getStr(STR_NEWICK_PATH));
+    newickPath=fs::absolute(newickPathRelative);
+  }
 
   //create the command line
   stringstream ssCommand;

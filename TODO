@@ -2,27 +2,22 @@
 Prioritaire
 ---------------------------------------------------------------------------------------------------------------------------------------------
 To check:
-Thirdparty licenses
+    -Fixed -help messages
+    -Added how to customize databases in the readme and help messages
+    -Thirdparty licenses
+        -Can we indeed redistribute all these executable with DBGWAS?
 
 Paper TODO:
-TODO v0.4.5:
--Core
-    -Put a time limit for phantom js (or how to know when it bugged?)
-        -Sometimes it can take a lot of time... knowing if it bugged is better
-        -http://phantomjs.org/api/phantom/handler/on-error.html
-    -Make the step 3 fully multi-threaded
-        -Phantom.js takes a bunch of time and could be easily parallelized
--Summary
-    -Add a different mouse icon when the mouse is over the preview
--Component page
-  -Update Help
-  -In the pop-up annotation from the table, show the annotations of the node, together with nb of nodes and e-value (the handson table itself)
-    -order by e-value
--Other questions:
--Bug solving on the performance test... can we relaunch everything?
--Update supplMaterials.pdf (4 Supplermenary Method, Part II)
--Compile kmer-size up to 256 for the final release?
--Deadline 20th november - final version
+-Code
+    -Fix copy and paste of cells containing annotation;
+    -Fix cytoscape export button regarding annotation table
+-README
+    -Update Memory and CPU requirements section in the README (maybe add the table from the paper?)
+        -In fact, I think the table from the paper is kind of outdated... should we relaunch everything?
+-Paper
+    -Update supplMaterials.pdf (4 Supplermenary Method, Part II)
+    -@see https://mail.google.com/mail/u/0/#inbox/15f9c647ececdc5e?compose=15fb5578f7bd95f7
+
 
 
 
@@ -84,6 +79,7 @@ Low priority TODO:
     -To view the MSA, there are several JS plugins
         -http://msa.biojs.net/
     -Or do we need to implement MSA ourselves in javascript or run a local web server which will provide a way of calling a proper program to do this
+  -Make the step 3 fully multi-threaded
   -Transparency switch
     -Non-significant nodes lose transparency
   -Assemble the heaviest path of the DBG and blast it (or the path going through the largest number of significant unitigs)
@@ -106,6 +102,28 @@ Low priority TODO:
 ---------------------------------------------------------------------------------------------------------------------------------------------
 Previous changelogs
 ---------------------------------------------------------------------------------------------------------------------------------------------
+Done v0.4.5:
+-Core
+    -Fixed -help messages
+    -Added how to customize databases in the readme and help messages
+    -Added a better error handling in phantomjs in case of problems with javascript
+    -Rendering of the thumbnails now are fully multithreaded
+    -Fixed a bug in step2 when no newick file is provided
+    -Kmer-size can now go up to 256
+-Index page
+    -Added a different mouse icon when the mouse is over the preview
+-Graph page
+    -Added the zoom-in feature when selecting all nodes or the significant nodes only
+    -Increased the height of the annotation table when opening the graph from 13% of the screen to 15%
+        -Better for smaller screens
+    -Refactored the way that the annotation is shown in the graph page, reducing the size of the files and allowing to get the annotation + e-value per node
+    -The annotation of each node is now shown in a pop-up menu as a spreadsheet table, ordered by E-value
+    -Updated Help
+
+
+
+
+
 Done v0.4.4:
 -Core
     -Fixed output folder from being fixed to being a parameter (-output)

@@ -123,12 +123,12 @@ function rgbToHex(r, g, b) {
 //************************************************************
 //FUNCTIONS OF THE CONTEXT MENU
 function selectAllNodes() {
-    cy.nodes().select();
+    selectNodesAndDoANiceZoom(cy.nodes())
 };
 
 function selectSignificantNodes() {
     cy.nodes().unselect();
-    cy.nodes('node[significant = "Yes"]').select();
+    selectNodesAndDoANiceZoom(cy.nodes('node[significant = "Yes"]'));
 }
 
 function unselectAllNodes() {
@@ -302,10 +302,9 @@ function makeFile (text, file, fileType) {
 
 
 //************************************************************
-//FUNCTIONS FOR RENDERING LARGE COLUMNS ON THE HANDSONTABLE
-function showFullString (event, title, longString) {
+//FUNCTIONS FOR CUSTOM RENDERING ON HANDSONTABLE
+function showFullString (event, longString) {
     $("<div>").html("<textarea class=\"code\" rows=\"10\" style=\"width: 100%\" readonly>"+ longString + "</textarea>").dialog({
-        title: title,
         position: {my: "left top", at: "left bottom", of: event.srcElement},
         close: function() {
             $(this).dialog('destroy').remove();
@@ -313,16 +312,99 @@ function showFullString (event, title, longString) {
     })
 }
 
+function fromLongToShortString(longString) {
+  if (longString.length>maxLengthColumnRenderer) {
+      //modify it
+      longString = longString.substring(0, maxLengthColumnRenderer) + "<span>...<img class=\"font_size_images\" src=\""+ pathToLib + "resources/enlarge.png\" onclick=\"showFullString(event, '"+ longString.replace(/'/g, "\\'") +"')\"/></span>"
+  }
+  return longString;
+}
+
 function longColumnRenderer (instance, td, row, col, prop, value, cellProperties) {
     var longString = Handsontable.helper.stringify(value);
+    td.innerHTML = fromLongToShortString(longString);
+    return td;
+}
 
-    if (longString.length>maxLengthColumnRenderer) {
-        //modify it
-        longString = longString.substring(0, maxLengthColumnRenderer) + "<span>...<img class=\"font_size_images\" src=\""+ pathToLib + "resources/enlarge.png\" onclick=\"showFullString(event, '" + instance.getColHeader(col) + "', '"+ longString.replace(/'/g, "\\'") +"')\"/></span>"
-    }
+function showAnnotationTableOfNode (event, title, nodeId) {
+    //populate the table for the graph annotation
+    var annotationTableSettings = {
+        data: node2AnnotationEvalue[nodeId],
+        columns: [
+            {renderer: longAnnotationId2StringRenderer},
+            {type: 'text'}
+        ],
+        colHeaders: [
+            'Annotation',
+            'E-value'
+        ],
+        colWidths: [250, 100],
+        copyColsLimit: 1000000,
+        copyRowsLimitNumber: 1000000,
+        readOnly: true,
+        wordWrap: false,
+        allowInsertColumn: false,
+        allowInsertRow: false,
+        allowRemoveColumn: false,
+        allowRemoveRow: false,
+        autoColumnSize: {useHeaders: true},
+        autoWrapCol: true,
+        autoWrapRow: true,
+        manualColumnResize: true,
+        columnSorting: true,
+        sortIndicator: true
+    };
+    $("<div>").html("<div class=\"nodeAnnotationTable\" id=\"nodeAnnotationDiv_"+nodeId+"\"></div>").dialog({
+        title: title,
+        width: 400,
+        position: {my: "left top", at: "left bottom", of: event.srcElement},
+        close: function() {
+            $(this).dialog('destroy').remove();
+        }
 
+    })
+    var annotationTableContainer = document.getElementById("nodeAnnotationDiv_"+nodeId);
+    var nodeAnnotationTable = new Handsontable(annotationTableContainer, annotationTableSettings);
+    nodeAnnotationTable.sort(1, true);
+}
 
-    td.innerHTML = longString;
+function nodeAnnotationRenderer (instance, td, row, col, prop, value, cellProperties) {
+    var IDsAsString = Handsontable.helper.stringify(value);
+    var annotation = "";
+    var nodeId = instance.getDataAtRow(row)[0]
+
+    if (IDsAsString != "") {
+      var IDsAsArray = IDsAsString.split(',')
+      
+      IDsAsArray.forEach(function(id){
+        annotation+=allAnnotations[id] + ","
+      });
+
+      var annotationTooLong=false
+      if (annotation.length>maxLengthColumnRenderer) {
+          //modify it
+          annotation = annotation.substring(0, maxLengthColumnRenderer)
+          annotationTooLong=true
+      }
+      annotation += "<span>" + (annotationTooLong ? "..." : "   ") +
+          "<img class=\"font_size_images\" src=\""+ pathToLib + "resources/enlarge.png\" onclick=\"showAnnotationTableOfNode(event, '" + instance.getColHeader(col) + "', '" + nodeId + "')\"/></span>"
+  }
+
+    td.innerHTML = annotation;
+    return td;
+}
+
+function annotationId2StringRenderer (instance, td, row, col, prop, value, cellProperties) {
+    td.innerHTML = allAnnotations[value];
+    return td;
+}
+
+function longAnnotationId2StringRenderer (instance, td, row, col, prop, value, cellProperties) {
+    //TODO: this is ugly but...
+    var oldmaxLengthColumnRenderer = maxLengthColumnRenderer;
+    maxLengthColumnRenderer = 25
+    td.innerHTML = fromLongToShortString(allAnnotations[value]);
+    maxLengthColumnRenderer = oldmaxLengthColumnRenderer
     return td;
 }
 //FUNCTIONS FOR RENDERING LARGE COLLUMNS ON THE HANDSONTABLE
@@ -361,19 +443,32 @@ function createInstructionsDialog() {
     <ul>\
         <li>Navigation</li>\
         <ul>\
-            <li>-Click and drag to move the screen;</li>\
-            <li>-Click and drag a node to move it;</li>\
+            <li>Click and drag to move the screen;</li>\
+            <li>Click and drag a node to move it;</li>\
             <li>Use mouse wheel to zoom;</li>\
             <li>You can also use the navigation panel in the up left to navigate;</li>\
         </ul>\
         <li>Selecting a node</li>\
         <ul>      \
-            <li>Press on a node to select it</li>\
-            <li>Selecting a node will add it to the Node table in the bottom of the screen</li>\
-            <li>To make a selection box, hold Ctrl and draw the box</li>\
+            <li>Press on a node to select it;</li>\
+            <li>Selecting a node will add it to the Node table in the bottom of the screen;</li>\
+            <li>To make a selection box, hold Ctrl and draw the box;</li>\
             <li>You can easily select and unselect all nodes by right-clicking anywhere in the graph;</li>\
-            <li>Press on a selected node to unselect it</li>\
-            <li>Press anywhere in the graph to unselect all nodes</li>\
+            <li>Press on a selected node to unselect it;</li>\
+            <li>Press anywhere in the graph to unselect all nodes;</li>\
+            <li>Right click anywhere in the graph will allow you to select all nodes, only the significant ones, unselect all nodes, etc;</li>\
+        </ul>\
+        <li>Working with the spreadsheet tables</li>\
+        <ul>      \
+            <li>There are two spreadsheet tables: the annotation table on the top of the screen and the node table on the bottom of the screen;</li>\
+            <li>You can sort the values of these tables by a specific header by clicking on that header;</li>\
+            <li>You can also copy the values of each cell in the table;</li>\
+            <li>You can right-click the lines of a table to check what else you can do;</li>\
+        </ul>\
+        <li>Panel management</li>\
+        <ul>\
+            <li>We have four panels in the visualisation: north (annotation table), east (information menu), south (node table) and center (the graph);</li>\
+            <li>Each panel can be resized or totally compressed to make space for other panels;</li>\
         </ul>\
     </ul>").
     dialog({
