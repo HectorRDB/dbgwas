@@ -21,7 +21,11 @@ TODO v0.4.5:
     -Better for smaller screens
   ?-Refactored the way that the annotation is shown in the graph page, reducing the size of the files and allowing to get the annotation + e-value per node
   ?-The annotation of each node is now shown in a pop-up menu as a spreadsheet table, ordered by E-value
-  -Updated Help
+  -Fixed cytoscape export button
+  ?-Updated Help
+
+
+Fix ctlr c e v e cytoscape export button
 
 
 

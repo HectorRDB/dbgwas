@@ -443,19 +443,32 @@ function createInstructionsDialog() {
     <ul>\
         <li>Navigation</li>\
         <ul>\
-            <li>-Click and drag to move the screen;</li>\
-            <li>-Click and drag a node to move it;</li>\
+            <li>Click and drag to move the screen;</li>\
+            <li>Click and drag a node to move it;</li>\
             <li>Use mouse wheel to zoom;</li>\
             <li>You can also use the navigation panel in the up left to navigate;</li>\
         </ul>\
         <li>Selecting a node</li>\
         <ul>      \
-            <li>Press on a node to select it</li>\
-            <li>Selecting a node will add it to the Node table in the bottom of the screen</li>\
-            <li>To make a selection box, hold Ctrl and draw the box</li>\
+            <li>Press on a node to select it;</li>\
+            <li>Selecting a node will add it to the Node table in the bottom of the screen;</li>\
+            <li>To make a selection box, hold Ctrl and draw the box;</li>\
             <li>You can easily select and unselect all nodes by right-clicking anywhere in the graph;</li>\
-            <li>Press on a selected node to unselect it</li>\
-            <li>Press anywhere in the graph to unselect all nodes</li>\
+            <li>Press on a selected node to unselect it;</li>\
+            <li>Press anywhere in the graph to unselect all nodes;</li>\
+            <li>Right click anywhere in the graph will allow you to select all nodes, only the significant ones, unselect all nodes, etc;</li>\
+        </ul>\
+        <li>Working with the spreadsheet tables</li>\
+        <ul>      \
+            <li>There are two spreadsheet tables: the annotation table on the top of the screen and the node table on the bottom of the screen;</li>\
+            <li>You can sort the values of these tables by a specific header by clicking on that header;</li>\
+            <li>You can also copy the values of each cell in the table;</li>\
+            <li>You can right-click the lines of a table to check what else you can do;</li>\
+        </ul>\
+        <li>Panel management</li>\
+        <ul>\
+            <li>We have four panels in the visualisation: north (annotation table), east (information menu), south (node table) and center (the graph);</li>\
+            <li>Each panel can be resized or totally compressed to make space for other panels;</li>\
         </ul>\
     </ul>").
     dialog({
