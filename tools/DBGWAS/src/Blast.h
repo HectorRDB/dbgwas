@@ -104,6 +104,9 @@ public:
 
     //get all the annotations IDs from a node as JS vector
     string getAllAnnotationsIDsFromANodeAsJSVector(int node);
+
+    //get a dictionary in JS where the key is the node id and the value is a pair annotation and evalue
+    string getJSRepresentationNodeId2AnnotationsEvalueForGraphPage() const;
 };
 
 

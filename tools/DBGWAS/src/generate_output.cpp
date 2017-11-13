@@ -392,6 +392,9 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
   //put the annotation info into the template file
   boost::replace_all(cytoscapeOutput, "<componentAnnotationTag>", annotationsOfThisComponent.getJSRepresentationAnnotIdNbNodesEvalueForGraphPage());
 
+  //put the node2AnnotationEvalue info into the template file
+  boost::replace_all(cytoscapeOutput, "<node2AnnotationEvalueTag>", annotationsOfThisComponent.getJSRepresentationNodeId2AnnotationsEvalueForGraphPage());
+
   //output the file
   string outfilename;
   {

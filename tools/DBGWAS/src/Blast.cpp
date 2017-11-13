@@ -71,7 +71,7 @@ vector<BlastRecord> Blast::blast (const string &command, const string &queryPath
   stringstream ss;
   ss << dirWhereDBGWASIsInstalled << DBGWAS_lib << "/" << command << " -query " << queryPath << " -db " << dbPath << " -out " << outFilePath << " -num_threads " << nbCores << " -outfmt '6 qseqid sseqid qcovs bitscore pident evalue'";
   string commandLine=ss.str();
-  executeCommand(commandLine);
+  executeCommand(commandLine, false);
 
   //read output
   vector<BlastRecord> records;
@@ -237,3 +237,24 @@ string AnnotationRecord::getAllAnnotationsIDsFromANodeAsJSVector(int node) {
   ss << "]";
   return ss.str();
 }
+
+//get a dictionary in JS where the key is the node id and the value is a pair annotation and evalue
+string AnnotationRecord::getJSRepresentationNodeId2AnnotationsEvalueForGraphPage() const {
+  stringstream ss;
+  ss << scientific;
+
+  ss << "{";
+
+  for (const auto &nodeId2AnnotationsIt : nodeId2Annotations) {
+    ss << "'n" << nodeId2AnnotationsIt.first << "': [";
+
+    for (const auto &annotationEvalue : nodeId2AnnotationsIt.second.annotation2Evalue)
+      ss << "['" << annotationEvalue.first << "', " << annotationEvalue.second << "]";
+
+    ss << "]";
+  }
+
+  ss << "}";
+
+  return ss.str();
+};
