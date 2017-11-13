@@ -449,7 +449,6 @@ void GetSignificantPatterns::operator()(double &qValue) const
 string getDirWhereDBGWASIsInstalled() {
   char* path = NULL;
   int length, dirname_length;
-  int i;
   string toReturn;
 
   length = wai_getExecutablePath(NULL, 0, &dirname_length);
