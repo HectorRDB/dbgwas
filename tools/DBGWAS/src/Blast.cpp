@@ -200,7 +200,7 @@ string AnnotationRecord::getAnnotationIndexAsJSVector() const {
   stringstream ss;
   ss << "[";
   for (const auto & annotation : annotationIndex)
-    ss << annotation << ", ";
+    ss << "'" << annotation << "', ";
   ss << "]";
   return ss.str();
 }

@@ -20,8 +20,7 @@ TODO v0.4.5:
   ?-Increased the height of the annotation table when opening the graph from 13% of the screen to 15%
     -Better for smaller screens
   -Updated Help
-  -In the pop-up annotation from the table, show the annotations of the node, together with nb of nodes and e-value (the handson table itself)
-    -order by e-value
+  -The annotation of each node is now shown in the pop-up menu as a spreadsheet table, ordered by E-value
 
 
 
