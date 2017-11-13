@@ -2,17 +2,22 @@
 Prioritaire
 ---------------------------------------------------------------------------------------------------------------------------------------------
 To check:
-Thirdparty licenses
-Update Memory and CPU requirements section in the README (maybe add the table from the paper?)
+    -Fixed -help messages
+    -Added how to customize databases in the readme and help messages
+    -Thirdparty licenses
+        -Can we indeed redistribute all these executable with DBGWAS?
 
 Paper TODO:
--Fix copy and paste of cells containing annotation;
--Fix cytoscape export button regarding annotation table
+-Code
+    -Fix copy and paste of cells containing annotation;
+    -Fix cytoscape export button regarding annotation table
+-README
+    -Update Memory and CPU requirements section in the README (maybe add the table from the paper?)
+        -In fact, I think the table from the paper is kind of outdated... should we relaunch everything?
+-Paper
+    -Update supplMaterials.pdf (4 Supplermenary Method, Part II)
+    -@see https://mail.google.com/mail/u/0/#inbox/15f9c647ececdc5e?compose=15fb5578f7bd95f7
 
--Other questions:
--Bug solving on the performance test... can we relaunch everything?
--Update supplMaterials.pdf (4 Supplermenary Method, Part II)
--Deadline 20th november - final version
 
 
 
@@ -100,7 +105,7 @@ Previous changelogs
 Done v0.4.5:
 -Core
     -Fixed -help messages
-    -Added how to customize databases in the readme and help messages (please check)
+    -Added how to customize databases in the readme and help messages
     -Added a better error handling in phantomjs in case of problems with javascript
     -Rendering of the thumbnails now are fully multithreaded
     -Fixed a bug in step2 when no newick file is provided
