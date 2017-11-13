@@ -190,7 +190,7 @@ string AnnotationRecord::getJSRepresentationAnnotIdNbNodesEvalueForGraphPage() c
   stringstream ss;
   ss << "[";
   for (const auto & indexAndSetOfNodesAndEvalue : annotations)
-    ss << "['" << indexAndSetOfNodesAndEvalue.first << "', " << indexAndSetOfNodesAndEvalue.second.getHTMLRepresentationForGraphPage() << "], ";
+    ss << "[" << indexAndSetOfNodesAndEvalue.first << ", " << indexAndSetOfNodesAndEvalue.second.getHTMLRepresentationForGraphPage() << "], ";
   ss << "]";
   return ss.str();
 }
