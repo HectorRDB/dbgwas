@@ -5,12 +5,6 @@ To check:
     -Added how to customize databases in the README
     -Thirdparty licenses
         -Can we indeed redistribute all these executable with DBGWAS?
-    -Run with the DBs without tags to check how it behaves
-
-v0.4.7:
-    -Fixed a small visual bug with long annotations
-    -Fixed a small visual bug when loading components for the first time in the index page
-    -Minor fix to the index style
 
 Paper TODO:
 -Code
@@ -107,6 +101,16 @@ Low priority TODO:
 ---------------------------------------------------------------------------------------------------------------------------------------------
 Previous changelogs
 ---------------------------------------------------------------------------------------------------------------------------------------------
+Done v0.4.7:
+Bugfixes:
+    -Fixed a small visual bug with long annotations
+    -Fixed a small visual bug when loading components for the first time in the index page
+    -Minor fix to the index style
+
+
+
+
+
 Done v0.4.6:
 Bugfixes:
     -Fixed preview getting buggy if the machine is very busy;
