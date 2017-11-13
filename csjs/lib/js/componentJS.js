@@ -343,7 +343,8 @@ function buildPage(graphElements, allAnnotations, componentAnnotation, node2Anno
             $.unblockUI({
                 fadeOut: 0
             })
-            window.callPhantom(); //tells phantom we are ready
+            cy.forceRender();
+            window.callPhantom();
         })
 
         //run the layout
