@@ -99,7 +99,7 @@ string Blast::makeblastdb (const string &dbtype, const string &originalDBPath, c
     //TODO: I don't know why <(echo) is not allowed in the cat command, so we have to use this ugly thing...
     //create an empty file with only a newline
     string newlineFilepath = outputFolderPath + "/newline";
-    executeCommand(string("echo > ") + newlineFilepath);
+    executeCommand(string("echo > ") + newlineFilepath, false);
     //TODO: I don't know why <(echo) is not allowed in the cat command, so we have to use this ugly thing...
 
     string catCommand;
@@ -107,7 +107,7 @@ string Blast::makeblastdb (const string &dbtype, const string &originalDBPath, c
     ss << "cat " << originalDBPath << " > " << concatenatedDBPath;
     catCommand = ss.str();
     boost::replace_all(catCommand, ",", string(" ") + newlineFilepath + " ");
-    executeCommand(catCommand);
+    executeCommand(catCommand, false);
   }
 
   //replace spaces for underscores in the concatenated files, as this could create some problems...
@@ -115,7 +115,7 @@ string Blast::makeblastdb (const string &dbtype, const string &originalDBPath, c
   fixedDBPath += "_fixed";
   {
     string commandLineFixSpaces = string("tr ' ' '_' <") + concatenatedDBPath + " >" + fixedDBPath;
-    executeCommand(commandLineFixSpaces);
+    executeCommand(commandLineFixSpaces, false);
   }
 
   //create the DB using the fixed FASTA
