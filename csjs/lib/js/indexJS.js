@@ -78,7 +78,7 @@ function buildComponentPreview(idPreviewAnn, order) {
                 '#nodes',
                 'Evalue'
             ],
-            colWidths: [190, 70, 70],
+            colWidths: [230, 70, 70],
             copyColsLimit: 1000000,
             copyRowsLimitNumber: 1000000,
             readOnly: true,

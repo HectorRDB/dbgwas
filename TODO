@@ -7,6 +7,11 @@ To check:
         -Can we indeed redistribute all these executable with DBGWAS?
     -Run with the DBs without tags to check how it behaves
 
+v0.4.7:
+    -Fixed a small visual bug with long annotations
+    -Fixed a small visual bug when loading components for the first time in the index page
+    -Minor fix to the index style
+
 Paper TODO:
 -Code
     -Fix copy and paste of cells containing annotation;
