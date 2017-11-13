@@ -2,10 +2,10 @@
 Prioritaire
 ---------------------------------------------------------------------------------------------------------------------------------------------
 To check:
-    -Fixed -help messages
-    -Added how to customize databases in the readme and help messages
+    -Added how to customize databases in the README
     -Thirdparty licenses
         -Can we indeed redistribute all these executable with DBGWAS?
+    -Run with the DBs without tags to check how it behaves
 
 Paper TODO:
 -Code
@@ -102,6 +102,16 @@ Low priority TODO:
 ---------------------------------------------------------------------------------------------------------------------------------------------
 Previous changelogs
 ---------------------------------------------------------------------------------------------------------------------------------------------
+Done v0.4.6:
+Bugfixes:
+    -Fixed preview getting buggy if the machine is very busy;
+    -Fixed Firefox bug on modal positioning;
+    -Fixed minor bug with the node annotation table;
+
+
+
+
+
 Done v0.4.5:
 -Core
     -Fixed -help messages

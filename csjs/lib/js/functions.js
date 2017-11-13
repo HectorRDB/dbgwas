@@ -305,7 +305,7 @@ function makeFile (text, file, fileType) {
 //FUNCTIONS FOR CUSTOM RENDERING ON HANDSONTABLE
 function showFullString (event, longString) {
     $("<div>").html("<textarea class=\"code\" rows=\"10\" style=\"width: 100%\" readonly>"+ longString + "</textarea>").dialog({
-        position: {my: "left top", at: "left bottom", of: event.srcElement},
+        position: {my: "left top", at: "left bottom", of: event},
         close: function() {
             $(this).dialog('destroy').remove();
         }
@@ -354,16 +354,17 @@ function showAnnotationTableOfNode (event, title, nodeId) {
         columnSorting: true,
         sortIndicator: true
     };
-    $("<div>").html("<div class=\"nodeAnnotationTable\" id=\"nodeAnnotationDiv_"+nodeId+"\"></div>").dialog({
+    var randomId = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)
+    $("<div>").html("<div class=\"nodeAnnotationTable\" id=\"nodeAnnotationDiv_"+randomId+"\"></div>").dialog({
         title: title,
         width: 400,
-        position: {my: "left top", at: "left bottom", of: event.srcElement},
+        position: {my: "left top", at: "left bottom", of: event},
         close: function() {
             $(this).dialog('destroy').remove();
         }
 
     })
-    var annotationTableContainer = document.getElementById("nodeAnnotationDiv_"+nodeId);
+    var annotationTableContainer = document.getElementById("nodeAnnotationDiv_"+randomId);
     var nodeAnnotationTable = new Handsontable(annotationTableContainer, annotationTableSettings);
     nodeAnnotationTable.sort(1, true);
 }
