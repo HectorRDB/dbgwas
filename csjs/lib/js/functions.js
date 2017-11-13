@@ -302,7 +302,7 @@ function makeFile (text, file, fileType) {
 
 
 //************************************************************
-//FUNCTIONS FOR RENDERING LARGE COLUMNS ON THE HANDSONTABLE
+//FUNCTIONS FOR CUSTOM RENDERING ON HANDSONTABLE
 function showFullString (event, longString) {
     $("<div>").html("<textarea class=\"code\" rows=\"10\" style=\"width: 100%\" readonly>"+ longString + "</textarea>").dialog({
         position: {my: "left top", at: "left bottom", of: event.srcElement},
@@ -357,7 +357,6 @@ function showAnnotationTableOfNode (event, title, nodeId) {
     $("<div>").html("<div class=\"nodeAnnotationTable\" id=\"nodeAnnotationDiv_"+nodeId+"\"></div>").dialog({
         title: title,
         width: 400,
-        height: 300,
         position: {my: "left top", at: "left bottom", of: event.srcElement},
         close: function() {
             $(this).dialog('destroy').remove();
@@ -380,12 +379,15 @@ function nodeAnnotationRenderer (instance, td, row, col, prop, value, cellProper
       IDsAsArray.forEach(function(id){
         annotation+=allAnnotations[id] + ","
       });
-      
+
+      var annotationTooLong=false
       if (annotation.length>maxLengthColumnRenderer) {
           //modify it
           annotation = annotation.substring(0, maxLengthColumnRenderer)
+          annotationTooLong=true
       }
-      annotation += "<span>...<img class=\"font_size_images\" src=\""+ pathToLib + "resources/enlarge.png\" onclick=\"showAnnotationTableOfNode(event, '" + instance.getColHeader(col) + "', '" + nodeId + "')\"/></span>"
+      annotation += "<span>" + (annotationTooLong ? "..." : "   ") +
+          "<img class=\"font_size_images\" src=\""+ pathToLib + "resources/enlarge.png\" onclick=\"showAnnotationTableOfNode(event, '" + instance.getColHeader(col) + "', '" + nodeId + "')\"/></span>"
   }
 
     td.innerHTML = annotation;
@@ -398,7 +400,7 @@ function annotationId2StringRenderer (instance, td, row, col, prop, value, cellP
 }
 
 function longAnnotationId2StringRenderer (instance, td, row, col, prop, value, cellProperties) {
-    //this is ugly but...
+    //TODO: this is ugly but...
     var oldmaxLengthColumnRenderer = maxLengthColumnRenderer;
     maxLengthColumnRenderer = 25
     td.innerHTML = fromLongToShortString(allAnnotations[value]);

@@ -148,7 +148,9 @@ select {
 }
 
 .nodeAnnotationTable{
-  width: 400px;
+  width: 380px;
+  height: 300px;
+  overflow:   hidden;
 }
 
 /*

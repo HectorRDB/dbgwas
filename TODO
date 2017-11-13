@@ -19,8 +19,9 @@ TODO v0.4.5:
   ?-Added the zoom-in feature when selecting all nodes or the significant nodes only
   ?-Increased the height of the annotation table when opening the graph from 13% of the screen to 15%
     -Better for smaller screens
+  ?-Refactored the way that the annotation is shown in the graph page, reducing the size of the files and allowing to get the annotation + e-value per node
+  ?-The annotation of each node is now shown in a pop-up menu as a spreadsheet table, ordered by E-value
   -Updated Help
-  -The annotation of each node is now shown in the pop-up menu as a spreadsheet table, ordered by E-value
 
 
 
