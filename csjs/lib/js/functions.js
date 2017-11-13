@@ -338,7 +338,7 @@ function showAnnotationTableOfNode (event, title, nodeId) {
             'Annotation',
             'E-value'
         ],
-        colWidths: [250, 100],
+        colWidths: [300, 100],
         copyColsLimit: 1000000,
         copyRowsLimitNumber: 1000000,
         readOnly: true,
@@ -357,7 +357,7 @@ function showAnnotationTableOfNode (event, title, nodeId) {
     var randomId = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)
     $("<div>").html("<div class=\"nodeAnnotationTable\" id=\"nodeAnnotationDiv_"+randomId+"\"></div>").dialog({
         title: title,
-        width: 400,
+        width: 450,
         position: {my: "left top", at: "left bottom", of: event},
         close: function() {
             $(this).dialog('destroy').remove();
