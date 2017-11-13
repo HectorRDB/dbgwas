@@ -72,13 +72,11 @@ void generate_output::createIndexFile(int numberOfComponents, const string &visu
   // We iterate the range
   cerr << "[Rendering thumbnails...]" << endl;
   dispatcher.iterate(rangeOfComponentsIt, [&](int i) {
-      cerr << "Thumbnail " << i << " - START" << endl; //REMOVE ME - debug
       string HTMLFile(boost::filesystem::canonical(visualisationsFolder+"/components/comp_"+std::to_string(i)+".html").string());
       string PNGFile = HTMLFile+".png";
       stringstream commandSS;
       commandSS << dirWhereDBGWASIsInstalled << DBGWAS_lib << "/phantomjs " << dirWhereDBGWASIsInstalled << DBGWAS_lib << "/render_graph.js " << HTMLFile << " " << PNGFile;
       executeCommand(commandSS.str(), false);
-      cerr << "Thumbnail " << i << " - END" << endl; //REMOVE ME - debug
   });
   cerr << "[Rendering thumbnails...] - Done!" << endl;
 
