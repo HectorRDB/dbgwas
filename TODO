@@ -6,33 +6,12 @@ Thirdparty licenses
 Update Memory and CPU requirements section in the README (maybe add the table from the paper?)
 
 Paper TODO:
-TODO v0.4.5:
--Core
-    ?-Fixed -help messages
-    x-Added how to customize databases in the readme and help messages (please check)
-    x-Added a better error handling in phantomjs in case of problems with javascript
-    x-Rendering of the thumbnails now are fully multithreaded
-    x-Fixed a bug in step2 when no newick file is provided
--Index page
-    x-Added a different mouse icon when the mouse is over the preview
--Graph page
-  ?-Added the zoom-in feature when selecting all nodes or the significant nodes only
-  ?-Increased the height of the annotation table when opening the graph from 13% of the screen to 15%
-    -Better for smaller screens
-  ?-Refactored the way that the annotation is shown in the graph page, reducing the size of the files and allowing to get the annotation + e-value per node
-  ?-The annotation of each node is now shown in a pop-up menu as a spreadsheet table, ordered by E-value
-  -Fixed cytoscape export button
-  ?-Updated Help
-
-
-Fix ctlr c e v e cytoscape export button
-
-
+-Fix copy and paste of cells containing annotation;
+-Fix cytoscape export button regarding annotation table
 
 -Other questions:
 -Bug solving on the performance test... can we relaunch everything?
 -Update supplMaterials.pdf (4 Supplermenary Method, Part II)
--Compile kmer-size up to 256 for the final release?
 -Deadline 20th november - final version
 
 
@@ -118,6 +97,28 @@ Low priority TODO:
 ---------------------------------------------------------------------------------------------------------------------------------------------
 Previous changelogs
 ---------------------------------------------------------------------------------------------------------------------------------------------
+Done v0.4.5:
+-Core
+    -Fixed -help messages
+    -Added how to customize databases in the readme and help messages (please check)
+    -Added a better error handling in phantomjs in case of problems with javascript
+    -Rendering of the thumbnails now are fully multithreaded
+    -Fixed a bug in step2 when no newick file is provided
+    -Kmer-size can now go up to 256
+-Index page
+    -Added a different mouse icon when the mouse is over the preview
+-Graph page
+    -Added the zoom-in feature when selecting all nodes or the significant nodes only
+    -Increased the height of the annotation table when opening the graph from 13% of the screen to 15%
+        -Better for smaller screens
+    -Refactored the way that the annotation is shown in the graph page, reducing the size of the files and allowing to get the annotation + e-value per node
+    -The annotation of each node is now shown in a pop-up menu as a spreadsheet table, ordered by E-value
+    -Updated Help
+
+
+
+
+
 Done v0.4.4:
 -Core
     -Fixed output folder from being fixed to being a parameter (-output)

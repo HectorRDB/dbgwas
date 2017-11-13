@@ -36,9 +36,7 @@ SET (CMAKE_MODULE_PATH ${GATB_CORE_HOME}/cmake)
 ################################################################################
 
 # One can uncomment this line and set the wanted values
-# TODO: set up to 256 for the final release?
-#set (KSIZE_LIST "32   64   96  128  160  192  224  256")
-set (KSIZE_LIST "32   64   96  128")
+set (KSIZE_LIST "32   64   96  128  160  192  224  256")
 
 ################################################################################
 # THIRD PARTIES
