@@ -96,7 +96,7 @@ void generate_output::createIndexFile(int numberOfComponents, const string &visu
 
   for (int i=0;i<numberOfComponents;i++) {
     string idString = std::to_string(i);
-    string annotationsSQL=idComponent2Annotations[i].getSQLRepresentation();
+    string annotationsSQL=idComponent2Annotations[i].getSQLRepresentationForIndexPage();
 
     //compute the number of nodes in this component and the number of significant nodes
     int nbNodes = nodesInComponent[i].size();
@@ -130,7 +130,7 @@ void generate_output::createIndexFile(int numberOfComponents, const string &visu
     }
     boost::replace_all(thisPreview, "<q-value>", lowestQValueAsStr);
 
-    string annotationsForHOT=idComponent2Annotations[i].getAnnotationsForHOT(i);
+    string annotationsForHOT=idComponent2Annotations[i].getAnnotationsForHOTForIndexPage(i);
 
     //add this preview to all previews
     previews.push_back(ObjectPreview(i, lowestQValue, annotationsSQL, thisPreview, annotationsForHOT));
@@ -192,7 +192,7 @@ void generate_output::createIndexFile(int numberOfComponents, const string &visu
     set<string> allTags;
     allTags.insert("No annotations found");
     for (const auto &idComponent2AnnotationsPair : idComponent2Annotations) {
-      auto tagsOfThisComponent = idComponent2AnnotationsPair.second.getAllAnnotationsNames();
+      auto tagsOfThisComponent = idComponent2AnnotationsPair.second.getAnnotationIndexAsSet();
       allTags.insert(tagsOfThisComponent.begin(), tagsOfThisComponent.end());
     }
 
@@ -330,21 +330,13 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
     for (const auto &node : nodes) {
       verticesInThisComponent.insert(node);
 
-      string tagsString;
-      {
-        stringstream ss;
-        for (const auto &tag : annotationsOfThisComponent.getAllAnnotationsNamesFromANode(graph[node].id))
-          ss << "'" << tag << "', ";
-        tagsString = ss.str();
-      }
-
       //print the node with the full data
       elementsSS << "{data: {id: 'n" << graph[node].id << "'" <<
       ", name: '" << graph[node].name << "'" <<
       ", sequenceLength: '" << graph[node].name.length() << "'" <<
       ", info: '" << graph[node].id << "'" <<
       ", total: '" << graph[node].phenoCounter.getTotal() << "'" <<
-      ", tags: [" << tagsString << "]" <<
+      ", tags: " << annotationsOfThisComponent.getAllAnnotationsIDsFromANodeAsJSVector(graph[node].id) <<
       ", pheno0: '" << graph[node].phenoCounter.getPheno0() << "/" << nbPheno0 << "'" <<
       ", pheno1: '" << graph[node].phenoCounter.getPheno1() << "/" << nbPheno1 << "'" <<
       ", NA: '" << graph[node].phenoCounter.getNA() << "'" <<
@@ -394,8 +386,11 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
   //put the graph in the template file
   boost::replace_all(cytoscapeOutput, "<elementsTag>", elements);
 
+  //put the annotation names in the template file
+  boost::replace_all(cytoscapeOutput, "<allAnnotationsTag>", annotationsOfThisComponent.getAnnotationIndexAsJSVector());
+
   //put the annotation info into the template file
-  boost::replace_all(cytoscapeOutput, "<componentAnnotationTag>", annotationsOfThisComponent.getHTMLRepresentationForGraphPage());
+  boost::replace_all(cytoscapeOutput, "<componentAnnotationTag>", annotationsOfThisComponent.getJSRepresentationAnnotIdNbNodesEvalueForGraphPage());
 
   //output the file
   string outfilename;

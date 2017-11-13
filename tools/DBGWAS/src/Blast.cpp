@@ -134,23 +134,24 @@ void AnnotationRecord::SetOfNodesAndEvalue::addNode(int node, long double evalue
   minEvalue = min(minEvalue, evalue);
 }
 
-
-string AnnotationRecord::getSQLRepresentation() const {
+//get a representation of this annotation to be added to the SQL string in the index page
+string AnnotationRecord::getSQLRepresentationForIndexPage() const {
   stringstream ss;
   if (annotations.size()==0)
     ss << UNIQUE_SYMBOL_MARKER << "No annotations found" << UNIQUE_SYMBOL_MARKER << " ";
   else {
-    for (const auto & tagAndSetOfNodesAndEvalue : annotations)
-      ss << UNIQUE_SYMBOL_MARKER << tagAndSetOfNodesAndEvalue.first << UNIQUE_SYMBOL_MARKER << " ";
+    for (const auto & indexAndSetOfNodesAndEvalue : annotations)
+      ss << UNIQUE_SYMBOL_MARKER << annotationIndex[indexAndSetOfNodesAndEvalue.first] << UNIQUE_SYMBOL_MARKER << " ";
   }
   return ss.str();
 }
 
-string AnnotationRecord::getAnnotationsForHOT(int componentId) const {
+//get JS array representation of the annotation component for the index page
+string AnnotationRecord::getAnnotationsForHOTForIndexPage(int componentId) const {
   stringstream ss;
   ss << "[";
-  for (const auto & tagAndSetOfNodesAndEvalue : annotations)
-    ss << "['" << tagAndSetOfNodesAndEvalue.first << "', " << tagAndSetOfNodesAndEvalue.second.getHTMLRepresentationForIndexPage() << "], ";
+  for (const auto & indexAndSetOfNodesAndEvalue : annotations)
+    ss << "['" << annotationIndex[indexAndSetOfNodesAndEvalue.first] << "', " << indexAndSetOfNodesAndEvalue.second.getHTMLRepresentationForIndexPage() << "], ";
   ss << "]";
 
   return ss.str();
@@ -176,20 +177,30 @@ string AnnotationRecord::SetOfNodesAndEvalue::getHTMLRepresentationForIndexPage 
   return ss.str();
 }
 
-set<string> AnnotationRecord::getAllAnnotationsNames() const {
+set<string> AnnotationRecord::getAnnotationIndexAsSet() const {
   set<string> allAnnotationsNames;
-  for (const auto & tagAndSetOfNodesAndEvalue : annotations)
-    allAnnotationsNames.insert(tagAndSetOfNodesAndEvalue.first);
+  for (const auto & annotation : annotationIndex)
+    allAnnotationsNames.insert(annotation);
   return allAnnotationsNames;
 }
 
 
-//get an HTML representation of the annotation component for the graph page
-string AnnotationRecord::getHTMLRepresentationForGraphPage() const {
+//get a JS representation of the annotation component for the graph page, with the annotation index, nb of nodes and evalue
+string AnnotationRecord::getJSRepresentationAnnotIdNbNodesEvalueForGraphPage() const {
   stringstream ss;
   ss << "[";
-  for (const auto & tagAndSetOfNodesAndEvalue : annotations)
-    ss << "['" << tagAndSetOfNodesAndEvalue.first << "', " << tagAndSetOfNodesAndEvalue.second.getHTMLRepresentationForGraphPage() << "], ";
+  for (const auto & indexAndSetOfNodesAndEvalue : annotations)
+    ss << "['" << indexAndSetOfNodesAndEvalue.first << "', " << indexAndSetOfNodesAndEvalue.second.getHTMLRepresentationForGraphPage() << "], ";
+  ss << "]";
+  return ss.str();
+}
+
+//get all annotations names as a JS vector
+string AnnotationRecord::getAnnotationIndexAsJSVector() const {
+  stringstream ss;
+  ss << "[";
+  for (const auto & annotation : annotationIndex)
+    ss << annotation << ", ";
   ss << "]";
   return ss.str();
 }
@@ -197,6 +208,32 @@ string AnnotationRecord::getHTMLRepresentationForGraphPage() const {
 
 //add an annotation to this set
 void AnnotationRecord::addAnnotation(const string &tag, int node, long double evalue) {
-  annotations[tag].addNode(node, evalue);
-  nodeId2Annotation[node].insert(tag);
+  if (find(annotationIndex.begin(), annotationIndex.end(), tag) == annotationIndex.end())
+    //did not find the tag, push it
+    annotationIndex.push_back(tag);
+
+  //find the index
+  auto index = find(annotationIndex.begin(), annotationIndex.end(), tag)-annotationIndex.begin();
+
+  //add to annotations
+  annotations[index].addNode(node, evalue);
+  nodeId2Annotations[node].addAnnotation(index, evalue);
+}
+
+void AnnotationRecord::AnnotationsAndEvalue::addAnnotation(int annotation, long double evalue) {
+  if (annotation2Evalue.count(annotation)>0) //it is already present in the map
+    annotation2Evalue[annotation] = min(annotation2Evalue[annotation], evalue);
+  else
+    annotation2Evalue[annotation] = evalue;
+}
+
+
+//get all the annotations IDs from a node as JS vector
+string AnnotationRecord::getAllAnnotationsIDsFromANodeAsJSVector(int node) {
+  stringstream ss;
+  ss << "[";
+  for (const auto &annotationAndEvalue : nodeId2Annotations[node].annotation2Evalue)
+    ss << annotationAndEvalue.first << ", ";
+  ss << "]";
+  return ss.str();
 }

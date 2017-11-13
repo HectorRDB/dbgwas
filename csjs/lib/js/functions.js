@@ -325,6 +325,34 @@ function longColumnRenderer (instance, td, row, col, prop, value, cellProperties
     td.innerHTML = longString;
     return td;
 }
+
+function showAnnotationTableOfNode (event, title, longString) {
+    longStringArray = longString.split(",")
+    console.log(longStringArray)
+    $("<div>").html("<textarea class=\"code\" rows=\"10\" style=\"width: 100%\" readonly>"+ longString + "</textarea>").dialog({
+        title: title,
+        position: {my: "left top", at: "left bottom", of: event.srcElement},
+        close: function() {
+            $(this).dialog('destroy').remove();
+        }
+    })
+}
+
+function annotationRenderer (instance, td, row, col, prop, value, cellProperties) {
+    var longString = Handsontable.helper.stringify(value);
+
+    if (longString!="") {
+        if (longString.length>maxLengthColumnRenderer) {
+            //modify it
+            longString = longString.substring(0, maxLengthColumnRenderer)
+        }
+        longString += "<span>...<img class=\"font_size_images\" src=\""+ pathToLib + "resources/enlarge.png\" onclick=\"showAnnotationTableOfNode(event, '" + instance.getColHeader(col) + "', '"+ longString.replace(/'/g, "\\'") +"')\"/></span>"
+    }
+
+
+    td.innerHTML = longString;
+    return td;
+}
 //FUNCTIONS FOR RENDERING LARGE COLLUMNS ON THE HANDSONTABLE
 //************************************************************
 

@@ -359,7 +359,7 @@ function buildPage(graphElements, componentAnnotation)
                 //TODO: NA temporarily removed
                 //{type: 'text'},
                 {type: 'text'},
-                {renderer: longColumnRenderer},
+                {renderer: annotationRenderer},
                 {type: 'text'},
                 {type: 'text'},
                 {type: 'text'},

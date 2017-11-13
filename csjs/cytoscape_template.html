@@ -64,11 +64,13 @@
     <script src="lib/js/functions.js"></script>
     <script src="lib/js/componentJS.js"></script>
     <script type="text/javascript">
+        var allAnnotatios;
         var componentAnnotation;
         $(function(){ // on dom ready
             var elements = [ <elementsTag> ]
+            allAnnotatios = <allAnnotationsTag>
             componentAnnotation = <componentAnnotationTag>
-            buildPage(elements, componentAnnotation)
+            buildPage(elements, allAnnotatios, componentAnnotation)
         });
     </script>
 </head>

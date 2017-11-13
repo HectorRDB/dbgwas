@@ -42,6 +42,8 @@ private:
 //For each set of annotations of a component, record the annotations' name, the nodes mapping to each and the lowest e-value of a hit to it
 class AnnotationRecord {
 private:
+    vector<string> annotationIndex; //contains the annotations and their indexes
+
     //stores all the nodes that map to an annotation and their minimum e-value
     class SetOfNodesAndEvalue {
     private:
@@ -65,8 +67,20 @@ private:
         //transform to a javascript array
         string getHTMLRepresentationForIndexPage () const;
     };
-    map<string, SetOfNodesAndEvalue> annotations;
-    map<int, set<string> > nodeId2Annotation;
+    //maps an annotation (int) to a set of nodes and values
+    map<int, SetOfNodesAndEvalue> annotations;
+
+    class AnnotationsAndEvalue {
+    public:
+        map<int, long double> annotation2Evalue;
+        AnnotationsAndEvalue(){}
+
+        //add annotation
+        void addAnnotation(int annotation, long double evalue);
+    };
+
+    //maps a node (int) to the set of annotations and values it maps to
+    map<int, AnnotationsAndEvalue > nodeId2Annotations;
 public:
     AnnotationRecord():annotations(){}
 
@@ -74,22 +88,22 @@ public:
     void addAnnotation(const string &tag, int node, long double evalue);
 
     //get a representation of this annotation to be added to the SQL string in the index page
-    string getSQLRepresentation() const;
+    string getSQLRepresentationForIndexPage() const;
 
-    //get an HTML representation of the annotation component for the index page
-    string getAnnotationsForHOT(int componentId) const;
+    //get JS array representation of the annotation component for the index page
+    string getAnnotationsForHOTForIndexPage(int componentId) const;
 
-    //get an HTML representation of the annotation component for the graph page
-    string getHTMLRepresentationForGraphPage() const;
+    //get an HTML representation of the annotation component for the graph page, with the annotaation index, nb of nodes and evalue
+    string getJSRepresentationAnnotIdNbNodesEvalueForGraphPage() const;
 
-    //get all the annotations names
-    set<string> getAllAnnotationsNames() const;
+    //gets the annotation index as a JS vector
+    string getAnnotationIndexAsJSVector() const;
 
-    //get all the annotations names from a node
-    set<string> getAllAnnotationsNamesFromANode(int node) {
-        return nodeId2Annotation[node];
-    }
+    //get all the annotations names as a set
+    set<string> getAnnotationIndexAsSet() const;
 
+    //get all the annotations IDs from a node as JS vector
+    string getAllAnnotationsIDsFromANodeAsJSVector(int node);
 };
 
 
