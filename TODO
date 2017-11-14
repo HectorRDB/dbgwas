@@ -2,17 +2,23 @@
 Prioritaire
 ---------------------------------------------------------------------------------------------------------------------------------------------
 To check:
-    -Thirdparty licenses
-        -Can we indeed redistribute all these executable with DBGWAS?
+    -Output txt files with the motifs and compare with other tools
 
 Paper TODO:
+v0.4.8:
+-Added thirdparty licenses to file THIRDPARTIES
+    -Check if it is included in the zipped file as well...
+-Added the tag DBGWAS_organism_tag
+    -This tag is parsed in the headers and added in the annotation table of the graph page
+
+
 -Code
-    -DBGWAS_organism_tag
     -Fix copy and paste of cells containing annotation;
     -Fix cytoscape export button regarding annotation table
         -Asked on stack overflow
 -README
     -Update Memory and CPU requirements section in the README (maybe add the table from the paper?)
+        -Rerun
 
 -Paper
     -Update supplMaterials.pdf (4 Supplermenary Method, Part II)
