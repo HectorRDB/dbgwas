@@ -2,7 +2,7 @@
 Prioritaire
 ---------------------------------------------------------------------------------------------------------------------------------------------
 To check:
-    -Output txt files with the motifs and compare with other tools
+    -Output txt files with the markers and compare with other tools (mainly kmer based ones)
 
 Paper TODO:
 v0.4.8:
