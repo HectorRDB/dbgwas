@@ -2,17 +2,18 @@
 Prioritaire
 ---------------------------------------------------------------------------------------------------------------------------------------------
 To check:
-    -Added how to customize databases in the README
     -Thirdparty licenses
         -Can we indeed redistribute all these executable with DBGWAS?
 
 Paper TODO:
 -Code
+    -DBGWAS_organism_tag
     -Fix copy and paste of cells containing annotation;
     -Fix cytoscape export button regarding annotation table
+        -Asked on stack overflow
 -README
     -Update Memory and CPU requirements section in the README (maybe add the table from the paper?)
-        -In fact, I think the table from the paper is kind of outdated... should we relaunch everything?
+
 -Paper
     -Update supplMaterials.pdf (4 Supplermenary Method, Part II)
     -@see https://mail.google.com/mail/u/0/#inbox/15f9c647ececdc5e?compose=15fb5578f7bd95f7

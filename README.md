@@ -146,9 +146,9 @@ MEYQLTLNWPDFLERHWQKRPVVLKRGFNNFIDPISPDELAGLAMESEVDSRLVSHQDGK
 WQVSHGPFESYDHLGETNWSLLVQAVNHWHEPTAALMRPFRELPDWRIDDLMISFSVPGG
 GVGPHLDQYDVFIIQGTGRRRWRVGEKLQMKQHCPHPDLLQVDPFEAIIDEELEPGDILY
 ```
-If DBGWAS finds a hit to this line, it will consider the full header as its identifier, which can be too long to be shown, making the visualisation cumbersome.
+If DBGWAS finds a hit to this line, it will consider the full header as its identifier, which can be too long to be shown, making the visualisation cumbersome. More worrying is that this long identifier can be too specific to show general informations, like in the summary page.
 
-If you wish to give new IDs to existing registries without changing much the database, in order to make the visualisation better, and maybe to group several annotations into one single ID, you can add two tags to the headers of the database in the following format:
+If you wish to give new IDs to existing registries without changing much the database, in order to make the visualisation better, and also to group different annotations in a large group in the summary page and in smaller groups in the graph page, you can add two tags to the headers of the database in the following format:
 ```
 DBGWAS_index_tag=<value>;
 DBGWAS_graph_tag=<value>;
