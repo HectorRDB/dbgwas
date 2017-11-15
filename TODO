@@ -8,14 +8,18 @@ Paper TODO:
 v0.4.8:
 -Added thirdparty licenses to file THIRDPARTIES
     -Check if it is included in the zipped file as well...
--Added the tag DBGWAS_organism_tag
-    -This tag is parsed in the headers and added in the annotation table of the graph page
+-TODO
+-Fix large kmer size bug
+-DBGWAS now processes a "DBGWAS_extra_tag_xyz = <value>;" tag
+    -All headers like this are processed and a xyz column is added to the annotation table in the graph page
 
 
 -Code
     -Fix copy and paste of cells containing annotation;
+        -Asked on stack overflow
     -Fix cytoscape export button regarding annotation table
         -Asked on stack overflow
+
 -README
     -Update Memory and CPU requirements section in the README (maybe add the table from the paper?)
         -Rerun

@@ -284,7 +284,11 @@ void build_dbg::execute ()
         GraphOutput<KMER_SPAN(0)>,
         GraphOutput<KMER_SPAN(1)>,
         GraphOutput<KMER_SPAN(2)>,
-        GraphOutput<KMER_SPAN(3)>
+        GraphOutput<KMER_SPAN(3)>,
+        GraphOutput<KMER_SPAN(4)>,
+        GraphOutput<KMER_SPAN(5)>,
+        GraphOutput<KMER_SPAN(6)>,
+        GraphOutput<KMER_SPAN(7)>
     >  GraphOutputVariant;
 
     GraphOutputVariant graphOutput;
@@ -292,6 +296,10 @@ void build_dbg::execute ()
     else if (kmerSize < KMER_SPAN(1))  {  graphOutput = GraphOutput<KMER_SPAN(1)>(graph, outputFolder+string("/graph")); }
     else if (kmerSize < KMER_SPAN(2))  {  graphOutput = GraphOutput<KMER_SPAN(2)>(graph, outputFolder+string("/graph")); }
     else if (kmerSize < KMER_SPAN(3))  {  graphOutput = GraphOutput<KMER_SPAN(3)>(graph, outputFolder+string("/graph")); }
+    else if (kmerSize < KMER_SPAN(4))  {  graphOutput = GraphOutput<KMER_SPAN(4)>(graph, outputFolder+string("/graph")); }
+    else if (kmerSize < KMER_SPAN(5))  {  graphOutput = GraphOutput<KMER_SPAN(5)>(graph, outputFolder+string("/graph")); }
+    else if (kmerSize < KMER_SPAN(6))  {  graphOutput = GraphOutput<KMER_SPAN(6)>(graph, outputFolder+string("/graph")); }
+    else if (kmerSize < KMER_SPAN(7))  {  graphOutput = GraphOutput<KMER_SPAN(7)>(graph, outputFolder+string("/graph")); }
     else { throw gatb::core::system::Exception ("Graph failure because of unhandled kmer size %d", kmerSize); }
     boost::apply_visitor (EdgeConstructionVisitor(linear_seqs_name),  graphOutput);
 
