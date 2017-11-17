@@ -21,8 +21,8 @@ v0.4.8:
         -Asked on stack overflow
 
 -README
-    -Update Memory and CPU requirements section in the README (maybe add the table from the paper?)
-        -Rerun
+    -Update Memory and CPU requirements section in the README
+        -Rerun with 16 cores? 8?
 
 -Paper
     -Update dbgwas.pdf (section 2 Methods)
@@ -52,19 +52,9 @@ v0.4.8:
 TODO list
 ---------------------------------------------------------------------------------------------------------------------------------------------
 High priority TODO:
-  -Use a portable version of R to remove all dependencies?
-  -Allow the user to provide an already built database, instead of calling makeblastdb always
-  -Fix qvalue default min and max to min and max of the components
+  -Receive as input reads instead of contigs
   -treat NA better
     -We just removed from the input for now
-  -svd and pca steps are probably redundant in cdbg_lin_loc as XX is centered. Check that they produce the same set of eigenvectors and remove the pca steps (call to prcomp uses more memory than svd).
-    -check with laurent
-  -If no annotation was provided, remove the line:
-        Annotations on significant nodes:
-        No annotations found.
-    from the tables in the summary page
-
-
 
 
 
@@ -76,10 +66,17 @@ Low priority TODO:
         -It should also show the strain path in the graph
     -Show the newick tree and the unitigs (genotypes)
         -@see: https://mail.google.com/mail/u/0/#sent/15f1663316ff5dec
-
+  -Move to the latest version of GATB
+  -Use a portable version of R to remove all dependencies?
+  -Allow the user to provide an already built database, instead of calling makeblastdb always
+  -Fix qvalue default min and max to min and max of the components
   -Use a continuous or categorical phenotype instead of a binarized phenotype (apparently, this would be more suited for virulence phenotypes);
   -Use counts instead of pres/abs patterns for the genotypes (and one application would be to compute such analysis on transcriptome data);
   -Add covariates (e.g. patient metadata) in the association model;
+  -If no annotation was provided, remove the line:
+        Annotations on significant nodes:
+        No annotations found.
+    from the tables in the summary page
   -remove the patterns with maf < maf.filter in C++
     -ok for now (done in R)
   -Multiple alignment on the node sequences that are selected?
