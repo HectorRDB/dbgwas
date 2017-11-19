@@ -43,17 +43,43 @@
 using namespace std;
 /********************************************************************************/
 
+
+//header is intentionally string and not const string &
+map<string, string> extractValuesWithRegex(const regex &expression, string header) {
+    map<string, string> extractedValues;
+    smatch matchResults;
+    bool key=true;
+    string keyStr, valueStr;
+
+    while(regex_search(header, matchResults, expression))
+    {
+        //check what to attribute
+        if (key)
+            keyStr = matchResults.str(1);
+        else
+            valueStr = matchResults.str(1);
+
+        if (!key) //if I read a value, add it to the map
+            extractedValues[keyStr]=valueStr;
+
+        //change the key/value flag
+        key=!key;
+
+        //go to the next field
+        header = matchResults.suffix();
+    }
+
+    return extractedValues;
+}
+
+
 int main (int argc, char* argv[])
 {
-    static const regex expression("DBGWAS_index_tag\\s*=\\s*(\\w+)\\s*;");
+    regex expression("DBGWAS_(\\w+)_tag)\\s*=\\s*(\\w+)\\s*;");
     string s = ">sp|P27431|ROXA_ECOLI;DBGWAS_index_tag=ROXA;DBGWAS_graph_tag=[uniprot] 50S ribosomal protein L16 3-hydroxylase (Escherichia coli)";
-    smatch matchResults;
-
-    while(regex_search(s, matchResults, expression))
-    {
-        std::cout << matchResults.str(1) << endl;
-        s = matchResults.suffix();
-    }
+    map<string, string> keyValue = extractValuesWithRegex(expression, s);
+    for (const auto &pair : keyValue)
+        cout << pair.first << " = " << pair.second << endl;
     return 0;
 
 
