@@ -59,6 +59,7 @@ map<string, string> extractValuesWithRegex(const regex &expression, string heade
 
         //go to the next field
         header = matchResults.suffix();
+        cout << "Suffix: " << header << endl;
     }
 
     return extractedValues;
@@ -70,6 +71,7 @@ int main (int argc, char* argv[])
     regex expression("DBGWAS_(\\w+)_tag\\s*=\\s*(\\w+)\\s*;");
     string s = ">sp|P27431|ROXA_ECOLI;DBGWAS_index_tag=ROXA;DBGWAS_graph_tag=[uniprot] 50S ribosomal protein L16 3-hydroxylase (Escherichia coli)";
     map<string, string> keyValue = extractValuesWithRegex(expression, s);
+    cout << "Output: " << endl;
     for (const auto &pair : keyValue)
         cout << pair.first << " = " << pair.second << endl;
     return 0;
