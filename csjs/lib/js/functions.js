@@ -230,7 +230,7 @@ function fillTable() {
                     node.data('pheno1'),
                     //TODO: NA temporarily removed
                     //node.data('NA'),
-                    node.data('tags').toString(),
+                    node.data('annotations').toString(),
                     node.data('significant'),
                     node.data('qValue'),
                     node.data('weight'),

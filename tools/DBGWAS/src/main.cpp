@@ -43,34 +43,8 @@
 using namespace std;
 /********************************************************************************/
 
-
-//header is intentionally string and not const string &
-map<string, string> extractValuesWithRegex(const regex &expression, string header) {
-    map<string, string> extractedValues;
-    smatch matchResults;
-
-    while(regex_search(header, matchResults, expression))
-    {
-        extractedValues[matchResults.str(1)]=matchResults.str(2);
-
-        //go to the next field
-        header = matchResults.suffix();
-    }
-    return extractedValues;
-}
-
-
 int main (int argc, char* argv[])
 {
-    regex expression("DBGWAS_(\\w+)_tag\\s*=\\s*([^;]+)\\s*;?");
-    string s = ">sp|P27431|ROXA_ECOLI;DBGWAS_index_tag=ROXA;DBGWAS_graph_tag=[uniprot] 50S ribosomal protein L16 3-hydroxylase (Escherichia coli)";
-    map<string, string> keyValue = extractValuesWithRegex(expression, s);
-    cout << "Output: " << endl;
-    for (const auto &pair : keyValue)
-        cout << pair.first << " = " << pair.second << endl;
-    return 0;
-
-
     // initialize random seed, in case we want to use rand(), we are already set
     srand (time(NULL));
 

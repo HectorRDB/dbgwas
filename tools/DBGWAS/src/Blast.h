@@ -11,6 +11,7 @@
 #include <set>
 #include <map>
 #include <boost/algorithm/string.hpp>
+#include <regex>
 
 using namespace std;
 
@@ -20,41 +21,47 @@ struct ValueNotFound{};
 class BlastRecord {
 public:
     int nodeId; //the query id
-    string DBGWAS_index_tag, DBGWAS_graph_tag; //the tags, if available
-    map<string, string> DBGWAS_extra_tag;
+    map<string, string> DBGWAS_tags;
     double qcovs, bitscore, pident; //the blast fields we care about
     long double evalue; //the blast fields we care about
 
     //constructors
     BlastRecord(){}
-    BlastRecord(int nodeId, const string &DBGWAS_index_tag, const string &DBGWAS_graph_tag,
+    BlastRecord(int nodeId, const map<string, string> &DBGWAS_tags,
                 double qcovs, double bitscore, double pident, long double evalue):
-        nodeId(nodeId), DBGWAS_index_tag(DBGWAS_index_tag), DBGWAS_graph_tag(DBGWAS_graph_tag), qcovs(qcovs),
+        nodeId(nodeId), DBGWAS_tags(DBGWAS_tags), qcovs(qcovs),
         bitscore(bitscore), pident(pident), evalue(evalue) {}
 
     //parse a string and build a BlastRecord from it
     static BlastRecord parseString (const string &str);
 private:
-    //parse the header and extract the value corresponding to the given tag
+
     static string extractValue (const string &header, const string &tag);
+
+    //parse the header and extract all the DBGWAS tags
+    //header is intentionally string and not const string &
+    static map<string, string> extractValuesWithRegex(string header, const regex &expression);
 };
 
 
 //For each set of annotations of a component, record the annotations' name, the nodes mapping to each and the lowest e-value of a hit to it
+//This represents the annotations of a component
 class AnnotationRecord {
 private:
     vector<string> annotationIndex; //contains the annotations and their indexes
 
-    //stores all the nodes that map to an annotation and their minimum e-value
-    class SetOfNodesAndEvalue {
+    //stores all the information of an annotation that is to be shown in the upper table in the graph page
+    class AnnotationInfoGraphPage {
     private:
         set<int> nodes;
         long double minEvalue;
+        BlastRecord record;
+
     public:
-        SetOfNodesAndEvalue():nodes(), minEvalue(std::numeric_limits<long double>::max()){}
+        AnnotationInfoGraphPage():nodes(), minEvalue(std::numeric_limits<long double>::max()), record(){}
 
         //add a new node to this set
-        void addNode(int node, long double evalue);
+        void addNode(int node, long double evalue, const BlastRecord* record);
 
         //get the nb of nodes mapping here
         int getNbOfNodes () const { return nodes.size(); }
@@ -63,13 +70,15 @@ private:
         long double getMinEvalue () const { return minEvalue; }
 
         //transform to a javascript array
-        string getHTMLRepresentationForGraphPage () const;
+        string getHTMLRepresentationForGraphPage (const set<string>& allExtraTags);
 
         //transform to a javascript array
         string getHTMLRepresentationForIndexPage () const;
     };
-    //maps an annotation (int) to a set of nodes and values
-    map<int, SetOfNodesAndEvalue> annotations;
+    //maps an annotation (int) to its informations to be shown in the graph page
+    map<int, AnnotationInfoGraphPage> annotations;
+    set<string> allExtraTags; //records all extra tags in this component
+
 
     class AnnotationsAndEvalue {
     public:
@@ -80,13 +89,14 @@ private:
         void addAnnotation(int annotation, long double evalue);
     };
 
-    //maps a node (int) to the set of annotations and values it maps to
+    //maps a node (int) to the set of annotations and evalues it maps to
+    //this is to be shown in the node handsontable in node table
     map<int, AnnotationsAndEvalue > nodeId2Annotations;
 public:
     AnnotationRecord():annotations(){}
 
     //add an annotation to this set
-    void addAnnotation(const string &tag, int node, long double evalue);
+    void addAnnotation(const string &tag, int node, long double evalue, const BlastRecord* record=NULL);
 
     //get a representation of this annotation to be added to the SQL string in the index page
     string getSQLRepresentationForIndexPage() const;
@@ -94,8 +104,8 @@ public:
     //get JS array representation of the annotation component for the index page
     string getAnnotationsForHOTForIndexPage(int componentId) const;
 
-    //get an HTML representation of the annotation component for the graph page, with the annotaation index, nb of nodes and evalue
-    string getJSRepresentationAnnotIdNbNodesEvalueForGraphPage() const;
+    //get an HTML representation of the annotation component for the graph page, with the annotation index, and all other info like nb of nodes, evalue and extra tags
+    string getJSRepresentationAnnotIdAnnotInfoGraphPage();
 
     //gets the annotation index as a JS vector
     string getAnnotationIndexAsJSVector() const;
