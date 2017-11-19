@@ -45,7 +45,8 @@ using namespace std;
 
 int main (int argc, char* argv[])
 {
-    static const regex expression("DBGWAS_index_tag \\s* = \\s* (\\w+) \\s*;");
+    //static const regex expression("DBGWAS_index_tag \\s* = \\s* (\\w+) \\s*;");
+    static const regex expression("(\\w+)");
     string s = ">sp|P27431|ROXA_ECOLI;DBGWAS_index_tag=ROXA;DBGWAS_graph_tag=[uniprot] 50S ribosomal protein L16 3-hydroxylase (Escherichia coli)";
     smatch matchResults;
     regex_search(s, matchResults, expression);
