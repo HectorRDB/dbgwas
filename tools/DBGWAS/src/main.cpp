@@ -48,8 +48,6 @@ using namespace std;
 map<string, string> extractValuesWithRegex(const regex &expression, string header) {
     map<string, string> extractedValues;
     smatch matchResults;
-    bool key=true;
-    string keyStr, valueStr;
 
     while(regex_search(header, matchResults, expression))
     {
@@ -57,17 +55,7 @@ map<string, string> extractValuesWithRegex(const regex &expression, string heade
         for (int i=0; i<matchResults.size(); i++)
             cout << matchResults.str(i) << endl;
 
-        //check what to attribute
-        if (key)
-            keyStr = matchResults.str(1);
-        else
-            valueStr = matchResults.str(1);
-
-        if (!key) //if I read a value, add it to the map
-            extractedValues[keyStr]=valueStr;
-
-        //change the key/value flag
-        key=!key;
+        extractedValues[matchResults.str(1)]=matchResults.str(2);
 
         //go to the next field
         header = matchResults.suffix();
