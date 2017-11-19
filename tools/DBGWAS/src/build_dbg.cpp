@@ -279,7 +279,6 @@ void build_dbg::execute ()
     construct_linear_seqs (*graph, linear_seqs_name, *nodeIdToUnitigId);
 
     //builds and outputs .nodes and .edges.dbg files
-    //TODO: go until GraphOutput<KMER_SPAN(7)>?
     typedef boost::variant <
         GraphOutput<KMER_SPAN(0)>,
         GraphOutput<KMER_SPAN(1)>,

@@ -21,6 +21,7 @@ class BlastRecord {
 public:
     int nodeId; //the query id
     string DBGWAS_index_tag, DBGWAS_graph_tag; //the tags, if available
+    map<string, string> DBGWAS_extra_tag;
     double qcovs, bitscore, pident; //the blast fields we care about
     long double evalue; //the blast fields we care about
 

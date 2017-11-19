@@ -38,10 +38,23 @@
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
 #undef BOOST_NO_CXX11_SCOPED_ENUMS
+#include <regex>
+
+using namespace std;
 /********************************************************************************/
 
 int main (int argc, char* argv[])
 {
+    static const regex expression("DBGWAS_index_tag \\s* = \\s* (\\w+) \\s*;");
+    string s = ">sp|P27431|ROXA_ECOLI;DBGWAS_index_tag=ROXA;DBGWAS_graph_tag=[uniprot] 50S ribosomal protein L16 3-hydroxylase (Escherichia coli)";
+    smatch matchResults;
+    regex_search(s, matchResults, expression);
+    for (const auto &submatch : matchResults) {
+        cout << submatch.str() << endl;
+    }
+    return 0;
+
+
     // initialize random seed, in case we want to use rand(), we are already set
     srand (time(NULL));
 

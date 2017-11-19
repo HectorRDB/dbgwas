@@ -63,6 +63,24 @@ string BlastRecord::extractValue (const string &header, const string &tag) {
   throw ValueNotFound();
 }
 
+//parse the header and extract the value corresponding to the REGEX
+/*
+string BlastRecord::extractValueUsingRegex (const string &header, const string &tag) {
+  if (header.find(tag) != string::npos) {
+    //found the tag, extract the value
+    auto posDBGWASIndexTag = header.find(tag);
+    auto posSemicolon = header.find_first_of("; \t\n\r", posDBGWASIndexTag+1);
+    if (posSemicolon==string::npos) posSemicolon = header.length();
+    auto posStartValue = posDBGWASIndexTag+string(tag).length()+1;
+    string value = header.substr(posStartValue, posSemicolon-posStartValue);
+    boost::trim(value);
+    return value;
+  }
+
+  //tag not found
+  throw ValueNotFound();
+}
+*/
 
 vector<BlastRecord> Blast::blast (const string &command, const string &queryPath, const string &dbPath, int nbCores) {
   string outFilePath = queryPath+"."+command+"Out";
