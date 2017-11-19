@@ -49,9 +49,11 @@ int main (int argc, char* argv[])
     static const regex expression("(\\w+)");
     string s = ">sp|P27431|ROXA_ECOLI;DBGWAS_index_tag=ROXA;DBGWAS_graph_tag=[uniprot] 50S ribosomal protein L16 3-hydroxylase (Escherichia coli)";
     smatch matchResults;
-    regex_search(s, matchResults, expression);
-    for (const auto &submatch : matchResults) {
-        cout << submatch.str() << endl;
+
+    while(regex_search(s, matchResults, expression))
+    {
+        std::cout << matchResults.str() << endl;
+        s = sm.suffix();
     }
     return 0;
 
