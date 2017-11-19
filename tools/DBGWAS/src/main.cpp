@@ -51,7 +51,7 @@ int main (int argc, char* argv[])
 
     while(regex_search(s, matchResults, expression))
     {
-        std::cout << matchResults.str() << endl;
+        std::cout << matchResults.str(1) << endl;
         s = matchResults.suffix();
     }
     return 0;
