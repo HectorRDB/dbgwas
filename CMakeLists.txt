@@ -87,6 +87,7 @@ SET (CPACK_SOURCE_IGNORE_FILES
 # Packaging the binary ; we want to include some additional files
 INSTALL (FILES   ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE                     DESTINATION . COMPONENT precompiled)
 INSTALL (FILES   ${CMAKE_CURRENT_SOURCE_DIR}/THIRDPARTIES                     DESTINATION . COMPONENT precompiled)
+INSTALL (FILES   ${CMAKE_CURRENT_SOURCE_DIR}/Changelog                     DESTINATION . COMPONENT precompiled)
 INSTALL (FILES   ${CMAKE_CURRENT_SOURCE_DIR}/README.md                     DESTINATION . COMPONENT precompiled)
 INSTALL (FILES   ${PROJECT_SOURCE_DIR}/csjs/cytoscape_template.html  DESTINATION ./bin/DBGWAS_lib/ COMPONENT precompiled)
 INSTALL (PROGRAMS   ${PROJECT_SOURCE_DIR}/gemma/gemma.0.93b  DESTINATION ./bin/DBGWAS_lib/ COMPONENT precompiled)
