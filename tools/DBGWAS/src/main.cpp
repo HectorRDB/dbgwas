@@ -53,6 +53,10 @@ map<string, string> extractValuesWithRegex(const regex &expression, string heade
 
     while(regex_search(header, matchResults, expression))
     {
+        cout << "Match Results: " << endl;
+        for (int i=0; i<matchResults.size(); i++)
+            cout << matchResults.str(i) << endl;
+
         //check what to attribute
         if (key)
             keyStr = matchResults.str(1);
