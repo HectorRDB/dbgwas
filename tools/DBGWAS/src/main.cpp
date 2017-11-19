@@ -53,7 +53,7 @@ int main (int argc, char* argv[])
     while(regex_search(s, matchResults, expression))
     {
         std::cout << matchResults.str() << endl;
-        s = sm.suffix();
+        s = matchResults.suffix();
     }
     return 0;
 
