@@ -1,21 +1,9 @@
 ﻿---------------------------------------------------------------------------------------------------------------------------------------------
 Prioritaire
 ---------------------------------------------------------------------------------------------------------------------------------------------
-To check:
-    -Thirdparty licenses
-        -Can we indeed redistribute all these executable with DBGWAS?
-
-Paper TODO:
--Code
-    -DBGWAS_organism_tag
-    -Fix copy and paste of cells containing annotation;
-    -Fix cytoscape export button regarding annotation table
-        -Asked on stack overflow
--README
-    -Update Memory and CPU requirements section in the README (maybe add the table from the paper?)
-
 -Paper
-    -Update supplMaterials.pdf (4 Supplermenary Method, Part II)
+    -Update dbgwas.pdf (section 2 Methods)
+    -Update supplMaterials.pdf (section 4 Supplementary Methods, Part II)
     -@see https://mail.google.com/mail/u/0/#inbox/15f9c647ececdc5e?compose=15fb5578f7bd95f7
 
 
@@ -40,20 +28,37 @@ Paper TODO:
 ---------------------------------------------------------------------------------------------------------------------------------------------
 TODO list
 ---------------------------------------------------------------------------------------------------------------------------------------------
+Known bugs:
+    -Large kmer size bug:
+        -Even if we set in CMakeLists.txt:
+            set (KSIZE_LIST "32   64   96  128  160  192  224  256")
+        -We still can't run the tool with a large kmer size due to:
+            leandro@ngs-provisoire:/data2/leandro/GWAS/DBGWAS-0.4.8-Linux-precompiled/bin$ ./DBGWAS -strains pseudomonas_aeruginosa_full_dataset/strains -newick pseudomonas_aeruginosa_full_dataset/strains.newick -nc_db Resistance_DB_for_DBGWAS.fasta -pt_db uniprot_sprot_bacteria_for_DBGWAS.with_extra_tags.fasta -nb-cores 4 -k 165 -output output_test_k_165
+            Step 1. Building DBG and mapping strains on the DBG...
+            [WARNING] Skipping strain WH-SGI-V-07286 because its phenotype is NA
+            [WARNING] Skipping strain WH-SGI-V-07290 because its phenotype is NA
+            [DSK: nb solid kmers found : 140764976   ]  100  %   elapsed:  12 min 3  sec   remaining:   0 min 0  sec   cpu: 153.4 %   mem: [ 924, 4598, 4598] MB
+            [Building BooPHF]  99.8 %   elapsed:   0 min 57 sec   remaining:   0 min 0  sec
+            [MPHF: populate                          ]  100  %   elapsed:   1 min 22 sec   remaining:   0 min 0  sec   cpu:  99.9 %   mem: [ 924,  924, 4598] MB
+            EXCEPTION: kmer size 165 too big for cascading bloom filters
+        -The maximum k-mer size we can use is 127
+        -I am setting in CMakeLists.txt back to:
+            set (KSIZE_LIST "32   64   96  128")
+
+    -Fix copy and paste of cells containing annotation;
+        -Asked on stack overflow
+    -Fix cytoscape export button regarding annotation table
+        -Asked on stack overflow
+
+
+
+
+
+
 High priority TODO:
-  -Use a portable version of R to remove all dependencies?
-  -Allow the user to provide an already built database, instead of calling makeblastdb always
-  -Fix qvalue default min and max to min and max of the components
-  -treat NA better
-    -We just removed from the input for now
-  -svd and pca steps are probably redundant in cdbg_lin_loc as XX is centered. Check that they produce the same set of eigenvectors and remove the pca steps (call to prcomp uses more memory than svd).
-    -check with laurent
-  -If no annotation was provided, remove the line:
-        Annotations on significant nodes:
-        No annotations found.
-    from the tables in the summary page
-
-
+    -Receive as input reads instead of contigs
+    -treat NA better
+        -We just removed from the input for now
 
 
 
@@ -65,10 +70,17 @@ Low priority TODO:
         -It should also show the strain path in the graph
     -Show the newick tree and the unitigs (genotypes)
         -@see: https://mail.google.com/mail/u/0/#sent/15f1663316ff5dec
-
+  -Move to the latest version of GATB
+  -Use a portable version of R to remove all dependencies?
+  -Allow the user to provide an already built database, instead of calling makeblastdb always
+  -Fix qvalue default min and max to min and max of the components
   -Use a continuous or categorical phenotype instead of a binarized phenotype (apparently, this would be more suited for virulence phenotypes);
   -Use counts instead of pres/abs patterns for the genotypes (and one application would be to compute such analysis on transcriptome data);
   -Add covariates (e.g. patient metadata) in the association model;
+  -If no annotation was provided, remove the line:
+        Annotations on significant nodes:
+        No annotations found.
+    from the tables in the summary page
   -remove the patterns with maf < maf.filter in C++
     -ok for now (done in R)
   -Multiple alignment on the node sequences that are selected?
@@ -89,214 +101,3 @@ Low priority TODO:
     -Show the original genomes as paths in the graph?
   -Work on unitig counts rather than presence/absence
 
-
-
-
-
-
-
-
-
-
-
----------------------------------------------------------------------------------------------------------------------------------------------
-Previous changelogs
----------------------------------------------------------------------------------------------------------------------------------------------
-Done v0.4.7:
-Bugfixes:
-    -Fixed a small visual bug with long annotations
-    -Fixed a small visual bug when loading components for the first time in the index page
-    -Minor fix to the index style
-
-
-
-
-
-Done v0.4.6:
-Bugfixes:
-    -Fixed preview getting buggy if the machine is very busy;
-    -Fixed Firefox bug on modal positioning;
-    -Fixed minor bug with the node annotation table;
-
-
-
-
-
-Done v0.4.5:
--Core
-    -Fixed -help messages
-    -Added how to customize databases in the readme and help messages
-    -Added a better error handling in phantomjs in case of problems with javascript
-    -Rendering of the thumbnails now are fully multithreaded
-    -Fixed a bug in step2 when no newick file is provided
-    -Kmer-size can now go up to 256
--Index page
-    -Added a different mouse icon when the mouse is over the preview
--Graph page
-    -Added the zoom-in feature when selecting all nodes or the significant nodes only
-    -Increased the height of the annotation table when opening the graph from 13% of the screen to 15%
-        -Better for smaller screens
-    -Refactored the way that the annotation is shown in the graph page, reducing the size of the files and allowing to get the annotation + e-value per node
-    -The annotation of each node is now shown in a pop-up menu as a spreadsheet table, ordered by E-value
-    -Updated Help
-
-
-
-
-
-Done v0.4.4:
--Core
-    -Fixed output folder from being fixed to being a parameter (-output)
-    -Reworked all the final and temporary files structure:
-        -Each step now has a separate folder where all files from that step are written
-    -DBGWAS now requires less disk space than before
-    -DBGWAS now works with only one installation
-    -Improved the contents of the final package
-    -Fixed -help and -version parameters
--Summary page
-    -Removed "Annotations on significant nodes" phrase;
-    -Showing now only the first 3 annotations in the annotation table
-    -Small fixes on the presentation of the annotation tables
-    -Fixed a bug where we were using the graph tag instead of the index tag on the summary page
-    -Added the nb of unitigs and significant unitigs
--Graph page
-    -Reduced the height of the annotation table when opening the graph from 25% of the screen to 13%
-    -Users can now select all the significant nodes with right click on the graph
-    -The number of selected nodes is now shown in the east panel
-
-
-
-
-Done v0.4.3:
--Added libgcc and libstdc++ as static libraries
-    -This will avoid running problems on distributions with outdated libgcc/libstdc++, like Debian or Red-Hat distros, e.g.:
-        ./DBGWAS: /usr/lib/x86_64-linux-gnu/libstdc++.so.6: version `GLIBCXX_3.4.21' not found (required by ./DBGWAS)
-
-
-
-
-Done v0.4.2:
--Fixed the ordering of the components in the index page
--In the "DBGWAS in a nutshell section", we now say that our example is using amikacin resistance phenotypes.
-
-
-
-Done v0.4.1:
--Fixed the small bug of the close button not displaying correctly on jquery dialog in the index page
--Added a check to verify that there is at least one strain with Phenotype 0 and one with Phenotype 1
-
-
-
-
-Done v0.4.0:
--Changes to visualisation:
-    -In the visualisation (both the index and graph page), the annotations are now in a spreadsheet so that it is sortable by e-value and node;
-        -We now also show the annotation for all nodes in the index page;
-        -The annotations are sorted by nb of nodes by default;
-    -In the graph page, when selecting the nodes from an annotation, a nice zoom is now given;
-        -If the zoom is way too much, we zoom out so that we nicely show the part of the graph corresponding to the annotation;
-    -In the graph page, the screen is now blocked until the graph is loaded;
-    -In the graph page, the user can now select nodes by selecting rows in the node table;
-    -In the visualisation page, changed "Show some stats" to "Show figures on lineage effect" in the index page
-    -Better performance on the visualisation page;
--Other changes:
-    -nt_db and -pt_db must receive a list of DBs, and not only one
-    -Refactoring of many parts of the code regarding the annotation
-        -The code was done in a rush and it was a mess
-
-
-
-
-
-Done v0.3.7:
-     -newick parameter is now optional, and do.lineage = TRUE if a newick file is given. Otherwise, it is set to false;
-     -Fixed a bug where we tried to copy some plots that are non-existant if do.lineage = FALSE
-     -Fixed a bug on the -nb-cores option appearing twice in the help
-
-
-
-
-Done v0.3.6:
-  -put DBGWAS version on the index page
-  -Add statistical figures to the index page
-        - PREFIX_SNPs_PC_manhattan_annot_pos-top.png:
-            p-values of tested unitigs sorted by principal component (each unitig is associated with the closest PC).
-        - PREFIX_barplot_BayesianWald_PCs.png:
-            p-value of each principal component, whose association with the phenotype is tested using a Bayesian Wald test.
-        - PREFIX_tree_branchescolouredbyPC​.png:
-            Phylogenetic tree annotated with the principal components which were found significantly associated with the phenotype using a Bayesian Wald test. [à compléter par Magali si tu te souviens de comment ils font l'annotation].
-
-
-Done v0.3.5:
-    -Fixed a bug when the input fasta files contain other bases besides A, C, G, T and N
-
-
-Done v0.3.4:
-    -Fixed bugs with pvalues 0 and wald statistics Inf
-
-
--Done v0.3.3:
-  -Added LBBE, Biomerieux and Erable logos to the index and result pages;
-  -Added LBBE, Biomerieux and Erable affiliations to GitLab (README page)
-  -When the strains input file is missing, we return an error:
-      [FATAL ERROR] Error opening file
-      Could it be a little more detailed? Eg, which file (there are two inputs), and whether the format is wrong or the file was not found.
-      -This was fixed in a previous commit
-  -Fixed the error message when the parameters are not correct
-    -We used to show the error 3 times, instead of 1
-  -Added a new parameter: -maf
-    -Minor allele frequency filter, defaults to 0.01
-  -Blast executions now use multiple cores
-    -This was done by simply adding -num_threads to the blast call
-    -Step 3 is not yet fully parallelized - just the blast executions
-  -nb-cores defaults to 1
-
-
-
-
-
-Done v 0.3.2:
-  -Changed the layout of the graph page - now we have 3 panels, where the south and east panel are resizable and closable
-  -Removed ratio from the legend
-  -Reduced size of high allelle frequency
-  -Reduced the width of the tables in the index page
-
-
-
-
-Done v 0.3.1:
--The annotations in the graph pages are now sorted in decreasing order by the number of nodes it maps to in the graph
-  -The number of nodes is also displayed in parenthesis before the annotation
--Fix very wide selects in the index page (put a horizontal scroll)
-  -Increased the height of select as well
--Selecting a gene now only centers the screen on the nodes of that gene, without zooming
-
-
-
-
-
-Done v 0.3.0:
-Changelog
--Core:
-  -Protein and nucleotide annotations are now supported;
-  -Users are now allowed to input their own annotation database
-    -They can further define two TAGs in their fasta headers:
-            -DBGWAS_index_tag=<value>;
-            -DBGWAS_graph_tag=<value>;
-        Which is what is going to be shown on the index and graph pages. If these tags are not found in the header, then the full header is considered
-        If the tags are available, but empty, a value of EMPTY is set;
-  -Blast output is now saved in tmp folder for each component;
-  -The annotation process is optional;
-  -Spaces in FASTA headers of the annotations DB are replaced for underscore because BLAST just considers the headers up to the first space
-    -A copy of the DB is made, and the spaces are replaced in this copy, in order to do not modify the users' annotations
-  -Blast executables are now integrated in the tool
--Index page:
-  -Annotations only for the significant nodes are shown in the index page
-  -Fixed a bug when no condition is set on the filter in the index page
-  -The arguments used to create the visualisation are now in the index page
-  -Fixed some icons on the index page related to the filter
-  -Fix the annotation filtering problems in the index page (i.e. one annotation substring of the other)
-  -Added expand/collapse buttons for the parameters and filters on the index page
--Graph page:
-    -When a gene/tag is selected in the graph page, the screen in centered on these nodes
-    -Annotation and sequence columns now has a limit on the number of characters that can be displayed with a modal to show the rest of the sequence

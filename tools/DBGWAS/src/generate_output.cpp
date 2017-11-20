@@ -284,14 +284,14 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
     for (const auto &record : records) {
       //here I have to use graph[v].id instead of simply record.nodeId because the original IDs of the node is used later
       MyVertex v = vertex(record.nodeId, graph);
-      annotationsOfThisComponent.addAnnotation(record.DBGWAS_graph_tag, graph[v].id, record.evalue);
+      annotationsOfThisComponent.addAnnotation(record.DBGWAS_tags.at("specific"), graph[v].id, record.evalue, &record);
     }
 
     //populate idComponent2Annotations[i]
     for (const auto &record : records) {
       //here I have to use graph[v].id instead of simply record.nodeId because the original IDs of the node is used later
       MyVertex v = vertex(record.nodeId, graph);
-      idComponent2Annotations[i].addAnnotation(record.DBGWAS_index_tag, graph[v].id, record.evalue);
+      idComponent2Annotations[i].addAnnotation(record.DBGWAS_tags.at("general"), graph[v].id, record.evalue);
     }
 
     cerr << "Annotating... - Done!" << endl;
@@ -336,7 +336,7 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
       ", sequenceLength: '" << graph[node].name.length() << "'" <<
       ", info: '" << graph[node].id << "'" <<
       ", total: '" << graph[node].phenoCounter.getTotal() << "'" <<
-      ", tags: " << annotationsOfThisComponent.getAllAnnotationsIDsFromANodeAsJSVector(graph[node].id) <<
+      ", annotations: " << annotationsOfThisComponent.getAllAnnotationsIDsFromANodeAsJSVector(graph[node].id) <<
       ", pheno0: '" << graph[node].phenoCounter.getPheno0() << "/" << nbPheno0 << "'" <<
       ", pheno1: '" << graph[node].phenoCounter.getPheno1() << "/" << nbPheno1 << "'" <<
       ", NA: '" << graph[node].phenoCounter.getNA() << "'" <<
@@ -390,10 +390,16 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
   boost::replace_all(cytoscapeOutput, "<allAnnotationsTag>", annotationsOfThisComponent.getAnnotationIndexAsJSVector());
 
   //put the annotation info into the template file
-  boost::replace_all(cytoscapeOutput, "<componentAnnotationTag>", annotationsOfThisComponent.getJSRepresentationAnnotIdNbNodesEvalueForGraphPage());
+  boost::replace_all(cytoscapeOutput, "<componentAnnotationTag>", annotationsOfThisComponent.getJSRepresentationAnnotIdAnnotInfoGraphPage());
 
   //put the node2AnnotationEvalue info into the template file
   boost::replace_all(cytoscapeOutput, "<node2AnnotationEvalueTag>", annotationsOfThisComponent.getJSRepresentationNodeId2AnnotationsEvalueForGraphPage());
+
+  //put the annotation2Nodes info into the template file
+  boost::replace_all(cytoscapeOutput, "<annotation2NodesParTag>", annotationsOfThisComponent.getJSRepresentationAnnotation2NodesForGraphPage());
+
+  //put the extraTags info into the template file
+  boost::replace_all(cytoscapeOutput, "<extraTagsPar>", annotationsOfThisComponent.getExtraTagsAsJSVector());
 
   //output the file
   string outfilename;

@@ -6,6 +6,7 @@
 #include "Utils.h"
 #include "global.h"
 #include <algorithm>
+#include <boost/algorithm/string.hpp>
 
 //parse a string and build a BlastRecord from it
 BlastRecord BlastRecord::parseString (const string &str) {
@@ -20,47 +21,55 @@ BlastRecord BlastRecord::parseString (const string &str) {
   //escape '
   boost::replace_all(header, "'", "\\'");
 
-  //parse DBGWAS_index_tag
-  try {
-    record.DBGWAS_index_tag = extractValue(header, "DBGWAS_index_tag");
-  } catch (const ValueNotFound &e) {
-    record.DBGWAS_index_tag = header;
-  }
-  if (record.DBGWAS_index_tag.size()==0) {
-    cerr << "[WARNING] DBGWAS_index_tag of " << header << " is empty! Setting to EMPTY" << endl;
-    record.DBGWAS_index_tag = "EMPTY";
+  //parse all tags
+  regex expression("DBGWAS_(\\w+)_tag_*=_*([^;]+)_*;?");
+  map<string, string> allTags = extractValuesWithRegex(header, expression);
+
+  //check if general tag was specified
+  if (allTags.count("general")==0)
+    //add the header as DBGWAS_general_tag
+    allTags["general"] = header;
+
+  //check if general tag is not empty
+  if (allTags["general"].size()==0) {
+    cerr << "[WARNING] DBGWAS_general_tag of " << header << " is empty! Setting to <EMPTY>" << endl;
+    allTags["general"] = "<EMPTY>";
   }
 
+  //check if specific tag was specified
+  if (allTags.count("specific")==0)
+    //add the header as DBGWAS_specific_tag
+    allTags["specific"] = header;
 
-  //parse DBGWAS_graph_tag
-  try {
-    record.DBGWAS_graph_tag = extractValue(header, "DBGWAS_graph_tag");
-  } catch (const ValueNotFound &e) {
-    record.DBGWAS_graph_tag = header;
+  //check if graph tag is not empty
+  if (allTags["specific"].size()==0) {
+    cerr << "[WARNING] DBGWAS_specific_tag of " << header << " is empty! Setting to <EMPTY>" << endl;
+    allTags["specific"] = "<EMPTY>";
   }
-  if (record.DBGWAS_graph_tag.size()==0) {
-    cerr << "[WARNING] DBGWAS_graph_tag of " << header << " is empty! Setting to EMPTY" << endl;
-    record.DBGWAS_graph_tag = "EMPTY";
-  }
+
+  record.DBGWAS_tags=allTags;
 
   return record;
 }
 
-//parse the header and extract the value corresponding to the given tag
-string BlastRecord::extractValue (const string &header, const string &tag) {
-  if (header.find(tag) != string::npos) {
-    //found the tag, extract the value
-    auto posDBGWASIndexTag = header.find(tag);
-    auto posSemicolon = header.find_first_of("; \t\n\r", posDBGWASIndexTag+1);
-    if (posSemicolon==string::npos) posSemicolon = header.length();
-    auto posStartValue = posDBGWASIndexTag+string(tag).length()+1;
-    string value = header.substr(posStartValue, posSemicolon-posStartValue);
-    boost::trim(value);
-    return value;
-  }
+//parse the header and extract all the DBGWAS tags
+//header is intentionally string and not const string &
+map<string, string> BlastRecord::extractValuesWithRegex(string header, const regex &expression) {
+  map<string, string> extractedValues;
+  smatch matchResults;
 
-  //tag not found
-  throw ValueNotFound();
+  while(regex_search(header, matchResults, expression))
+  {
+    string key = matchResults.str(1);
+    boost::trim_if(key, [](char c) -> bool { return c=='_';});
+    string value = matchResults.str(2);
+    boost::trim_if(value, [](char c) -> bool { return c=='_';});
+    extractedValues[key]=value;
+
+    //go to the next field
+    header = matchResults.suffix();
+  }
+  return extractedValues;
 }
 
 
@@ -129,9 +138,11 @@ string Blast::makeblastdb (const string &dbtype, const string &originalDBPath, c
 }
 
 
-void AnnotationRecord::SetOfNodesAndEvalue::addNode(int node, long double evalue) {
+void AnnotationRecord::AnnotationInfoGraphPage::addNode(int node, long double evalue, const BlastRecord* record) {
   nodes.insert(node);
   minEvalue = min(minEvalue, evalue);
+  if (record)
+    this->record=*record;
 }
 
 //get a representation of this annotation to be added to the SQL string in the index page
@@ -140,8 +151,8 @@ string AnnotationRecord::getSQLRepresentationForIndexPage() const {
   if (annotations.size()==0)
     ss << UNIQUE_SYMBOL_MARKER << "No annotations found" << UNIQUE_SYMBOL_MARKER << " ";
   else {
-    for (const auto & indexAndSetOfNodesAndEvalue : annotations)
-      ss << UNIQUE_SYMBOL_MARKER << annotationIndex[indexAndSetOfNodesAndEvalue.first] << UNIQUE_SYMBOL_MARKER << " ";
+    for (const auto & indexAndAnnotationInfoGraphPage : annotations)
+      ss << UNIQUE_SYMBOL_MARKER << annotationIndex[indexAndAnnotationInfoGraphPage.first] << UNIQUE_SYMBOL_MARKER << " ";
   }
   return ss.str();
 }
@@ -150,8 +161,8 @@ string AnnotationRecord::getSQLRepresentationForIndexPage() const {
 string AnnotationRecord::getAnnotationsForHOTForIndexPage(int componentId) const {
   stringstream ss;
   ss << "[";
-  for (const auto & indexAndSetOfNodesAndEvalue : annotations)
-    ss << "['" << annotationIndex[indexAndSetOfNodesAndEvalue.first] << "', " << indexAndSetOfNodesAndEvalue.second.getHTMLRepresentationForIndexPage() << "], ";
+  for (const auto & indexAndAnnotationInfoGraphPage : annotations)
+    ss << "['" << annotationIndex[indexAndAnnotationInfoGraphPage.first] << "', " << indexAndAnnotationInfoGraphPage.second.getHTMLRepresentationForIndexPage() << "], ";
   ss << "]";
 
   return ss.str();
@@ -159,18 +170,17 @@ string AnnotationRecord::getAnnotationsForHOTForIndexPage(int componentId) const
 
 
 //transform to a javascript array
-string AnnotationRecord::SetOfNodesAndEvalue::getHTMLRepresentationForGraphPage () const {
+string AnnotationRecord::AnnotationInfoGraphPage::getHTMLRepresentationForGraphPage (const set<string>& allExtraTags) {
   stringstream ss;
   ss << scientific;
-  ss << nodes.size() << ", " << minEvalue << ", [";
-  for (const auto &node : nodes)
-    ss << "'n" << node << "', ";
-  ss << "]";
+  ss << nodes.size() << ", " << minEvalue << ", ";
+  for (const auto &extraTag : allExtraTags)
+    ss << "'" << record.DBGWAS_tags[extraTag] << "', ";
   return ss.str();
 }
 
 //transform to a javascript array
-string AnnotationRecord::SetOfNodesAndEvalue::getHTMLRepresentationForIndexPage () const {
+string AnnotationRecord::AnnotationInfoGraphPage::getHTMLRepresentationForIndexPage () const {
   stringstream ss;
   ss << scientific;
   ss << nodes.size() << ", " << minEvalue;
@@ -185,12 +195,32 @@ set<string> AnnotationRecord::getAnnotationIndexAsSet() const {
 }
 
 
-//get a JS representation of the annotation component for the graph page, with the annotation index, nb of nodes and evalue
-string AnnotationRecord::getJSRepresentationAnnotIdNbNodesEvalueForGraphPage() const {
+//get an HTML representation of the annotation component for the graph page, with the annotation index, and all other info like nb of nodes, evalue and extra tags
+string AnnotationRecord::getJSRepresentationAnnotIdAnnotInfoGraphPage() {
   stringstream ss;
   ss << "[";
-  for (const auto & indexAndSetOfNodesAndEvalue : annotations)
-    ss << "[" << indexAndSetOfNodesAndEvalue.first << ", " << indexAndSetOfNodesAndEvalue.second.getHTMLRepresentationForGraphPage() << "], ";
+  for (auto & indexAndAnnotationInfoGraphPage : annotations)
+    ss << "[" << indexAndAnnotationInfoGraphPage.first << ", " << indexAndAnnotationInfoGraphPage.second.getHTMLRepresentationForGraphPage(allExtraTags) << "], ";
+  ss << "]";
+  return ss.str();
+}
+
+//get the nodes as a javascript array
+string AnnotationRecord::AnnotationInfoGraphPage::getNodesAsJSArray() const {
+  stringstream ss;
+  ss << "[";
+  for (int node : nodes)
+    ss << "'n" << node << "', ";
+  ss << "]";
+  return ss.str();
+}
+
+//get a JS array mapping annotation IDs to the nodes it maps to
+string AnnotationRecord::getJSRepresentationAnnotation2NodesForGraphPage() const {
+  stringstream ss;
+  ss << "[";
+  for (auto & indexAndAnnotationInfoGraphPage : annotations)
+    ss << indexAndAnnotationInfoGraphPage.second.getNodesAsJSArray() << ", ";
   ss << "]";
   return ss.str();
 }
@@ -207,7 +237,7 @@ string AnnotationRecord::getAnnotationIndexAsJSVector() const {
 
 
 //add an annotation to this set
-void AnnotationRecord::addAnnotation(const string &tag, int node, long double evalue) {
+void AnnotationRecord::addAnnotation(const string &tag, int node, long double evalue, const BlastRecord* record) {
   if (find(annotationIndex.begin(), annotationIndex.end(), tag) == annotationIndex.end())
     //did not find the tag, push it
     annotationIndex.push_back(tag);
@@ -216,8 +246,16 @@ void AnnotationRecord::addAnnotation(const string &tag, int node, long double ev
   auto index = find(annotationIndex.begin(), annotationIndex.end(), tag)-annotationIndex.begin();
 
   //add to annotations
-  annotations[index].addNode(node, evalue);
+  annotations[index].addNode(node, evalue, record);
   nodeId2Annotations[node].addAnnotation(index, evalue);
+
+  //add the extra tags if the record was given
+  if(record) {
+    for (const auto &pair : record->DBGWAS_tags) {
+      if (pair.first!="general" && pair.first!="specific")
+        allExtraTags.insert(pair.first);
+    }
+  }
 }
 
 void AnnotationRecord::AnnotationsAndEvalue::addAnnotation(int annotation, long double evalue) {
@@ -258,3 +296,14 @@ string AnnotationRecord::getJSRepresentationNodeId2AnnotationsEvalueForGraphPage
 
   return ss.str();
 };
+
+
+//get the extra tags as a JS vector
+string AnnotationRecord::getExtraTagsAsJSVector() const {
+  stringstream ss;
+  ss << "[";
+  for (const string &extraTag : allExtraTags)
+    ss << "'" << extraTag << "', ";
+  ss << "]";
+  return ss.str();
+}

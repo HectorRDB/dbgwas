@@ -37,9 +37,11 @@ For reproducibility reasons, in the following you have easily the input data, an
 # Downloading, installing and running
 ## Downloading the precompiled binaries
 This is the easiest way to run the tool since it is already precompiled for Linux AMD64 machines.
-Download the latest binary here (v0.4.7): https://www.dropbox.com/s/bb6uk0qw8r7018n/DBGWAS-0.4.7-Linux-precompiled.tar.gz?dl=1
+Download the latest binary here (v0.4.8): https://www.dropbox.com/s/bp81xqohgyfl8ed/DBGWAS-0.4.8-Linux-precompiled.tar.gz?dl=1
 
 Pre-compiled versions history:
+
+DBGWAS v0.4.7: https://www.dropbox.com/s/bb6uk0qw8r7018n/DBGWAS-0.4.7-Linux-precompiled.tar.gz?dl=1
 
 DBGWAS v0.4.6: https://www.dropbox.com/s/fmttm0dhv1bq5ms/DBGWAS-0.4.6-Linux-precompiled.tar.gz?dl=1
 
@@ -103,6 +105,27 @@ cd bin/
 5. See also the directory ```sample_example``` to understand better this example;
 Check at least the file ```sample_example/strains``` to know how to build the input to the program.
 
+## Parameters
+
+You can find DBGWAS parameters by running ```./DBGWAS -h``` or simply here:
+```
+       -strains  (1 arg) :    A text file describing the strains containing 3 columns: 1) ID of the strain; 2) Phenotype (0/1/NA); 3) Path to a multi-fasta file containing the sequences of the strain. This file needs a header. Check the sample_example folder or https://gitlab.com/leoisl/dbgwas/raw/master/sample_example/strains for an example.
+       -k        (1 arg) :    K-mer size.  [default '31']
+       -newick   (1 arg) :    Optional path to a newick tree file. If (and only if) a newick tree file is provided, the lineage effect analysis is computed and PCs figures are generated.  [default '']
+       -nc_db    (1 arg) :    A list of Fasta files separated by comma containing annotations in a nucleotide alphabet format (e.g.: -nc_db path/to/file_1.fa,path/to/file_2.fa,etc). You can customize these files to work better with DBGWAS (see https://gitlab.com/leoisl/dbgwas/tree/master#customizing-annotation-databases).  [default '']
+       -pt_db    (1 arg) :    A list of Fasta files separated by comma containing annotations in a protein alphabet format (e.g.: -pt_db path/to/file_1.fa,path/to/file_2.fa,etc). You can customize these files to work better with DBGWAS (see https://gitlab.com/leoisl/dbgwas/tree/master#customizing-annotation-databases).  [default '']
+       -output   (1 arg) :    Path to the folder where the final and temporary files will be stored.  [default 'output']
+       -skip1    (0 arg) :    Skips Step 1, running only Steps 2 and 3. Assumes that Step 1 was correctly run and folder "step1" is present in the output folder.
+       -skip2    (0 arg) :    Skips Steps 1 and 2, running only Step 3. Assumes that Steps 1 and 2 were correctly run and folders "step1" and "step2" are present in the output folder.
+       -SFF      (1 arg) :    Denotes the Significant Features Filter - the features (or patterns) selected to create a visualisation around them. If it is a float number n, then only the features with q-value<=n are selected. If it is an integer n, then only the n first features are selected. Take a look at the output/step2/patterns.txt file to get a list of features ordered by q-value to better choose this parameter (re-run the tool with -skip2 in order to directly produce the visualisation of the features selected by your parameter).  [default '100']
+       -nh       (1 arg) :    Denotes the neighbourhood to be considered around the significant unitigs.  [default '5']
+       -maf      (1 arg) :    Minor Allele Frequency Filter.  [default '0.01']
+       -nb-cores (1 arg) :    number of cores  [default '1']
+       -verbose  (1 arg) :    verbosity level  [default '1']
+       -version  (0 arg) :    version
+       -help     (0 arg) :    help
+```
+
 ## Lineage vs locus effect
 
 DBGWAS is based on bugwas, which is described in the following paper:
@@ -115,9 +138,8 @@ Bugwas offers association tests at the "locus" level (SNPs, kmers, or
 in our case unitigs) or at the lineage level, i.e. groups of
 SNPs/kmers/unitigs represented by a principal component of the full
 design matrix. The latter option needs more memory as it requires a
-PCA step. By default, DBGWAS skips lineage effect estimation to save
-memory. If you would like to activate lineage effect estimation,
-change do.lineage to TRUE in bin/DBGWAS.R.
+PCA step. If a newick tree file is provided to DBGWAS (with parameter ```-newick```)
+then the lineage effect analysis is computed. Otherwise, it is skipped.
 
 ## Memory and CPU requirements
 
@@ -126,12 +148,11 @@ described in section "DBGWAS in a nutshell" and in our paper (ref at
 the end of the README) produces 54,397,312 kmers which are compressed
 into 2,356,052 unitigs corresponding to 1,141,877 unique patterns.
 
-The analysis runs in about 40 minutes on a PC with 8 Intel(R) Xeon(R)
-CPU E5-1620 0 @ 3.60GHz cores, although most of the operations only
-use a single core at the moment.
+On a machine with 8 Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz cores, the analysis runs in:
 
-With do.lineage=TRUE, memory usage peaks at ~15Gb, vs ~9Gb with
-do.lineage=FALSE.
+* 56 minutes and has 7.7Gb memory usage peak if the newick tree file and the annotation DBs are not given (lineage effect analysis and annotations are skipped);
+* 80 minutes and has 13.6Gb memory usage peak if the newick tree file and the annotation DBs are given (lineage effect analysis and annotations are processed);
+
 
 Scaling on new datasets will essentially depend on the number of
 strains and the number of unique presence/absence patterns obtained
@@ -148,15 +169,23 @@ GVGPHLDQYDVFIIQGTGRRRWRVGEKLQMKQHCPHPDLLQVDPFEAIIDEELEPGDILY
 ```
 If DBGWAS finds a hit to this line, it will consider the full header as its identifier, which can be too long to be shown, making the visualisation cumbersome. More worrying is that this long identifier can be too specific to show general informations, like in the summary page.
 
-If you wish to give new IDs to existing registries without changing much the database, in order to make the visualisation better, and also to group different annotations in a large group in the summary page and in smaller groups in the graph page, you can add two tags to the headers of the database in the following format:
+If you wish to give new IDs to existing registries without changing much the database, in order to make the visualisation better, and also to group different annotations in the summary page, you can add some tags to the headers of the database in the following format:
 ```
-DBGWAS_index_tag=<value>;
-DBGWAS_graph_tag=<value>;
+DBGWAS_general_tag=<value>;
+DBGWAS_specific_tag=<value>;
+DBGWAS_xyz_tag=<value>;
 ```
 
-```DBGWAS_index_tag``` will be the value shown for this annotation in the summary page and ```DBGWAS_graph_tag``` will be the value shown for this annotation in the graph page. For example, if we add both tags to our previous example (scroll to the right to see the tags):
+```DBGWAS_general_tag``` will be the value shown for this annotation in the summary page.
+
+```DBGWAS_specific_tag``` will be the value shown for this annotation in the graph page. **It is advised that ```DBGWAS_specific_tag``` to be unique.**
+
+```DBGWAS_xyz_tag``` will be a column ```xyz``` added to the annotation table in the graph page to make it easier to analyse the annotations found by DBGWAS. With this tag, you could specify, for example, from which organism the annotation comes. There are no limits on the number of ```DBGWAS_xyz_tag``` one can use.
+
+
+For example, if we add three tags to our previous example (scroll to the right to see the tags):
 ```
->sp|P27431|ROXA_ECOLI 50S ribosomal protein L16 3-hydroxylase OS=Escherichia coli (strain K12) GN=roxA PE=1 SV=2;DBGWAS_index_tag=ROXA;DBGWAS_graph_tag=[uniprot] 50S ribosomal protein L16 3-hydroxylase (Escherichia coli)
+>sp|P27431|ROXA_ECOLI 50S ribosomal protein L16 3-hydroxylase OS=Escherichia coli (strain K12) GN=roxA PE=1 SV=2;DBGWAS_general_tag=ROXA;DBGWAS_specific_tag=[uniprot] 50S ribosomal protein L16 3-hydroxylase;DBGWAS_Organism_tag=Escherichia coli
 MEYQLTLNWPDFLERHWQKRPVVLKRGFNNFIDPISPDELAGLAMESEVDSRLVSHQDGK
 WQVSHGPFESYDHLGETNWSLLVQAVNHWHEPTAALMRPFRELPDWRIDDLMISFSVPGG
 GVGPHLDQYDVFIIQGTGRRRWRVGEKLQMKQHCPHPDLLQVDPFEAIIDEELEPGDILY
@@ -222,6 +251,9 @@ cite the following paper :
 Magali Jaillard, Maud Tournoud, Leandro Lima, Vincent Lacroix, Jean-Baptiste Veyrieras and Laurent Jacob, "Representing Genetic Determinants in Bacterial GWAS with Compacted De Bruijn Graphs", 2017, Cold Spring Harbor Labs Journals, doi:10.1101/113563.(url: http://www.biorxiv.org/content/early/2017/03/03/113563).
 
 # Affiliations:
+
 bioMérieux (http://www.biomerieux.fr/)
+
 LBBE (https://lbbe.univ-lyon1.fr/?lang=en)
+
 Erable (https://team.inria.fr/erable/en/)

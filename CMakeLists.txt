@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 2.6)
 ################################################################################
 SET (gatb-tool_VERSION_MAJOR 0)
 SET (gatb-tool_VERSION_MINOR 4)
-SET (gatb-tool_VERSION_PATCH 7)
+SET (gatb-tool_VERSION_PATCH 8)
 
 #write the version number
 file(WRITE ${PROJECT_SOURCE_DIR}/tools/DBGWAS/src/version.h "\#define VERSION \"${gatb-tool_VERSION_MAJOR}.${gatb-tool_VERSION_MINOR}.${gatb-tool_VERSION_PATCH}\"")
@@ -36,7 +36,7 @@ SET (CMAKE_MODULE_PATH ${GATB_CORE_HOME}/cmake)
 ################################################################################
 
 # One can uncomment this line and set the wanted values
-set (KSIZE_LIST "32   64   96  128  160  192  224  256")
+set (KSIZE_LIST "32   64   96  128")
 
 ################################################################################
 # THIRD PARTIES
@@ -86,6 +86,8 @@ SET (CPACK_SOURCE_IGNORE_FILES
 
 # Packaging the binary ; we want to include some additional files
 INSTALL (FILES   ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE                     DESTINATION . COMPONENT precompiled)
+INSTALL (FILES   ${CMAKE_CURRENT_SOURCE_DIR}/THIRDPARTIES                     DESTINATION . COMPONENT precompiled)
+INSTALL (FILES   ${CMAKE_CURRENT_SOURCE_DIR}/Changelog                     DESTINATION . COMPONENT precompiled)
 INSTALL (FILES   ${CMAKE_CURRENT_SOURCE_DIR}/README.md                     DESTINATION . COMPONENT precompiled)
 INSTALL (FILES   ${PROJECT_SOURCE_DIR}/csjs/cytoscape_template.html  DESTINATION ./bin/DBGWAS_lib/ COMPONENT precompiled)
 INSTALL (PROGRAMS   ${PROJECT_SOURCE_DIR}/gemma/gemma.0.93b  DESTINATION ./bin/DBGWAS_lib/ COMPONENT precompiled)
