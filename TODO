@@ -1,9 +1,6 @@
 ﻿---------------------------------------------------------------------------------------------------------------------------------------------
 Prioritaire
 ---------------------------------------------------------------------------------------------------------------------------------------------
-To check:
-    -Output txt files with the markers and compare with other tools (mainly kmer based ones)
-
 Paper TODO:
 v0.4.8:
 -Test:
@@ -12,9 +9,8 @@ v0.4.8:
 -Added Changelog to file Changelog
     -Check if it is included in the zipped file as well...
 -Fix large kmer size bug
-TODO:
-DBGWAS_index_tag renamed to DBGWAS_general_tag;
-DBGWAS_graph_tag renamed to DBGWAS_specific_tag;
+-DBGWAS_index_tag renamed to DBGWAS_general_tag;
+-DBGWAS_graph_tag renamed to DBGWAS_specific_tag;
 -DBGWAS now processes all tags in the format "DBGWAS_xyz_tag = <value>;" tag
     -All headers like this are processed and a xyz column is added to the annotation table in the graph page;
     -DBGWAS_general_tag and DBGWAS_specific_tag are the exceptions to this rule;
