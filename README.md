@@ -148,7 +148,7 @@ into 2,356,052 unitigs corresponding to 1,141,877 unique patterns.
 
 On a machine with 8 Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz cores, the analysis runs in:
 
-* XXX minutes and has YYYGb memory usage peak if the newick tree file and the annotation DBs are not given (lineage effect analysis and annotations are skipped);
+* 56 minutes and has 7.7Gb memory usage peak if the newick tree file and the annotation DBs are not given (lineage effect analysis and annotations are skipped);
 * 80 minutes and has 13.6Gb memory usage peak if the newick tree file and the annotation DBs are given (lineage effect analysis and annotations are processed);
 
 

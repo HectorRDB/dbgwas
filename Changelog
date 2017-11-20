@@ -6,6 +6,13 @@ Done v0.4.8:
 -DBGWAS now processes all tags in the format "DBGWAS_xyz_tag = <value>;"
     -All headers like this are processed and a xyz column is added to the annotation table in the graph page;
     -DBGWAS_general_tag and DBGWAS_specific_tag are the exceptions to this rule;
+-Updated section "Customizing annotation databases" in the README
+-Updated the annotation databases with the new tags
+-Updated section "Lineage vs locus effect" in the README
+    -We don't need to edit the R file anymore
+-Added a section "Parameters" to the README
+-Updated section "Memory and CPU requirements section" in the README with the latest version of the tool
+    -Since the time that we measured these were a very long time ago
 
 
 

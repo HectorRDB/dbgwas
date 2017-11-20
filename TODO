@@ -1,14 +1,6 @@
 ﻿---------------------------------------------------------------------------------------------------------------------------------------------
 Prioritaire
 ---------------------------------------------------------------------------------------------------------------------------------------------
-Paper TODO:
-v0.4.8:
--Updated section "Customizing annotation databases" in the README
--Updated section "Memory and CPU requirements section" in the README with the latest version of the tool
-    -Since the time that we measured these were a very long time ago
--Added a section "Parameters" to the README
-
-
 -Paper
     -Update dbgwas.pdf (section 2 Methods)
     -Update supplMaterials.pdf (section 4 Supplementary Methods, Part II)
@@ -36,10 +28,7 @@ v0.4.8:
 ---------------------------------------------------------------------------------------------------------------------------------------------
 TODO list
 ---------------------------------------------------------------------------------------------------------------------------------------------
-High priority TODO:
-    -Receive as input reads instead of contigs
-    -treat NA better
-        -We just removed from the input for now
+Known bugs:
     -Large kmer size bug:
         -Even if we set in CMakeLists.txt:
             set (KSIZE_LIST "32   64   96  128  160  192  224  256")
@@ -60,6 +49,16 @@ High priority TODO:
         -Asked on stack overflow
     -Fix cytoscape export button regarding annotation table
         -Asked on stack overflow
+
+
+
+
+
+
+High priority TODO:
+    -Receive as input reads instead of contigs
+    -treat NA better
+        -We just removed from the input for now
 
 
 
