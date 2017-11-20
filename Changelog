@@ -1,7 +1,11 @@
 Done v0.4.8:
 -Added thirdparty licenses to file THIRDPARTIES
 -Added Changelog to file Changelog
-
+-DBGWAS_index_tag renamed to DBGWAS_general_tag;
+-DBGWAS_graph_tag renamed to DBGWAS_specific_tag;
+-DBGWAS now processes all tags in the format "DBGWAS_xyz_tag = <value>;"
+    -All headers like this are processed and a xyz column is added to the annotation table in the graph page;
+    -DBGWAS_general_tag and DBGWAS_specific_tag are the exceptions to this rule;
 
 
 

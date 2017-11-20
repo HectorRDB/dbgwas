@@ -146,12 +146,11 @@ described in section "DBGWAS in a nutshell" and in our paper (ref at
 the end of the README) produces 54,397,312 kmers which are compressed
 into 2,356,052 unitigs corresponding to 1,141,877 unique patterns.
 
-The analysis runs in about 40 minutes on a PC with 8 Intel(R) Xeon(R)
-CPU E5-1620 0 @ 3.60GHz cores, although most of the operations only
-use a single core at the moment.
+On a machine with 8 Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz cores, the analysis runs in:
 
-With do.lineage=TRUE, memory usage peaks at ~15Gb, vs ~9Gb with
-do.lineage=FALSE.
+* XXX minutes and has YYYGb memory usage peak if the newick tree file and the annotation DBs are not given (lineage effect analysis and annotations are skipped);
+* 80 minutes and has 13.6Gb memory usage peak if the newick tree file and the annotation DBs are given (lineage effect analysis and annotations are processed);
+
 
 Scaling on new datasets will essentially depend on the number of
 strains and the number of unique presence/absence patterns obtained
@@ -177,14 +176,14 @@ DBGWAS_xyz_tag=<value>;
 
 ```DBGWAS_general_tag``` will be the value shown for this annotation in the summary page.
 
-```DBGWAS_specific_tag``` will be the value shown for this annotation in the graph page. *It is advised that ```DBGWAS_specific_tag``` to be unique.*
+```DBGWAS_specific_tag``` will be the value shown for this annotation in the graph page. **It is advised that ```DBGWAS_specific_tag``` to be unique.**
 
 ```DBGWAS_xyz_tag``` will be a column ```xyz``` added to the annotation table in the graph page to make it easier to analyse the annotations found by DBGWAS. With this tag, you could specify, for example, from which organism the annotation comes. There are no limits on the number of ```DBGWAS_xyz_tag``` one can use.
 
 
-For example, if we add both tags to our previous example (scroll to the right to see the tags):
+For example, if we add three tags to our previous example (scroll to the right to see the tags):
 ```
->sp|P27431|ROXA_ECOLI 50S ribosomal protein L16 3-hydroxylase OS=Escherichia coli (strain K12) GN=roxA PE=1 SV=2;DBGWAS_general_tag=ROXA;DBGWAS_specific_tag=[uniprot] 50S ribosomal protein L16 3-hydroxylase (Escherichia coli)
+>sp|P27431|ROXA_ECOLI 50S ribosomal protein L16 3-hydroxylase OS=Escherichia coli (strain K12) GN=roxA PE=1 SV=2;DBGWAS_general_tag=ROXA;DBGWAS_specific_tag=[uniprot] 50S ribosomal protein L16 3-hydroxylase;DBGWAS_Organism_tag=Escherichia coli
 MEYQLTLNWPDFLERHWQKRPVVLKRGFNNFIDPISPDELAGLAMESEVDSRLVSHQDGK
 WQVSHGPFESYDHLGETNWSLLVQAVNHWHEPTAALMRPFRELPDWRIDDLMISFSVPGG
 GVGPHLDQYDVFIIQGTGRRRWRVGEKLQMKQHCPHPDLLQVDPFEAIIDEELEPGDILY

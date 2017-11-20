@@ -3,19 +3,10 @@ Prioritaire
 ---------------------------------------------------------------------------------------------------------------------------------------------
 Paper TODO:
 v0.4.8:
--Test:
--Run with the new DBs and check:
--DBGWAS_index_tag renamed to DBGWAS_general_tag;
--DBGWAS_graph_tag renamed to DBGWAS_specific_tag;
-    -Update example and images in the readme
-    -Check README and check if everything is fine
--DBGWAS now processes all tags in the format "DBGWAS_xyz_tag = <value>;" tag
-    -All headers like this are processed and a xyz column is added to the annotation table in the graph page;
-    -DBGWAS_general_tag and DBGWAS_specific_tag are the exceptions to this rule;
-    -Compare with previous version and check if everything is fine
--Updated Memory and CPU requirements section in the README
-    -Rerun with 8 cores
--Added the parameters to the README
+-Updated section "Customizing annotation databases" in the README
+-Updated section "Memory and CPU requirements section" in the README with the latest version of the tool
+    -Since the time that we measured these were a very long time ago
+-Added a section "Parameters" to the README
 
 
 -Paper
