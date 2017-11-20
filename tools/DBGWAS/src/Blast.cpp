@@ -173,13 +173,9 @@ string AnnotationRecord::getAnnotationsForHOTForIndexPage(int componentId) const
 string AnnotationRecord::AnnotationInfoGraphPage::getHTMLRepresentationForGraphPage (const set<string>& allExtraTags) {
   stringstream ss;
   ss << scientific;
-  ss << nodes.size() << ", " << minEvalue << ", [";
-  for (const auto &node : nodes)
-    ss << "'n" << node << "', ";
-  ss << "], {";
+  ss << nodes.size() << ", " << minEvalue << ", ";
   for (const auto &extraTag : allExtraTags)
-    ss << "'" << extraTag << "': '" << record.DBGWAS_tags[extraTag] << "', ";
-  ss << "}";
+    ss << "'" << record.DBGWAS_tags[extraTag] << "', ";
   return ss.str();
 }
 
@@ -205,6 +201,26 @@ string AnnotationRecord::getJSRepresentationAnnotIdAnnotInfoGraphPage() {
   ss << "[";
   for (auto & indexAndAnnotationInfoGraphPage : annotations)
     ss << "[" << indexAndAnnotationInfoGraphPage.first << ", " << indexAndAnnotationInfoGraphPage.second.getHTMLRepresentationForGraphPage(allExtraTags) << "], ";
+  ss << "]";
+  return ss.str();
+}
+
+//get the nodes as a javascript array
+string AnnotationRecord::AnnotationInfoGraphPage::getNodesAsJSArray() const {
+  stringstream ss;
+  ss << "[";
+  for (int node : nodes)
+    ss << "'n" << node << "', ";
+  ss << "]";
+  return ss.str();
+}
+
+//get a JS array mapping annotation IDs to the nodes it maps to
+string AnnotationRecord::getJSRepresentationAnnotation2NodesForGraphPage() const {
+  stringstream ss;
+  ss << "[";
+  for (auto & indexAndAnnotationInfoGraphPage : annotations)
+    ss << indexAndAnnotationInfoGraphPage.second.getNodesAsJSArray() << ", ";
   ss << "]";
   return ss.str();
 }
@@ -280,3 +296,14 @@ string AnnotationRecord::getJSRepresentationNodeId2AnnotationsEvalueForGraphPage
 
   return ss.str();
 };
+
+
+//get the extra tags as a JS vector
+string AnnotationRecord::getExtraTagsAsJSVector() const {
+  stringstream ss;
+  ss << "[";
+  for (const string &extraTag : allExtraTags)
+    ss << "'" << extraTag << "', ";
+  ss << "]";
+  return ss.str();
+}

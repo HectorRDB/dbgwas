@@ -52,7 +52,7 @@ var colors = ['red', 'blue', 'green', 'yellow', 'fuchsia', 'brown', 'lime', 'aqu
 
 //***************************************************************
 //MAIN FUNCTIONS
-function buildPage(graphElements, allAnnotations, componentAnnotation, node2AnnotationEvalue)
+function buildPage(graphElements, allAnnotations, componentAnnotation, node2AnnotationEvalue, annotation2NodesPar, extraTags)
 {
     $.blockUI({
       message: '<img width="25px" src="lib/resources/busy.gif" /> Loading resources and drawing the graph<br/>Please wait...' ,
@@ -220,24 +220,31 @@ function buildPage(graphElements, allAnnotations, componentAnnotation, node2Anno
 
 
         //populate annotation2Nodes
-        componentAnnotation.forEach(function(item) {
-            annotation2Nodes[item[0]]=item[3]
-        });
+        annotation2Nodes=annotation2NodesPar;
 
         //populate the table for the graph annotation
+        var tableColumns = [
+            {renderer: annotationId2StringRenderer},
+            {type: 'text'},
+            {type: 'text'}
+        ]
+        var tableColHeaders = [
+            'Annotation',
+            '# nodes',
+            'E-value'
+        ]
+
+        //add the extra tags for the annotation
+        extraTags.forEach(function (key){
+            tableColumns.push({type: 'text'})
+            tableColHeaders.push(key)
+        })
+
         var annotationTableSettings = {
             data: componentAnnotation,
-            columns: [
-                {renderer: annotationId2StringRenderer},
-                {type: 'text'},
-                {type: 'text'}
-            ],
-            colHeaders: [
-                'Annotation',
-                '# nodes',
-                'E-value'
-            ],
-            colWidths: [300, 50, 50],
+            columns: tableColumns,
+            colHeaders: tableColHeaders,
+            colWidths: [300, 50],
             copyColsLimit: 1000000,
             copyRowsLimitNumber: 1000000,
             readOnly: true,

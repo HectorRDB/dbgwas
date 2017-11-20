@@ -74,6 +74,9 @@ private:
 
         //transform to a javascript array
         string getHTMLRepresentationForIndexPage () const;
+
+        //get the nodes as a javascript array
+        string getNodesAsJSArray() const;
     };
     //maps an annotation (int) to its informations to be shown in the graph page
     map<int, AnnotationInfoGraphPage> annotations;
@@ -107,6 +110,9 @@ public:
     //get an HTML representation of the annotation component for the graph page, with the annotation index, and all other info like nb of nodes, evalue and extra tags
     string getJSRepresentationAnnotIdAnnotInfoGraphPage();
 
+    //get a JS array mapping annotation IDs to the nodes it maps to
+    string getJSRepresentationAnnotation2NodesForGraphPage() const;
+
     //gets the annotation index as a JS vector
     string getAnnotationIndexAsJSVector() const;
 
@@ -115,6 +121,9 @@ public:
 
     //get all the annotations IDs from a node as JS vector
     string getAllAnnotationsIDsFromANodeAsJSVector(int node);
+
+    //get the extra tags as a JS vector
+    string getExtraTagsAsJSVector() const;
 
     //get a dictionary in JS where the key is the node id and the value is a pair annotation and evalue
     string getJSRepresentationNodeId2AnnotationsEvalueForGraphPage() const;
