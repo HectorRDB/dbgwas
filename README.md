@@ -148,15 +148,23 @@ GVGPHLDQYDVFIIQGTGRRRWRVGEKLQMKQHCPHPDLLQVDPFEAIIDEELEPGDILY
 ```
 If DBGWAS finds a hit to this line, it will consider the full header as its identifier, which can be too long to be shown, making the visualisation cumbersome. More worrying is that this long identifier can be too specific to show general informations, like in the summary page.
 
-If you wish to give new IDs to existing registries without changing much the database, in order to make the visualisation better, and also to group different annotations in a large group in the summary page and in smaller groups in the graph page, you can add two tags to the headers of the database in the following format:
+If you wish to give new IDs to existing registries without changing much the database, in order to make the visualisation better, and also to group different annotations in the summary page, you can add some tags to the headers of the database in the following format:
 ```
-DBGWAS_index_tag=<value>;
-DBGWAS_graph_tag=<value>;
+DBGWAS_general_tag=<value>;
+DBGWAS_specific_tag=<value>;
+DBGWAS_xyz_tag=<value>;
 ```
 
-```DBGWAS_index_tag``` will be the value shown for this annotation in the summary page and ```DBGWAS_graph_tag``` will be the value shown for this annotation in the graph page. For example, if we add both tags to our previous example (scroll to the right to see the tags):
+```DBGWAS_general_tag``` will be the value shown for this annotation in the summary page.
+
+```DBGWAS_specific_tag``` will be the value shown for this annotation in the graph page. *It is advised that ```DBGWAS_specific_tag``` to be unique.*
+
+```DBGWAS_xyz_tag``` will be a column ```xyz``` added to the annotation table in the graph page to make it easier to analyse the annotations found by DBGWAS. With this tag, you could specify, for example, from which organism the annotation comes. There are no limits on the number of ```DBGWAS_xyz_tag``` one can use.
+
+
+For example, if we add both tags to our previous example (scroll to the right to see the tags):
 ```
->sp|P27431|ROXA_ECOLI 50S ribosomal protein L16 3-hydroxylase OS=Escherichia coli (strain K12) GN=roxA PE=1 SV=2;DBGWAS_index_tag=ROXA;DBGWAS_graph_tag=[uniprot] 50S ribosomal protein L16 3-hydroxylase (Escherichia coli)
+>sp|P27431|ROXA_ECOLI 50S ribosomal protein L16 3-hydroxylase OS=Escherichia coli (strain K12) GN=roxA PE=1 SV=2;DBGWAS_general_tag=ROXA;DBGWAS_specific_tag=[uniprot] 50S ribosomal protein L16 3-hydroxylase (Escherichia coli)
 MEYQLTLNWPDFLERHWQKRPVVLKRGFNNFIDPISPDELAGLAMESEVDSRLVSHQDGK
 WQVSHGPFESYDHLGETNWSLLVQAVNHWHEPTAALMRPFRELPDWRIDDLMISFSVPGG
 GVGPHLDQYDVFIIQGTGRRRWRVGEKLQMKQHCPHPDLLQVDPFEAIIDEELEPGDILY

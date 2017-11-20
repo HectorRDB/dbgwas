@@ -1,3 +1,12 @@
+Done v0.4.8:
+-Added thirdparty licenses to file THIRDPARTIES
+-Added Changelog to file Changelog
+
+
+
+
+
+
 Done v0.4.7:
 Bugfixes:
     -Fixed a small visual bug with long annotations
