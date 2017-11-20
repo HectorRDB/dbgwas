@@ -103,6 +103,27 @@ cd bin/
 5. See also the directory ```sample_example``` to understand better this example;
 Check at least the file ```sample_example/strains``` to know how to build the input to the program.
 
+## Parameters
+
+You can find DBGWAS parameters by running ```./DBGWAS -h``` or simply here:
+```
+       -strains  (1 arg) :    A text file describing the strains containing 3 columns: 1) ID of the strain; 2) Phenotype (0/1/NA); 3) Path to a multi-fasta file containing the sequences of the strain. This file needs a header. Check the sample_example folder or https://gitlab.com/leoisl/dbgwas/raw/master/sample_example/strains for an example.
+       -k        (1 arg) :    K-mer size.  [default '31']
+       -newick   (1 arg) :    Optional path to a newick tree file. If (and only if) a newick tree file is provided, the lineage effect analysis is computed and PCs figures are generated.  [default '']
+       -nc_db    (1 arg) :    A list of Fasta files separated by comma containing annotations in a nucleotide alphabet format (e.g.: -nc_db path/to/file_1.fa,path/to/file_2.fa,etc). You can customize these files to work better with DBGWAS (see https://gitlab.com/leoisl/dbgwas/tree/master#customizing-annotation-databases).  [default '']
+       -pt_db    (1 arg) :    A list of Fasta files separated by comma containing annotations in a protein alphabet format (e.g.: -pt_db path/to/file_1.fa,path/to/file_2.fa,etc). You can customize these files to work better with DBGWAS (see https://gitlab.com/leoisl/dbgwas/tree/master#customizing-annotation-databases).  [default '']
+       -output   (1 arg) :    Path to the folder where the final and temporary files will be stored.  [default 'output']
+       -skip1    (0 arg) :    Skips Step 1, running only Steps 2 and 3. Assumes that Step 1 was correctly run and folder "step1" is present in the output folder.
+       -skip2    (0 arg) :    Skips Steps 1 and 2, running only Step 3. Assumes that Steps 1 and 2 were correctly run and folders "step1" and "step2" are present in the output folder.
+       -SFF      (1 arg) :    Denotes the Significant Features Filter - the features (or patterns) selected to create a visualisation around them. If it is a float number n, then only the features with q-value<=n are selected. If it is an integer n, then only the n first features are selected. Take a look at the output/step2/patterns.txt file to get a list of features ordered by q-value to better choose this parameter (re-run the tool with -skip2 in order to directly produce the visualisation of the features selected by your parameter).  [default '100']
+       -nh       (1 arg) :    Denotes the neighbourhood to be considered around the significant unitigs.  [default '5']
+       -maf      (1 arg) :    Minor Allele Frequency Filter.  [default '0.01']
+       -nb-cores (1 arg) :    number of cores  [default '1']
+       -verbose  (1 arg) :    verbosity level  [default '1']
+       -version  (0 arg) :    version
+       -help     (0 arg) :    help
+```
+
 ## Lineage vs locus effect
 
 DBGWAS is based on bugwas, which is described in the following paper:

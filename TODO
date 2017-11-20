@@ -15,7 +15,7 @@ v0.4.8:
     -Compare with previous version and check if everything is fine
 -Updated Memory and CPU requirements section in the README
     -Rerun with 8 cores
-
+-Added the parameters to the README
 
 
 -Paper
