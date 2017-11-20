@@ -115,9 +115,8 @@ Bugwas offers association tests at the "locus" level (SNPs, kmers, or
 in our case unitigs) or at the lineage level, i.e. groups of
 SNPs/kmers/unitigs represented by a principal component of the full
 design matrix. The latter option needs more memory as it requires a
-PCA step. By default, DBGWAS skips lineage effect estimation to save
-memory. If you would like to activate lineage effect estimation,
-change do.lineage to TRUE in bin/DBGWAS.R.
+PCA step. If a newick tree file is provided to DBGWAS (with parameter ```-newick```)
+then the lineage effect analysis is computed. Otherwise, it is skipped.
 
 ## Memory and CPU requirements
 

@@ -13,9 +13,10 @@ v0.4.8:
     -All headers like this are processed and a xyz column is added to the annotation table in the graph page;
     -DBGWAS_general_tag and DBGWAS_specific_tag are the exceptions to this rule;
     -Compare with previous version and check if everything is fine
-
--Update Memory and CPU requirements section in the README
+-Updated Memory and CPU requirements section in the README
     -Rerun with 8 cores
+
+
 
 -Paper
     -Update dbgwas.pdf (section 2 Methods)
@@ -60,7 +61,7 @@ High priority TODO:
             [Building BooPHF]  99.8 %   elapsed:   0 min 57 sec   remaining:   0 min 0  sec
             [MPHF: populate                          ]  100  %   elapsed:   1 min 22 sec   remaining:   0 min 0  sec   cpu:  99.9 %   mem: [ 924,  924, 4598] MB
             EXCEPTION: kmer size 165 too big for cascading bloom filters
-        -The maximum k-mer size we can use is 128
+        -The maximum k-mer size we can use is 127
         -I am setting in CMakeLists.txt back to:
             set (KSIZE_LIST "32   64   96  128")
 
