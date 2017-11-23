@@ -268,8 +268,49 @@ void build_dbg::execute ()
 
     //Builds the DBG using GATB
     //TODO: by using create() and assigning to a Graph object, the copy constructor does a shallow or deep copy??
-    graph = gatb::core::debruijn::impl::Graph::createAsPointer("-in %s -kmer-size %d -abundance-min 0 -out %s/graph -nb-cores %d",
-                                                          readsFile.c_str(), kmerSize, outputFolder.c_str(), nbCores);
+    /*
+ * Parameters for graph construction:
+ *
+[graph options]
+
+[kmer count options]
+      -in                      (1 arg) :    reads file
+      -kmer-size               (1 arg) :    size of a kmer  [default '31']
+      -abundance-min           (1 arg) :    min abundance threshold for solid kmers  [default '3']
+      -abundance-max           (1 arg) :    max abundance threshold for solid kmers  [default '4294967295']
+      -abundance-min-threshold (1 arg) :    min abundance automatic threshold  [default '3']
+      -histo-max               (1 arg) :    max number of values in kmers histogram  [default '10000']
+      -solidity-kind           (1 arg) :    way to compute solids (sum, min, max, one, all)  [default 'sum']
+      -max-memory              (1 arg) :    max memory (in MBytes)  [default '2000']
+      -max-disk                (1 arg) :    max disk   (in MBytes)  [default '0']
+      -solid-kmers-out         (1 arg) :    output file for solid kmers  [default '']
+      -out                     (1 arg) :    output file  [default '']
+      -out-dir                 (1 arg) :    output directory  [default '.']
+      -minimizer-type          (1 arg) :    minimizer type (0=lexi, 1=freq)  [default '0']
+      -minimizer-size          (1 arg) :    size of a minimizer  [default '8']
+      -repartition-type        (1 arg) :    minimizer repartition (0=unordered, 1=ordered)  [default '0']
+
+[bloom options]
+      -bloom        (1 arg) :    bloom type ('basic', 'cache', 'neighbor')  [default 'neighbor']
+      -debloom      (1 arg) :    debloom type ('none', 'original' or 'cascading')  [default 'cascading']
+      -debloom-impl (1 arg) :    debloom impl ('basic', 'minimizer')  [default 'minimizer']
+
+[branching options]
+      -branching-nodes (1 arg) :    branching type ('none' or 'stored')  [default 'stored']
+      -topology-stats  (1 arg) :    topological information level (0 for none)  [default '0']
+
+[emphf options]
+      -mphf (1 arg) :    mphf type ('none' or 'emphf')  [default 'emphf']
+
+[general options]
+      -nb-cores          (1 arg) :    number of cores  [default '0']
+      -verbose           (1 arg) :    verbosity level  [default '1']
+      -integer-precision (1 arg) :    integers precision (0 for optimized value)  [default '0']
+ *
+ */
+
+    graph = gatb::core::debruijn::impl::Graph::createAsPointer("-in %s -kmer-size %d -abundance-min 0 -out %s/graph -out-dir %s -nb-cores %d",
+                                                          readsFile.c_str(), kmerSize, outputFolder.c_str(), tmpFolder.c_str(), nbCores);
 
 
     // Finding the unitigs

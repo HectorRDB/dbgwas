@@ -7,7 +7,8 @@ Prioritaire
     -@see https://mail.google.com/mail/u/0/#inbox/15f9c647ececdc5e?compose=15fb5578f7bd95f7
 
 
-
+v0.4.9:
+    -Changed where DSK temp files are created from where the tool is launched to output_folder/step1/tmp
 
 
 
@@ -91,7 +92,9 @@ Low priority TODO:
     -To view the MSA, there are several JS plugins
         -http://msa.biojs.net/
     -Or do we need to implement MSA ourselves in javascript or run a local web server which will provide a way of calling a proper program to do this
-  -Make the step 3 fully multi-threaded
+  -Memory optimization:
+    -Change UnitigIdStrandPos simply to unitigId
+        -We just use the unitig id...
   -Transparency switch
     -Non-significant nodes lose transparency
   -Assemble the heaviest path of the DBG and blast it (or the path going through the largest number of significant unitigs)
