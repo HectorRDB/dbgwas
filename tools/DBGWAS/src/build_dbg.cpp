@@ -309,7 +309,7 @@ void build_dbg::execute ()
  *
  */
 
-    graph = gatb::core::debruijn::impl::Graph::createAsPointer("-in %s -kmer-size %d -abundance-min 0 -out %s/graph -out-dir %s -nb-cores %d",
+    graph = gatb::core::debruijn::impl::Graph::createAsPointer("-in %s -kmer-size %d -abundance-min 0 -out %s/graph -out-tmp %s -nb-cores %d",
                                                           readsFile.c_str(), kmerSize, outputFolder.c_str(), tmpFolder.c_str(), nbCores);
 
 
