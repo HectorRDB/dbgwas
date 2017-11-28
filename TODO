@@ -1,6 +1,8 @@
 ﻿---------------------------------------------------------------------------------------------------------------------------------------------
 Prioritaire
 ---------------------------------------------------------------------------------------------------------------------------------------------
+-Fix Git - the precompiled version need to be excluded...
+
 -Paper
     -Update dbgwas.pdf (section 2 Methods)
     -Update supplMaterials.pdf (section 4 Supplementary Methods, Part II)
@@ -9,7 +11,17 @@ Prioritaire
 
 v0.4.9:
     -Changed where DSK temp files are created from where the tool is launched to output_folder/step1/tmp
-
+    -Did not really managed to do so:
+        -These are the temp files that were created during the graph construction:
+            trashme_17941_cfp
+            trashme_17941_debloom_partitions.h5
+            trashme_17941_dsk_partitions_gatb
+            trashme_17941_t2_kmers
+        -There are the temp files created after my changes:
+            trashme_12929_cfp
+            trashme_12929_debloom_partitions.h5
+            trashme_12929_t2_kmers
+        ... so there is still 3 trashme files
 
 
 
@@ -58,6 +70,7 @@ Known bugs:
 
 High priority TODO:
     -Receive as input reads instead of contigs
+        -@see https://mail.google.com/mail/u/0/#inbox/15ffcd92a248a692
     -treat NA better
         -We just removed from the input for now
 
