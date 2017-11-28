@@ -1,6 +1,15 @@
 ﻿---------------------------------------------------------------------------------------------------------------------------------------------
 Prioritaire
 ---------------------------------------------------------------------------------------------------------------------------------------------
+-Fix Git - the precompiled versions need to be excluded...
+    -Will be done on friday, and errors will be fixed on the weekend if they happen
+    -See mail about this
+-Fix:
+    1)  Slash at the end of –output option value (error in step1)
+        DGWAS -strains file  -output toto/    failed with obscure error “for unknow reason” at step1. We understood that the slash was the cause of the error as
+        DGWAS -strains file  -output toto     passed
+
+
 -Paper
     -Update dbgwas.pdf (section 2 Methods)
     -Update supplMaterials.pdf (section 4 Supplementary Methods, Part II)
@@ -50,6 +59,9 @@ Known bugs:
     -Fix cytoscape export button regarding annotation table
         -Asked on stack overflow
 
+    -Bug with maf 0.5 => wrong node color (issue in step3)
+        -@see https://mail.google.com/mail/u/0/#inbox/1600315d1c1fe7bc
+
 
 
 
@@ -57,6 +69,7 @@ Known bugs:
 
 High priority TODO:
     -Receive as input reads instead of contigs
+        -@see https://mail.google.com/mail/u/0/#inbox/15ffcd92a248a692
     -treat NA better
         -We just removed from the input for now
 
@@ -91,7 +104,9 @@ Low priority TODO:
     -To view the MSA, there are several JS plugins
         -http://msa.biojs.net/
     -Or do we need to implement MSA ourselves in javascript or run a local web server which will provide a way of calling a proper program to do this
-  -Make the step 3 fully multi-threaded
+  -Memory optimization:
+    -Change UnitigIdStrandPos simply to unitigId
+        -We just use the unitig id...
   -Transparency switch
     -Non-significant nodes lose transparency
   -Assemble the heaviest path of the DBG and blast it (or the path going through the largest number of significant unitigs)
@@ -100,4 +115,23 @@ Low priority TODO:
     -This would be a field in the input file with a collumn with whatever the user would like to put
     -Show the original genomes as paths in the graph?
   -Work on unitig counts rather than presence/absence
+
+
+
+
+Suggestions from Magali's Formation:
+-          Possibility to launch only step1. Thus, user can specify their own processing on the X matrix of unitigs.
+-          Possibility to write a count matrix at step1, as we get this count value during step1.3. This would be useful for users designing their own step2 (all the trainees were bioinformaticians/biostatisticians)
+-          Possibility to map a particular sequence on the output subgraphs (highlight its path). This is a little bit different from the mapping of a complete input individual sequence. Here, the idea would be to “visualize” on the graph a particular gene variant. Indeed, a lot of resistance genes are gene family containing well described and well annotated variant. For instance, when we see than 44 nodes got the “TEM-11” annotation, the idea would be to draw the (real exact) path of TEM-11 sequence on the graph…
+-          Possibility to export graph view as bitmap…
+-          Possibility to export linear paths as patterns of sequences
+
+
+
+
+Other discussions from MAgali's Formation:
+ When discuting about newick files creation:
+-          multiple alignment of core genes. The core gene collection creation, and the (manual) cleaning of multiple alignment can take really a lot of time and can require quite a lot of expertise
+-          MLST schemes. These are list of predefined genes seen as allele, and the distance between 2 strains is computed as the number of differing alleles the strains get (thus is both gene differ by 1 or 100 SNPs, the distance for this allele will be 1). This take the accessory MLST gene into account. This required that a MLST scheme is available for the species. It is not always/often the case, but when it exists, this is less time-consuming than building core gene alignments.
+-          Kmer-bases phylogeny. I wondered if it already exists and if it could make sense to phylogeneticians. Apparently yes, and for at least 5 years: http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0081760  and https://academic.oup.com/bioinformatics/article-pdf/31/17/2877/445523/btv271.pdf
 
