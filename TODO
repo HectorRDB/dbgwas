@@ -8,6 +8,9 @@ Prioritaire
     1)  Slash at the end of –output option value (error in step1)
         DGWAS -strains file  -output toto/    failed with obscure error “for unknow reason” at step1. We understood that the slash was the cause of the error as
         DGWAS -strains file  -output toto     passed
+    2) Allele freq, Pheno0 and Pheno1 should just take into account the presence/absence pattern
+        -If the unitig appears several times in one strain, it should count just one time!!!
+        -I think it is already like this in the code, I just need to recheck it...
 
 
 -Paper
