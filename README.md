@@ -64,12 +64,13 @@ DBGWAS v0.3.7: https://www.dropbox.com/s/cl3ai2bybqyor2g/DBGWAS-0.3.7-Linux.tar.
 ## Compiling
 If you still want to compile, clone the repository:
 ```
-git clone --recursive git@gitlab.com:leoisl/dbgwas.git
+git clone --recursive https://gitlab.com/leoisl/dbgwas.git
 ```
-and execute inside the repository directory:
+and build the package:
 ```
-mkdir build && cd build && cmake .. && make && make package
+cd dbgwas && mkdir build && cd build && cmake .. && make && make package
 ```
+
 
 ## Dependencies installation
 DBGWAS uses several thirdparty libraries, but most of them were already packed and were statically linked during compilation, so almost no dependencies are needed. However, you still need to:
