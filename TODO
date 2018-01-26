@@ -1,9 +1,9 @@
-﻿---------------------------------------------------------------------------------------------------------------------------------------------
+﻿-Text just after monday
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------
 Prioritaire
 ---------------------------------------------------------------------------------------------------------------------------------------------
--Fix Git - the precompiled versions need to be excluded...
-    -Will be done on friday, and errors will be fixed on the weekend if they happen
-    -See mail about this
 -Fix:
     1)  Slash at the end of –output option value (error in step1)
         DGWAS -strains file  -output toto/    failed with obscure error “for unknow reason” at step1. We understood that the slash was the cause of the error as
@@ -11,6 +11,27 @@ Prioritaire
     2) Allele freq, Pheno0 and Pheno1 should just take into account the presence/absence pattern
         -If the unitig appears several times in one strain, it should count just one time!!!
         -I think it is already like this in the code, I just need to recheck it...
+    3) Mettre en ligne tous les visualisations /data/Projects/00_DBGWAS_paper/output
+        Les dossiers Experiment_visualisation - exclude les *SFF* e le *Kos*
+    4) Execute seer on:
+        -All datasets of the paper
+        -Run after with only one core to get the time and memory requirements
+
+
+       Post-processing of SEER output:
+            1. sort by wald_p_value
+            2. get the annotation for each kmer
+            3. get the n=10 distinct annotation from the top kmer to the others
+    5) In very large graphs, selecting rows in the table does not work
+
+
+
+Run seer:
+    https://github.com/johnlees/seer/wiki/Tutorial
+
+easiest way:
+    -Email seer authors to get the input
+    -But ask for the input and the command lines on how to reproduce the results in Table 1
 
 
 -Paper

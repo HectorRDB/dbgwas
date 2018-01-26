@@ -62,6 +62,15 @@ void checkStrainsFile(const string &strainsFile);
 
 string readFileAsString(const char* fileName);
 
+//strips all last "/" if exists in the parameter
+string stripLastSlashIfExists (string path) {
+  cout << "Before " << path << endl;
+  while(path.size()>0 && path.back()=="/")
+    path.pop()
+  cout << "After " << path << endl;
+  return path;
+}
+
 void copyDirectoryRecursively(const fs::path& sourceDir, const fs::path& destinationDir);
 
 int getNbLinesInFile(const string &filename);

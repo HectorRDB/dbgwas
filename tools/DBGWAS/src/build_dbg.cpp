@@ -253,8 +253,9 @@ void build_dbg::execute ()
     //TODO: seeveral questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
 
     //create the step1 folder in the outputfolder
-    string outputFolder = getInput()->getStr(STR_OUTPUT)+string("/step1");
+    string outputFolder = stripLastSlashIfExists(getInput()->getStr(STR_OUTPUT)+string("/step1"));
     createFolder(outputFolder);
+    exit(0);
 
     //create the tmp folder of step1
     string tmpFolder = outputFolder+string("/tmp");
