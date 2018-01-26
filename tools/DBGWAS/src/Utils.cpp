@@ -394,7 +394,7 @@ void executeCommand(const string &command, bool verbose) {
 //strips all last "/" if exists in the parameter
 string stripLastSlashIfExists (string path) {
   cout << "Before " << path << endl;
-  while(path.size()>0 && path.back()=="/")
+  while(path.size()>0 && path.back()=='/')
     path.pop_back();
   cout << "After " << path << endl;
   return path;
