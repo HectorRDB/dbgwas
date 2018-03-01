@@ -1,6 +1,16 @@
 # About DBGWAS
 DBGWAS is a tool for quick and efficient bacterial GWAS. It uses a compacted De Bruijn Graph (cDBG) structure to represent the variability within all bacterial genome assemblies given as input. Then cDBG nodes are tested for association with a phenotype of interest and the resulting associated nodes are then re-mapped on the cDBG. The output of DBGWAS consists of regions of the cDBG around statistically significant nodes with several informations related to the phenotypes, offering a representation helping in the interpretation. The output can be viewed with any modern web browser, and thus easily shared.
 
+## DBGWAS pipeline
+DBGWAS takes as input draft assemblies and phenotype data for a panel of
+bacterial strains. Variant matrix `X` is built in step 1 using cDBG nodes.
+Variants are tested in step 2 using a linear mixed model.
+Significant variants are post-processed in step 3 to provide an interactive
+interface assisting their interpretation.
+
+![alt text](figures/pipeline.png "DBGWAS pipeline")
+
+
 **IMPORTANT: DBGWAS ONLY WORKS ON LINUX FOR THE MOMENT.**
 
 **IMPORTANT: DBGWAS' OUTPUT IS ONLY TESTED WITH GOOGLE CHROME, FIREFOX AND OPERA BROWSERS.**
