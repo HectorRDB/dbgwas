@@ -43,7 +43,7 @@ void statistical_test::execute () {
 
   //get the parameters
   //create the step2 folder in the outputfolder
-  string outputFolder = getInput()->getStr(STR_OUTPUT)+string("/step2");
+  string outputFolder = stripLastSlashIfExists(getInput()->getStr(STR_OUTPUT))+string("/step2");
   createFolder(outputFolder);
 
   //create the tmp folder of step2
@@ -54,7 +54,7 @@ void statistical_test::execute () {
 
   //execute the statistical test
   //get the step1 output folder
-  fs::path step1OutputFolderRelative(getInput()->getStr(STR_OUTPUT)+string("/step1"));
+  fs::path step1OutputFolderRelative(stripLastSlashIfExists(getInput()->getStr(STR_OUTPUT))+string("/step1"));
   fs::path step1OutputFolder=fs::absolute(step1OutputFolderRelative);
 
   //get the newick path

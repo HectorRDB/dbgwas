@@ -255,7 +255,6 @@ void build_dbg::execute ()
     //create the step1 folder in the outputfolder
     string outputFolder = stripLastSlashIfExists(getInput()->getStr(STR_OUTPUT))+string("/step1");
     createFolder(outputFolder);
-    exit(0);
 
     //create the tmp folder of step1
     string tmpFolder = outputFolder+string("/tmp");
