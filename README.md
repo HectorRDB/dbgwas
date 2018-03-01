@@ -144,28 +144,25 @@ then the lineage effect analysis is computed. Otherwise, it is skipped.
 
 ## Memory and CPU requirements
 
-The analysis on the full dataset with 280 P. aeruginosa strains
-described in section "DBGWAS in a nutshell" and in our paper (ref at
-the end of the README) produces 54,397,312 kmers which are compressed
+The analysis on the full dataset with 280 P. aeruginosa strains and amikacin resistance phenotype,
+described in section "DBGWAS in a nutshell",
+produces 54,397,312 kmers which are compressed
 into 2,356,052 unitigs corresponding to 1,141,877 unique patterns.
 
 On a machine with 8 Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz cores, the analysis runs in:
 
-* 56 minutes and has 7.7Gb memory usage peak if the newick tree file and the annotation DBs are not given (lineage effect analysis and annotations are skipped);
+* 56 minutes and has 8Gb memory usage peak if the newick tree file and the annotation DBs are not given (lineage effect analysis and annotations are skipped);
 * 80 minutes and has 13.6Gb memory usage peak if the newick tree file and the annotation DBs are given (lineage effect analysis and annotations are processed);
 
+A more comprehensive test is presented below. DBGWAS time and maximal memory load on a **single core** is shown (memory between parenthesis). All
+runs were executed with the default parameters, without optional steps (lineage effect analysis
+nor annotation of subgraphs), on an Intel(R) Xeon(R) CPU E5-1620 v3 processor.
+
+![alt text](figures/runtime.png "Runtime and maximal memory load")
 
 Scaling on new datasets will essentially depend on the number of
 strains and the number of unique presence/absence patterns obtained
 across unitigs, i.e., on the genetic variability in the dataset.
-
-A more comprehensive test is presented below. DBGWAS time and maximal memory load on a *single core* is shown (memory between parenthesis). All
-runs were executed with the default parameters, without optional steps (lineage effect analysis
-nor annotation of subgraphs), on an Intel(R) Xeon(R) CPU E5-1620 v3 processor.
-The panel size and genome length (given between parenthesis in the Panel column) do not drive alone the running performances; the
-genome complexity plays an important role as well.
-
-![alt text](figures/runtime.png "Runtime and maximal memory load")
 
 
 # Customizing annotation databases
