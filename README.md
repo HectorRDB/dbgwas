@@ -159,6 +159,15 @@ Scaling on new datasets will essentially depend on the number of
 strains and the number of unique presence/absence patterns obtained
 across unitigs, i.e., on the genetic variability in the dataset.
 
+A more comprehensive test is presented below. DBGWAS time and maximal memory load on a *single core* is shown (memory between parenthesis). All
+runs were executed with the default parameters, without optional steps (lineage effect analysis
+nor annotation of subgraphs), on an Intel(R) Xeon(R) CPU E5-1620 v3 processor.
+The panel size and genome length (given between parenthesis in the Panel column) do not drive alone the running performances; the
+genome complexity plays an important role as well.
+
+![alt text](figures/runtime.png "Runtime and maximal memory load")
+
+
 # Customizing annotation databases
 
 You can customize annotation databases to work better with DBGWAS. For example, consider this Fasta line in the UniProt database of bacterial proteins:
