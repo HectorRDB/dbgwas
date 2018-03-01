@@ -1,58 +1,10 @@
-﻿-Text just after monday
-
-
----------------------------------------------------------------------------------------------------------------------------------------------
+﻿---------------------------------------------------------------------------------------------------------------------------------------------
 Prioritaire
 ---------------------------------------------------------------------------------------------------------------------------------------------
 -Fix:
     1)  Slash at the end of –output option value (error in step1)
         DGWAS -strains file  -output toto/    failed with obscure error “for unknow reason” at step1. We understood that the slash was the cause of the error as
         DGWAS -strains file  -output toto     passed
-    2) Allele freq, Pheno0 and Pheno1 should just take into account the presence/absence pattern
-        -If the unitig appears several times in one strain, it should count just one time!!!
-        -I think it is already like this in the code, I just need to recheck it...
-    3) Mettre en ligne tous les visualisations /data/Projects/00_DBGWAS_paper/output
-        Les dossiers Experiment_visualisation - exclude les *SFF* e le *Kos*
-    4) Execute seer on:
-        -All datasets of the paper
-        -Run after with only one core to get the time and memory requirements
-
-
-       Post-processing of SEER output:
-            1. sort by wald_p_value
-            2. get the annotation for each kmer
-            3. get the n=10 distinct annotation from the top kmer to the others
-    5) In very large graphs, selecting rows in the table does not work
-
-
-
-Run seer:
-    https://github.com/johnlees/seer/wiki/Tutorial
-
-easiest way:
-    -Email seer authors to get the input
-    -But ask for the input and the command lines on how to reproduce the results in Table 1
-
-
--Paper
-    -Update dbgwas.pdf (section 2 Methods)
-    -Update supplMaterials.pdf (section 4 Supplementary Methods, Part II)
-    -@see https://mail.google.com/mail/u/0/#inbox/15f9c647ececdc5e?compose=15fb5578f7bd95f7
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -61,6 +13,16 @@ easiest way:
 ---------------------------------------------------------------------------------------------------------------------------------------------
 TODO list
 ---------------------------------------------------------------------------------------------------------------------------------------------
+Priority:
+    1) Make sure that allele freq, Pheno0 and Pheno1 take into account only the presence/absence pattern
+        -If the unitig appears several times in one strain, it should count just one time.
+        -I think it is already like this in the code, we just need to recheck it...
+
+    2) In very large graphs, selecting all nodes, unselecting, etc is very slow
+
+    3) Change filter in the annotation list in the summary page (add option for the user to use text or to type something)
+
+
 Known bugs:
     -Large kmer size bug:
         -Even if we set in CMakeLists.txt:
@@ -79,8 +41,6 @@ Known bugs:
             set (KSIZE_LIST "32   64   96  128")
 
     -Fix copy and paste of cells containing annotation;
-        -Asked on stack overflow
-    -Fix cytoscape export button regarding annotation table
         -Asked on stack overflow
 
     -Bug with maf 0.5 => wrong node color (issue in step3)
@@ -153,7 +113,7 @@ Suggestions from Magali's Formation:
 
 
 
-Other discussions from MAgali's Formation:
+Other discussions from Magali's Formation:
  When discuting about newick files creation:
 -          multiple alignment of core genes. The core gene collection creation, and the (manual) cleaning of multiple alignment can take really a lot of time and can require quite a lot of expertise
 -          MLST schemes. These are list of predefined genes seen as allele, and the distance between 2 strains is computed as the number of differing alleles the strains get (thus is both gene differ by 1 or 100 SNPs, the distance for this allele will be 1). This take the accessory MLST gene into account. This required that a MLST scheme is available for the species. It is not always/often the case, but when it exists, this is less time-consuming than building core gene alignments.
