@@ -1,3 +1,11 @@
+Done v0.5.0:
+-Bugfix:
+    1)  Slash at the end of –output option value (error in step1)
+        DGWAS -strains file  -output toto/    failed with obscure error “for unknow reason” at step1. We understood that the slash was the cause of the error as
+        DGWAS -strains file  -output toto     passed
+-Updated BioMérieux logo
+
+
 Done v0.4.8:
 -Added thirdparty licenses to file THIRDPARTIES
 -Added Changelog to file Changelog

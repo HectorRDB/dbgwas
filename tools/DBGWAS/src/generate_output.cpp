@@ -432,11 +432,12 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
 void generate_output::execute () {
   checkParametersGenerateOutput(this);
   int neighbourhood = getInput()->getInt(STR_MAX_NEIGHBOURHOOD);
-  string outputFolder = getInput()->getStr(STR_OUTPUT)+string("/step3");
+  string outputFolderParameter = stripLastSlashIfExists(getInput()->getStr(STR_OUTPUT));
+  string outputFolder = outputFolderParameter+string("/step3");
   string tmpFolder = outputFolder+string("/tmp");
-  string visualisationsFolder = getInput()->getStr(STR_OUTPUT)+string("/visualisations");
-  string step1OutputFolder = getInput()->getStr(STR_OUTPUT)+string("/step1");
-  string step2OutputFolder = getInput()->getStr(STR_OUTPUT)+string("/step2");
+  string visualisationsFolder = outputFolderParameter+string("/visualisations");
+  string step1OutputFolder = outputFolderParameter+string("/step1");
+  string step2OutputFolder = outputFolderParameter+string("/step2");
   int nbCores = getInput()->getInt(STR_NBCORES);
 
 

@@ -1,6 +1,16 @@
 # About DBGWAS
 DBGWAS is a tool for quick and efficient bacterial GWAS. It uses a compacted De Bruijn Graph (cDBG) structure to represent the variability within all bacterial genome assemblies given as input. Then cDBG nodes are tested for association with a phenotype of interest and the resulting associated nodes are then re-mapped on the cDBG. The output of DBGWAS consists of regions of the cDBG around statistically significant nodes with several informations related to the phenotypes, offering a representation helping in the interpretation. The output can be viewed with any modern web browser, and thus easily shared.
 
+## DBGWAS pipeline
+DBGWAS takes as input draft assemblies and phenotype data for a panel of
+bacterial strains. Variant matrix `X` is built in step 1 using cDBG nodes.
+Variants are tested in step 2 using a linear mixed model.
+Significant variants are post-processed in step 3 to provide an interactive
+interface assisting their interpretation.
+
+![alt text](figures/pipeline.png "DBGWAS pipeline")
+
+
 **IMPORTANT: DBGWAS ONLY WORKS ON LINUX FOR THE MOMENT.**
 
 **IMPORTANT: DBGWAS' OUTPUT IS ONLY TESTED WITH GOOGLE CHROME, FIREFOX AND OPERA BROWSERS.**
@@ -37,9 +47,11 @@ For reproducibility reasons, in the following you have easily the input data, an
 # Downloading, installing and running
 ## Downloading the precompiled binaries
 This is the easiest way to run the tool since it is already precompiled for Linux AMD64 machines.
-Download the latest binary here (v0.4.8): https://www.dropbox.com/s/bp81xqohgyfl8ed/DBGWAS-0.4.8-Linux-precompiled.tar.gz?dl=1
+Download the latest binary here (v0.5.0): https://www.dropbox.com/s/qr1ew7jdfieodt0/DBGWAS-0.5.0-Linux-precompiled.tar.gz?dl=1
 
 Pre-compiled versions history:
+
+DBGWAS v0.4.8: https://www.dropbox.com/s/bp81xqohgyfl8ed/DBGWAS-0.4.8-Linux-precompiled.tar.gz?dl=1
 
 DBGWAS v0.4.7: https://www.dropbox.com/s/bb6uk0qw8r7018n/DBGWAS-0.4.7-Linux-precompiled.tar.gz?dl=1
 
@@ -144,20 +156,26 @@ then the lineage effect analysis is computed. Otherwise, it is skipped.
 
 ## Memory and CPU requirements
 
-The analysis on the full dataset with 280 P. aeruginosa strains
-described in section "DBGWAS in a nutshell" and in our paper (ref at
-the end of the README) produces 54,397,312 kmers which are compressed
+The analysis on the full dataset with 280 P. aeruginosa strains and amikacin resistance phenotype,
+described in section "DBGWAS in a nutshell",
+produces 54,397,312 kmers which are compressed
 into 2,356,052 unitigs corresponding to 1,141,877 unique patterns.
 
 On a machine with 8 Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz cores, the analysis runs in:
 
-* 56 minutes and has 7.7Gb memory usage peak if the newick tree file and the annotation DBs are not given (lineage effect analysis and annotations are skipped);
+* 56 minutes and has 8Gb memory usage peak if the newick tree file and the annotation DBs are not given (lineage effect analysis and annotations are skipped);
 * 80 minutes and has 13.6Gb memory usage peak if the newick tree file and the annotation DBs are given (lineage effect analysis and annotations are processed);
 
+A more comprehensive test is presented below. DBGWAS time and maximal memory load on a **single core** is shown (memory between parenthesis). All
+runs were executed with the default parameters, without optional steps (lineage effect analysis
+nor annotation of subgraphs), on an Intel(R) Xeon(R) CPU E5-1620 v3 processor.
+
+![alt text](figures/runtime.png "Runtime and maximal memory load")
 
 Scaling on new datasets will essentially depend on the number of
 strains and the number of unique presence/absence patterns obtained
 across unitigs, i.e., on the genetic variability in the dataset.
+
 
 # Customizing annotation databases
 

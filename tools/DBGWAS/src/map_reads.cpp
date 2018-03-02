@@ -440,7 +440,7 @@ void map_reads::execute ()
     if (skip1) return;
 
     //get the parameters
-    string outputFolder = getInput()->getStr(STR_OUTPUT)+string("/step1");
+    string outputFolder = stripLastSlashIfExists(getInput()->getStr(STR_OUTPUT))+string("/step1");
     string tmpFolder = outputFolder+string("/tmp");
     string longReadsFile = tmpFolder+string("/readsFile");
     int nbCores = getInput()->getInt(STR_NBCORES);
