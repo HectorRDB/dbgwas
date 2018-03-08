@@ -2,6 +2,11 @@
 TODO list
 ---------------------------------------------------------------------------------------------------------------------------------------------
 Priority:
+    0) Add to DBGWAS parameter -runOnlyStep1 Freq/Bin
+        -It will just produces the variant matrices and stop
+        -Freq = use frequences
+        -Bin = use presence/absence pattern
+
     1) Make sure that allele freq, Pheno0 and Pheno1 take into account only the presence/absence pattern
         -If the unitig appears several times in one strain, it should count just one time.
         -I think it is already like this in the code, we just need to recheck it...
