@@ -53,7 +53,7 @@ For reproducibility reasons, in the following you have easily the input data, an
 This is the easiest way to run the tool since it is already precompiled for Linux AMD64 machines.
 Download the latest binary here (v0.5.0): https://www.dropbox.com/s/qr1ew7jdfieodt0/DBGWAS-0.5.0-Linux-precompiled.tar.gz?dl=1
 
-*Note:* even in this case, you still have to install the R dependencies (see https://gitlab.com/leoisl/dbgwas#dependencies-installation ).
+**Note:** even in this case, you still have to install the R dependencies (see https://gitlab.com/leoisl/dbgwas#dependencies-installation ).
 
 Pre-compiled versions history:
 
