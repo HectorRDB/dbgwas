@@ -11,7 +11,7 @@ interface assisting their interpretation.
 ![alt text](figures/pipeline.png "DBGWAS pipeline")
 
 
-# Could DBGWAS be usefult to me? - a quick glance at DBGWAS' output
+# Could DBGWAS be useful to me? - a quick glance at DBGWAS' output
 
 You can find DBGWAS' output using several antibiotic resistance phenotypes within three bacterial species of various degrees of genome plasticity (Mycobacterium tuberculosis, Staphylococcus aureus and Pseudomonas aeruginosa) here: http://leoisl.gitlab.io/DBGWAS_support/experiments/#DBGWAS_all_results .
 
