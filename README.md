@@ -11,10 +11,6 @@ interface assisting their interpretation.
 ![alt text](figures/pipeline.png "DBGWAS pipeline")
 
 
-**IMPORTANT: DBGWAS ONLY WORKS ON LINUX FOR THE MOMENT.**
-
-**IMPORTANT: DBGWAS' OUTPUT IS ONLY TESTED WITH GOOGLE CHROME, FIREFOX AND OPERA BROWSERS.**
-
 # Could DBGWAS be usefult to me? - a quick glance at DBGWAS' output
 
 You can find DBGWAS' output using several antibiotic resistance phenotypes within three bacterial species of various degrees of genome plasticity (Mycobacterium tuberculosis, Staphylococcus aureus and Pseudomonas aeruginosa) here: http://leoisl.gitlab.io/DBGWAS_support/experiments/#DBGWAS_all_results .
@@ -23,7 +19,7 @@ The input to each of these experiments are the IDs, phenotypes and contigs for e
 
 A detailed description of the output can be found in section 6 of the supplementary material of our paper.
 
-# DBGWAS in a nutshell
+# DBGWAS in a nutshell - running the tool in one example
 
 For a quick example on how DBGWAS works, we provide the output
 obtained from 282 bacterial genomes along with their drug (amikacin) resistance/sensitivity
@@ -52,10 +48,12 @@ For reproducibility reasons, in the following you have easily the input data, an
 ```
 5. After finishing the execution, the output can be found in the folder ```bin/output/visualisations```
 
-# Downloading, installing and running
+# Downloading, installing, running and troubleshooting
 ## Downloading the precompiled binaries
 This is the easiest way to run the tool since it is already precompiled for Linux AMD64 machines.
 Download the latest binary here (v0.5.0): https://www.dropbox.com/s/qr1ew7jdfieodt0/DBGWAS-0.5.0-Linux-precompiled.tar.gz?dl=1
+
+*Note:* even in this case, you still have to install the R dependencies (see https://gitlab.com/leoisl/dbgwas#dependencies-installation ).
 
 Pre-compiled versions history:
 
@@ -184,6 +182,13 @@ Scaling on new datasets will essentially depend on the number of
 strains and the number of unique presence/absence patterns obtained
 across unitigs, i.e., on the genetic variability in the dataset.
 
+## Troubleshooting
+
+**IMPORTANT: DBGWAS ONLY WORKS ON LINUX FOR THE MOMENT.**
+
+**IMPORTANT: DBGWAS' OUTPUT IS ONLY TESTED WITH GOOGLE CHROME, FIREFOX AND OPERA BROWSERS.**
+
+If you have any doubts or find any bug, please fill in an issue at https://gitlab.com/leoisl/dbgwas/issues .
 
 # Customizing annotation databases
 
