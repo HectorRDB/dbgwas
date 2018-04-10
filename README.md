@@ -17,7 +17,7 @@ You can find DBGWAS' output using several antibiotic resistance phenotypes withi
 
 The input to each of these experiments are the IDs, phenotypes and contigs for each strain.
 
-A detailed description of the output can be found in section 6 of the supplementary material of our paper.
+A detailed description of the output can be found in section 6 of the [supplementary material](https://www.dropbox.com/s/k554q1yqfuyhapf/Suppl_Materials_for_Fast-agnostic-bacterial-GWAS.pdf?dl=1) of our paper.
 
 # DBGWAS in a nutshell - running the tool in one example
 
@@ -258,7 +258,12 @@ DBGWAS makes use of several thirdparty libraries:
 
 
 # How to cite
+
 Magali Jaillard, Leandro Lima, Maud Tournoud, Pierre Mahé, Alex van Belkum, Vincent Lacroix, Laurent Jacob. A fast and agnostic method for bacterial genome-wide association studies: bridging the gap between kmers and genetic events. bioRxiv Cold Spring Harbor Labs Journals (2018). doi:10.1101/297754. URL: https://www.biorxiv.org/content/early/2018/04/09/297754.
+
+# Supplementary Material
+
+https://www.dropbox.com/s/k554q1yqfuyhapf/Suppl_Materials_for_Fast-agnostic-bacterial-GWAS.pdf?dl=1
 
 # License
 Copyright (C) <2017>  <bioMerieux, Universite Claude Bernard Lyon 1,
