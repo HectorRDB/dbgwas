@@ -233,7 +233,8 @@ void generate_output::createIndexFile(int numberOfComponents, const string &visu
 }
 
 
-void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector<MyVertex> &nodes, const string &typeOfGraph, int i,
+void generate_output::
+generateCytoscapeOutput(const graph_t &graph, const vector<MyVertex> &nodes, const string &typeOfGraph, int i,
                              const string &tmpFolder, const string &visualisationsFolder, const vector<int> &selectedUnitigs, int nbPheno0, int nbPheno1,
                              map<int, AnnotationRecord > &idComponent2Annotations,
                              int nbCores) {
@@ -517,6 +518,9 @@ void generate_output::execute () {
     significantUnitigsFile.close();
   }
   cerr << "[Getting significant unitigs from the patterns...] - Done!" << endl;
+  //After this line, we have created a file called significant_unitigs.txt which has the significant
+
+
 
   cerr << "[Reading input and creating BOOST graph...]" << endl;
 
@@ -657,8 +661,19 @@ void generate_output::execute () {
       generateCytoscapeOutput(newGraph, nodesInComponent[i], "comp", i, tmpFolder, visualisationsFolder, selectedUnitigs, nbPheno0, nbPheno1,
                               idComponent2Annotations, nbCores);
     }
+
+
+    ofstream fichierStats;
+    openFileForWriting(outputFolder+"subgraph_descriptors", fichierStats);
+    fichierStats << "node_number\tsig_node_number\tsig_node_ratio\tpos_effect_ratio\tmax_dist\tbranching_level" << endl;
+    for (int i = 0; i < nodesInComponent.size(); i++) { //we go through each component
+      fichierStats << nodesInComponents[i].size() << endl;
+    }
+    fichierStats.close();
+
     numberOfComponents = nodesInComponent.size();
   }
+
 
   cerr << "[Generating the visualisation files...] - Done!" << endl;
 
