@@ -668,7 +668,7 @@ void generate_output::execute () {
     cout << "Trying to write to " << outputFolder+string("/subgraph_descriptors") << endl;
     fichierStats << "node_number\tsig_node_number\tsig_node_ratio\tpos_effect_ratio\tmax_dist\tbranching_level" << endl;
     for (int i = 0; i < nodesInComponent.size(); i++) { //we go through each component
-      fichierStats << nodesInComponents[i].size() << endl;
+      fichierStats << nodesInComponent[i].size() << endl;
     }
     fichierStats.close();
 
