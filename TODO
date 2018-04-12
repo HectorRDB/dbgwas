@@ -17,6 +17,7 @@ Priority:
 
     4) Double-check SFF filter: when the 100th q-value is really not significant (like ~1), there is no meaning to generate a subgraph with the related unitigs. The double check would be: take the top 100 q-values below a threshold (like the usual 0.05). Do you think we could try this ? This would certainly lead to 2 different SFF parameters, which are somewhere correlated…
 
+    5) when launching only step3, there should be no need to specify a strain file
 
 Known bugs:
     -Large kmer size bug:
