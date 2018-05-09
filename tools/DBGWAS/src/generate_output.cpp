@@ -734,11 +734,13 @@ void generate_output::execute () {
 
       //execute abyss on these two files
       {
-        stringstream commandSS << "ABYSS -k " << k << " -o " << effPosPrefix << ".contigs.fa -c 0 -e 0 -E 0 " << effPosPrefix << ".unitigs.fa";
+        stringstream commandSS;
+        commandSS << "ABYSS -k " << k << " -o " << effPosPrefix << ".contigs.fa -c 0 -e 0 -E 0 " << effPosPrefix << ".unitigs.fa";
         executeCommand(commandSS.str(), true);
       }
       {
-        stringstream commandSS << "ABYSS -k " << k << " -o " << effNegPrefix << ".contigs.fa -c 0 -e 0 -E 0 " << effNegPrefix << ".unitigs.fa";
+        stringstream commandSS;
+        commandSS << "ABYSS -k " << k << " -o " << effNegPrefix << ".contigs.fa -c 0 -e 0 -E 0 " << effNegPrefix << ".unitigs.fa";
         executeCommand(commandSS.str(), true);
       }
     }
