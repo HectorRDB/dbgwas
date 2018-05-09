@@ -62,6 +62,8 @@ private:
     bool valid;
 public:
     UnitigStats():valid(false){} //default constructor
+
+    //weightCorrection is 1 or -1, 1 = if we did not switch the 0/1 vector due to allele frequency > 0.5 for bugwas, -1 opposite
     UnitigStats(const PatternFromStats *patternStat, int weightCorretion) {
         if (patternStat) { //valid stuff
             this->qValue = patternStat->qValue;
@@ -73,6 +75,11 @@ public:
             valid=false; //not valid
         }
     }
+
+    long double getWeight() const {
+        return weight;
+    }
+
 
 
     string getQValueAsStr() const {
@@ -125,6 +132,7 @@ struct VertexInfo {
     char strand;
     PhenoCounter phenoCounter;
     UnitigStats unitigStats;
+    bool significant;
 };
 
 //edge informations

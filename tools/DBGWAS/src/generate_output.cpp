@@ -583,6 +583,7 @@ void generate_output::execute () {
       graph[vF].strand = 'F';
       graph[vF].phenoCounter = phenotypeCounters[id];
       graph[vF].unitigStats = UnitigStats(unitigToPatternStats[id], unitigToWeightCorrection[id]);
+      graph[vF].significant = find(selectedUnitigs.begin(), selectedUnitigs.end(), id) != selectedUnitigs.end();
       index++;
     }
     nodesFileReader.close();
@@ -621,6 +622,8 @@ void generate_output::execute () {
     MyVertex selectedVertex = vertex(unitig, graph);
     try {
       fill(distances.begin(), distances.end(), 0);
+
+      //TODO: change for bfs
       dijkstra_shortest_paths(graph, selectedVertex, weight_map(get(&EdgeInfo::weight, graph)).
           distance_map(make_iterator_property_map(distances.begin(),
                                                   boost::get(boost::vertex_index, graph))).
@@ -650,26 +653,42 @@ void generate_output::execute () {
       }
     }
 
-    //get the components of this subgraphs
-    vector<int> componentOfThisNode = vector<int>(num_vertices(newGraph));
-    int num = connected_components(newGraph, &componentOfThisNode[0]);
-    nodesInComponent = vector<vector<MyVertex> >(num);
-    for (int i = 0; i != componentOfThisNode.size(); ++i)
-      nodesInComponent[componentOfThisNode[i]].push_back(vertex(i, newGraph));
+    //get the components of this subgraph
+    vector<int> node2Component = vector<int>(num_vertices(newGraph));
+    int num = connected_components(newGraph, &node2Component[0]);
 
+    //getting all nodes in each component
+    nodesInComponent = vector<vector<MyVertex> >(num);
+    for (int i = 0; i != node2Component.size(); ++i)
+      nodesInComponent[node2Component[i]].push_back(vertex(i, newGraph));
+
+    //output each component
     for (int i = 0; i < nodesInComponent.size(); i++) {
       generateCytoscapeOutput(newGraph, nodesInComponent[i], "comp", i, tmpFolder, visualisationsFolder, selectedUnitigs, nbPheno0, nbPheno1,
                               idComponent2Annotations, nbCores);
     }
 
 
-    ofstream fichierStats;
-    openFileForWriting(outputFolder+string("/subgraph_descriptors"), fichierStats);
-    fichierStats << "node_number\tsig_node_number\tsig_node_ratio\tpos_effect_ratio\tmax_dist\tbranching_level" << endl;
+    ofstream statsFile;
+    openFileForWriting(outputFolder+string("/subgraph_descriptors"), statsFile);
+      statsFile << "subgraph_id\tnode_number\tsig_node_number\tsig_node_ratio\tpos_effect_ratio\tmax_dist\tbranching_level" << endl;
     for (int i = 0; i < nodesInComponent.size(); i++) { //we go through each component
-      fichierStats << nodesInComponent[i].size() << endl;
+        statsFile << i << "\t" << nodesInComponent[i].size() << "\t";
+
+        int numberOfSignificantNodes=0;
+        int numberOfPositiveEffectOnTheSignificantNodes=0;
+        for (const auto &node : nodesInComponent[i]) {
+          if (newGraph[node].significant == true ){
+            numberOfSignificantNodes++;
+            if(newGraph[node].unitigStats.getWeight() > 0 ){
+              numberOfPositiveEffectOnTheSignificantNodes++;
+            }
+          }
+        }
+        statsFile << numberOfSignificantNodes << "\t" << (double) numberOfSignificantNodes/nodesInComponent[i].size()
+                  << "\t" <<  (double) numberOfPositiveEffectOnTheSignificantNodes/numberOfSignificantNodes << "\t" << endl;
     }
-    fichierStats.close();
+    statsFile.close();
 
     numberOfComponents = nodesInComponent.size();
   }

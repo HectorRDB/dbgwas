@@ -1,7 +1,17 @@
 ﻿---------------------------------------------------------------------------------------------------------------------------------------------
 TODO list
 ---------------------------------------------------------------------------------------------------------------------------------------------
+TODO ML:
+    1) quantile distribution of out_degree among significant unitigs (LL+MD)
+    2) max distance of the shortest paths between all pairs of significant unitigs (LL)
+    3) assemble the unitigs using abyss and check if we can classify the events into SNPs and MGEs (LL+MD)
+        -assemble the unitigs using abyss and save the contigs to a file
+
+
+
+
 Priority:
+    0) Do a text output with the infos we have in each node + subgraph id
     0) Add to DBGWAS parameter -runOnlyStep1 Freq/Bin
         -It will just produces the variant matrices and stop
         -Freq = use frequences
