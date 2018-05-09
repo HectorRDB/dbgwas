@@ -721,7 +721,6 @@ void generate_output::execute () {
             averageDegree += (double) out_degree(node, newGraph)/nodesInComponent[i].size();
             nodesFile << newGraph[node].id << "\t" << newGraph[node].significant << "\t" << newGraph[node].unitigStats.getWeight()
                   << "\t" << newGraph[node].name << "\t"
-                  << endl;
                   << out_degree(node, newGraph) << endl;
 
         }
