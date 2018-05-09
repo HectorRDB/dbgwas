@@ -439,6 +439,7 @@ void generate_output::execute () {
   string visualisationsFolder = outputFolderParameter+string("/visualisations");
   string step1OutputFolder = outputFolderParameter+string("/step1");
   string step2OutputFolder = outputFolderParameter+string("/step2");
+  int kmerSize = getInput()->getInt(STR_KSKMER_SIZE);
   int nbCores = getInput()->getInt(STR_NBCORES);
 
 
@@ -735,12 +736,12 @@ void generate_output::execute () {
       //execute abyss on these two files
       {
         stringstream commandSS;
-        commandSS << "ABYSS -k " << k << " -o " << effPosPrefix << ".contigs.fa -c 0 -e 0 -E 0 " << effPosPrefix << ".unitigs.fa";
+        commandSS << "ABYSS -k " << kmerSize << " -o " << effPosPrefix << ".contigs.fa -c 0 -e 0 -E 0 " << effPosPrefix << ".unitigs.fa";
         executeCommand(commandSS.str(), true);
       }
       {
         stringstream commandSS;
-        commandSS << "ABYSS -k " << k << " -o " << effNegPrefix << ".contigs.fa -c 0 -e 0 -E 0 " << effNegPrefix << ".unitigs.fa";
+        commandSS << "ABYSS -k " << kmerSize << " -o " << effNegPrefix << ".contigs.fa -c 0 -e 0 -E 0 " << effNegPrefix << ".unitigs.fa";
         executeCommand(commandSS.str(), true);
       }
     }
