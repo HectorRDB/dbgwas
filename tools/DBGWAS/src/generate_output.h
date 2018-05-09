@@ -45,6 +45,7 @@
 #include <boost/graph/graph_utility.hpp>
 #include <boost/graph/subgraph.hpp>
 #include <cstdlib>
+#include <jmorecfg.h>
 
 #include "global.h"
 #include "PhenoCounter.h"
@@ -80,7 +81,9 @@ public:
         return weight;
     }
 
-
+    boolean getValid() const {
+        return valid;
+    }
 
     string getQValueAsStr() const {
         stringstream ss;
