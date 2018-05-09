@@ -718,18 +718,17 @@ void generate_output::execute () {
             }
           }
 
-          //averageDegree += (double) out_degree(newGraph[node], newGraph)/nodesInComponent[i].size();
+            averageDegree += (double) out_degree(node, newGraph)/nodesInComponent[i].size();
             nodesFile << newGraph[node].id << "\t" << newGraph[node].significant << "\t" << newGraph[node].unitigStats.getWeight()
                   << "\t" << newGraph[node].name << "\t"
                   << endl;
-          //        << out_degree(newGraph[node], newGraph) << endl;
+                  << out_degree(node, newGraph) << endl;
 
         }
 
         statsFile << numberOfSignificantNodes << "\t" << (double) numberOfSignificantNodes/nodesInComponent[i].size()
                   << "\t" <<  (double) numberOfPositiveEffectOnTheSignificantNodes/numberOfSignificantNodes
-                  << endl;
-          //      << "\t" << averageDegree << endl;
+                  << "\t" << averageDegree << endl;
 
         EffPosFile.close();
         EffNegFile.close();
