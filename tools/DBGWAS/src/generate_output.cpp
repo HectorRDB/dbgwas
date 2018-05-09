@@ -706,10 +706,12 @@ void generate_output::execute () {
 
 
       //creating the fasta files to be given to be abyss
+      string effPosPrefix = outputFolder+string("/subgraph_")+std::to_string(i)+string("_EffPos");
       ofstream EffPosFile;
-      openFileForWriting(outputFolder+string("/subgraph")+std::to_string(i)+string("_EffPos.fasta"), EffPosFile);
+      openFileForWriting(effPosPrefix+string(".unitigs.fa"), EffPosFile);
+      string effNegPrefix = outputFolder+string("/subgraph_")+std::to_string(i)+string("_EffNeg");
       ofstream EffNegFile;
-      openFileForWriting(outputFolder+string("/subgraph")+std::to_string(i)+string("_EffNeg.fasta"), EffNegFile);
+      openFileForWriting(effNegPrefix+string(".unitigs.fa"), EffNegFile);
       for (const auto &node : nodesInComponent[i]) {
         if (newGraph[node].unitigStats.getWeight() > 0 || !newGraph[node].unitigStats.getValid()) {
           EffPosFile << ">ID:" << newGraph[node].id
@@ -729,6 +731,16 @@ void generate_output::execute () {
       }
       EffPosFile.close();
       EffNegFile.close();
+
+      //execute abyss on these two files
+      {
+        stringstream commandSS << "ABYSS -k " << k << " -o " << effPosPrefix << ".contigs.fa -c 0 -e 0 -E 0 " << effPosPrefix << ".unitigs.fa";
+        executeCommand(commandSS.str(), true);
+      }
+      {
+        stringstream commandSS << "ABYSS -k " << k << " -o " << effNegPrefix << ".contigs.fa -c 0 -e 0 -E 0 " << effNegPrefix << ".unitigs.fa";
+        executeCommand(commandSS.str(), true);
+      }
     }
     statsFile.close();
     nodesFile.close();
