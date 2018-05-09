@@ -668,74 +668,72 @@ void generate_output::execute () {
                               idComponent2Annotations, nbCores);
     }
 
-
+    //create the subgraph descriptor file
     ofstream statsFile;
     openFileForWriting(outputFolder+string("/subgraph_descriptors"), statsFile);
-      statsFile << "subgraph_id\tnode_number\tsig_node_number\tsig_node_ratio\tpos_effect_ratio\tmax_dist\tbranching_level" << endl;
+    statsFile << "subgraph_id\tnode_number\tsig_node_number\tsig_node_ratio\tpos_effect_ratio\tmax_dist\tbranching_level" << endl;
 
+    //create the node descriptor file
     ofstream nodesFile;
-      openFileForWriting(outputFolder+string("/nodes_descriptors"), nodesFile);
-      nodesFile << "subgraph_id\tnode_id\tnode_sign\tnode_effect\tnode_seq\tnode_degree" << endl;
+    openFileForWriting(outputFolder+string("/nodes_descriptors"), nodesFile);
+    nodesFile << "subgraph_id\tnode_id\tnode_sign\tnode_effect\tnode_seq\tnode_degree" << endl;
 
 
-      for (int i = 0; i < nodesInComponent.size(); i++) { //we go through each component
-
-        ofstream EffPosFile;
-        openFileForWriting(outputFolder+string("/subgraph")+std::to_string(i)+string("_EffPos.fasta"), EffPosFile);
-
-        ofstream EffNegFile;
-        openFileForWriting(outputFolder+string("/subgraph")+std::to_string(i)+string("_EffNeg.fasta"), EffNegFile);
-
-        statsFile << i << "\t" << nodesInComponent[i].size() << "\t";
-        nodesFile << i << "\t";
-
-        int numberOfSignificantNodes=0;
-        int numberOfPositiveEffectOnTheSignificantNodes=0;
-        double averageDegree=0;
-
-        for (const auto &node : nodesInComponent[i]) {
-
-          if(newGraph[node].unitigStats.getWeight() > 0 || !newGraph[node].unitigStats.getValid()){
-            EffPosFile << ">ID:" << newGraph[node].id
-                       << "_EFF:" << newGraph[node].unitigStats.getWeight()
-                       << "_VAL:" << newGraph[node].unitigStats.getValid()
-                       << "_SIGN:" << (string) (newGraph[node].significant ? "1" : "0")
-                       << endl << newGraph[node].name << endl;
+    for (int i = 0; i < nodesInComponent.size(); i++) { //we go through each component
+      //computing some values and writing to nodesFile and statsFile
+      statsFile << i << "\t" << nodesInComponent[i].size() << "\t";
+      nodesFile << i << "\t";
+      int numberOfSignificantNodes=0;
+      int numberOfPositiveEffectOnTheSignificantNodes=0;
+      double averageDegree=0;
+      for (const auto &node : nodesInComponent[i]) {
+        if (newGraph[node].significant == true ){
+          numberOfSignificantNodes++;
+          if(newGraph[node].unitigStats.getWeight() > 0 ){
+            numberOfPositiveEffectOnTheSignificantNodes++;
           }
+        }
+        averageDegree += (double) out_degree(node, newGraph)/nodesInComponent[i].size();
 
-          if(newGraph[node].unitigStats.getWeight() < 0 || !newGraph[node].unitigStats.getValid()){
-              EffNegFile << ">ID:" << newGraph[node].id
-                       << "_EFF:" << newGraph[node].unitigStats.getWeight()
-                       << "_VAL:" << newGraph[node].unitigStats.getValid()
-                       << "_SIGN:" << (string) (newGraph[node].significant ? "1" : "0")
-                       << endl << newGraph[node].name << endl;
-          }
+        //adding the info to the nodesFile
+        nodesFile << newGraph[node].id << "\t" << newGraph[node].significant << "\t" << newGraph[node].unitigStats.getWeight()
+              << "\t" << newGraph[node].name << "\t"
+              << out_degree(node, newGraph) << endl;
+      }
+      //adding the info to the stats file
+      statsFile << numberOfSignificantNodes << "\t" << (double) numberOfSignificantNodes/nodesInComponent[i].size()
+                << "\t" <<  (double) numberOfPositiveEffectOnTheSignificantNodes/numberOfSignificantNodes
+                << "\t" << averageDegree << endl;
 
-          if (newGraph[node].significant == true ){
-            numberOfSignificantNodes++;
-            if(newGraph[node].unitigStats.getWeight() > 0 ){
-              numberOfPositiveEffectOnTheSignificantNodes++;
-            }
-          }
 
-            averageDegree += (double) out_degree(node, newGraph)/nodesInComponent[i].size();
-            nodesFile << newGraph[node].id << "\t" << newGraph[node].significant << "\t" << newGraph[node].unitigStats.getWeight()
-                  << "\t" << newGraph[node].name << "\t"
-                  << out_degree(node, newGraph) << endl;
-
+      //creating the fasta files to be given to be abyss
+      ofstream EffPosFile;
+      openFileForWriting(outputFolder+string("/subgraph")+std::to_string(i)+string("_EffPos.fasta"), EffPosFile);
+      ofstream EffNegFile;
+      openFileForWriting(outputFolder+string("/subgraph")+std::to_string(i)+string("_EffNeg.fasta"), EffNegFile);
+      for (const auto &node : nodesInComponent[i]) {
+        if (newGraph[node].unitigStats.getWeight() > 0 || !newGraph[node].unitigStats.getValid()) {
+          EffPosFile << ">ID:" << newGraph[node].id
+          << "_EFF:" << newGraph[node].unitigStats.getWeight()
+          << "_VAL:" << newGraph[node].unitigStats.getValid()
+          << "_SIGN:" << (string) (newGraph[node].significant ? "1" : "0")
+          << endl << newGraph[node].name << endl;
         }
 
-        statsFile << numberOfSignificantNodes << "\t" << (double) numberOfSignificantNodes/nodesInComponent[i].size()
-                  << "\t" <<  (double) numberOfPositiveEffectOnTheSignificantNodes/numberOfSignificantNodes
-                  << "\t" << averageDegree << endl;
-
-        EffPosFile.close();
-        EffNegFile.close();
-
+        if (newGraph[node].unitigStats.getWeight() < 0 || !newGraph[node].unitigStats.getValid()) {
+          EffNegFile << ">ID:" << newGraph[node].id
+          << "_EFF:" << newGraph[node].unitigStats.getWeight()
+          << "_VAL:" << newGraph[node].unitigStats.getValid()
+          << "_SIGN:" << (string) (newGraph[node].significant ? "1" : "0")
+          << endl << newGraph[node].name << endl;
+        }
       }
-
+      EffPosFile.close();
+      EffNegFile.close();
+    }
     statsFile.close();
     nodesFile.close();
+
     numberOfComponents = nodesInComponent.size();
   }
 
