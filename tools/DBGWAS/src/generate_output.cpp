@@ -681,8 +681,6 @@ void generate_output::execute () {
 
     for (int i = 0; i < nodesInComponent.size(); i++) { //we go through each component
       //computing some values and writing to nodesFile and statsFile
-      statsFile << i << "\t" << nodesInComponent[i].size() << "\t";
-      nodesFile << i << "\t";
       int numberOfSignificantNodes=0;
       int numberOfPositiveEffectOnTheSignificantNodes=0;
       double averageDegree=0;
@@ -696,12 +694,13 @@ void generate_output::execute () {
         averageDegree += (double) out_degree(node, newGraph)/nodesInComponent[i].size();
 
         //adding the info to the nodesFile
-        nodesFile << newGraph[node].id << "\t" << newGraph[node].significant << "\t" << newGraph[node].unitigStats.getWeight()
-              << "\t" << newGraph[node].name << "\t"
-              << out_degree(node, newGraph) << endl;
+        nodesFile << i << "\t" << newGraph[node].id << "\t" << ((int)newGraph[node].significant)
+                  << "\t" << newGraph[node].unitigStats.getWeight() << "\t" << newGraph[node].name
+                  << "\t" << out_degree(node, newGraph) << endl;
       }
       //adding the info to the stats file
-      statsFile << numberOfSignificantNodes << "\t" << (double) numberOfSignificantNodes/nodesInComponent[i].size()
+      statsFile << i << "\t" << nodesInComponent[i].size() << "\t"
+                << numberOfSignificantNodes << "\t" << (double) numberOfSignificantNodes/nodesInComponent[i].size()
                 << "\t" <<  (double) numberOfPositiveEffectOnTheSignificantNodes/numberOfSignificantNodes
                 << "\t" << averageDegree << endl;
 
@@ -716,7 +715,7 @@ void generate_output::execute () {
           EffPosFile << ">ID:" << newGraph[node].id
           << "_EFF:" << newGraph[node].unitigStats.getWeight()
           << "_VAL:" << newGraph[node].unitigStats.getValid()
-          << "_SIGN:" << (string) (newGraph[node].significant ? "1" : "0")
+          << "_SIGN:" << ((int)newGraph[node].significant)
           << endl << newGraph[node].name << endl;
         }
 
@@ -724,7 +723,7 @@ void generate_output::execute () {
           EffNegFile << ">ID:" << newGraph[node].id
           << "_EFF:" << newGraph[node].unitigStats.getWeight()
           << "_VAL:" << newGraph[node].unitigStats.getValid()
-          << "_SIGN:" << (string) (newGraph[node].significant ? "1" : "0")
+          << "_SIGN:" << ((int)newGraph[node].significant)
           << endl << newGraph[node].name << endl;
         }
       }
