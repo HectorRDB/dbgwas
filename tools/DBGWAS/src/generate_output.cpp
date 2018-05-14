@@ -440,7 +440,7 @@ void generate_output::executeAbyss(int kmerSize, const string &prefix) const {
     cerr << "Executing ABYSS with -k " << (kmerSize/2) << "..." << endl;
     if (!executeCommand(commandSSKHalf.str(), true, false)) {
       cerr << "ABYSS failed two times, putting the unitigs as assembly" << endl;
-      boost::filesystem::copy_file(prefix+".unitigs.fa", prefix+".contigs.fa")
+      boost::filesystem::copy_file(prefix+".unitigs.fa", prefix+".contigs.fa");
     }
   }
 }
