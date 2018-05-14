@@ -430,6 +430,21 @@ generateCytoscapeOutput(const graph_t &graph, const vector<MyVertex> &nodes, con
   cerr << "Rendering " << typeOfGraph << "_" << i << "... - Done!" << endl;
 }
 
+void generate_output::executeAbyss(int kmerSize, const string &prefix) const {
+  stringstream commandSS;
+  commandSS << "ABYSS -k " << kmerSize << " -o " << prefix << ".contigs.fa -c 0 -e 0 -E 0 " << prefix << ".unitigs.fa";
+  cerr << "Executing ABYSS with -k " << kmerSize << "..." << endl;
+  if (!executeCommand(commandSS.str(), false, false)) {
+    stringstream commandSSKHalf;
+    commandSSKHalf << "ABYSS -k " << (kmerSize/2) << " -o " << prefix << ".contigs.fa -c 0 -e 0 -E 0 " << prefix << ".unitigs.fa";
+    cerr << "Executing ABYSS with -k " << (kmerSize/2) << "..." << endl;
+    if (!executeCommand(commandSSKHalf.str(), true, false)) {
+      cerr << "ABYSS failed two times, putting the unitigs as assembly" << endl;
+      boost::filesystem::copy_file(prefix+".unitigs.fa", prefix+".contigs.fa")
+    }
+  }
+}
+
 void generate_output::execute () {
   checkParametersGenerateOutput(this);
   int neighbourhood = getInput()->getInt(STR_MAX_NEIGHBOURHOOD);
@@ -734,24 +749,8 @@ void generate_output::execute () {
       EffNegFile.close();
 
       //execute abyss on these two files
-      {
-        stringstream commandSS;
-        commandSS << "ABYSS -k " << kmerSize << " -o " << effPosPrefix << ".contigs.fa -c 0 -e 0 -E 0 " << effPosPrefix << ".unitigs.fa";
-        if (!executeCommand(commandSS.str(), true, false)) {
-          stringstream commandSSKHalf;
-          commandSSKHalf << "ABYSS -k " << (kmerSize/2) << " -o " << effPosPrefix << ".contigs.fa -c 0 -e 0 -E 0 " << effPosPrefix << ".unitigs.fa";
-          executeCommand(commandSSKHalf.str(), true);
-        }
-      }
-      {
-        stringstream commandSS;
-        commandSS << "ABYSS -k " << kmerSize << " -o " << effNegPrefix << ".contigs.fa -c 0 -e 0 -E 0 " << effNegPrefix << ".unitigs.fa";
-        if (!executeCommand(commandSS.str(), true, false)) {
-          stringstream commandSSKHalf;
-          commandSSKHalf << "ABYSS -k " << (kmerSize/2) << " -o " << effNegPrefix << ".contigs.fa -c 0 -e 0 -E 0 " << effNegPrefix << ".unitigs.fa";
-          executeCommand(commandSSKHalf.str(), true);
-        }
-      }
+      executeAbyss(kmerSize, effPosPrefix);
+      executeAbyss(kmerSize, effNegPrefix);
     }
     statsFile.close();
     nodesFile.close();
