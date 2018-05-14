@@ -1,8 +1,6 @@
 ################################################################################
 #  TOOLS
 ################################################################################
-include(ExternalProject)
-
 MACRO(SUBDIRLIST result curdir)
     FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
     SET (dirlist "")
@@ -28,36 +26,6 @@ include_directories (${PSTREAMS_SOURCE_DIR})
 set (WHEREAMI_SOURCE_DIR ${PROJECT_SOURCE_DIR}/whereami/src)
 include_directories (${WHEREAMI_SOURCE_DIR})
 
-# Installing BOOST using CMAKE (based on https://stackoverflow.com/questions/43692976/compile-boost-with-multi-configuration-with-cmake)
-#message(STATUS "Installing Boost library.")
-#set(BOOST_BOOTSTRAP_COMMAND ./bootstrap.sh)
-#set(BOOST_B2_COMMAND ./b2)
-#set(BOOST_SRC_DIR ${PROJECT_BINARY_DIR}/boost_1_62_0)
-#set(BOOST_INSTALL_DIR ${PROJECT_BINARY_DIR}/boost_1_62_0_install)
-
-#set(BOOST_BUILD_TYPE variant=release)
-#if (${CMAKE_BUILD_TYPE} MATCHES Debug)
-#  set(BOOST_BUILD_TYPE variant=debug)
-#endif(${CMAKE_BUILD_TYPE} MATCHES Debug)
-
-#ExternalProject_Add(boost
-#  SOURCE_DIR ${BOOST_SRC_DIR}
-#  BUILD_IN_SOURCE 1
-#  GIT_REPOSITORY "https://github.com/boostorg/boost"
-#  GIT_TAG "4f2bdeb93a4be13ba0dc5e9f44920a2bf67191fc"
-#  CONFIGURE_COMMAND ${BOOST_BOOTSTRAP_COMMAND}
-#  BUILD_COMMAND ${BOOST_B2_COMMAND} headers COMMAND ${BOOST_B2_COMMAND} install
-#    link=static
-#    ${BOOST_BUILD_TYPE}
-#    --prefix=${BOOST_INSTALL_DIR}
-#    --with-filesystem
-#    --with-system
-#    -j2
-#  INSTALL_COMMAND ""
-#)
-
-# We add the BOOST to the project
-#set(BOOST_ROOT ${BOOST_INSTALL_DIR})
 set(Boost_USE_STATIC_LIBS   ON) #This makes boost plug the libraries we specify as static libraries (not dynamic ones - the user does not even need to have boost installed in their pc)
 FIND_PACKAGE(Boost 1.62.0 COMPONENTS filesystem system REQUIRED)
 include_directories(${Boost_INCLUDE_DIR})
