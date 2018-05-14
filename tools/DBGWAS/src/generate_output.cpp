@@ -432,13 +432,13 @@ generateCytoscapeOutput(const graph_t &graph, const vector<MyVertex> &nodes, con
 
 void generate_output::executeAbyss(int kmerSize, const string &prefix) const {
   stringstream commandSS;
-  commandSS << "ABYSS -k " << kmerSize << " -o " << prefix << ".contigs.fa -c 0 -e 0 -E 0 " << prefix << ".unitigs.fa";
+  commandSS << "ABYSSqsd -k " << kmerSize << " -o " << prefix << ".contigs.fa -c 0 -e 0 -E 0 " << prefix << ".unitigs.fa";
   cerr << "Executing ABYSS with -k " << kmerSize << "..." << endl;
   if (!executeCommand(commandSS.str(), false, false)) {
     stringstream commandSSKHalf;
-    commandSSKHalf << "ABYSS -k " << (kmerSize/2) << " -o " << prefix << ".contigs.fa -c 0 -e 0 -E 0 " << prefix << ".unitigs.fa";
+    commandSSKHalf << "ABYSSqsd -k " << (kmerSize/2) << " -o " << prefix << ".contigs.fa -c 0 -e 0 -E 0 " << prefix << ".unitigs.fa";
     cerr << "Executing ABYSS with -k " << (kmerSize/2) << "..." << endl;
-    if (!executeCommand(commandSSKHalf.str(), true, false)) {
+    if (!executeCommand(commandSSKHalf.str(), false, false)) {
       cerr << "ABYSS failed two times, putting the unitigs as assembly" << endl;
       boost::filesystem::copy_file(prefix+".unitigs.fa", prefix+".contigs.fa");
     }
