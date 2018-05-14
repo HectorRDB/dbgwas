@@ -73,7 +73,7 @@ void checkParametersBuildDBG(Tool *tool);
 void checkParametersGenerateOutput(Tool *tool);
 void checkParametersStatisticalTest(Tool *tool);
 void fatalError (const string &message);
-void executeCommand(const string &command, bool verbose=true);
+bool executeCommand(const string &command, bool verbose=true, bool dieToFatalError=true);
 void openFileForReading(const string &filePath, ifstream &stream);
 void openFileForWriting(const string &filePath, ofstream &stream);
 void createFolder(const string &path);

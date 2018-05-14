@@ -356,7 +356,7 @@ void fatalError (const string &message) {
 }
 
 
-void executeCommand(const string &command, bool verbose) {
+bool executeCommand(const string &command, bool verbose, bool dieToFatalError) {
   // run a process and create a streambuf that reads its stdout and stderr
   if (verbose)
     cerr << "Executing " << command << "..." << endl;
@@ -382,13 +382,22 @@ void executeCommand(const string &command, bool verbose) {
     if (proc.rdbuf()->status() != 0) {
       stringstream ss;
       ss << "Error executing " << command << ". Exit status: " << proc.rdbuf()->status();
-      fatalError(ss.str());
+      if (dieToFatalError)
+        fatalError(ss.str());
+      else
+        return false;
     }
     if (verbose)
       cerr << "Executing " << command << " - Done!" << endl;
   }
-  else
-    fatalError("On executeCommand()");
+  else {
+    if (dieToFatalError)
+      fatalError("On executeCommand()");
+    else
+      return false;
+  }
+
+  return true;
 }
 
 //strips all last "/" if exists in the parameter

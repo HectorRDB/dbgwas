@@ -737,12 +737,20 @@ void generate_output::execute () {
       {
         stringstream commandSS;
         commandSS << "ABYSS -k " << kmerSize << " -o " << effPosPrefix << ".contigs.fa -c 0 -e 0 -E 0 " << effPosPrefix << ".unitigs.fa";
-        executeCommand(commandSS.str(), true);
+        if (!executeCommand(commandSS.str(), true, false)) {
+          stringstream commandSSKHalf;
+          commandSSKHalf << "ABYSS -k " << (kmerSize/2) << " -o " << effPosPrefix << ".contigs.fa -c 0 -e 0 -E 0 " << effPosPrefix << ".unitigs.fa";
+          executeCommand(commandSSKHalf.str(), true);
+        }
       }
       {
         stringstream commandSS;
         commandSS << "ABYSS -k " << kmerSize << " -o " << effNegPrefix << ".contigs.fa -c 0 -e 0 -E 0 " << effNegPrefix << ".unitigs.fa";
-        executeCommand(commandSS.str(), true);
+        if (!executeCommand(commandSS.str(), true, false)) {
+          stringstream commandSSKHalf;
+          commandSSKHalf << "ABYSS -k " << (kmerSize/2) << " -o " << effNegPrefix << ".contigs.fa -c 0 -e 0 -E 0 " << effNegPrefix << ".unitigs.fa";
+          executeCommand(commandSSKHalf.str(), true);
+        }
       }
     }
     statsFile.close();
