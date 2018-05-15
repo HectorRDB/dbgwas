@@ -87,7 +87,7 @@ git clone --recursive https://gitlab.com/leoisl/dbgwas.git
 
 And build the package:
 ```
-cd dbgwas && mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make -j8 && cd DBGWAS && make package
+cd dbgwas && mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make && cd DBGWAS && make package
 ```
 
 The package can be found in `build/DBGWAS/DBGWAS-<version>-Linux-precompiled.tar.gz`.
