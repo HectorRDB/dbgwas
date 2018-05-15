@@ -1,11 +1,17 @@
 ﻿---------------------------------------------------------------------------------------------------------------------------------------------
 TODO list
 ---------------------------------------------------------------------------------------------------------------------------------------------
+- Get the good sense of the unitigs (L)
+    If does not work well:
+    - Get only a very small neighbourhoods around the significant unitigs (2 or 3)
+- Group by effect (red+gray and blue+gray) (Ok)
+- Assemble each group with MSA (SeqAn) (MJ)
+- Compare both alignments pairwisely (SeqAn) (MJ)
+
+
 TODO ML:
     1) quantile distribution of out_degree among significant unitigs (LL+MD)
     2) max distance of the shortest paths between all pairs of significant unitigs (LL)
-    3) assemble the unitigs using abyss and check if we can classify the events into SNPs and MGEs (LL+MD)
-        -assemble the unitigs using abyss and save the contigs to a file
 
 
 
