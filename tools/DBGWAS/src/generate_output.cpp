@@ -434,9 +434,9 @@ void generate_output::executeAbyss(int kmerSize, const string &prefix) const {
   stringstream commandSSKHalf;
   commandSSKHalf << "ABYSS -k " << (kmerSize/2) << " -o " << prefix << ".contigs.fa -c 0 -e 0 -E 0 " << prefix << ".unitigs.fa";
   cerr << "Executing ABYSS with -k " << (kmerSize/2) << "..." << endl;
-  if (!executeCommand(commandSSKHalf.str(), false, false)) {
+  if (!executeCommand(commandSSKHalf.str(), true, false)) {
     cerr << "ABYSS failed, putting the unitigs as assembly" << endl;
-    boost::filesystem::copy_file(prefix+".unitigs.fa", prefix+".contigs.fa");
+    boost::filesystem::copy_file(prefix+".unitigs.fa", prefix+".contigs.fa", boost::filesystem::copy_option::overwrite_if_exists);
   }
 }
 
