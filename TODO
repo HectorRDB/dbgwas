@@ -1,23 +1,51 @@
 ﻿---------------------------------------------------------------------------------------------------------------------------------------------
 TODO list
 ---------------------------------------------------------------------------------------------------------------------------------------------
+Next release (v0.5.2 ETA 31/05/2018):
+Continuous genotypes/phenotypes:
+    - Still read the phenotype as a string, to deal with NAs.
+    - If not NA, convert to float, and store as a float in the strain object.
+    - Replace the part where we test whether both "0" and "1" phenotypes are present by a test that the empirical variance of the phenotypes is above some threshold (or simply that they are not all identical).
+    - Optionally build the pheno0Count and pheno1Count counters (which we use for visualization) using a user specified threshold: eg, users can say that positive phenotypes are class1 and non-negative ones are class 0. We provide a default threshold (eg >0 vs <=0, which works seamlessly for the current binary phenotypes) and an option to just desactivate the count columns in the visualization.
+    Regarding the figures:
+        - The barplot and manhattan plot for PCs can be done with non-binary phenotypes.
+        - The "indiv vs first PCs" and tree plot would need to be adapted eg by replacing the 2 colors by a gradient of shades. I can try and do it (or we can just skip these plots for non-binary phenotypes for the moment).
+
+
 Priority:
-    0) Add to DBGWAS parameter -runOnlyStep1 Freq/Bin
+    1) Work on the javascript performance
+        In very large graphs, selecting all nodes, unselecting, etc is very slow
+
+    2) Change filter in the annotation list in the summary page (add option for the user to use text or to type something)
+        In index pages with a lot of annotation, it is way too hard to use a drop-down list
+
+    3) Do a text output of DBGWAS so users can use other tools to post-process its output
+
+    4) Make step 3 multithreaded
+
+    5) Add to DBGWAS parameter -runOnlyStep1 Freq/Bin
         -It will just produces the variant matrices and stop
         -Freq = use frequences
         -Bin = use presence/absence pattern
 
-    1) Make sure that allele freq, Pheno0 and Pheno1 take into account only the presence/absence pattern
-        -If the unitig appears several times in one strain, it should count just one time.
-        -I think it is already like this in the code, we just need to recheck it...
+    6) Double-check SFF filter
+        -When the 100th q-value is really not significant (like ~1), there is no meaning to generate a subgraph with the related unitigs.
+        The double check would be: take the top 100 q-values below a threshold (like the usual 0.05). Do you think we could try this ?
+        This would certainly lead to 2 different SFF parameters, which are somewhere correlated...
 
-    2) In very large graphs, selecting all nodes, unselecting, etc is very slow
+    7) When launching only step3, there should be no need to specify a strain file
 
-    3) Change filter in the annotation list in the summary page (add option for the user to use text or to type something)
+    8) Receive as input reads instead of contigs
+        -@see https://mail.google.com/mail/u/0/#inbox/15ffcd92a248a692
 
-    4) Double-check SFF filter: when the 100th q-value is really not significant (like ~1), there is no meaning to generate a subgraph with the related unitigs. The double check would be: take the top 100 q-values below a threshold (like the usual 0.05). Do you think we could try this ? This would certainly lead to 2 different SFF parameters, which are somewhere correlated…
+    9) Treat NA phenotypes better
+        -We just removed from the input for now
 
-    5) when launching only step3, there should be no need to specify a strain file
+    10) "make" should copy the DBGWAS_lib folder to the tools/ folder
+
+
+
+
 
 Known bugs:
     -Large kmer size bug:
@@ -47,15 +75,6 @@ Known bugs:
 
 
 
-High priority TODO:
-    -Receive as input reads instead of contigs
-        -@see https://mail.google.com/mail/u/0/#inbox/15ffcd92a248a692
-    -treat NA better
-        -We just removed from the input for now
-
-
-
-
 Low priority TODO:
     -Select nodes using the newick tree
         -This is used to select nodes belonging to a strain
@@ -63,11 +82,9 @@ Low priority TODO:
         -It should also show the strain path in the graph
     -Show the newick tree and the unitigs (genotypes)
         -@see: https://mail.google.com/mail/u/0/#sent/15f1663316ff5dec
-  -Move to the latest version of GATB
   -Use a portable version of R to remove all dependencies?
   -Allow the user to provide an already built database, instead of calling makeblastdb always
   -Fix qvalue default min and max to min and max of the components
-  -Use a continuous or categorical phenotype instead of a binarized phenotype (apparently, this would be more suited for virulence phenotypes);
   -Use counts instead of pres/abs patterns for the genotypes (and one application would be to compute such analysis on transcriptome data);
   -Add covariates (e.g. patient metadata) in the association model;
   -If no annotation was provided, remove the line:

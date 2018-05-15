@@ -1,7 +1,6 @@
 ################################################################################
 #  TOOLS
 ################################################################################
-
 MACRO(SUBDIRLIST result curdir)
     FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
     SET (dirlist "")
@@ -27,9 +26,8 @@ include_directories (${PSTREAMS_SOURCE_DIR})
 set (WHEREAMI_SOURCE_DIR ${PROJECT_SOURCE_DIR}/whereami/src)
 include_directories (${WHEREAMI_SOURCE_DIR})
 
-# We add the BOOST include directory
 set(Boost_USE_STATIC_LIBS   ON) #This makes boost plug the libraries we specify as static libraries (not dynamic ones - the user does not even need to have boost installed in their pc)
-FIND_PACKAGE(Boost COMPONENTS filesystem system REQUIRED)
+FIND_PACKAGE(Boost 1.62.0 COMPONENTS filesystem system REQUIRED)
 include_directories(${Boost_INCLUDE_DIR})
 
 # We add the path for extra libraries

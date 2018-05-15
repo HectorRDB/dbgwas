@@ -1,3 +1,11 @@
+Done v0.5.1:
+-Fixed compilation issues
+    -Due to this issue: https://gitlab.com/leoisl/dbgwas/issues/2 (reported by mail from the user of issue https://gitlab.com/leoisl/dbgwas/issues/1 )
+    -Now we have a local copy of Boost v1.62.0 in the repository, so there is no need for the user to have the good version of Boost for compiling the source.
+    -This just affects the compilation step.
+
+
+
 Done v0.5.0:
 -Bugfix:
     1)  Slash at the end of –output option value (error in step1)

@@ -1,13 +1,27 @@
-project(DBGWAS)
-
 cmake_minimum_required(VERSION 2.6)
 
+# Handle superbuild first
+option (USE_SUPERBUILD "Whether or not a superbuild should be invoked" ON)
+
+if (USE_SUPERBUILD)
+  project (SUPERBUILD NONE)
+  # execute the superbuild (this script will be invoked again without the
+  # USE_SUPERBUILD option this time)
+  include (boostSuperBuild/SuperBuild.cmake)
+  return()                      # stop processing this file further
+else()
+  project(DBGWAS)
+endif()
+
+#
+# <usual CMakeLists.txt stuff goes here...>
+#
 ################################################################################
 # The version number.
 ################################################################################
 SET (gatb-tool_VERSION_MAJOR 0)
 SET (gatb-tool_VERSION_MINOR 5)
-SET (gatb-tool_VERSION_PATCH 0)
+SET (gatb-tool_VERSION_PATCH 1)
 
 #write the version number
 file(WRITE ${PROJECT_SOURCE_DIR}/tools/DBGWAS/src/version.h "\#define VERSION \"${gatb-tool_VERSION_MAJOR}.${gatb-tool_VERSION_MINOR}.${gatb-tool_VERSION_PATCH}\"")

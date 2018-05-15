@@ -51,11 +51,14 @@ For reproducibility reasons, in the following you have easily the input data, an
 # Downloading, installing, running and troubleshooting
 ## Downloading the precompiled binaries
 This is the easiest way to run the tool since it is already precompiled for Linux AMD64 machines.
-Download the latest binary here (v0.5.0): https://www.dropbox.com/s/qr1ew7jdfieodt0/DBGWAS-0.5.0-Linux-precompiled.tar.gz?dl=1
+
+Download the latest binary here (v0.5.1): https://www.dropbox.com/s/072vycgnw181jvr/DBGWAS-0.5.1-Linux-precompiled.tar.gz?dl=1
 
 **Note:** even in this case, you still have to install the R dependencies (see https://gitlab.com/leoisl/dbgwas#dependencies-installation ).
 
 Pre-compiled versions history:
+
+DBGWAS v0.5.0: https://www.dropbox.com/s/qr1ew7jdfieodt0/DBGWAS-0.5.0-Linux-precompiled.tar.gz?dl=1
 
 DBGWAS v0.4.8: https://www.dropbox.com/s/bp81xqohgyfl8ed/DBGWAS-0.4.8-Linux-precompiled.tar.gz?dl=1
 
@@ -67,31 +70,30 @@ DBGWAS v0.4.5: https://www.dropbox.com/s/3yow59j0f5onnb7/DBGWAS-0.4.5-Linux-prec
 
 DBGWAS v0.4.4: https://www.dropbox.com/s/ncf6ef4pwyzzuog/DBGWAS-0.4.4-Linux-precompiled.tar.gz?dl=1
 
-DBGWAS v0.4.3: https://www.dropbox.com/s/6b7toss7h4ql6vi/DBGWAS-0.4.3-Linux.tar.gz?dl=1
-
-DBGWAS v0.4.2: https://www.dropbox.com/s/k67eym0b0koo84h/DBGWAS-0.4.2-Linux.tar.gz?dl=1
-
-DBGWAS v0.4.1: https://www.dropbox.com/s/k4kq6e7xz23qu65/DBGWAS-0.4.1-Linux.tar.gz?dl=1
-
-DBGWAS v0.4.0: https://www.dropbox.com/s/q52b1xbvfy55acm/DBGWAS-0.4.0-Linux.tar.gz?dl=1
-
-DBGWAS v0.3.7: https://www.dropbox.com/s/cl3ai2bybqyor2g/DBGWAS-0.3.7-Linux.tar.gz?dl=1
-
 
 
 ## Compiling
-If you still want to compile, clone the repository:
+If you still want to compile, first have installed:
+```
+cmake v2.6+
+g++ v5.4+
+ZLIB
+```
+
+Then, clone the repository:
 ```
 git clone --recursive https://gitlab.com/leoisl/dbgwas.git
 ```
-and build the package:
+
+And build the package:
 ```
-cd dbgwas && mkdir build && cd build && cmake .. && make && make package
+cd dbgwas && mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make && cd DBGWAS && make package
 ```
 
+The package can be found in `build/DBGWAS/DBGWAS-<version>-Linux-precompiled.tar.gz`.
 
 ## Dependencies installation
-DBGWAS uses several thirdparty libraries, but most of them were already packed and were statically linked during compilation, so almost no dependencies are needed. However, you still need to:
+DBGWAS uses several thirdparty libraries, but most of them were already packed and were statically linked during compilation, so almost no dependencies are needed. However, in order to run the tool, you still need to:
 
 1. Install bugwas (an R package). Execute these commands:
 
@@ -104,24 +106,28 @@ install.packages("https://raw.githubusercontent.com/sgearle/bugwas/master/build/
 
 ## Running on a sample example
 
-Now that everything is installed, let's try running the tool in a
-sample example comprising 50 bacterial genomes (subset of the 282
+Now that you have the package (either downloaded or you compiled it yourself),
+let's try running the tool in a sample example comprising 50 bacterial genomes (subset of the 282
 described in the "DBGWAS in a nutshell" section):
 
-1. Go to the binary folder:
+1. Extract the package:
+```
+tar -zxvf DBGWAS-<version>-Linux-precompiled.tar.gz
+```
+2. Go to the binary folder:
 ```
 cd bin/
 ```
-2. Execute the program, using demo files:
+3. Execute the program, using demo files:
 ```
 ./DBGWAS -strains ../sample_example/strains -newick ../sample_example/strains.newick
 ```
-3. The main output, which are subgraphs that can be visualised with any modern web browser, can be found in ```bin/output/visualisations/index.html```
-4. For help and understanding the parameters:
+4. The main output, which are subgraphs that can be visualised with any modern web browser, can be found in ```bin/output/visualisations/index.html```
+5. For help and understanding the parameters:
 ```
 ./DBGWAS -h
 ```
-5. See also the directory ```sample_example``` to understand better this example;
+6. See also the directory ```sample_example``` to understand better this example;
 Check at least the file ```sample_example/strains``` to know how to build the input to the program.
 
 ## Parameters
@@ -255,6 +261,7 @@ DBGWAS makes use of several thirdparty libraries:
 16. jQuery BlockUI Plugin (https://github.com/malsup/blockui/)
 17. Shuffle.js (https://vestride.github.io/Shuffle/)
 18. Fastclick (https://github.com/ftlabs/fastclick)
+19. cmake-superbuild (https://github.com/Sarcasm/cmake-superbuild)
 
 
 # How to cite
