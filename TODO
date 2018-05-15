@@ -21,25 +21,27 @@ Priority:
 
     3) Do a text output of DBGWAS so users can use other tools to post-process its output
 
-    4) Add to DBGWAS parameter -runOnlyStep1 Freq/Bin
+    4) Make step 3 multithreaded
+
+    5) Add to DBGWAS parameter -runOnlyStep1 Freq/Bin
         -It will just produces the variant matrices and stop
         -Freq = use frequences
         -Bin = use presence/absence pattern
 
-    5) Double-check SFF filter
+    6) Double-check SFF filter
         -When the 100th q-value is really not significant (like ~1), there is no meaning to generate a subgraph with the related unitigs.
         The double check would be: take the top 100 q-values below a threshold (like the usual 0.05). Do you think we could try this ?
         This would certainly lead to 2 different SFF parameters, which are somewhere correlated...
 
-    6) When launching only step3, there should be no need to specify a strain file
+    7) When launching only step3, there should be no need to specify a strain file
 
-    7) Receive as input reads instead of contigs
+    8) Receive as input reads instead of contigs
         -@see https://mail.google.com/mail/u/0/#inbox/15ffcd92a248a692
 
-    8) Treat NA phenotypes better
+    9) Treat NA phenotypes better
         -We just removed from the input for now
 
-    9) "make" should copy the DBGWAS_lib folder to the tools/ folder
+    10) "make" should copy the DBGWAS_lib folder to the tools/ folder
 
 
 
