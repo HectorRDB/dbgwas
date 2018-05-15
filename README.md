@@ -75,7 +75,7 @@ DBGWAS v0.4.4: https://www.dropbox.com/s/ncf6ef4pwyzzuog/DBGWAS-0.4.4-Linux-prec
 ## Compiling
 If you still want to compile, first have installed:
 ```
-cmake v3.6+
+cmake v2.6+
 g++ v5.4+
 ZLIB
 ```
