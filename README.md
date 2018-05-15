@@ -52,7 +52,7 @@ For reproducibility reasons, in the following you have easily the input data, an
 ## Downloading the precompiled binaries
 This is the easiest way to run the tool since it is already precompiled for Linux AMD64 machines.
 
-Download the latest binary here (v0.5.1): TODO_PUT_URL
+Download the latest binary here (v0.5.1): <this package>
 
 **Note:** even in this case, you still have to install the R dependencies (see https://gitlab.com/leoisl/dbgwas#dependencies-installation ).
 
