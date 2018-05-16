@@ -149,40 +149,39 @@ genVars = NULL, cutoffCor = NULL,  npcs = NULL, phenotype = NULL,
                               pc.lim = pc.lim)
    message("The barplot for the Bayesian wald test for genome-wide PCs has been completed successfully.")
        
-    ## snpColours = cdbg_getSNPColours(sampleCount = sampleCount,
-    ##                                colourPalette = colourPalette,
-    ##                                colouredPCs =  o[1:20],
-    ##                                which.pc = which.pc,
-    ##                                ipat = ipat,
-    ##                                max.cor.pc = max.cor.pc,
-    ##                                cutoffCor = cutoffCor,
-    ##                                which.pc.tritetra = which.pc.tritetra,
-    ##                                ipat.snps = ipat.snps,
-    ##                                max.cor.pc.tritetra = max.cor.pc.tritetra,
-    ##                                cor.XX = cor.XX)
+    snpColours = cdbg_getSNPColours(sampleCount = sampleCount,
+                                   colourPalette = colourPalette,
+                                   colouredPCs =  o[1:20],
+                                   which.pc = which.pc,
+                                   ipat = ipat,
+                                   max.cor.pc = max.cor.pc,
+                                   cutoffCor = cutoffCor,
+                                   which.pc.tritetra = which.pc.tritetra,
+                                   ipat.snps = ipat.snps,
+                                   max.cor.pc.tritetra = max.cor.pc.tritetra,
+                                   cor.XX = cor.XX)
     
-  ## bipCount = 0
-  ## ttpCount = 0
-  ## if(!is.null(fit.lmm)){
-  ## 	bipCount = nrow(fit.lmm)
-  ## }
-  ## if(!is.null(fit.lmm.tritetra)){
-  ## 	ttpCount = nrow(fit.lmm.tritetra)
-  ## }
+  bipCount = 0
+  ttpCount = 0
+  if(!is.null(fit.lmm)){
+  	bipCount = nrow(fit.lmm)
+  }
+  if(!is.null(fit.lmm.tritetra)){
+  	ttpCount = nrow(fit.lmm.tritetra)
+  }
   
-  ## snpType = c(rep(1,bipCount),rep(2,ttpCount))
+  snpType = c(rep(1,bipCount),rep(2,ttpCount))
 
     ## Not sure it makes sense when using unitigs rather than SNPs: no
     ## linear chromosome structure. Skip for now.
 
     ## #The Manhattan plot for SNP GWAS using logistic regerssion
-    ## logregPvalues = NULL
-    ## logregPos = NULL
-    ## if(!is.null(fit.lm)){
+    logregPvalues = NULL
+    logregPos = NULL
+    if(!is.null(fit.lm)){
         
-    	##logregPos = c(fit.lm$ps,fit.lm.tritetra$ps)
-        ##logregPvalues = c(fit.lm$negLog10,fit.lm.tritetra$negLog10)
-        
+    	logregPos = c(fit.lm$ps,fit.lm.tritetra$ps)
+        logregPvalues = c(fit.lm$negLog10,fit.lm.tritetra$negLog10)
         ## bugwas:::.manhattanPlot(prefix = paste0(prefix,"_ManhattanRawPvalues"),
         ##                         snpPos = logregPos,
         ##                         pValues = logregPvalues,
@@ -192,13 +191,12 @@ genVars = NULL, cutoffCor = NULL,  npcs = NULL, phenotype = NULL,
         
         ## message("The Manhattan plot for SNP GWAS using logistic regerssion has been completed successfully.")
     
-    ##}
+    }
     
     
     ## #The Manhattan plot for SNP GWAS using LMM
-    ##lmmPos = c(fit.lmm$ps,fit.lmm.tritetra$ps)
-    ##lmmPvalues = c(-log10(fit.lmm$p_lrt),-log10(as.numeric(fit.lmm.tritetra$pvals)))
-    
+    lmmPos = c(fit.lmm$ps,fit.lmm.tritetra$ps)
+    lmmPvalues = c(-log10(fit.lmm$p_lrt),-log10(as.numeric(fit.lmm.tritetra$pvals)))
     ## bugwas:::.manhattanPlot(prefix = paste0(prefix,"_ManhattanLMMPvalues"),
     ##               snpPos = lmmPos,
     ##               pValues = lmmPvalues,
@@ -208,44 +206,40 @@ genVars = NULL, cutoffCor = NULL,  npcs = NULL, phenotype = NULL,
     
     ## message("The Manhattan plot for SNP GWAS using LMM has been completed successfully.")
   
-
-    ## Skip this too for now since we are never doing a logistic
-    ## regression. Putting it back requires uncommenting the
-    ## computation of lmmPvalues and logregPvalues above, as well as
-    ## snpColours computation..
-    
+  
   #The plot of logistic regression P-values vs. LMM P-values for SNP GWAS
-  ## if(!is.null(logregPvalues)){
-  ##   bugwas:::.logregVsLMM(prefix = prefix,
-  ##                        col = c(snpColours$bip, snpColours$ttp),
-  ##                        logregPvalues = logregPvalues,
-  ##                        lmmPvalues =  lmmPvalues,
-  ##                        snpType = snpType,
-  ##                        pcOrder = o,
-  ##                        pc.lim = pc.lim,
-  ##                        colourPalette = colourPalette)
+  if(!is.null(logregPvalues)){
+    bugwas:::.logregVsLMM(prefix = prefix,
+                         col = c(snpColours$bip, snpColours$ttp),
+                         logregPvalues = logregPvalues,
+                         lmmPvalues =  lmmPvalues,
+                         snpType = snpType,
+                         pcOrder = o,
+                         pc.lim = pc.lim,
+                         colourPalette = colourPalette)
                          
-  ##    message("The plot of logistic regression P-values vs. LMM P-values for SNP GWAS has been completed successfully.")                    
-  ## }
+     message("The plot of logistic regression P-values vs. LMM P-values for SNP GWAS has been completed successfully.")                    
+  }
+  
   
   
   
   # Plot the individuals by their top two significant additive PCs
-    .plotIndividualBy2PCs(pc1 = o[1], pc2 = o[2],
-                         pc1.scores = pca$x[,o[1]], pc2.scores = pca$x[,o[2]],
-                         prefix= prefix, phenotype)
+  bugwas:::.plotIndividualBy2PCs(pc1 = o[1], pc2 = o[2],
+                       pc1.scores = pca$x[,o[1]], pc2.scores = pca$x[,o[2]],
+                       prefix= prefix, phenotype)
                        
-    message("The reduced space plot of the sample on the top two significant additive PCs been completed successfully.")                    
+   message("The reduced space plot of the sample on the top two significant additive PCs been completed successfully.")                    
                        
   
   #The plot with true and predicted phenotype on the tree
-    .trueAndPredPhenoOnTreePlot(prefix = prefix, tree = tree, which.mtp.pc = unlist(which.mtp.pc), #Check with SGE
-                                max.mtp.cor.pc = max.mtp.cor.pc, cutoffCor = cutoffCor, treepat = treepat,
-                                pcOrder = o, p.genomewidepc = p.genomewidepc, phenotype = phenotype, 
-                                XX.comid = XX.comid, colourPalette = colourPalette,
-                                pc.lim = pc.lim, pred2 = pred2)
+  bugwas:::.trueAndPredPhenoOnTreePlot(prefix = prefix, tree = tree, which.mtp.pc = unlist(which.mtp.pc), #Check with SGE
+                             max.mtp.cor.pc = max.mtp.cor.pc, cutoffCor = cutoffCor, treepat = treepat,
+                             pcOrder = o, p.genomewidepc = p.genomewidepc, phenotype = phenotype, 
+                             XX.comid = XX.comid, colourPalette = colourPalette,
+                             pc.lim = pc.lim, pred2 = pred2)
                              
-    message("The plot with true and predicted phenotype on the tree has been completed successfully.")                         
+   message("The plot with true and predicted phenotype on the tree has been completed successfully.")                         
   
   #The plots of PCs loadings
   bugwas:::.pcLoadingsPlot(prefix = prefix, pca = pca, pc.lim = pc.lim, 
@@ -414,116 +408,4 @@ cdbg_getSNPColours = function(sampleCount = NULL,
     })
     
 
-}
-
-###################################################################
-#' Plot of the sample on the first two principal components
-#' 
-#' This function generates a plot of the sample on the first two
-#' principal components.
-#'
-#' Changelog: deal with continuous phenotypes
-###################################################################
-
-.plotIndividualBy2PCs <- function (pc1 = NULL, pc2 = NULL, pc1.scores = NULL, pc2.scores = NULL, 
-    prefix = NULL, phenotype = NULL) 
-{
-
-    if(length(unique(phenotype[!is.na(phenotype)])) == 2){
-        pheno.colors <- c("blue", "red")[1 + phenotype]
-    }else{
-        ## Use n equally spaced breaks to assign each value to n-1 equal sized bins 
-        ii <- cut(phenotype, breaks = seq(min(phenotype), max(phenotype), len = 100), 
-                  include.lowest = TRUE)
-        ## Use bin indices, ii, to select color from vector of n-1 equally spaced colors
-        pheno.colors <- colorRampPalette(c("#aaaaff", "navy"))(99)[ii]
-    }
-    bugwas:::.pl(paste0(prefix, "_indiv_first2signifPCs"), {
-        plot(pc1.scores + rnorm(length(pc1.scores), 0, sd(pc1.scores)/10), 
-            pc2.scores + rnorm(length(pc2.scores), 0, sd(pc2.scores)/10), 
-            col = pheno.colors, lwd = 0.5, 
-            cex = 1.5, xlab = paste0("PC ", pc1), ylab = paste0("PC ", 
-                pc2))
-    })
-}
-
-###################################################################
-#' 
-#' This function plots the true and predicted phenotypes on a tree.
-#' 
-#' Changelog: deal with continuous phenotypes
-###################################################################
-
-.trueAndPredPhenoOnTreePlot <- function (prefix = NULL, tree = NULL, which.mtp.pc = NULL, max.mtp.cor.pc = NULL, 
-    cutoffCor = NULL, treepat = NULL, pcOrder = NULL, p.genomewidepc = NULL, 
-    phenotype = NULL, XX.comid = NULL, colourPalette = NULL, 
-    pc.lim = NULL, pred2 = NULL) 
-{
-    m = match(pcOrder[pc.lim], which.mtp.pc)
-    branch.col.pc = bugwas:::.getBranchColors(treepat = treepat, tree = tree, 
-        phenotype = phenotype, pcOrder = pcOrder, colourPalette = colourPalette, 
-        which.mtp.pc = which.mtp.pc, max.mtp.cor.pc = max.mtp.cor.pc, 
-        cutoffCor = cutoffCor)
-    tree.eq = bugwas:::.get.tree.eq(tree)
-    pred3 = (pred2 - min(phenotype - mean(phenotype)))/diff(range(phenotype - 
-        mean(phenotype)))
-    edgeLabels = rep("", length(tree$edge))
-    edgeLabelsCOL = rep("white", length(tree$edge))
-    add.signif = NULL
-    if (length(pc.lim) > 0) {
-        sigInd = bugwas:::.getSigIndicators(pc.lim = pc.lim, pcOrder = pcOrder, 
-            p.genomewidepc = p.genomewidepc, tree.eq = tree.eq, 
-            branch.col.pc = branch.col.pc, colourPalette = colourPalette)
-        edgeLabels = sigInd$edgeLabels
-        edgeLabelsCOL = sigInd$edgeLabelsCOL
-        add.signif = sigInd$add.signif
-    }
-    predCOLS = colorRamp(c("grey", "black"))
-    predCOLS = predCOLS(bugwas:::.st(pred3))
-    predCOLS = rgb(predCOLS, maxColorValue = 256)
-    .trueAndPredPhenoOnTree(prefix = prefix, phenotype = phenotype, 
-        tree.eq = tree.eq, branch.col.pc = branch.col.pc, tree = tree, 
-        XX.comid = XX.comid, predCOLS = predCOLS, edgeLabels = edgeLabels, 
-        edgeLabelsCOL = edgeLabelsCOL, add.signif = add.signif, 
-        pc.lim = pc.lim, colourPalette = colourPalette, matchedPCs = m)
-}
-
-.trueAndPredPhenoOnTree <- function (prefix = NULL, phenotype = NULL, tree.eq = NULL, branch.col.pc = NULL, 
-    tree = NULL, XX.comid = NULL, predCOLS = NULL, edgeLabels = NULL, 
-    edgeLabelsCOL = NULL, add.signif = NULL, pc.lim = NULL, colourPalette = NULL, 
-    matchedPCs = NULL) 
-{
-    bugwas:::.pl(paste0(prefix, "_tree_branchescolouredbyPC"), {
-        n = length(phenotype)
-        par(oma = c(1, 1, 1, 5))
-        if(length(unique(phenotype[!is.na(phenotype)])) == 2){
-            pheno.colors <- c("gray", "black")[1 + phenotype - min(phenotype)][match(tree$tip.label, XX.comid)]
-        }else{
-            ## Use n equally spaced breaks to assign each value to n-1 equal sized bins 
-            ii <- cut(phenotype, breaks = seq(min(phenotype), max(phenotype), len = 100), 
-                  include.lowest = TRUE)
-            ## Use bin indices, ii, to select color from vector of n-1 equally spaced colors
-            pheno.colors <- colorRampPalette(c("grey", "black"))(99)[ii]
-        }
-
-        ape::plot.phylo(tree.eq, type = "fan", show.tip.label = TRUE, 
-            edge.col = branch.col.pc, tip.col = pheno.colors, lwd = 3, adj = 0.5, lab4ut = "axial")
-        xx = get("last_plot.phylo", envir = ape::.PlotPhyloEnv)$xx[1:n][match(XX.comid, 
-            tree$tip.label)]
-        yy = get("last_plot.phylo", envir = ape::.PlotPhyloEnv)$yy[1:n][match(XX.comid, 
-            tree$tip.label)]
-        points(1.08 * xx, 1.08 * yy, col = predCOLS, xpd = TRUE, 
-            lwd = 0.5, cex = 1.5)
-        ape::edgelabels(edgeLabels, frame = "none", bg = "none", 
-            col = edgeLabelsCOL)
-        par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0), mar = c(0, 
-            0, 0, 0), new = TRUE)
-        plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
-        if (length(pc.lim) > 0) {
-            colourPalette[which(is.na(matchedPCs) == TRUE)] = "grey50"
-            legend("right", c(add.signif, "Other"), fill = c(colourPalette[pc.lim], 
-                "grey50"), bty = "n", cex = 1.8, xpd = TRUE, 
-                inset = c(0, 0))
-        }
-    })
 }
