@@ -85,7 +85,8 @@ cleanMem()
 ## Read phenotypes
 ##------------------------------
 message(sprintf('[DBGWAS] Reading phenotypes from %s', pheno.file))
-pheno.mat <- read.table(file=pheno.file, header=TRUE, check.names=FALSE, colClasses=c("character","integer"))
+## pheno.mat <- read.table(file=pheno.file, header=TRUE, check.names=FALSE, colClasses=c("character","integer"))
+pheno.mat <- read.table(file=pheno.file, header=TRUE, check.names=FALSE, colClasses=c("character","numeric"))
 if((ncol(gen) != nrow(pheno.mat)) || any(colnames(gen) != pheno.mat['ID'])){
     stop('Mismatch between genotype and phenotype ids (should be in the same order)')
 }
@@ -128,7 +129,7 @@ if(do.lineage){
 ## Takes up memory (~3x design size)
 
 ## Remove mono-allelic (constant) patterns (even if maf.filter=0)
-polyallelic.mask <- (apply(gen, 1, FUN=function(v) length(unique(v))) > 1)
+polyallelic.mask <- (apply(gen[, !is.na(pheno.mat[, 'pheno'])], 1, FUN=function(v) length(unique(v))) > 1)
 cleanMem()
 ## Filter on MAF
 maf.mask <- (rowMeans(gen) >= maf.filter)

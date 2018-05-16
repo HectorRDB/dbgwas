@@ -590,7 +590,7 @@ cdbg_wald_test <- function(y = NULL,
     
     ## Heritability
     fit.lmm.ypred <- XX %*% fit.lmm$Ebeta
-    cat(paste0("## Heritability (R^2) = ", cor(fit.lmm.ypred,y)^2),
+    cat(paste0("## Heritability (R^2) = ", cor(fit.lmm.ypred,y, use='complete.obs')^2),
     	file=paste0(prefix, "_logfile.txt"), sep="\n", append=TRUE)
     
     ## Get full posterior covariance matrix for Bayesian Wald Test
@@ -641,7 +641,7 @@ cdbg_wald_test <- function(y = NULL,
 cdbg_get_wald_input <- function(fit.lmm = NULL,
                                 pca = NULL,
                                 y = NULL){
-	
+
     ## Get full posterior covariance matrix for Bayesian Wald Test
     ## Need the full posterior covariance matrix for the Bayesian Wald test,
     ## to get the posterior uncertainty for each point estimate
@@ -649,12 +649,16 @@ cdbg_get_wald_input <- function(fit.lmm = NULL,
     ## Cstar = diag(lambda * pca$d^2 / (lambda * pca$d^2 + 1))
     ## For the null model, the posterior mean and variance (may be slow!)
     ## astar = t(y) %*% y - t(y) %*% XX %*% fit.lmm$Ebeta
-    pca.Ebeta <- diag(1/(1/(fit.lmm$prefered.lambda) + pca$d^2)) %*% t(pca$x) %*% y
+
+    ## Deal with NA by restricting post.mean computation to phenotyped
+    ## samples
+    missing.y <- is.na(y)
+    pca.Ebeta <- diag(1/(1/(fit.lmm$prefered.lambda) + pca$d^2)) %*% t(pca$x[!missing.y, ]) %*% y[!missing.y]
     XE <- pca$x %*% pca.Ebeta
-    astar <- crossprod(y) - t(y) %*% XE
+    astar <- crossprod(y[!missing.y]) - t(y[!missing.y]) %*% XE[!missing.y, ]
     ## csqxty <-  diag(1/sqrt(1/(fit.lmm$prefered.lambda) + pca$d^2)) %*% t(pca$x) %*% y
     ## astar = crossprod(y) - crossprod(csqxty)
-    dstar = length(y)
+    dstar = sum(!missing.y) #length(y)
     tau = as.numeric((dstar-2)/astar)
     
     ## rotation = t(pca$rotation[,1:npcs])

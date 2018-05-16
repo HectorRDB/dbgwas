@@ -138,7 +138,10 @@ genVars = NULL, cutoffCor = NULL,  npcs = NULL, phenotype = NULL,
                                                  ipat = ipat,
                                                  o = o)
   message("Bayesian Wald test for genome-wide PCs has been completed successfully.")
-  
+
+    print(o)
+    print(p.pca.bwt[o][1:20])
+    
   #The barplot for the Bayesian wald test for genome-wide PCs
   bugwas:::.BayesianWaldTestPCsBarplot(prefix = prefix,
                               p.pca.bwt = p.pca.bwt,
@@ -212,7 +215,7 @@ genVars = NULL, cutoffCor = NULL,  npcs = NULL, phenotype = NULL,
     ## Skip this too for now since we are never doing a logistic
     ## regression. Putting it back requires uncommenting the
     ## computation of lmmPvalues and logregPvalues above, as well as
-    ## snpColours computation..
+    ## snpColours computation.
     
   #The plot of logistic regression P-values vs. LMM P-values for SNP GWAS
   ## if(!is.null(logregPvalues)){
@@ -247,10 +250,11 @@ genVars = NULL, cutoffCor = NULL,  npcs = NULL, phenotype = NULL,
                              
     message("The plot with true and predicted phenotype on the tree has been completed successfully.")                         
   
-  #The plots of PCs loadings
-  bugwas:::.pcLoadingsPlot(prefix = prefix, pca = pca, pc.lim = pc.lim, 
-                 pcOrder = o, ipat = ipat, bippat = bippat, 
-                 bipPos = fit.lmm$ps)  
+    ## The plots of PCs loadings    
+    bugwas:::.pcLoadingsPlot(prefix = prefix, pca = pca, pc.lim = pc.lim, 
+                             pcOrder = o, ipat = ipat, bippat = bippat, 
+                             bipPos = fit.lmm$ps)
+
   message("The plots of PCs loadings have been completed successfully.")
   
   ## To run for all SNPs (biallelic and tri and tetra allelic)
@@ -465,8 +469,8 @@ cdbg_getSNPColours = function(sampleCount = NULL,
         which.mtp.pc = which.mtp.pc, max.mtp.cor.pc = max.mtp.cor.pc, 
         cutoffCor = cutoffCor)
     tree.eq = bugwas:::.get.tree.eq(tree)
-    pred3 = (pred2 - min(phenotype - mean(phenotype)))/diff(range(phenotype - 
-        mean(phenotype)))
+    pred3 = (pred2 - min(phenotype - mean(phenotype, na.rm=TRUE), na.rm=TRUE))/diff(range(phenotype - 
+        mean(phenotype, na.rm=TRUE), na.rm=TRUE))
     edgeLabels = rep("", length(tree$edge))
     edgeLabelsCOL = rep("white", length(tree$edge))
     add.signif = NULL

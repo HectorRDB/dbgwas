@@ -185,7 +185,13 @@ cdbg_ridge_regression = function(y,x,w=matrix(1,length(y),1),K_type="uncentred",
     C <- solve(crossprod(svdR) + (1/lambda * diag(n)))
     
     ## post.mean = (svdX$v %*% (C %*% t(svdR) %*% y))
-    post.mean <- (pca$rotation %*% (C %*% t(svdR) %*% y))
+    ## post.mean <- (pca$rotation %*% (C %*% t(svdR) %*% y))
+
+    ## Deal with NA by restricting post.mean computation to phenotyped
+    ## samples
+    missing.y <- is.na(y)
+    post.mean <- (pca$rotation %*% (C %*% t(svdR[!missing.y, ]) %*% y[!missing.y]))
+    
     ## The posterior variance, Wstar = solve(solve(W) + tau t(X) X) (Eq 11.61 of O`Hagan & Forster, p327 with tau=sigma^(-2))
     ## Assuming a prior variance W = lambda/tau I_L,
     ##	Wstar	= lambda/tau solve(I_L + lambda t(X) X)
