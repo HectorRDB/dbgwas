@@ -138,9 +138,6 @@ genVars = NULL, cutoffCor = NULL,  npcs = NULL, phenotype = NULL,
                                                  ipat = ipat,
                                                  o = o)
   message("Bayesian Wald test for genome-wide PCs has been completed successfully.")
-
-    print(o)
-    print(p.pca.bwt[o][1:20])
     
   #The barplot for the Bayesian wald test for genome-wide PCs
   bugwas:::.BayesianWaldTestPCsBarplot(prefix = prefix,
