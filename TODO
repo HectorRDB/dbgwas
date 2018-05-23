@@ -2,7 +2,7 @@
 TODO list
 ---------------------------------------------------------------------------------------------------------------------------------------------
 -Release v0.5.2:
-    1. Continuous genotypes/phenotypes:
+    1. Continuous phenotypes:
            - Still read the phenotype as a string, to deal with NAs.
            - If not NA, convert to float, and store as a float in the strain object.
            - Replace the part where we test whether both "0" and "1" phenotypes are present by a test that the empirical variance of the phenotypes is above some threshold (or simply that they are not all identical).
@@ -10,27 +10,70 @@ TODO list
            Regarding the figures:
                - The barplot and manhattan plot for PCs can be done with non-binary phenotypes.
                - The "indiv vs first PCs" and tree plot would need to be adapted eg by replacing the 2 colors by a gradient of shades. I can try and do it (or we can just skip these plots for non-binary phenotypes for the moment).
-    2. Step1 only + count matrix X
+           -phenotype count in step3:
+               -Parametre -phenotypeBreakpoint pB (pB=0 by default or do not show Pheno0 and Pheno1 count in step3 if not passed?)
+                   - count 0 -> count [-inf, pB]
+                   - count 1 -> count (pB, +inf]
+    2. Step1 only
+        -Count mode is way too hard than we imagined, we are skipping it in v0.5.2.
         -Possibility to launch only step1:
+            -Add to DBGWAS parameter -runOnlyStep1
             - Thus, user can specify their own processing on the X matrix of unitigs + Possibility to write a count matrix at step1, as we get this count value during step1.3.  (Work on unitig counts rather than presence/absence)
-                 -  Add to DBGWAS parameter -runOnlyStep1 Freq/Bin
-                          -It will just produces the variant matrices and stop
-                          -Freq = use frequences
-                          -Bin = use presence/absence pattern
                 - Required: do the filtering of patterns with maf < maf.filter in C++ (for now done in R)
+                    -#0s / #samples >= 1-maf -> filter out
+                - Parameter --removeNAs (remove NAs phenotypes from the processing)
+
     3. Two SFF filters (top-N + q-value). The one leading to the lowest number of patterns is used.
         -Double-check SFF filter
                 -When the 100th q-value is really not significant (like ~1), there is no meaning to generate a subgraph with the related unitigs.
                 The double check would be: take the top 100 q-values below a threshold (like the usual 0.05). Do you think we could try this ?
                 This would certainly lead to 2 different SFF parameters, which are somewhere correlated...
+                    -q-value: default 0.05
+                    -top-n: default 100
+
 
 
 Core GWAS  functionalities (HIGH PRIORITY):
     -Assemble the heaviest path of the DBG and blast it (or the path going through the largest number of significant unitigs) /// Multiple alignment on the node sequences that are selected?
         -That’s more or less what we are trying to do in automatic_labelling branch...
+
     -Work on raw reads instead of assembled contigs (@see https://mail.google.com/mail/u/0/#inbox/15ffcd92a248a692)
+
     -Add covariates (e.g. patient metadata) in the association model
 
+    -Count mode
+        -Should we demand:
+            -Only raw reads?
+                -Should we make an assembly?
+                    -Assembly simplifies the DBG and the output, and everything else, but we might lose some variations that are removed by the assembly step and parameters
+                    -This would also mean that DBGWAS would need to make a bacterial assembly (not sure if this is a good idea, it is a hard task, we won't be better than the current assemblers)
+                -Should we get raw reads and use the unitigs as assembly?
+                    -This would make the DBG larger, output more complicated to read, and everything else will take more time, will be more complicated
+                    -But we won't lose any variation in the dataset - assembly might remove a SNP that is associated with resistance, for example
+            -Contigs + raw reads?
+                -Here we build the DBG from the contigs and we get the count from the raw reads
+                    -We don't want to assemble the sequences ourselves
+                    -We might lose some variations (we are sensible to what is contained in the contigs)
+            -The main is a biological question:
+                -Use unitigs and keep all variants
+                -Use contigs and lose some variants, but simplify everything else?
+
+        - Count matrix does not make sense if the input are contigs (we need raw reads to have contig/unitig quantification)
+            -We should also normalize the counts per strain (strains can be sequenced at different coverage, and a normalization is required)
+            -We can get the coverage of a strain sequencing by two methods:
+                1) # total bases in the reads of a strain / estimated genome size
+                    -estimated genome size can be given as input by the user or we can compute it
+                        -Given as input by the user is not nice, because the user must know the estimated genome size and it won't work for plastic genomes
+                        -We can compute it ourselves by summing up all the bases of the contigs
+                2) Use median kmer-counts for doing the normalization
+                    -It does not really mean it is the coverage, but it is just to do the normalization
+                    -Normalized count of an unitig : unitig count / median kmer-counts (or median unitig count?)
+            -Magali will choose which method to implement
+
+       -  Add to DBGWAS parameter -runOnlyStep1 Freq/Bin
+             -It will just produces the variant matrices and stop
+             -Freq = use frequences
+             -Bin = use presence/absence pattern
 
 
 
@@ -52,6 +95,13 @@ Performances (and I/O features):
     -Allow the user to provide an already built database, instead of calling makeblastdb always
     -Adding metadata to features (like what each genome mean, species, etc)
         -This would be a field in the input file with a column with whatever the user would like to put
+
+
+   -commandStep2
+        -allow the user to launch a custom processing for step 2
+        -Input: <x_matrix> <pattern_matrix> <pattern2unitigs>
+        -Output: <significative_patterns.txt>
+
 
 
 
