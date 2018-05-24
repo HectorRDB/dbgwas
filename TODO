@@ -68,6 +68,7 @@ Core GWAS  functionalities (HIGH PRIORITY):
                 2) Use median kmer-counts for doing the normalization
                     -It does not really mean it is the coverage, but it is just to do the normalization
                     -Normalized count of an unitig : unitig count / median kmer-counts (or median unitig count?)
+                3) see:  Evaluation of statistical methods for normalization and differential expression in mRNA-Seq experiments  :upper-quartile normalisation or full-quantile normalisation
             -Magali will choose which method to implement
 
        -  Add to DBGWAS parameter -runOnlyStep1 Freq/Bin
