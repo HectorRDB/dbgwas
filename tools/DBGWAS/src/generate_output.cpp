@@ -681,12 +681,25 @@ void generate_output::execute () {
     }
 
     vector<bool> nodeWasVisited(num_vertices(newGraph), false);
+    vector<int> distances(num_vertices(graph));
 
     for (auto vp = vertices(newGraph); vp.first != vp.second; ++vp.first) {
       MyVertex v = *vp.first;
-      if (nodeWasVisited[v] == false) //node was not visited
-        breadth_first_visit(newGraph, v, visitor(getGoodStrandBfsVisitor(nodeWasVisited))); //we visit the component
+      try {
+        fill(distances.begin(), distances.end(), 0);
+
+        //TODO: change for bfs
+        dijkstra_shortest_paths(graph, selectedVertex, weight_map(get(&EdgeInfo::weight, graph)).
+            distance_map(make_iterator_property_map(distances.begin(),
+                                                    boost::get(boost::vertex_index, graph))).
+            visitor(GetGoodStrandBfsVisitorDijkstraVisitor(nodeWasVisited)));
+      } catch (TooDistant &e) { }
+
+      //update verticesInTheNeighbourhood
+      verticesInTheNeighbourhood.insert(verticesInTheNeighbourhoodOfThisUnitig[unitig].begin(), verticesInTheNeighbourhoodOfThisUnitig[unitig].end());
     }
+
+
 
     //create the subgraph descriptor file
     ofstream statsFile;

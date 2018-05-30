@@ -146,7 +146,7 @@ struct EdgeInfo {
 };
 
 //some typedefs for making life easier
-typedef boost::property<boost::vertex_index_t, std::size_t, boost::vertex_color_t, int, VertexInfo> vertex_prop;
+typedef boost::property<boost::vertex_index_t, std::size_t, VertexInfo> vertex_prop;
 typedef boost::property<boost::edge_index_t, std::size_t, EdgeInfo> edge_prop;
 typedef boost::adjacency_list <boost::setS, boost::vecS, boost::undirectedS, vertex_prop, edge_prop> adjlist_t;
 typedef boost::subgraph< adjlist_t > graph_t;
@@ -270,12 +270,16 @@ private:
 };
 
 
-struct getGoodStrandBfsVisitor : public boost::default_bfs_visitor {
+
+class GetGoodStrandBfsVisitorDijkstraVisitor : public boost::dijkstra_visitor<> {
+private:
     vector<bool>& nodeWasVisited;
+
+public:
     getGoodStrandBfsVisitor(vector<bool> &nodeWasVisited):nodeWasVisited(nodeWasVisited){}
 
     template<typename Edge, typename Graph>
-    void tree_edge(Edge e, const Graph& g) {
+    void edge_relaxed(Edge e, const Graph& g) {
         auto s = source(e, g);
         auto t = target(e, g);
         char strandOfS = g[s].strand;
@@ -288,6 +292,10 @@ struct getGoodStrandBfsVisitor : public boost::default_bfs_visitor {
     void finish_vertex(Vertex v, const Graph& g) {
         nodeWasVisited[v]=true;
     }
+};
+
+struct getGoodStrandBfsVisitor : public boost::default_bfs_visitor {
+
 };
 
 
