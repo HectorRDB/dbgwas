@@ -294,10 +294,5 @@ public:
     }
 };
 
-struct getGoodStrandBfsVisitor : public boost::default_bfs_visitor {
-
-};
-
-
 
 #endif //KSGATB_GENERATE_OUPUT_H

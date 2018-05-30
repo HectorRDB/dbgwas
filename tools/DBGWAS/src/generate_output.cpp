@@ -685,18 +685,13 @@ void generate_output::execute () {
 
     for (auto vp = vertices(newGraph); vp.first != vp.second; ++vp.first) {
       MyVertex v = *vp.first;
-      try {
-        fill(distances.begin(), distances.end(), 0);
+      fill(distances.begin(), distances.end(), 0);
 
-        //TODO: change for bfs
-        dijkstra_shortest_paths(graph, selectedVertex, weight_map(get(&EdgeInfo::weight, graph)).
-            distance_map(make_iterator_property_map(distances.begin(),
-                                                    boost::get(boost::vertex_index, graph))).
-            visitor(GetGoodStrandBfsVisitorDijkstraVisitor(nodeWasVisited)));
-      } catch (TooDistant &e) { }
-
-      //update verticesInTheNeighbourhood
-      verticesInTheNeighbourhood.insert(verticesInTheNeighbourhoodOfThisUnitig[unitig].begin(), verticesInTheNeighbourhoodOfThisUnitig[unitig].end());
+      //TODO: change for bfs
+      dijkstra_shortest_paths(graph, v, weight_map(get(&EdgeInfo::weight, newGraph)).
+          distance_map(make_iterator_property_map(distances.begin(),
+                                                  boost::get(boost::vertex_index, newGraph))).
+          visitor(GetGoodStrandBfsVisitorDijkstraVisitor(nodeWasVisited)));
     }
 
 
