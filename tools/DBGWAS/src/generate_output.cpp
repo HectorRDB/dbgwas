@@ -615,6 +615,7 @@ void generate_output::execute () {
         if (return_from_add_edge.second) {
           graph[return_from_add_edge.first].id = index;
           graph[return_from_add_edge.first].weight = 1;
+          graph[return_from_add_edge.first].sameSense = (label[0] == label[1]);
           index++;
         }
     }
@@ -677,6 +678,15 @@ void generate_output::execute () {
     for (int i = 0; i < nodesInComponent.size(); i++) {
       generateCytoscapeOutput(newGraph, nodesInComponent[i], "comp", i, tmpFolder, visualisationsFolder, selectedUnitigs, nbPheno0, nbPheno1,
                               idComponent2Annotations, nbCores);
+    }
+
+
+    typedef boost::property_map<graph_t, boost::vertex_color_t>::type color_map_t;
+    color_map_t colorMap; //Create a color map
+    for (auto vp = vertices(newGraph); vp.first != vp.second; ++vp.first) {
+      MyVertex v = *vp.first;
+      if (colorMap[v] == 0) //if the node color is white
+        breadth_first_visit(newGraph, v); //we visit the component
     }
 
     //create the subgraph descriptor file

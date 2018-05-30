@@ -142,6 +142,7 @@ struct VertexInfo {
 struct EdgeInfo {
     int id; //do not use unsigned values
     int weight;
+    bool sameSense; // if the source and the target have the same sense (label)
 };
 
 //some typedefs for making life easier
@@ -266,6 +267,19 @@ private:
     void createIndexFile(int numberOfComponents, const string &visualisationsFolder, const string &step2OutputFolder, const vector<vector<MyVertex> > &nodesInComponent, graph_t& newGraph,
                          map<int, AnnotationRecord > &idComponent2Annotations, const vector<const PatternFromStats*> &unitigToPatternStats,
                          const vector<int> &selectedUnitigs, int nbCores);
+};
+
+
+struct getGoodStrandBfsVisitor : default_bfs_visitor {
+    template<typename Edge, typename Graph>
+    void tree_edge(Edge e, const Graph& g) {
+        auto s = source(e, g);
+        auto t = target(e, g);
+        char strandOfS = g[s].strand;
+        char oppositeStrandOfS = (strandOfS=='F' ? 'R' : 'F');
+        char strandOfT = (g[e].sameSense ? strandOfS : oppositeStrandOfS);
+        g[t].strand = strandOfT;
+    };
 };
 
 
