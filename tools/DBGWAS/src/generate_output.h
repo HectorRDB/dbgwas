@@ -279,7 +279,7 @@ public:
     GetGoodStrandBfsVisitorDijkstraVisitor(vector<bool> &nodeWasVisited):nodeWasVisited(nodeWasVisited){}
 
     template<typename Edge, typename Graph>
-    void edge_relaxed(Edge e, const Graph& g) {
+    void edge_relaxed(Edge e, Graph& g) {
         auto s = source(e, g);
         auto t = target(e, g);
         char strandOfS = g[s].strand;
@@ -289,7 +289,7 @@ public:
     }
 
     template<typename Vertex, typename Graph>
-    void finish_vertex(Vertex v, Graph& g) {
+    void finish_vertex(Vertex v, const Graph& g) {
         nodeWasVisited[v]=true;
     }
 };
