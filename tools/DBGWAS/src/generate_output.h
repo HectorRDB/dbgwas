@@ -276,7 +276,7 @@ private:
     vector<bool>& nodeWasVisited;
 
 public:
-    getGoodStrandBfsVisitor(vector<bool> &nodeWasVisited):nodeWasVisited(nodeWasVisited){}
+    GetGoodStrandBfsVisitorDijkstraVisitor(vector<bool> &nodeWasVisited):nodeWasVisited(nodeWasVisited){}
 
     template<typename Edge, typename Graph>
     void edge_relaxed(Edge e, const Graph& g) {
