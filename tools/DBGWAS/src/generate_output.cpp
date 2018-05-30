@@ -681,6 +681,7 @@ void generate_output::execute () {
     }
 
     vector<bool> nodeWasVisited(num_vertices(newGraph), false);
+    vector<char> nodeStrands(num_vertices(newGraph), 'F');
     vector<int> distances(num_vertices(graph));
 
     for (auto vp = vertices(newGraph); vp.first != vp.second; ++vp.first) {
@@ -691,7 +692,7 @@ void generate_output::execute () {
       dijkstra_shortest_paths(graph, v, weight_map(get(&EdgeInfo::weight, newGraph)).
           distance_map(make_iterator_property_map(distances.begin(),
                                                   boost::get(boost::vertex_index, newGraph))).
-          visitor(GetGoodStrandBfsVisitorDijkstraVisitor(nodeWasVisited)));
+          visitor(GetGoodStrandBfsVisitorDijkstraVisitor(nodeWasVisited, nodeStrands)));
     }
 
 

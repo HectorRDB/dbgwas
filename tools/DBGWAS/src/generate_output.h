@@ -274,18 +274,19 @@ private:
 class GetGoodStrandBfsVisitorDijkstraVisitor : public boost::dijkstra_visitor<> {
 private:
     vector<bool>& nodeWasVisited;
+    vector<char>& nodeStrands;
 
 public:
-    GetGoodStrandBfsVisitorDijkstraVisitor(vector<bool> &nodeWasVisited):nodeWasVisited(nodeWasVisited){}
+    GetGoodStrandBfsVisitorDijkstraVisitor(vector<bool> &nodeWasVisited, vector<char>& nodeStrands):nodeWasVisited(nodeWasVisited), nodeStrands(nodeStrands){}
 
     template<typename Edge, typename Graph>
     void edge_relaxed(Edge e, Graph& g) {
         auto s = source(e, g);
         auto t = target(e, g);
-        char strandOfS = g[s].strand;
+        char strandOfS = nodeStrands[s];
         char oppositeStrandOfS = (strandOfS=='F' ? 'R' : 'F');
         char strandOfT = (g[e].sameSense ? strandOfS : oppositeStrandOfS);
-        boost::put(&VertexInfo::strand, t, strandOfT);
+        nodeStrands[t] = strandOfT;
     }
 
     template<typename Vertex, typename Graph>
