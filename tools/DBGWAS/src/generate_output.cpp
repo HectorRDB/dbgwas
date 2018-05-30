@@ -680,7 +680,7 @@ void generate_output::execute () {
                               idComponent2Annotations, nbCores);
     }
 
-    map<MyVertex, boost::vertex_color_t> colorMap;
+    boost::property_map<MyVertex, boost::vertex_color_t> colorMap;
     for (auto vp = vertices(newGraph); vp.first != vp.second; ++vp.first) {
       MyVertex v = *vp.first;
       if (colorMap[v] == 0) //if the node color is white
