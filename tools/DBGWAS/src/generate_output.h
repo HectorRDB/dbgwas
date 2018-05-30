@@ -279,7 +279,7 @@ struct getGoodStrandBfsVisitor : default_bfs_visitor {
         char oppositeStrandOfS = (strandOfS=='F' ? 'R' : 'F');
         char strandOfT = (g[e].sameSense ? strandOfS : oppositeStrandOfS);
         g[t].strand = strandOfT;
-    };
+    }
 };
 
 
