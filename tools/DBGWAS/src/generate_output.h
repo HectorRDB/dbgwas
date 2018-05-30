@@ -289,7 +289,7 @@ public:
     }
 
     template<typename Vertex, typename Graph>
-    void finish_vertex(Vertex v, const Graph& g) {
+    void finish_vertex(Vertex v, Graph& g) {
         nodeWasVisited[v]=true;
     }
 };
