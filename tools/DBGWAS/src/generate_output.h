@@ -285,7 +285,7 @@ public:
         char strandOfS = g[s].strand;
         char oppositeStrandOfS = (strandOfS=='F' ? 'R' : 'F');
         char strandOfT = (g[e].sameSense ? strandOfS : oppositeStrandOfS);
-        g[t].strand = strandOfT;
+        boost::put(&VertexInfo::strand, t, strandOfT);
     }
 
     template<typename Vertex, typename Graph>
