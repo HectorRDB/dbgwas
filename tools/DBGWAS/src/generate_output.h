@@ -270,7 +270,7 @@ private:
 };
 
 
-struct getGoodStrandBfsVisitor : default_bfs_visitor {
+struct getGoodStrandBfsVisitor : public boost::default_bfs_visitor<> {
     template<typename Edge, typename Graph>
     void tree_edge(Edge e, const Graph& g) {
         auto s = source(e, g);
