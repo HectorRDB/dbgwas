@@ -680,11 +680,12 @@ void generate_output::execute () {
                               idComponent2Annotations, nbCores);
     }
 
-    boost::property_map<MyVertex, boost::vertex_color_t> colorMap;
+    vector<bool> nodeWasVisited(num_vertices(newGraph), false);
+
     for (auto vp = vertices(newGraph); vp.first != vp.second; ++vp.first) {
       MyVertex v = *vp.first;
-      if (colorMap[v] == 0) //if the node color is white
-        breadth_first_visit(newGraph, v, boost::color_map(colorMap)); //we visit the component
+      if (nodeWasVisited[v] == false) //node was not visited
+        breadth_first_visit(newGraph, v, visitor(getGoodStrandBfsVisitor(nodeWasVisited))); //we visit the component
     }
 
     //create the subgraph descriptor file

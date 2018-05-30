@@ -271,6 +271,9 @@ private:
 
 
 struct getGoodStrandBfsVisitor : public boost::default_bfs_visitor {
+    vector<bool>& nodeWasVisited;
+    getGoodStrandBfsVisitor(vector<bool> &nodeWasVisited):nodeWasVisited(nodeWasVisited){}
+
     template<typename Edge, typename Graph>
     void tree_edge(Edge e, const Graph& g) {
         auto s = source(e, g);
@@ -279,6 +282,11 @@ struct getGoodStrandBfsVisitor : public boost::default_bfs_visitor {
         char oppositeStrandOfS = (strandOfS=='F' ? 'R' : 'F');
         char strandOfT = (g[e].sameSense ? strandOfS : oppositeStrandOfS);
         g[t].strand = strandOfT;
+    }
+
+    template<typename Vertex, typename Graph>
+    void finish_vertex(Vertex v, const Graph& g) {
+        nodeWasVisited[v]=true;
     }
 };
 
