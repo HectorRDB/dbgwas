@@ -680,13 +680,11 @@ void generate_output::execute () {
                               idComponent2Annotations, nbCores);
     }
 
-
-    typedef boost::property_map<graph_t, boost::vertex_color_t>::type color_map_t;
-    color_map_t colorMap; //Create a color map
+    map<MyVertex, int> colorMap;
     for (auto vp = vertices(newGraph); vp.first != vp.second; ++vp.first) {
       MyVertex v = *vp.first;
       if (colorMap[v] == 0) //if the node color is white
-        breadth_first_visit(newGraph, v); //we visit the component
+        breadth_first_visit(newGraph, v, boost::color_map(colorMap)); //we visit the component
     }
 
     //create the subgraph descriptor file
