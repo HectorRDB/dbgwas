@@ -680,20 +680,38 @@ void generate_output::execute () {
                               idComponent2Annotations, nbCores);
     }
 
-    vector<bool> nodeWasVisited(num_vertices(newGraph), false);
-    vector<char> nodeStrands(num_vertices(newGraph), 'F');
-    vector<int> distances(num_vertices(graph));
+    //we get the good sense of the nodes
+    vector<bool> nodeWasVisited(num_vertices(newGraph), false); //keep track of the visited nodes
+    vector<char> nodeStrands(num_vertices(newGraph), 'F'); //keep track of the nodes' sense
+    vector<int> distances(num_vertices(newGraph)); //keep track of the node distances during the dijkstra
 
     for (auto vp = vertices(newGraph); vp.first != vp.second; ++vp.first) {
       MyVertex v = *vp.first;
-      fill(distances.begin(), distances.end(), 0);
 
-      //TODO: change for bfs
-      dijkstra_shortest_paths(graph, v, weight_map(get(&EdgeInfo::weight, newGraph)).
-          distance_map(make_iterator_property_map(distances.begin(),
-                                                  boost::get(boost::vertex_index, newGraph))).
-          visitor(GetGoodStrandBfsVisitorDijkstraVisitor(nodeWasVisited, nodeStrands)));
+      if (nodeWasVisited[v]==false) {
+        fill(distances.begin(), distances.end(), 0);
+
+        //TODO: change for bfs
+        dijkstra_shortest_paths(newGraph, v, weight_map(get(&EdgeInfo::weight, newGraph)).
+            distance_map(make_iterator_property_map(distances.begin(),
+                                                    boost::get(boost::vertex_index, newGraph))).
+            visitor(GetGoodStrandBfsVisitorDijkstraVisitor(nodeWasVisited, nodeStrands)));
+      }
     }
+
+    //update the vertices' sequences and strand
+    for (auto vp = vertices(newGraph); vp.first != vp.second; ++vp.first) {
+      MyVertex v = *vp.first;
+      if (nodeStrands[v]=='R') {
+        newGraph[v].name = reverse_complement(newGraph[v].name);
+        newGraph[v].strand = 'R';
+      }
+    }
+
+
+    //TODO
+    //for each subgraph, print:
+    //sequence strand effect sign
 
 
 
@@ -747,6 +765,7 @@ void generate_output::execute () {
           << "_EFF:" << newGraph[node].unitigStats.getWeight()
           << "_VAL:" << newGraph[node].unitigStats.getValid()
           << "_SIGN:" << ((int)newGraph[node].significant)
+          //TODO: add reverse
           << endl << newGraph[node].name << endl;
         }
 
@@ -755,6 +774,7 @@ void generate_output::execute () {
           << "_EFF:" << newGraph[node].unitigStats.getWeight()
           << "_VAL:" << newGraph[node].unitigStats.getValid()
           << "_SIGN:" << ((int)newGraph[node].significant)
+          //TODO: add reverse
           << endl << newGraph[node].name << endl;
         }
       }
