@@ -761,7 +761,7 @@ void generate_output::execute () {
           << "_EFF:" << newGraph[node].unitigStats.getWeight()
           << "_VAL:" << newGraph[node].unitigStats.getValid()
           << "_SIGN:" << ((int)newGraph[node].significant)
-          //TODO: add reverse
+          << "_STRAND:" << newGraph[node].strand
           << endl << newGraph[node].name << endl;
         }
 
@@ -770,7 +770,7 @@ void generate_output::execute () {
           << "_EFF:" << newGraph[node].unitigStats.getWeight()
           << "_VAL:" << newGraph[node].unitigStats.getValid()
           << "_SIGN:" << ((int)newGraph[node].significant)
-          //TODO: add reverse
+          << "_STRAND:" << newGraph[node].strand
           << endl << newGraph[node].name << endl;
         }
       }
