@@ -711,12 +711,6 @@ void generate_output::execute () {
                               idComponent2Annotations, nbCores);
     }
 
-    //TODO
-    //for each subgraph, print:
-    //sequence strand effect sign
-
-
-
     //create the subgraph descriptor file
     ofstream statsFile;
     openFileForWriting(outputFolder+string("/subgraph_descriptors"), statsFile);
@@ -725,7 +719,7 @@ void generate_output::execute () {
     //create the node descriptor file
     ofstream nodesFile;
     openFileForWriting(outputFolder+string("/nodes_descriptors"), nodesFile);
-    nodesFile << "subgraph_id\tnode_id\tnode_sign\tnode_effect\tnode_seq\tnode_degree" << endl;
+    nodesFile << "subgraph_id\tnode_id\tnode_sign\tnode_effect\tnode_seq\tnode_strand\tnode_degree" << endl;
 
 
     for (int i = 0; i < nodesInComponent.size(); i++) { //we go through each component
@@ -744,7 +738,7 @@ void generate_output::execute () {
 
         //adding the info to the nodesFile
         nodesFile << i << "\t" << newGraph[node].id << "\t" << ((int)newGraph[node].significant)
-                  << "\t" << newGraph[node].unitigStats.getWeight() << "\t" << newGraph[node].name
+                  << "\t" << newGraph[node].unitigStats.getWeight() << "\t" << newGraph[node].name << "\t" << newGraph[node].strand
                   << "\t" << out_degree(node, newGraph) << endl;
       }
       //adding the info to the stats file
