@@ -658,10 +658,41 @@ void generate_output::execute () {
   map<int, AnnotationRecord > idComponent2Annotations;
   int numberOfComponents=0;
   {
+    //create the subgraph
     for (auto vp = vertices(graph); vp.first != vp.second; ++vp.first) {
       MyVertex v = *vp.first;
       if (verticesInTheNeighbourhood.find(v)!=verticesInTheNeighbourhood.end()) {
         add_vertex(v, newGraph);
+      }
+    }
+
+    //we get the good sense of the nodes - so when we print, they are in the good sense
+    {
+      vector<bool> nodeWasVisited(num_vertices(newGraph), false); //keep track of the visited nodes
+      vector<char> nodeStrands(num_vertices(newGraph), 'F'); //keep track of the nodes' sense
+      vector<int> distances(num_vertices(newGraph)); //keep track of the node distances during the dijkstra
+
+      for (auto vp = vertices(newGraph); vp.first != vp.second; ++vp.first) {
+        MyVertex v = *vp.first;
+
+        if (nodeWasVisited[v] == false) {
+          fill(distances.begin(), distances.end(), 0);
+
+          //TODO: change for bfs
+          dijkstra_shortest_paths(newGraph, v, weight_map(get(&EdgeInfo::weight, newGraph)).
+              distance_map(make_iterator_property_map(distances.begin(),
+                                                      boost::get(boost::vertex_index, newGraph))).
+              visitor(GetGoodStrandBfsVisitorDijkstraVisitor(nodeWasVisited, nodeStrands)));
+        }
+      }
+
+      //update the vertices' sequences and strand
+      for (auto vp = vertices(newGraph); vp.first != vp.second; ++vp.first) {
+        MyVertex v = *vp.first;
+        if (nodeStrands[v] == 'R') {
+          newGraph[v].name = reverse_complement(newGraph[v].name);
+          newGraph[v].strand = 'R';
+        }
       }
     }
 
@@ -679,35 +710,6 @@ void generate_output::execute () {
       generateCytoscapeOutput(newGraph, nodesInComponent[i], "comp", i, tmpFolder, visualisationsFolder, selectedUnitigs, nbPheno0, nbPheno1,
                               idComponent2Annotations, nbCores);
     }
-
-    //we get the good sense of the nodes
-    vector<bool> nodeWasVisited(num_vertices(newGraph), false); //keep track of the visited nodes
-    vector<char> nodeStrands(num_vertices(newGraph), 'F'); //keep track of the nodes' sense
-    vector<int> distances(num_vertices(newGraph)); //keep track of the node distances during the dijkstra
-
-    for (auto vp = vertices(newGraph); vp.first != vp.second; ++vp.first) {
-      MyVertex v = *vp.first;
-
-      if (nodeWasVisited[v]==false) {
-        fill(distances.begin(), distances.end(), 0);
-
-        //TODO: change for bfs
-        dijkstra_shortest_paths(newGraph, v, weight_map(get(&EdgeInfo::weight, newGraph)).
-            distance_map(make_iterator_property_map(distances.begin(),
-                                                    boost::get(boost::vertex_index, newGraph))).
-            visitor(GetGoodStrandBfsVisitorDijkstraVisitor(nodeWasVisited, nodeStrands)));
-      }
-    }
-
-    //update the vertices' sequences and strand
-    for (auto vp = vertices(newGraph); vp.first != vp.second; ++vp.first) {
-      MyVertex v = *vp.first;
-      if (nodeStrands[v]=='R') {
-        newGraph[v].name = reverse_complement(newGraph[v].name);
-        newGraph[v].strand = 'R';
-      }
-    }
-
 
     //TODO
     //for each subgraph, print:
