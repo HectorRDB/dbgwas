@@ -2,6 +2,7 @@
 TODO list
 ---------------------------------------------------------------------------------------------------------------------------------------------
 - Get the good sense of the unitigs (L)
+    -Done, check if we do what is described below
     If does not work well:
     - Get only a very small neighbourhoods around the significant unitigs (2 or 3)
 - Group by effect (red+gray and blue+gray) (Ok)
