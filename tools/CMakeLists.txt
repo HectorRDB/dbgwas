@@ -2,6 +2,44 @@
 #  TOOLS
 ################################################################################
 
+
+
+
+################################################################################
+# SeqAn related CMake code.
+################################################################################
+# ----------------------------------------------------------------------------
+# SeqAn Dependencies
+# ----------------------------------------------------------------------------
+
+# Search for zlib as a dependency for SeqAn.
+find_package (ZLIB)
+
+# Load the SeqAn module and fail if not found.
+find_package (SeqAn REQUIRED)
+
+
+# ----------------------------------------------------------------------------
+# Build Setup
+# ----------------------------------------------------------------------------
+
+# Add include directories.
+include_directories (${SEQAN_INCLUDE_DIRS})
+
+# Add definitions set by find_package (SeqAn).
+add_definitions (${SEQAN_DEFINITIONS})
+
+# Add CXX flags found by find_package (SeqAn).
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${SEQAN_CXX_FLAGS}")
+################################################################################
+# SeqAn related CMake code. - END
+################################################################################
+
+
+
+
+
+
 MACRO(SUBDIRLIST result curdir)
     FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
     SET (dirlist "")
@@ -46,7 +84,7 @@ FOREACH (program ${PROGRAMS})
   file (GLOB_RECURSE  ProjectFiles  ${PROGRAM_SOURCE_DIR}/*.cpp)
   file (GLOB_RECURSE  WhereamiFiles  ${WHEREAMI_SOURCE_DIR}/*.c)
   add_executable(${program} ${ProjectFiles} ${WhereamiFiles})
-  target_link_libraries(${program} ${gatb-core-libraries} ${Boost_LIBRARIES} -static-libgcc -static-libstdc++)
+  target_link_libraries(${program} ${gatb-core-libraries} ${Boost_LIBRARIES} -static-libgcc -static-libstdc++ ${SEQAN_LIBRARIES})
 ENDFOREACH (program)
 
 ################################################################################

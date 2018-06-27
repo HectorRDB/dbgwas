@@ -41,6 +41,7 @@
 #include <boost/filesystem.hpp>
 #undef BOOST_NO_CXX11_SCOPED_ENUMS
 #include "version.h"
+#include "compareNeg2Pos.h"
 
 using namespace std;
 
@@ -430,16 +431,6 @@ generateCytoscapeOutput(const graph_t &graph, const vector<MyVertex> &nodes, con
   cerr << "Rendering " << typeOfGraph << "_" << i << "... - Done!" << endl;
 }
 
-void generate_output::executeAbyss(int kmerSize, const string &prefix) const {
-  stringstream commandSSKHalf;
-  commandSSKHalf << "ABYSS -k " << (kmerSize/2) << " -o " << prefix << ".contigs.fa -c 0 -e 0 -E 0 " << prefix << ".unitigs.fa";
-  cerr << "Executing ABYSS with -k " << (kmerSize/2) << "..." << endl;
-  if (!executeCommand(commandSSKHalf.str(), true, false)) {
-    cerr << "ABYSS failed, putting the unitigs as assembly" << endl;
-    boost::filesystem::copy_file(prefix+".unitigs.fa", prefix+".contigs.fa", boost::filesystem::copy_option::overwrite_if_exists);
-  }
-}
-
 void generate_output::execute () {
   checkParametersGenerateOutput(this);
   int neighbourhood = getInput()->getInt(STR_MAX_NEIGHBOURHOOD);
@@ -711,75 +702,87 @@ void generate_output::execute () {
                               idComponent2Annotations, nbCores);
     }
 
+
     //create the subgraph descriptor file
     ofstream statsFile;
     openFileForWriting(outputFolder+string("/subgraph_descriptors"), statsFile);
-    statsFile << "subgraph_id\tnode_number\tsig_node_number\tsig_node_ratio\tpos_effect_ratio\tmax_dist\tbranching_level" << endl;
+    statsFile << "subgraph_id\tnode_number\tsig_node_number\tsig_node_ratio\tpos_effect_ratio\tmax_contig_pos\tmax_contig_neg\tpos_neg_contig_homology" << endl;
+    // max_contig is the max length of the contig obtained by assembling/aligning the unitigs (I'd like to remove contigs without sign nodes)
 
     //create the node descriptor file
     ofstream nodesFile;
     openFileForWriting(outputFolder+string("/nodes_descriptors"), nodesFile);
-    nodesFile << "subgraph_id\tnode_id\tnode_sign\tnode_effect\tnode_seq\tnode_strand\tnode_degree" << endl;
+    nodesFile << "subgraph_id\tnode_id\tnode_sign\tnode_effect\tnode_length\tnode_strand\tnode_degree\tnode_frequency\tnode_frequency\tnode_fq_Pheno1" << endl;
 
 
     for (int i = 0; i < nodesInComponent.size(); i++) { //we go through each component
       //computing some values and writing to nodesFile and statsFile
       int numberOfSignificantNodes=0;
       int numberOfPositiveEffectOnTheSignificantNodes=0;
-      double averageDegree=0;
+
+      // [automated_labelling] These variables are declared to get the homology score between the assembly of the positive effect and negative effect nodes
+      // From an array/flow of DNA sequences: (to be integrated in generate_output.cpp)
+      TStore storeNEG;
+      TStore storePOS;
+      TStringSet signNEG;
+      TStringSet signPOS;
+
       for (const auto &node : nodesInComponent[i]) {
+
         if (newGraph[node].significant == true ){
           numberOfSignificantNodes++;
           if(newGraph[node].unitigStats.getWeight() > 0 ){
             numberOfPositiveEffectOnTheSignificantNodes++;
           }
         }
-        averageDegree += (double) out_degree(node, newGraph)/nodesInComponent[i].size();
 
         //adding the info to the nodesFile
         nodesFile << i << "\t" << newGraph[node].id << "\t" << ((int)newGraph[node].significant)
-                  << "\t" << newGraph[node].unitigStats.getWeight() << "\t" << newGraph[node].name << "\t" << newGraph[node].strand
-                  << "\t" << out_degree(node, newGraph) << endl;
+        << "\t" << newGraph[node].unitigStats.getWeight() << "\t" << newGraph[node].name.size() << "\t"
+        << newGraph[node].strand  << "\t" << out_degree(node, newGraph) << "\t"
+        << newGraph[node].phenoCounter.getTotal() << "\t" << newGraph[node].phenoCounter.getPheno1() << endl;
       }
-      //adding the info to the stats file
-      statsFile << i << "\t" << nodesInComponent[i].size() << "\t"
-                << numberOfSignificantNodes << "\t" << (double) numberOfSignificantNodes/nodesInComponent[i].size()
-                << "\t" <<  (double) numberOfPositiveEffectOnTheSignificantNodes/numberOfSignificantNodes
-                << "\t" << averageDegree << endl;
 
-
-      //creating the fasta files to be given to be abyss
-      string effPosPrefix = outputFolder+string("/subgraph_")+std::to_string(i)+string("_EffPos");
-      ofstream EffPosFile;
-      openFileForWriting(effPosPrefix+string(".unitigs.fa"), EffPosFile);
-      string effNegPrefix = outputFolder+string("/subgraph_")+std::to_string(i)+string("_EffNeg");
-      ofstream EffNegFile;
-      openFileForWriting(effNegPrefix+string(".unitigs.fa"), EffNegFile);
+      //[automatic_labelling] assembling the positive and negative effect unitigs using seqan directly from the C++ object
       for (const auto &node : nodesInComponent[i]) {
         if (newGraph[node].unitigStats.getWeight() > 0 || !newGraph[node].unitigStats.getValid()) {
-          EffPosFile << ">ID:" << newGraph[node].id
-          << "_EFF:" << newGraph[node].unitigStats.getWeight()
-          << "_VAL:" << newGraph[node].unitigStats.getValid()
-          << "_SIGN:" << ((int)newGraph[node].significant)
-          << "_STRAND:" << newGraph[node].strand
-          << endl << newGraph[node].name << endl;
+          appendRead(storePOS, newGraph[node].name);
+
+          if (newGraph[node].significant == true ){
+            DnaString str = newGraph[node].name;
+            appendValue(signPOS, str);
+          }
         }
 
         if (newGraph[node].unitigStats.getWeight() < 0 || !newGraph[node].unitigStats.getValid()) {
-          EffNegFile << ">ID:" << newGraph[node].id
-          << "_EFF:" << newGraph[node].unitigStats.getWeight()
-          << "_VAL:" << newGraph[node].unitigStats.getValid()
-          << "_SIGN:" << ((int)newGraph[node].significant)
-          << "_STRAND:" << newGraph[node].strand
-          << endl << newGraph[node].name << endl;
+          appendRead(storeNEG, newGraph[node].name);
+
+          if (newGraph[node].significant == true ){
+            DnaString str = newGraph[node].name;
+            appendValue(signNEG, str);
+          }
         }
       }
-      EffPosFile.close();
-      EffNegFile.close();
+      // and here we do the process for each component (we ask seqan to make the assembly and get the longest contig)
+      storeNEG = makeAssembly(storeNEG);
+      TSequence contigNEG = selectContig(storeNEG);
+      storePOS = makeAssembly(storePOS);
+      TSequence contigPOS = selectContig(storePOS);
 
-      //execute abyss on these two files
-      executeAbyss(kmerSize, effPosPrefix);
-      executeAbyss(kmerSize, effNegPrefix);
+      // And now the three indicators I'd like to output in the subgraph description file:
+      int score = homologyScore(TSequence contigNEG, TSequence contigPOS);
+      int lengthPOS = length(contigPOS);
+      int lengthNEG = length(contigNEG);
+
+
+      //adding the info to the stats file
+      statsFile << i << "\t" << nodesInComponent[i].size() << "\t"
+      << numberOfSignificantNodes << "\t" << (double) numberOfSignificantNodes/nodesInComponent[i].size()
+      << "\t" <<  (double) numberOfPositiveEffectOnTheSignificantNodes/numberOfSignificantNodes
+      << "\t" << lengthPOS << "\t" << lengthNEG << "\t" << score << endl;
+
+
+
     }
     statsFile.close();
     nodesFile.close();
