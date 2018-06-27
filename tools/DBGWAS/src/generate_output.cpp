@@ -765,9 +765,9 @@ void generate_output::execute () {
       }
       // and here we do the process for each component (we ask seqan to make the assembly and get the longest contig)
       makeAssembly(storeNEG);
-      TSequence contigNEG = selectContig(storeNEG);
+      TSequence contigNEG = selectContig(storeNEG, signNEG);
       makeAssembly(storePOS);
-      TSequence contigPOS = selectContig(storePOS);
+      TSequence contigPOS = selectContig(storePOS, signPOS);
 
       // And now the three indicators I'd like to output in the subgraph description file:
       int score = homologyScore(contigNEG, contigPOS);
