@@ -764,9 +764,9 @@ void generate_output::execute () {
         }
       }
       // and here we do the process for each component (we ask seqan to make the assembly and get the longest contig)
-      storeNEG = makeAssembly(storeNEG);
+      makeAssembly(storeNEG);
       TSequence contigNEG = selectContig(storeNEG);
-      storePOS = makeAssembly(storePOS);
+      makeAssembly(storePOS);
       TSequence contigPOS = selectContig(storePOS);
 
       // And now the three indicators I'd like to output in the subgraph description file:

@@ -1,11 +1,11 @@
 #include <compareNeg2Pos.h>
 
-TStore makeAssembly(TStore store) {
+using namespace seqan;
+
+void makeAssembly(TStore &store) {
     ConsensusAlignmentOptions options;
     options.useContigID = false;
     consensusAlignment(store, options);
-
-    return store;
 }
 
 bool findExact(const TSequence &text, const TSequence &pattern){ 
@@ -87,7 +87,7 @@ TSequence selectContig(const TStore &store, const TStringSet &signif) {
     }
 }
 
-int homologyScore(TSequence seq1, TSequence seq2){
+int homologyScore(const TSequence &seq1, const TSequence &seq2){
     TStringSet homologySet;
     appendValue(homologySet, seq1);
     appendValue(homologySet, seq2);
