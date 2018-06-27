@@ -21,6 +21,6 @@ typedef seqan::Value<TStore::TContigStore>::Type  TContig;
 void makeAssembly(TStore &store);
 bool findExact(const TSequence &text, const TSequence &pattern);
 TSequence selectContig(const TStore &store, const TStringSet &signif);
-int homologyScore(const TSequence &seq1, const TSequence &seq2)
+int homologyScore(const TSequence &seq1, const TSequence &seq2);
 
 #endif //DBGWAS_COMPARENEG2POS_H_H
