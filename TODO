@@ -1,17 +1,8 @@
 ﻿---------------------------------------------------------------------------------------------------------------------------------------------
 TODO list
 ---------------------------------------------------------------------------------------------------------------------------------------------
-- Get the good sense of the unitigs (L)
-    -Done, check if we do what is described below
-    If does not work well:
-    - Get only a very small neighbourhoods around the significant unitigs (2 or 3)
-- Group by effect (red+gray and blue+gray) (Ok)
-- Assemble each group with MSA (SeqAn) (MJ)
-- Compare both alignments pairwisely (SeqAn) (MJ)
-
-
-TODO ML:
-    1) quantile distribution of out_degree among significant unitigs (LL+MD)
+- Print the subgraphs to be viewed in Cytoscape (LL)
+- Get only a very small neighbourhoods around the significant unitigs (2 or 3) (????)
 
 
 
