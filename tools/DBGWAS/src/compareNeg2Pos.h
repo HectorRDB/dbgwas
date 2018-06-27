@@ -16,7 +16,7 @@ typedef FragmentStore<> TStore;
 typedef String<char> TSequence;                             // sequence type
 typedef StringSet<TSequence> TStringSet;                    // container for strings
 typedef StringSet<TSequence, Dependent<> > TDepStringSet;   // dependent string set
-typedef Graph<Alignment<TDepStringSet> > TAlignGraph;       // alignment graph
+typedef seqan::Graph<Alignment<TDepStringSet> > TAlignGraph;       // alignment graph
 typedef Value<TStore::TContigStore>::Type  TContig;
 
 // function declarations
