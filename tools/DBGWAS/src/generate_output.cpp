@@ -749,7 +749,7 @@ void generate_output::execute () {
           appendRead(storePOS, newGraph[node].name);
 
           if (newGraph[node].significant == true ){
-            DnaString str = newGraph[node].name;
+            seqan::DnaString str = newGraph[node].name;
             appendValue(signPOS, str);
           }
         }
@@ -758,7 +758,7 @@ void generate_output::execute () {
           appendRead(storeNEG, newGraph[node].name);
 
           if (newGraph[node].significant == true ){
-            DnaString str = newGraph[node].name;
+            seqan::DnaString str = newGraph[node].name;
             appendValue(signNEG, str);
           }
         }
@@ -770,9 +770,9 @@ void generate_output::execute () {
       TSequence contigPOS = selectContig(storePOS);
 
       // And now the three indicators I'd like to output in the subgraph description file:
-      int score = homologyScore(TSequence contigNEG, TSequence contigPOS);
-      int lengthPOS = length(contigPOS);
-      int lengthNEG = length(contigNEG);
+      int score = homologyScore(contigNEG, contigPOS);
+      int lengthPOS = seqan::length(contigPOS);
+      int lengthNEG = seqan::length(contigNEG);
 
 
       //adding the info to the stats file
