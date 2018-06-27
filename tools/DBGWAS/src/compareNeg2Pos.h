@@ -8,7 +8,6 @@
 #include <iostream>
 #include <seqan/store.h>
 #include <seqan/consensus.h>
-#include <seqan/misc/svg.h>
 
 typedef seqan::FragmentStore<> TStore;
 typedef seqan::String<char> TSequence;                             // sequence type
