@@ -14,12 +14,7 @@
 
 # Search for zlib as a dependency for SeqAn.
 find_package (ZLIB)
-
-# Load the SeqAn module and fail if not found.
-set (ENV{CMAKE_PREFIX_PATH} "${CMAKE_PREFIX_PATH} ${PROJECT_SOURCE_DIR}/seqan/util/cmake")
-set (ENV{SEQAN_INCLUDE_PATH} "${PROJECT_SOURCE_DIR}/seqan/include")
 find_package (SeqAn REQUIRED)
-
 
 # ----------------------------------------------------------------------------
 # Build Setup
