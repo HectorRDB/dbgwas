@@ -86,7 +86,7 @@ git clone --recursive https://gitlab.com/leoisl/dbgwas.git
 ```
 and build the package:
 ```
-cd dbgwas && mkdir build && cd build && cmake .. && make && make package
+cd dbgwas && bash install.sh
 ```
 
 
