@@ -11,8 +11,11 @@ void makeAssembly(TStore &store) {
 bool findExact(const TSequence &text, const TSequence &pattern){ 
 // Brute force pattern matching for every position
 // from a seqAn example... (I tried t use the text.find(pattern) function, but it is not applicabel to TSequence objects...)
-
     bool found = false;
+
+    //if the length of the pattern is larger than the text, then we can't find it anyway
+    if (length(pattern) > length(text))
+        return false;
 
     // Number of consecutive matching characters per position
     String<int> score;
