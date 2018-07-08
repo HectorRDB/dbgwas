@@ -6,7 +6,7 @@
 # Near-optimal probabilistic RNA-seq quantification, Nature Biotechnology 34, 525–527 (2016), doi:10.1038/nbt.3519)
 # portable in different linux distributions.
 
-set -x
+set -e
 
 # Activate Holy Build Box environment.
 source /hbb_exe/activate
@@ -14,5 +14,11 @@ source /hbb_exe/activate
 set -eux
 
 # compile and install dbgwas
-cd io/dbgwas && mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make && cd DBGWAS && make package
+cd io
+mkdir build
+cd build
+cmake -DCMAKE_BUILD_TYPE=Release ..
+make
+cd DBGWAS/DBGWAS
+make package
 cp DBGWAS*Linux-precompiled.tar.gz /io/

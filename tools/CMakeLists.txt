@@ -26,6 +26,7 @@ include_directories (${PSTREAMS_SOURCE_DIR})
 set (WHEREAMI_SOURCE_DIR ${PROJECT_SOURCE_DIR}/whereami/src)
 include_directories (${WHEREAMI_SOURCE_DIR})
 
+set(BOOST_ROOT ${CMAKE_BINARY_DIR}/../Dependencies/Source/boost_1_62_0)
 set(Boost_USE_STATIC_LIBS   ON) #This makes boost plug the libraries we specify as static libraries (not dynamic ones - the user does not even need to have boost installed in their pc)
 FIND_PACKAGE(Boost 1.62.0 COMPONENTS filesystem system REQUIRED)
 include_directories(${Boost_INCLUDE_DIR})
