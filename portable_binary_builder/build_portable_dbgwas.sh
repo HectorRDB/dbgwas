@@ -6,7 +6,7 @@
 
 git clone --recursive https://gitlab.com/leoisl/dbgwas.git
 
-docker run -t -i --rm \
+sudo docker run -t -i --rm \
   -v `pwd`:/io \
   phusion/holy-build-box-64:latest \
   bash /io/build_portable_dbgwas_core.sh
