@@ -50,34 +50,39 @@ For reproducibility reasons, in the following you have easily the input data, an
 
 # Downloading, installing, running and troubleshooting
 ## Downloading the precompiled binaries
-This is the easiest way to run the tool since it is already precompiled for Linux AMD64 machines.
+This is the easiest way to run the tool since it is already precompiled.
 
-Download the latest binary here (v0.5.1): https://www.dropbox.com/s/072vycgnw181jvr/DBGWAS-0.5.1-Linux-precompiled.tar.gz?dl=1
+Pre-compilation is done using [Holy Box Build](http://phusion.github.io/holy-build-box/), so it should work on
+pretty much any glibc-based x86 and x86-64 Linux distribution released since 2007 (e.g.: Debian >= 6, Ubuntu >= 10.04,
+Red Hat Enterprise Linux >= 5, CentOS >= 5, etc). We acknowledge Páll Melsted since we followed his
+[blog post](https://pmelsted.wordpress.com/2015/10/14/building-binaries-for-bioinformatics/) to build this portable binary.
 
-**Note:** even in this case, you still have to install the R dependencies (see https://gitlab.com/leoisl/dbgwas#dependencies-installation ).
+Download the latest binary here (v0.5.1): https://www.dropbox.com/s/ure1jl9y7fjvw4s/DBGWAS-0.5.1-Linux-precompiled.tar.gz?dl=1
 
-Pre-compiled versions history:
+**Note:** even in this case, you still have to install the R dependencies (see [Dependencies installation](#dependencies-installation)).
 
-DBGWAS v0.5.0: https://www.dropbox.com/s/qr1ew7jdfieodt0/DBGWAS-0.5.0-Linux-precompiled.tar.gz?dl=1
+### Help, I can't run the precompiled binaries!
+Despite all our efforts, DBGWAS or the other binaries it uses might not work on your particular machine.
+In this case, you can compile these binaries yourself and tell DBGWAS to use them instead of the ones that are distributed.
+If you have problem with:
 
-DBGWAS v0.4.8: https://www.dropbox.com/s/bp81xqohgyfl8ed/DBGWAS-0.4.8-Linux-precompiled.tar.gz?dl=1
-
-DBGWAS v0.4.7: https://www.dropbox.com/s/bb6uk0qw8r7018n/DBGWAS-0.4.7-Linux-precompiled.tar.gz?dl=1
-
-DBGWAS v0.4.6: https://www.dropbox.com/s/fmttm0dhv1bq5ms/DBGWAS-0.4.6-Linux-precompiled.tar.gz?dl=1
-
-DBGWAS v0.4.5: https://www.dropbox.com/s/3yow59j0f5onnb7/DBGWAS-0.4.5-Linux-precompiled.tar.gz?dl=1
-
-DBGWAS v0.4.4: https://www.dropbox.com/s/ncf6ef4pwyzzuog/DBGWAS-0.4.4-Linux-precompiled.tar.gz?dl=1
-
-
+* DBGWAS binary: try compiling from the source: [Compiling](#Compiling)
+* [GEMMA](https://github.com/genetics-statistics/GEMMA) binary: compile your own version of [GEMMA](https://github.com/genetics-statistics/GEMMA) and use parameter `--set-GEMMA`.
+   * GEMMA is *required* for DBGWAS to work.
+* [Blast suite](https://blast.ncbi.nlm.nih.gov/Blast.cgi) (blastn, blastp, makeblastdb): if you have your own installation of blast and use parameter `--set-blast-dir`.
+   * Blast suite is only required if you want to annotate the output subgraphs with parameters `-nc_db` and `-pt_db`.
+* phantomjs: if you have your own installation of phantomjs, use parameter `--set-phantomjs`.
+   * phantomjs is only required to have the components preview in the index page.
 
 ## Compiling
-If you still want to compile, first have installed:
+
+If you need to compile, first have installed:
 ```
-cmake v2.6+
-g++ v5.4+
-ZLIB
+GCC 4.8.2+
+cmake v3.6+
+make
+zlib 1.2.11+
+git
 ```
 
 Then, clone the repository:
