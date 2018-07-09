@@ -69,10 +69,12 @@ If you have problem with:
 * DBGWAS binary: try compiling from the source: [Compiling](#compiling)
 * [GEMMA](https://github.com/genetics-statistics/GEMMA) binary: compile your own version of [GEMMA](https://github.com/genetics-statistics/GEMMA) and use parameter `--set-GEMMA`.
    * GEMMA is **required** for DBGWAS to work.
-* [Blast suite](https://blast.ncbi.nlm.nih.gov/Blast.cgi) (blastn, blastp, makeblastdb): if you have your own installation of blast, use parameter `--set-blast-dir`.
+* [Blast suite](https://blast.ncbi.nlm.nih.gov/Blast.cgi) (blastn, blastx, makeblastdb): if you have your own installation of blast, use parameter `--set-blast-dir`.
    * Blast suite is only required if you want to annotate the output subgraphs with parameters `-nc_db` and `-pt_db`.
 * phantomjs: if you have your own installation of phantomjs, use parameter `--set-phantomjs`.
    * phantomjs is only required to have the components preview in the index page.
+
+**In case nothing works, please fill an issue at https://gitlab.com/leoisl/dbgwas/issues **
 
 ## Compiling
 
