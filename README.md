@@ -52,7 +52,7 @@ For reproducibility reasons, in the following you have easily the input data, an
 ## Downloading the precompiled binaries
 This is the easiest way to run the tool since it is already precompiled.
 
-Pre-compilation is done using [Holy Box Build](http://phusion.github.io/holy-build-box/), so it should work on
+Precompilation is done using [Holy Box Build](http://phusion.github.io/holy-build-box/), so it should work on
 pretty much any glibc-based x86 and x86-64 Linux distribution released since 2007 (e.g.: Debian >= 6, Ubuntu >= 10.04,
 Red Hat Enterprise Linux >= 5, CentOS >= 5, etc). We acknowledge Páll Melsted since we followed his
 [blog post](https://pmelsted.wordpress.com/2015/10/14/building-binaries-for-bioinformatics/) to build this portable binary.
@@ -66,10 +66,10 @@ Despite all our efforts, DBGWAS or the other binaries it uses might not work on 
 In this case, you can compile these binaries yourself and tell DBGWAS to use them instead of the ones that are distributed.
 If you have problem with:
 
-* DBGWAS binary: try compiling from the source: [Compiling](#Compiling)
+* DBGWAS binary: try compiling from the source: [Compiling](#compiling)
 * [GEMMA](https://github.com/genetics-statistics/GEMMA) binary: compile your own version of [GEMMA](https://github.com/genetics-statistics/GEMMA) and use parameter `--set-GEMMA`.
-   * GEMMA is *required* for DBGWAS to work.
-* [Blast suite](https://blast.ncbi.nlm.nih.gov/Blast.cgi) (blastn, blastp, makeblastdb): if you have your own installation of blast and use parameter `--set-blast-dir`.
+   * GEMMA is **required** for DBGWAS to work.
+* [Blast suite](https://blast.ncbi.nlm.nih.gov/Blast.cgi) (blastn, blastp, makeblastdb): if you have your own installation of blast, use parameter `--set-blast-dir`.
    * Blast suite is only required if you want to annotate the output subgraphs with parameters `-nc_db` and `-pt_db`.
 * phantomjs: if you have your own installation of phantomjs, use parameter `--set-phantomjs`.
    * phantomjs is only required to have the components preview in the index page.
