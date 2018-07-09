@@ -40,9 +40,18 @@ const char* STR_SKIP1 = "-skip1";
 const char* STR_SKIP2 = "-skip2";
 const char* STR_NEWICK_PATH = "-newick";
 const char* STR_SFF = "-SFF";
-const char* STR_NUCLEOTIDE_DB = "-nc_db";
-const char* STR_PROTEIN_DB = "-pt_db";
+const char* STR_NUCLEOTIDE_DB = "-nc-db";
+const char* STR_PROTEIN_DB = "-pt-db";
 const char* STR_MAF_FILTER = "-maf";
+
+//TODO: implement these 4 parameters
+//TODO: implement these 4 parameters
+const char* STR_SET_GEMMA = "-GEMMA-path;
+const char* STR_SET_BLAST_DIR = "-Blast-path";
+const char* STR_SET_PHANTOMJS = "-phantomjsv2.1.1-path";
+const char* STR_R_COMMAND = "-R-command";
+//TODO: implement these 4 parameters
+//TODO: implement these 4 parameters
 
 //TODO: seeveral questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
 //const char* STR_COUNT_MODE = "-count";
@@ -59,6 +68,9 @@ bool thereIsNucleotideDB = false;
 string nucleotideDBPath;
 bool thereIsProteinDB = false;
 string proteinDBPath;
+string gemmaPath;
+string blastDir;
+string phantomjsPath;
 
 //global vars used by both programs
 Graph* graph;
@@ -67,6 +79,9 @@ vector< Strain >* strains = NULL;
 
 void populateParser (Tool *tool) {
   // We add some custom arguments for command line interface
+  tool->getParser()->push_front (new OptionOneParam (STR_SET_PHANTOMJS, "Path to phantomjs version 2.1.1 executable.",  false, "<DBGWAS_lib>/phantomjs"));
+  tool->getParser()->push_front (new OptionOneParam (STR_SET_BLAST_DIR, "Path to the directory containing the Blast suite (should contain at least blastn, blastx, and makeblastdb).",  false, "<DBGWAS_lib>/"));
+  tool->getParser()->push_front (new OptionOneParam (STR_SET_GEMMA, "Path to the GEMMA executable.",  false, "<DBGWAS_lib>/gemma.0.93b"));
   tool->getParser()->push_front (new OptionOneParam (STR_MAF_FILTER, "Minor Allele Frequency Filter.",  false, "0.01"));
   tool->getParser()->push_front (new OptionOneParam (STR_MAX_NEIGHBOURHOOD, "Denotes the neighbourhood to be considered around the significant unitigs.",  false, "5"));
   tool->getParser()->push_front (new OptionOneParam (STR_SFF, "Denotes the Significant Features Filter - the features (or patterns) selected to create a visualisation around them. If it is a float number n, then only the features with q-value<=n are selected. If it is an integer n, then only the n first features are selected. Take a look at the output/step2/patterns.txt file to get a list of features ordered by q-value to better choose this parameter (re-run the tool with -skip2 in order to directly produce the visualisation of the features selected by your parameter).",  false, "100"));

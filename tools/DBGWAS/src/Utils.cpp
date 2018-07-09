@@ -224,6 +224,14 @@ int getNbLinesInFile(const string &filename) {
   return n;
 }
 
+void checkExecutables(Tool *tool) {
+  gemmaPath = tool->getInput()->getStr(STR_SET_GEMMA);
+  blastDir = tool->getInput()->getStr(STR_SET_BLAST_DIR);
+  phantomjsPath = tool->getInput()->getStr(STR_SET_PHANTOMJS);
+
+  gemmaPath
+}
+
 
 void checkParametersBuildDBG(Tool *tool) {
   //check if we skip or not
@@ -262,6 +270,9 @@ void checkParametersBuildDBG(Tool *tool) {
     fatalError(ss.str());
   }
   createFolder(p.string());
+
+  //check executables and parameters
+  checkExecutables(tool);
 }
 
 
