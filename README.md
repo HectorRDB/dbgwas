@@ -63,18 +63,20 @@ Download the latest binary here (v0.5.1): https://www.dropbox.com/s/ure1jl9y7fjv
 
 ### Help, I can't run the precompiled binaries!
 Despite all our efforts, DBGWAS or the other binaries it uses might not work on your particular machine.
-In this case, you can compile these binaries yourself and tell DBGWAS to use them instead of the ones that are distributed.
+In this case, you can compile these binaries yourself and tell DBGWAS to use them instead of the ones that are distributed in DBGWAS package.
 If you have problem with:
 
 * DBGWAS binary: try compiling from the source: [Compiling](#compiling)
-* [GEMMA](https://github.com/genetics-statistics/GEMMA) binary: compile your own version of [GEMMA](https://github.com/genetics-statistics/GEMMA) and use parameter `--set-GEMMA`.
+* [GEMMA](https://github.com/genetics-statistics/GEMMA) binary: compile your own version of [GEMMA](https://github.com/genetics-statistics/GEMMA) and use parameter `-GEMMA-path`.
    * GEMMA is **required** for DBGWAS to work.
-* [Blast suite](https://blast.ncbi.nlm.nih.gov/Blast.cgi) (blastn, blastx, makeblastdb): if you have your own installation of blast, use parameter `--set-blast-dir`.
-   * Blast suite is only required if you want to annotate the output subgraphs with parameters `-nc_db` and `-pt_db`.
-* phantomjs: if you have your own installation of phantomjs, use parameter `--set-phantomjs`.
-   * phantomjs is only required to have the components preview in the index page.
+* Rscript: by default, DBGWAS uses the Rscript in your PATH. If this is not the version you want to use, you can specify other Rscript executable using parameter `-Rscript-path`.
+* [Blast suite](https://blast.ncbi.nlm.nih.gov/Blast.cgi) (blastn, blastx, makeblastdb): if you prefer to use your own installation of Blast, use parameter `-Blast-path`.
+   * Blast suite is only required if you want to annotate the output subgraphs with parameters `-nc-db` and `-pt-db`.
+* phantomjs: if you prefer to use your own installation of phantomjs, use parameter `-phantomjs-path`.
+   * phantomjs is only required to have the components preview in the summary output page. If you prefer not to have them or if you do not manage to
+   have a working phantomjs executable, you can still run DBGWAS with parameter `-no-preview`, which will skip producing the components preview.
 
-**In case nothing works, please fill an issue at https://gitlab.com/leoisl/dbgwas/issues **
+** In case nothing works, please fill an issue at https://gitlab.com/leoisl/dbgwas/issues **
 
 ## Compiling
 
