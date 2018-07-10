@@ -1,5 +1,13 @@
+# Before starting
+If you have any problems, please try to find your answer in this page or in the [issues page](https://gitlab.com/leoisl/dbgwas/issues?scope=all&utf8=%E2%9C%93&state=all).
+
+If your problem persists, please do not hesitate on submitting an issue to the [issues page](https://gitlab.com/leoisl/dbgwas/issues), as this can help the developers and other users.
+
 # About DBGWAS
-DBGWAS is a tool for quick and efficient bacterial GWAS. It uses a compacted De Bruijn Graph (cDBG) structure to represent the variability within all bacterial genome assemblies given as input. Then cDBG nodes are tested for association with a phenotype of interest and the resulting associated nodes are then re-mapped on the cDBG. The output of DBGWAS consists of regions of the cDBG around statistically significant nodes with several informations related to the phenotypes, offering a representation helping in the interpretation. The output can be viewed with any modern web browser, and thus easily shared.
+DBGWAS is a tool for quick and efficient bacterial GWAS. It uses a compacted De Bruijn Graph (cDBG) structure to represent the variability within all bacterial
+genome assemblies given as input. Then cDBG nodes are tested for association with a phenotype of interest and the resulting associated nodes are then re-mapped
+on the cDBG. The output of DBGWAS consists of regions of the cDBG around statistically significant nodes with several informations related to the phenotypes,
+offering a representation helping in the interpretation. The output can be viewed with any modern web browser, and thus easily shared.
 
 ## DBGWAS pipeline
 DBGWAS takes as input draft assemblies and phenotype data for a panel of
@@ -70,13 +78,14 @@ If you have problem with:
 * [GEMMA](https://github.com/genetics-statistics/GEMMA) binary: compile your own version of [GEMMA](https://github.com/genetics-statistics/GEMMA) and use parameter `-GEMMA-path`.
    * GEMMA is **required** for DBGWAS to work.
 * Rscript: by default, DBGWAS uses the Rscript in your PATH. If this is not the version you want to use, you can specify other Rscript executable using parameter `-Rscript-path`.
+   * Rscript is **required** for DBGWAS to work.
 * [Blast suite](https://blast.ncbi.nlm.nih.gov/Blast.cgi) (blastn, blastx, makeblastdb): if you prefer to use your own installation of Blast, use parameter `-Blast-path`.
    * Blast suite is only required if you want to annotate the output subgraphs with parameters `-nc-db` and `-pt-db`.
 * phantomjs: if you prefer to use your own installation of phantomjs, use parameter `-phantomjs-path`.
    * phantomjs is only required to have the components preview in the summary output page. If you prefer not to have them or if you do not manage to
    have a working phantomjs executable, you can still run DBGWAS with parameter `-no-preview`, which will skip producing the components preview.
 
-** In case nothing works, please fill an issue at https://gitlab.com/leoisl/dbgwas/issues **
+**In case nothing works, please fill an issue at https://gitlab.com/leoisl/dbgwas/issues**
 
 ## Compiling
 
