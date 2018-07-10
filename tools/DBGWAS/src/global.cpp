@@ -79,8 +79,8 @@ vector< Strain >* strains = NULL;
 
 void populateParser (Tool *tool) {
   // We add some custom arguments for command line interface
-  tool->getParser()->push_front (new OptionOneParam (STR_RSCRIPT_COMMAND, "Command to execute Rscript (first argument should be the path to Rscript and the rest any other arguments you wish).",  false, "Rscript --vanilla"));
-  tool->getParser()->push_front (new OptionOneParam (STR_NO_PREVIEW, "Do not produce the components preview in the summary output page.",  false));
+  tool->getParser()->push_front (new OptionOneParam (STR_RSCRIPT_COMMAND, "Command to execute Rscript (first argument should be the path to Rscript and the rest any other arguments you wish - if you use more than two words for this argument, put them between double quotes).",  false, "Rscript --vanilla"));
+  tool->getParser()->push_front (new OptionNoParam (STR_NO_PREVIEW, "Do not produce the components preview in the summary output page.",  false));
   tool->getParser()->push_front (new OptionOneParam (STR_PHANTOMJS_PATH, "Path to phantomjs executable (DBGWAS was tested only with version 2.1.1).",  false, "<DBGWAS_lib>/phantomjs"));
   tool->getParser()->push_front (new OptionOneParam (STR_BLAST_PATH, "Path to the directory containing the Blast suite (should contain at least blastn, blastx, and makeblastdb).",  false, "<DBGWAS_lib>/"));
   tool->getParser()->push_front (new OptionOneParam (STR_GEMMA_PATH, "Path to the GEMMA executable.",  false, "<DBGWAS_lib>/gemma.0.93b"));
