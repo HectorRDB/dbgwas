@@ -50,6 +50,7 @@ int main (int argc, char* argv[])
 
     //get the path to the dir were the executable is
     DBGWAS_lib = getDirWhereDBGWASIsInstalled() + "/DBGWAS_lib/";
+    cout << "DBGWAS_lib = " << DBGWAS_lib << endl;
 
     try
     {

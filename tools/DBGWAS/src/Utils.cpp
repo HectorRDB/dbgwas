@@ -237,6 +237,11 @@ void checkExecutables(Tool *tool) {
   boost::replace_all(phantomjsPath, "<DBGWAS_lib>", DBGWAS_lib);
   boost::replace_all(RscriptCommand, "<DBGWAS_lib>", DBGWAS_lib);
 
+  cout << "gemmaPath = " << gemmaPath << endl;
+  cout << "blastPath = " << blastPath << endl;
+  cout << "phantomjsPath = " << phantomjsPath << endl;
+  cout << "RscriptCommand = " << RscriptCommand << endl;
+
   //check if the executables work
   //check gemma
   executeCommand(gemmaPath, false, gemmaPath + " does not work, but it is required. You can install a version of GEMMA that works on your system and tell DBGWAS to use it through the parameter " + STR_GEMMA_PATH + " ."); //if it returns an exit status != 0, then it does not work and we issue a fatal error
