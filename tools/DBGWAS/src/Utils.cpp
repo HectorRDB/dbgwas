@@ -288,6 +288,9 @@ void checkParametersBuildDBG(Tool *tool) {
     return;
   }
 
+  //check executables and parameters
+  checkExecutables(tool);
+
   //check the count mode
   //TODO: seeveral questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
   /*
@@ -312,9 +315,6 @@ void checkParametersBuildDBG(Tool *tool) {
     fatalError(ss.str());
   }
   createFolder(p.string());
-
-  //check executables and parameters
-  checkExecutables(tool);
 }
 
 
@@ -323,6 +323,9 @@ void checkParametersStatisticalTest(Tool *tool) {
     cerr << "Skipping Step 2!" << endl;
     return;
   }
+
+  //check executables and parameters
+  checkExecutables(tool);
 
   //check if newickTreeFilePath exists
   if (hasNewickFile) {
@@ -334,13 +337,13 @@ void checkParametersStatisticalTest(Tool *tool) {
       fatalError(ss.str());
     }
   }
-
-  //check executables and parameters
-  checkExecutables(tool);
 }
 
 
 void checkParametersGenerateOutput(Tool *tool) {
+  //check executables and parameters
+  checkExecutables(tool);
+
   //create the output folder for step 3
   string outputFolder = stripLastSlashIfExists(tool->getInput()->getStr(STR_OUTPUT))+string("/step3");
   createFolder(outputFolder);
@@ -403,11 +406,8 @@ void checkParametersGenerateOutput(Tool *tool) {
     thereIsProteinDB=true;
   }
 
-  //check the -no-preview parameter
+  //get the -no-preview parameter
   noPreview = tool->getInput()->get(STR_NO_PREVIEW) != 0;
-
-  //check executables and parameters
-  checkExecutables(tool);
 }
 
 
