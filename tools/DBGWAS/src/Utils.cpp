@@ -229,26 +229,20 @@ void checkExecutables(Tool *tool) {
   gemmaPath = tool->getInput()->getStr(STR_GEMMA_PATH);
   blastPath = tool->getInput()->getStr(STR_BLAST_PATH);
   phantomjsPath = tool->getInput()->getStr(STR_PHANTOMJS_PATH);
-  RscriptCommand = tool->getInput()->getStr(STR_RSCRIPT_COMMAND);
+  RscriptPath = tool->getInput()->getStr(STR_RSCRIPT_PATH);
 
   //fix the variables
   boost::replace_all(gemmaPath, "<DBGWAS_lib>", DBGWAS_lib);
   boost::replace_all(blastPath, "<DBGWAS_lib>", DBGWAS_lib);
   boost::replace_all(phantomjsPath, "<DBGWAS_lib>", DBGWAS_lib);
-  boost::replace_all(RscriptCommand, "<DBGWAS_lib>", DBGWAS_lib);
-
-  cout << "gemmaPath = " << gemmaPath << endl;
-  cout << "blastPath = " << blastPath << endl;
-  cout << "phantomjsPath = " << phantomjsPath << endl;
-  cout << "RscriptCommand = " << RscriptCommand << endl;
+  boost::replace_all(RscriptPath, "<DBGWAS_lib>", DBGWAS_lib);
 
   //check if the executables work
   //check gemma
   executeCommand(gemmaPath, false, gemmaPath + " does not work, but it is required. You can install a version of GEMMA that works on your system and tell DBGWAS to use it through the parameter " + STR_GEMMA_PATH + " ."); //if it returns an exit status != 0, then it does not work and we issue a fatal error
 
   //check Rscript
-  string RscriptPath = RscriptCommand.substr(0, RscriptCommand.find(" "));
-  executeCommand(RscriptPath+" --version", false, RscriptPath + " does not work, but it is required. You can install a version of R that works on your system and tell DBGWAS to use it through the parameter " + STR_RSCRIPT_COMMAND + " .");
+  executeCommand(RscriptPath+" --version", false, RscriptPath + " does not work, but it is required. You can install a version of R that works on your system and tell DBGWAS to use it through the parameter " + STR_RSCRIPT_PATH + " .");
 
   //check blast, if the user wants to annotate the subgraphs
   if (tool->getInput()->get(STR_NUCLEOTIDE_DB)) {

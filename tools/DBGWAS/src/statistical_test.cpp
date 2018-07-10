@@ -66,7 +66,7 @@ void statistical_test::execute () {
 
   //create the command line
   stringstream ssCommand;
-  ssCommand << RscriptCommand << " "
+  ssCommand << RscriptPath << " --vanilla "
             << DBGWAS_lib << "/DBGWAS.R "
             << DBGWAS_lib << " "
             << step1OutputFolder.string() << " "

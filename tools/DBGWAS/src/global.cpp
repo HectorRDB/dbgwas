@@ -46,7 +46,7 @@ const char* STR_MAF_FILTER = "-maf";
 const char* STR_GEMMA_PATH = "-GEMMA-path";
 const char* STR_BLAST_PATH = "-Blast-path";
 const char* STR_PHANTOMJS_PATH = "-phantomjs-path";
-const char* STR_RSCRIPT_COMMAND = "-Rscript-command";
+const char* STR_RSCRIPT_PATH = "-Rscript-path";
 const char* STR_NO_PREVIEW = "-no-preview";
 
 //TODO: seeveral questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
@@ -69,7 +69,7 @@ string proteinDBPath;
 string gemmaPath;
 string blastPath;
 string phantomjsPath;
-string RscriptCommand;
+string RscriptPath;
 bool noPreview = false;
 
 //global vars used by both programs
@@ -79,7 +79,7 @@ vector< Strain >* strains = NULL;
 
 void populateParser (Tool *tool) {
   // We add some custom arguments for command line interface
-  tool->getParser()->push_front (new OptionOneParam (STR_RSCRIPT_COMMAND, "Command to execute Rscript (first argument should be the path to Rscript and the rest any other arguments you wish - if you use more than two words for this argument, put them between double quotes).",  false, "Rscript --vanilla"));
+  tool->getParser()->push_front (new OptionOneParam (STR_RSCRIPT_PATH, "Path to Rscript.",  false, "Rscript"));
   tool->getParser()->push_front (new OptionNoParam (STR_NO_PREVIEW, "Do not produce the components preview in the summary output page.",  false));
   tool->getParser()->push_front (new OptionOneParam (STR_PHANTOMJS_PATH, "Path to phantomjs executable (DBGWAS was tested only with version 2.1.1).",  false, "<DBGWAS_lib>/phantomjs"));
   tool->getParser()->push_front (new OptionOneParam (STR_BLAST_PATH, "Path to the directory containing the Blast suite (should contain at least blastn, blastx, and makeblastdb).",  false, "<DBGWAS_lib>/"));
