@@ -49,7 +49,7 @@ int main (int argc, char* argv[])
     srand (time(NULL));
 
     //get the path to the dir were the executable is
-    dirWhereDBGWASIsInstalled = getDirWhereDBGWASIsInstalled();
+    DBGWAS_lib = getDirWhereDBGWASIsInstalled() + "/DBGWAS_lib/";
 
     try
     {

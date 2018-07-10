@@ -74,9 +74,16 @@ void generate_output::createIndexFile(int numberOfComponents, const string &visu
   dispatcher.iterate(rangeOfComponentsIt, [&](int i) {
       string HTMLFile(boost::filesystem::canonical(visualisationsFolder+"/components/comp_"+std::to_string(i)+".html").string());
       string PNGFile = HTMLFile+".png";
-      stringstream commandSS;
-      commandSS << dirWhereDBGWASIsInstalled << DBGWAS_lib << "/phantomjs " << dirWhereDBGWASIsInstalled << DBGWAS_lib << "/render_graph.js " << HTMLFile << " " << PNGFile;
-      executeCommand(commandSS.str(), false);
+
+      if (noPreview){
+        boost::filesystem::copy_file(DBGWAS_lib+"/lib/resources/nopreview.png", PNGFile, boost::filesystem::copy_option::overwrite_if_exists);
+      }
+      else {
+        stringstream commandSS;
+        commandSS << phantomjsPath << " " << DBGWAS_lib << "/render_graph.js " << HTMLFile << " " << PNGFile;
+        executeCommand(commandSS.str(), false);
+      }
+
   });
   cerr << "[Rendering thumbnails...] - Done!" << endl;
 
@@ -89,7 +96,7 @@ void generate_output::createIndexFile(int numberOfComponents, const string &visu
   //get the template preview
   string templatePreview="";
   {
-    auto indexTableTemplateAsStringVector = getVectorStringFromFile(dirWhereDBGWASIsInstalled + DBGWAS_lib + string("/index_table_template.html"));
+    auto indexTableTemplateAsStringVector = getVectorStringFromFile(DBGWAS_lib + "/index_table_template.html");
     for (const auto &line : indexTableTemplateAsStringVector)
       templatePreview += line;
   }
@@ -146,7 +153,7 @@ void generate_output::createIndexFile(int numberOfComponents, const string &visu
 
   //create the index file
   //read template file
-  string templatePath = dirWhereDBGWASIsInstalled + DBGWAS_lib + string("/index_template.html");
+  string templatePath = DBGWAS_lib + "/index_template.html";
   string indexOutput = readFileAsString(templatePath.c_str());
 
 
@@ -380,7 +387,7 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
 
   //create the graph file
   //read template file
-  string templatePath = dirWhereDBGWASIsInstalled + DBGWAS_lib + string("/cytoscape_template.html");
+  string templatePath = DBGWAS_lib + "/cytoscape_template.html";
   string cytoscapeOutput = readFileAsString(templatePath.c_str());
 
   //put the graph in the template file
@@ -415,8 +422,8 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
 
 
   //copy the lib folder, if it is not already copied
-  string fromLibPath = dirWhereDBGWASIsInstalled + DBGWAS_lib + string("/lib");
-  string toLibPath = visualisationsFolder + string("/components/lib");
+  string fromLibPath = DBGWAS_lib + "/lib";
+  string toLibPath = visualisationsFolder + "/components/lib";
   if (!boost::filesystem::exists(toLibPath))
     copyDirectoryRecursively(fromLibPath, toLibPath);
   cerr << "Building Cytoscape graph... - Done!" << endl;

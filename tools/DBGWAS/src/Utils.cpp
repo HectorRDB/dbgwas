@@ -225,11 +225,48 @@ int getNbLinesInFile(const string &filename) {
 }
 
 void checkExecutables(Tool *tool) {
-  gemmaPath = tool->getInput()->getStr(STR_SET_GEMMA);
-  blastDir = tool->getInput()->getStr(STR_SET_BLAST_DIR);
-  phantomjsPath = tool->getInput()->getStr(STR_SET_PHANTOMJS);
+  //configure the global vars of the executable paths
+  gemmaPath = tool->getInput()->getStr(STR_GEMMA_PATH);
+  blastPath = tool->getInput()->getStr(STR_BLAST_PATH);
+  phantomjsPath = tool->getInput()->getStr(STR_PHANTOMJS_PATH);
+  RscriptCommand = tool->getInput()->getStr(STR_RSCRIPT_COMMAND);
 
-  gemmaPath
+  //fix the variables
+  boost::replace_all(gemmaPath, "<DBGWAS_lib>", DBGWAS_lib);
+  boost::replace_all(blastPath, "<DBGWAS_lib>", DBGWAS_lib);
+  boost::replace_all(phantomjsPath, "<DBGWAS_lib>", DBGWAS_lib);
+  boost::replace_all(RscriptCommand, "<DBGWAS_lib>", DBGWAS_lib);
+
+  //check if the executables work
+  //check gemma
+  executeCommand(gemmaPath, false, gemmaPath + " does not work, but it is required. You can install a version of GEMMA that works on your system and tell DBGWAS to use it through the parameter " + STR_GEMMA_PATH + " ."); //if it returns an exit status != 0, then it does not work and we issue a fatal error
+
+  //check Rscript
+  string RscriptPath = RscriptCommand.substr(0, RscriptCommand.find(" "));
+  executeCommand(RscriptPath+" --version", false, RscriptPath + " does not work, but it is required. You can install a version of R that works on your system and tell DBGWAS to use it through the parameter " + STR_RSCRIPT_COMMAND + " .");
+
+  //check blast, if the user wants to annotate the subgraphs
+  if (tool->getInput()->get(STR_NUCLEOTIDE_DB)) {
+    executeCommand(blastPath+"/makeblastdb -version", false, string("You want to annotate the output subgraphs with ") + STR_NUCLEOTIDE_DB + " , but " + blastPath+"/makeblastdb does not work. You can install a version of the Blast suite that works on your system" +
+        " and tell DBGWAS to use it through the parameter " + STR_BLAST_PATH + " .");
+    executeCommand(blastPath+"/blastn -version", false, string("You want to annotate the output subgraphs with ") + STR_NUCLEOTIDE_DB + " , but " + blastPath+"/blastn does not work. You can install a version of the Blast suite that works on your system" +
+        " and tell DBGWAS to use it through the parameter " + STR_BLAST_PATH + " .");
+  }
+  if (tool->getInput()->get(STR_PROTEIN_DB)) {
+    executeCommand(blastPath+"/makeblastdb -version", false, string("You want to annotate the output subgraphs with ") + STR_PROTEIN_DB + " , but " + blastPath+"/makeblastdb does not work. You can install a version of the Blast suite that works on your system" +
+        " and tell DBGWAS to use it through the parameter " + STR_BLAST_PATH + " .");
+    executeCommand(blastPath+"/blastx -version", false, string("You want to annotate the output subgraphs with ") + STR_PROTEIN_DB + " , but " + blastPath+"/blastx does not work. You can install a version of the Blast suite that works on your system" +
+        " and tell DBGWAS to use it through the parameter " + STR_BLAST_PATH + " .");
+  }
+
+  //check phantomjs
+  if (tool->getInput()->get(STR_NO_PREVIEW) == 0) {
+    executeCommand(phantomjsPath+" --version", false, phantomjsPath + " does not work, DBGWAS cant produce the components preview on the summary output page." +
+                                             " Either you get a version of phantomjs that works on your system (DBGWAS was "
+                                             "tested with version 2.1.1) and tell DBGWAS to use it through the parameter " + STR_PHANTOMJS_PATH +
+                                             " , or you can choose to not produce the components preview "
+                                             "through the parameter " + STR_NO_PREVIEW + " .");
+  }
 }
 
 
@@ -292,6 +329,9 @@ void checkParametersStatisticalTest(Tool *tool) {
       fatalError(ss.str());
     }
   }
+
+  //check executables and parameters
+  checkExecutables(tool);
 }
 
 
@@ -357,6 +397,12 @@ void checkParametersGenerateOutput(Tool *tool) {
     proteinDBPath = Blast::makeblastdb("prot", tool->getInput()->getStr(STR_PROTEIN_DB), outputFolder);
     thereIsProteinDB=true;
   }
+
+  //check the -no-preview parameter
+  noPreview = tool->getInput()->get(STR_NO_PREVIEW) != 0;
+
+  //check executables and parameters
+  checkExecutables(tool);
 }
 
 
@@ -367,7 +413,7 @@ void fatalError (const string &message) {
 }
 
 
-void executeCommand(const string &command, bool verbose) {
+void executeCommand(const string &command, bool verbose, const string &messageIfItFails) {
   // run a process and create a streambuf that reads its stdout and stderr
   if (verbose)
     cerr << "Executing " << command << "..." << endl;
@@ -392,7 +438,9 @@ void executeCommand(const string &command, bool verbose) {
   if (proc.rdbuf()->exited()) {
     if (proc.rdbuf()->status() != 0) {
       stringstream ss;
-      ss << "Error executing " << command << ". Exit status: " << proc.rdbuf()->status();
+      ss << "Error executing " << command << ". Exit status: " << proc.rdbuf()->status() << endl;
+      if (messageIfItFails != "")
+        ss << "Message: " << messageIfItFails << endl;
       fatalError(ss.str());
     }
     if (verbose)

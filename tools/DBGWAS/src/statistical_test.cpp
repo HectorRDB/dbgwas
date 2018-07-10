@@ -66,13 +66,13 @@ void statistical_test::execute () {
 
   //create the command line
   stringstream ssCommand;
-  ssCommand << "Rscript --vanilla "
-            << (dirWhereDBGWASIsInstalled+DBGWAS_lib) << "/DBGWAS.R "
-            << (dirWhereDBGWASIsInstalled+DBGWAS_lib) << " "
+  ssCommand << RscriptCommand << " "
+            << DBGWAS_lib << "/DBGWAS.R "
+            << DBGWAS_lib << " "
             << step1OutputFolder.string() << " "
             << step1OutputFolder.string() << "/bugwas_input.id_phenotype "
             << "bugwas_out "
-            << (dirWhereDBGWASIsInstalled+DBGWAS_lib) << "/gemma.0.93b "
+            << gemmaPath << " "
             << mafFilter << " ";
   if (hasNewickFile)
     ssCommand << newickPath.string() << " ";
