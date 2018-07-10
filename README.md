@@ -94,10 +94,10 @@ git clone --recursive https://gitlab.com/leoisl/dbgwas.git
 
 And build the package:
 ```
-cd dbgwas && mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make && cd DBGWAS && make package
+cd dbgwas && mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make && cd DBGWAS/DBGWAS && make package
 ```
 
-The package can be found in `build/DBGWAS/DBGWAS-<version>-Linux-precompiled.tar.gz`.
+The package can be found in `build/DBGWAS/DBGWAS/DBGWAS-<version>-Linux-precompiled.tar.gz`.
 
 ## Dependencies installation
 DBGWAS uses several thirdparty libraries, but most of them were already packed and were statically linked during compilation, so almost no dependencies are needed. However, in order to run the tool, you still need to:
