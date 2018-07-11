@@ -40,7 +40,7 @@ private:
 
     //parse the header and extract all the DBGWAS tags
     //header is intentionally string and not const string &
-    static map<string, string> extractValuesWithRegex(string header, const regex &expression);
+    static map<string, string> extractValuesWithRegex(string header, const boost::regex &expression);
 };
 
 
