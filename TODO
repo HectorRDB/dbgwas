@@ -2,10 +2,22 @@
 TODO list
 ---------------------------------------------------------------------------------------------------------------------------------------------
 Paper:
-    -Fix gemma binary
-    -Test on old ubuntu, debian, centOs, and fedora
+    -Test on old ubuntu, debian, centOs, etc
     -Put S1 online, and increment it to be a user-manual
     - nc_db e pt_db para nc-db e pt-db
+
+    -Table to track the performance of DBGWAS
+        -Subsampling SA, PA and TB big datasets
+            -100, 250, 500, 1000, 2500, 5000 10000
+            -Create the input files [MAGALI]
+        -Run once each point
+            -no-annotations
+            -no-newick
+            -8 cores
+            -Log the time and memory for each point
+        -Parse output file and create the following table:
+            Species     Nb_Genome   RunNb   Time    Mem
+        -Magali generate the graph
 
 
 

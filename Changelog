@@ -1,3 +1,13 @@
+Done v0.5.2:
+-Fixed various issues with the building process and the precompiled binary:
+    -The precompiled binary was not portable enough. Now we added a script to create a portable binary inspired by https://pmelsted.wordpress.com/2015/10/14/building-binaries-for-bioinformatics/.
+        -The script can be found in folder portable_binary_builder
+    -Fixed some bugs with CMAKE_ARGS in boostSuperBuild/SuperBuild.cmake
+    -Added five new parameters to deal with binary incompatibility of the executables that are bundled with DBGWAS (GEMMA, Blast suite, phantomjs):
+        <TODO>: put the 5 parameters
+
+
+
 Done v0.5.1:
 -Fixed compilation issues
     -Due to this issue: https://gitlab.com/leoisl/dbgwas/issues/2 (reported by mail from the user of issue https://gitlab.com/leoisl/dbgwas/issues/1 )
