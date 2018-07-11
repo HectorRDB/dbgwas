@@ -11,7 +11,6 @@ wget https://www.dropbox.com/s/9y1p0yw918ips6k/uniprot_sprot_bacteria_for_DBGWAS
 wget https://www.dropbox.com/s/jp24184zony1977/correct_output.zip?dl=1 -O correct_output.zip
 unzip correct_output.zip
 
-#compare both output
-diff -rq correct_output output | grep -v ".png" | grep -v ".log.txt" | grep -v "visualisations/index.html"
-
-# If this previous command does not output anything, then it is fine
+#compare both outputs
+echo "Differences found (check them to see if they are really a problem):"
+diff -rq correct_output output | grep -v ".png" | grep -v ".log.txt"
