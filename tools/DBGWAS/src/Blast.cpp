@@ -56,7 +56,7 @@ BlastRecord BlastRecord::parseString (const string &str) {
 //header is intentionally string and not const string &
 map<string, string> BlastRecord::extractValuesWithRegex(string header, const boost::regex &expression) {
   map<string, string> extractedValues;
-  smatch matchResults;
+  boost::smatch matchResults;
 
   while(boost::regex_search(header, matchResults, expression))
   {
