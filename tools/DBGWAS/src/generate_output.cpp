@@ -712,7 +712,8 @@ void generate_output::execute () {
     //create the node descriptor file
     ofstream nodesFile;
     openFileForWriting(outputFolder+string("/nodes_descriptors"), nodesFile);
-    nodesFile << "subgraph_id\tnode_id\tnode_sign\tnode_effect\tnode_length\tnode_strand\tnode_degree\tnode_frequency\tnode_frequency\tnode_fq_Pheno1" << endl;
+    nodesFile << "subgraph_id\tnode_id\tnode_sign\tnode_effect\tnode_length\tnode_strand\tnode_degree " <<
+              "\tnode_in_Pheno0\tnode_in_Pheno1\tnb_Pheno0\tnb_Pheno1\tqvalue" << endl;
 
 
     for (int i = 0; i < nodesInComponent.size(); i++) { //we go through each component
@@ -740,7 +741,8 @@ void generate_output::execute () {
         nodesFile << i << "\t" << newGraph[node].id << "\t" << ((int)newGraph[node].significant)
         << "\t" << newGraph[node].unitigStats.getWeight() << "\t" << newGraph[node].name.size() << "\t"
         << newGraph[node].strand  << "\t" << out_degree(node, newGraph) << "\t"
-        << newGraph[node].phenoCounter.getTotal() << "\t" << newGraph[node].phenoCounter.getPheno1() << endl;
+        << newGraph[node].phenoCounter.getPheno0() << "\t" << newGraph[node].phenoCounter.getPheno1() << "\t"
+        << nbPheno0 << "\t" << nbPheno1 << "\t" <<  newGraph[node].unitigStats.getQValueAsStr() << endl;
       }
 
       //[automatic_labelling] assembling the positive and negative effect unitigs using seqan directly from the C++ object
@@ -780,7 +782,6 @@ void generate_output::execute () {
       << numberOfSignificantNodes << "\t" << (double) numberOfSignificantNodes/nodesInComponent[i].size()
       << "\t" <<  (double) numberOfPositiveEffectOnTheSignificantNodes/numberOfSignificantNodes
       << "\t" << lengthPOS << "\t" << lengthNEG << "\t" << score << endl;
-
 
 
     }
