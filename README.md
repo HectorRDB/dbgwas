@@ -7,18 +7,16 @@ If your problem persists, please do not hesitate on submitting an issue to the [
 
 **DBGWAS' OUTPUT IS ONLY TESTED WITH GOOGLE CHROME, FIREFOX AND OPERA BROWSERS.**
 
-If you have any doubts or find any bug, please fill in an issue at https://gitlab.com/leoisl/dbgwas/issues .
-
 # About DBGWAS
 DBGWAS is a tool for quick and efficient bacterial GWAS. It uses a compacted De Bruijn Graph (cDBG) structure to represent the variability within all bacterial
 genome assemblies given as input. Then cDBG nodes are tested for association with a phenotype of interest and the resulting associated nodes are then re-mapped
 on the cDBG. The output of DBGWAS consists of regions of the cDBG around statistically significant nodes with several informations related to the phenotypes,
 offering a representation helping in the interpretation. The output can be viewed with any modern web browser, and thus easily shared.
 
-{::comment}
+<!--
 TODO: add when published
 A complete description of DBGWAS and its application can be found in its publication: <publication_link>
-{:/comment}
+-->
 
 
 
@@ -38,9 +36,9 @@ You can find DBGWAS' output using several antibiotic resistance phenotypes withi
 
 The input to each of these experiments are the IDs, phenotypes and contigs for each strain.
 
-{::comment}
+<!--
 TODO: UPDATE ME
-{:/comment}
+-->
 A detailed description of the output can be found in section 6 of the [supplementary material](https://www.dropbox.com/s/k554q1yqfuyhapf/Suppl_Materials_for_Fast-agnostic-bacterial-GWAS.pdf?dl=1) of our paper.
 
 # DBGWAS in a nutshell - running the tool in one example
@@ -77,9 +75,9 @@ pretty much any glibc-based x86 and x86-64 Linux distribution released since 200
 Red Hat Enterprise Linux >= 5, CentOS >= 5, etc). We acknowledge Páll Melsted since we followed his
 [blog post](https://pmelsted.wordpress.com/2015/10/14/building-binaries-for-bioinformatics/) to build this portable binary.
 
-{::comment}
+<!--
 TODO: UPDATE ME
-{:/comment}
+-->
 Download the latest binary here (v0.5.1): https://www.dropbox.com/s/ure1jl9y7fjvw4s/DBGWAS-0.5.1-Linux-precompiled.tar.gz?dl=1
 
 **Note:** even in this case, you still have to install the R dependencies (see [Dependencies installation](#dependencies-installation)).
@@ -120,9 +118,9 @@ Then, clone the repository:
 git clone --recursive https://gitlab.com/leoisl/dbgwas.git
 ```
 
-{::comment}
+<!--
 TODO: CHECK ME
-{:/comment}
+-->
 And build the package:
 ```
 cd dbgwas && mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make && cd DBGWAS/DBGWAS && make package
@@ -302,9 +300,9 @@ DBGWAS makes use of several thirdparty libraries:
 
 # How to cite
 
-{::comment}
+<!--
 TODO: UPDATE ME
-{:/comment}
+-->
 Magali Jaillard, Leandro Lima, Maud Tournoud, Pierre Mahé, Alex van Belkum, Vincent Lacroix, Laurent Jacob. A fast and agnostic method for bacterial genome-wide association studies: bridging the gap between kmers and genetic events. bioRxiv Cold Spring Harbor Labs Journals (2018). doi:10.1101/297754. URL: https://www.biorxiv.org/content/early/2018/04/09/297754.
 
 # Supplementary Material
