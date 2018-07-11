@@ -1,8 +1,2 @@
-Testing if a new release is ok with the sample example:
-
-1/ Download the correct sample example output: https://www.dropbox.com/s/jp24184zony1977/correct_output.zip?dl=1
-2/ Unpack it
-3/ Run the new release on the sample data
-4/ Compare the two outputs like:
-    diff -rq <correct_output> <output_new_release> | grep -v ".png" | grep -v ".log.txt" | grep -v "visualisations/index.html"
-5/ If this previous command does not output anything, then it is fine
+1/ Go to the bin/ directory of the DBGWAS you want to test
+2/ Execute bash <the_dir_of_this_script>/test_DBGWAS_on_pseudomonas_aeruginosa.sh
