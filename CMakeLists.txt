@@ -119,7 +119,6 @@ INSTALL (FILES   ${PROJECT_SOURCE_DIR}/html_templates/index_template.html  DESTI
 INSTALL (FILES   ${PROJECT_SOURCE_DIR}/html_templates/index_table_template.html  DESTINATION ./bin/DBGWAS_lib/ COMPONENT precompiled)
 INSTALL (DIRECTORY   ${PROJECT_SOURCE_DIR}/sample_example  DESTINATION . COMPONENT precompiled)
 INSTALL (DIRECTORY   ${PROJECT_SOURCE_DIR}/csjs/lib  DESTINATION ./bin/DBGWAS_lib/ COMPONENT precompiled)
-INSTALL (DIRECTORY   ${PROJECT_SOURCE_DIR}/sharedobjects  DESTINATION ./bin/DBGWAS_lib/ COMPONENT precompiled)
 
 set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
 set(CPACK_COMPONENTS_ALL precompiled)

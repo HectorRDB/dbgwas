@@ -90,7 +90,8 @@ In this case, you can compile these binaries yourself and tell DBGWAS to use the
 If you have problem with:
 
 * DBGWAS binary: try compiling from the source: [Compiling](#compiling)
-* [GEMMA](https://github.com/genetics-statistics/GEMMA) binary: compile your own version of [GEMMA](https://github.com/genetics-statistics/GEMMA) and use parameter `-GEMMA-path`.
+* GEMMA binary: bugwas requires a modified of GEMMA version 0.93 to work. We created a static portable binary of this specific version available here: https://github.com/leoisl/gemma0.93b , and already distributed with DBGWAS.
+However, if you need to compile your own version of GEMMA, try compiling the version at https://github.com/danny-wilson/gemma0.93b and tell DBGWAS to use your own executable by using parameter `-GEMMA-path`.
    * GEMMA is **required** for DBGWAS to work.
 * Rscript: by default, DBGWAS uses the Rscript in your PATH. If this is not the version you want to use, you can specify other Rscript executable using parameter `-Rscript-path`.
    * Rscript is **required** for DBGWAS to work.
