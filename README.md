@@ -66,7 +66,7 @@ For reproducibility reasons, in the following you have easily the input data, an
 ```
 5. After finishing the execution, the output can be found in the folder ```bin/output/visualisations```
 
-# Downloading, installing, running and troubleshooting
+# Downloading, installing and running
 ## Downloading the precompiled binaries
 This is the easiest way to run the tool since it is already precompiled.
 
@@ -144,7 +144,7 @@ install.packages("https://raw.githubusercontent.com/sgearle/bugwas/master/build/
 
 Now that you have the package (either the precompiled or you compiled it yourself),
 let's try running the tool in a sample example comprising 50 bacterial genomes (subset of the 282
-described in the ["DBGWAS in a nutshell"](#dbgwas-in-a-nutshell-running-the-tool-in-one-example) section):
+described in the [DBGWAS in a nutshell](#dbgwas-in-a-nutshell-running-the-tool-in-one-example) section):
 
 1. Extract the package:
 ```
@@ -210,7 +210,7 @@ then the lineage effect analysis is computed. Otherwise, it is skipped.
 ## Memory and CPU requirements
 
 The analysis on the full dataset with 280 P. aeruginosa strains and amikacin resistance phenotype,
-described in section ["DBGWAS in a nutshell"](#dbgwas-in-a-nutshell-running-the-tool-in-one-example),
+described in section [DBGWAS in a nutshell](#dbgwas-in-a-nutshell-running-the-tool-in-one-example),
 produces 54,397,312 kmers which are compressed
 into 2,356,052 unitigs corresponding to 1,141,877 unique patterns.
 
