@@ -10,7 +10,7 @@ list (APPEND DEPENDENCIES boost_1_62_0)
 ExternalProject_Add (boost_1_62_0
   URL ${PROJECT_SOURCE_DIR}/thirdparty/boost_1_62_0.tar.gz
   URL_MD5 6f4571e7c5a66ccc3323da6c24be8f05
-  CONFIGURE_COMMAND ./bootstrap.sh --with-libraries=filesystem,system
+  CONFIGURE_COMMAND ./bootstrap.sh --with-libraries=filesystem,system,regex
   BUILD_COMMAND ./b2 link=static
   BUILD_IN_SOURCE 1
   INSTALL_COMMAND ""

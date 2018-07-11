@@ -38,7 +38,7 @@
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
 #undef BOOST_NO_CXX11_SCOPED_ENUMS
-#include <regex>
+#include <boost/regex.hpp>
 
 using namespace std;
 /********************************************************************************/
