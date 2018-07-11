@@ -78,7 +78,7 @@ Red Hat Enterprise Linux >= 5, CentOS >= 5, etc). We acknowledge Páll Melsted s
 <!--
 TODO: UPDATE ME
 -->
-Download the latest binary here (v0.5.1): https://www.dropbox.com/s/ure1jl9y7fjvw4s/DBGWAS-0.5.1-Linux-precompiled.tar.gz?dl=1
+Download the latest binary here (v0.5.2): https://www.dropbox.com/s/1fbf00cy8vhfxpg/DBGWAS-0.5.2-Linux-precompiled.tar.gz?dl=1
 
 **Note:** even in this case, you still have to install the R dependencies (see [Dependencies installation](#dependencies-installation)).
 
