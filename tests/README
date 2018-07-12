@@ -1,10 +1,10 @@
 #1. Download the dbgwas version you want to test (let's use v0.5.2 as an example):
-wget https://www.dropbox.com/s/1fbf00cy8vhfxpg/DBGWAS-0.5.2-Linux-precompiled.tar.gz?dl=1 -O DBGWAS-0.5.2-Linux-precompiled.tar.gz
+wget https://www.dropbox.com/s/gf6n4ibcakcyo5k/DBGWAS-0.5.2-Linux-precompiled.tar.gz?dl=1 -O DBGWAS-0.5.2-Linux-precompiled.tar.gz
 #2. extract and go to bin
 tar -zxvf DBGWAS-0.5.2-Linux-precompiled.tar.gz
 cd bin/
 #3. download the test case:
-wget https://gitlab.com/leoisl/dbgwas/raw/portable_binary/tests/test_DBGWAS_on_pseudomonas_aeruginosa.sh
+wget https://gitlab.com/leoisl/dbgwas/raw/master/tests/test_DBGWAS_on_pseudomonas_aeruginosa.sh
 #4. run the test case:
 bash test_DBGWAS_on_pseudomonas_aeruginosa.sh
 
