@@ -1,8 +1,14 @@
-Testing if a new release is ok with the sample example:
+#1. Download the dbgwas version you want to test (let's use v0.5.2 as an example):
+wget https://www.dropbox.com/s/1fbf00cy8vhfxpg/DBGWAS-0.5.2-Linux-precompiled.tar.gz?dl=1 -O DBGWAS-0.5.2-Linux-precompiled.tar.gz
+#2. extract and go to bin
+tar -zxvf DBGWAS-0.5.2-Linux-precompiled.tar.gz
+cd bin/
+#3. download the test case:
+wget https://gitlab.com/leoisl/dbgwas/raw/portable_binary/tests/test_DBGWAS_on_pseudomonas_aeruginosa.sh
+#4. run the test case:
+bash test_DBGWAS_on_pseudomonas_aeruginosa.sh
 
-1/ Download the correct sample example output: https://www.dropbox.com/s/jp24184zony1977/correct_output.zip?dl=1
-2/ Unpack it
-3/ Run the new release on the sample data
-4/ Compare the two outputs like:
-    diff -rq <correct_output> <output_new_release> | grep -v ".png" | grep -v ".log.txt" | grep -v "visualisations/index.html"
-5/ If this previous command does not output anything, then it is fine
+In the end, you should have something like:
+    Differences found (check them to see if they are really a problem):
+
+And a list of files that differ, if they exist. Then you check the diff to see if they are really a problem.

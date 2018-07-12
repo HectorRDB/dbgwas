@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.6)
 
 # Handle superbuild first
 option (USE_SUPERBUILD "Whether or not a superbuild should be invoked" ON)
@@ -21,7 +21,7 @@ endif()
 ################################################################################
 SET (gatb-tool_VERSION_MAJOR 0)
 SET (gatb-tool_VERSION_MINOR 5)
-SET (gatb-tool_VERSION_PATCH 1)
+SET (gatb-tool_VERSION_PATCH 2)
 
 #write the version number
 file(WRITE ${PROJECT_SOURCE_DIR}/tools/DBGWAS/src/version.h "\#define VERSION \"${gatb-tool_VERSION_MAJOR}.${gatb-tool_VERSION_MINOR}.${gatb-tool_VERSION_PATCH}\"")
@@ -119,7 +119,6 @@ INSTALL (FILES   ${PROJECT_SOURCE_DIR}/html_templates/index_template.html  DESTI
 INSTALL (FILES   ${PROJECT_SOURCE_DIR}/html_templates/index_table_template.html  DESTINATION ./bin/DBGWAS_lib/ COMPONENT precompiled)
 INSTALL (DIRECTORY   ${PROJECT_SOURCE_DIR}/sample_example  DESTINATION . COMPONENT precompiled)
 INSTALL (DIRECTORY   ${PROJECT_SOURCE_DIR}/csjs/lib  DESTINATION ./bin/DBGWAS_lib/ COMPONENT precompiled)
-INSTALL (DIRECTORY   ${PROJECT_SOURCE_DIR}/sharedobjects  DESTINATION ./bin/DBGWAS_lib/ COMPONENT precompiled)
 
 set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
 set(CPACK_COMPONENTS_ALL precompiled)

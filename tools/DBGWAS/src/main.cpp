@@ -38,7 +38,7 @@
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
 #undef BOOST_NO_CXX11_SCOPED_ENUMS
-#include <regex>
+#include <boost/regex.hpp>
 
 using namespace std;
 /********************************************************************************/
@@ -49,7 +49,7 @@ int main (int argc, char* argv[])
     srand (time(NULL));
 
     //get the path to the dir were the executable is
-    dirWhereDBGWASIsInstalled = getDirWhereDBGWASIsInstalled();
+    DBGWAS_lib = getDirWhereDBGWASIsInstalled() + "/DBGWAS_lib/";
 
     try
     {

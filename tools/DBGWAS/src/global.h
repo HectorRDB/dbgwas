@@ -49,12 +49,15 @@ extern const char* STR_SFF;
 extern const char* STR_NUCLEOTIDE_DB;
 extern const char* STR_PROTEIN_DB;
 extern const char* STR_MAF_FILTER;
+extern const char* STR_GEMMA_PATH;
+extern const char* STR_BLAST_PATH;
+extern const char* STR_PHANTOMJS_PATH;
+extern const char* STR_RSCRIPT_PATH;
+extern const char* STR_NO_PREVIEW;
 
 //TODO: seeveral questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
 //extern const char* STR_COUNT_MODE;
 //TODO: seeveral questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
-
-extern string dirWhereDBGWASIsInstalled;
 extern string DBGWAS_lib;
 extern bool skip1;
 extern bool skip2;
@@ -65,6 +68,11 @@ extern string nucleotideDBPath;
 extern bool thereIsProteinDB;
 extern string proteinDBPath;
 extern boost::variant< int, double > SFF;
+extern string gemmaPath;
+extern string blastPath;
+extern string phantomjsPath;
+extern string RscriptPath;
+extern bool noPreview;
 
 void populateParser (Tool *tool);
 

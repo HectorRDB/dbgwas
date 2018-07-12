@@ -1,5 +1,24 @@
+# Before starting
+If you have any problems, please try to find your answer in this page or in the [issues page](https://gitlab.com/leoisl/dbgwas/issues?scope=all&utf8=%E2%9C%93&state=all).
+
+If your problem persists, please do not hesitate on submitting an issue to the [issues page](https://gitlab.com/leoisl/dbgwas/issues), as this can help the developers and other users.
+
+**DBGWAS ONLY WORKS ON LINUX FOR THE MOMENT.**
+
+**DBGWAS' OUTPUT IS ONLY TESTED WITH GOOGLE CHROME, FIREFOX AND OPERA BROWSERS.**
+
 # About DBGWAS
-DBGWAS is a tool for quick and efficient bacterial GWAS. It uses a compacted De Bruijn Graph (cDBG) structure to represent the variability within all bacterial genome assemblies given as input. Then cDBG nodes are tested for association with a phenotype of interest and the resulting associated nodes are then re-mapped on the cDBG. The output of DBGWAS consists of regions of the cDBG around statistically significant nodes with several informations related to the phenotypes, offering a representation helping in the interpretation. The output can be viewed with any modern web browser, and thus easily shared.
+DBGWAS is a tool for quick and efficient bacterial GWAS. It uses a compacted De Bruijn Graph (cDBG) structure to represent the variability within all bacterial
+genome assemblies given as input. Then cDBG nodes are tested for association with a phenotype of interest and the resulting associated nodes are then re-mapped
+on the cDBG. The output of DBGWAS consists of regions of the cDBG around statistically significant nodes with several informations related to the phenotypes,
+offering a representation helping in the interpretation. The output can be viewed with any modern web browser, and thus easily shared.
+
+<!--
+TODO: add when published
+A complete description of DBGWAS and its application can be found in its publication: <publication_link>
+-->
+
+
 
 ## DBGWAS pipeline
 DBGWAS takes as input draft assemblies and phenotype data for a panel of
@@ -17,6 +36,9 @@ You can find DBGWAS' output using several antibiotic resistance phenotypes withi
 
 The input to each of these experiments are the IDs, phenotypes and contigs for each strain.
 
+<!--
+TODO: UPDATE ME
+-->
 A detailed description of the output can be found in section 6 of the [supplementary material](https://www.dropbox.com/s/k554q1yqfuyhapf/Suppl_Materials_for_Fast-agnostic-bacterial-GWAS.pdf?dl=1) of our paper.
 
 # DBGWAS in a nutshell - running the tool in one example
@@ -25,13 +47,9 @@ For a quick example on how DBGWAS works, we provide the output
 obtained from 282 bacterial genomes along with their drug (amikacin) resistance/sensitivity
 phenotype.
 
-Genomes are taken from van Belkum A et al., "Phylogenetic Distribution
-of CRISPR-Cas Systems in Antibiotic-Resistant Pseudomonas
-aeruginosa.", MBio, 2015 Nov 24;6(6):e01796-15
+Genomes are taken from [van Belkum A et al., "Phylogenetic Distribution of CRISPR-Cas Systems in Antibiotic-Resistant Pseudomonas aeruginosa.", MBio, 2015 Nov 24;6(6):e01796-15](http://mbio.asm.org/content/6/6/e01796-15.full)
 
-Phenotypes are taken from Jaillard M at al. ,"Correlation between
-phenotypic antibiotic susceptibility and the resistome in Pseudomonas
-aeruginosa". IJAA , 50 (2017) 210-218.
+Phenotypes are taken from [Jaillard M et al. ,"Correlation between phenotypic antibiotic susceptibility and the resistome in Pseudomonas aeruginosa". IJAA , 50 (2017) 210-218.](https://www.ncbi.nlm.nih.gov/pubmed/28554735)
 
 The graph nodes were annotated with a resistance database composed by four sources (ResFinders, MEGAres, ArgAnnot and CARD) and the UniProt database of bacterial proteins (http://www.uniprot.org/).
 
@@ -42,42 +60,55 @@ For reproducibility reasons, in the following you have easily the input data, an
 1. Strains' sequences along with DBGWAS' required files (input): https://www.dropbox.com/s/0g1llvdbfv1jys6/pseudomonas_aeruginosa_full_dataset.zip?dl=1
 2. Resistance database: https://www.dropbox.com/s/mt3g4oh0bt5jwmr/Resistance_DB_for_DBGWAS.fasta?dl=1
 3. UniProt database: https://www.dropbox.com/s/9y1p0yw918ips6k/uniprot_sprot_bacteria_for_DBGWAS.fasta?dl=1
-4. Extract everything in the bin folder and execute DBGWAS as:
+4. Extract everything in the `bin` of the [precompiled binary](#downloading-the-precompiled-binaries) folder and execute DBGWAS as:
 ```
-./DBGWAS -strains pseudomonas_aeruginosa_full_dataset/strains -newick pseudomonas_aeruginosa_full_dataset/strains.newick -nc_db Resistance_DB_for_DBGWAS.fasta -pt_db uniprot_sprot_bacteria_for_DBGWAS.fasta
+./DBGWAS -strains pseudomonas_aeruginosa_full_dataset/strains -newick pseudomonas_aeruginosa_full_dataset/strains.newick -nc-db Resistance_DB_for_DBGWAS.fasta -pt-db uniprot_sprot_bacteria_for_DBGWAS.fasta
 ```
 5. After finishing the execution, the output can be found in the folder ```bin/output/visualisations```
 
-# Downloading, installing, running and troubleshooting
+# Downloading, installing and running
 ## Downloading the precompiled binaries
-This is the easiest way to run the tool since it is already precompiled for Linux AMD64 machines.
+This is the easiest way to run the tool since it is already precompiled.
 
-Download the latest binary here (v0.5.1): https://www.dropbox.com/s/072vycgnw181jvr/DBGWAS-0.5.1-Linux-precompiled.tar.gz?dl=1
+Precompilation is done using [Holy Build Box](http://phusion.github.io/holy-build-box/), so it should work on
+pretty much any glibc-based x86 and x86-64 Linux distribution released since 2007 (e.g.: Debian >= 6, Ubuntu >= 10.04,
+Red Hat Enterprise Linux >= 5, CentOS >= 5, etc). We acknowledge Páll Melsted since we followed his
+[blog post](https://pmelsted.wordpress.com/2015/10/14/building-binaries-for-bioinformatics/) to build this portable binary.
 
-**Note:** even in this case, you still have to install the R dependencies (see https://gitlab.com/leoisl/dbgwas#dependencies-installation ).
+Download the latest binary here (v0.5.2): https://www.dropbox.com/s/gf6n4ibcakcyo5k/DBGWAS-0.5.2-Linux-precompiled.tar.gz?dl=1
 
-Pre-compiled versions history:
+**Note:** even in this case, you still have to install the R dependencies (see [Dependencies installation](#dependencies-installation)).
 
-DBGWAS v0.5.0: https://www.dropbox.com/s/qr1ew7jdfieodt0/DBGWAS-0.5.0-Linux-precompiled.tar.gz?dl=1
+If the precompiled binary worked on your machine, you can jump to section [Dependencies installation](#dependencies-installation). Otherwise, see the next sections.
 
-DBGWAS v0.4.8: https://www.dropbox.com/s/bp81xqohgyfl8ed/DBGWAS-0.4.8-Linux-precompiled.tar.gz?dl=1
+### Help, I can't run the precompiled binaries!
+Despite all our efforts, DBGWAS or the other binaries it uses might not work on your particular machine.
+In this case, you can compile these binaries yourself and tell DBGWAS to use them instead of the ones that are distributed in DBGWAS package.
+If you have problem with:
 
-DBGWAS v0.4.7: https://www.dropbox.com/s/bb6uk0qw8r7018n/DBGWAS-0.4.7-Linux-precompiled.tar.gz?dl=1
+* DBGWAS binary: try compiling from the source: [Compiling](#compiling)
+* GEMMA binary: bugwas requires a modified GEMMA version 0.93 to work. We created a static portable binary of this specific version available here: https://github.com/leoisl/gemma0.93b , which is already distributed with DBGWAS.
+However, if you need to compile your own version of GEMMA, try compiling the version at https://github.com/danny-wilson/gemma0.93b and tell DBGWAS to use your own executable by using parameter `-GEMMA-path`.
+   * GEMMA is **required** for DBGWAS to work.
+* Rscript: by default, DBGWAS uses the Rscript in your PATH. If this is not the version you want to use, you can specify other Rscript executable using parameter `-Rscript-path`.
+   * Rscript is **required** for DBGWAS to work.
+* [Blast suite](https://blast.ncbi.nlm.nih.gov/Blast.cgi) (blastn, blastx, makeblastdb): if you prefer to use your own installation of Blast, use parameter `-Blast-path`.
+   * Blast suite is only required if you want to annotate the output subgraphs with parameters `-nc-db` and `-pt-db`.
+* phantomjs: if you prefer to use your own installation of phantomjs, use parameter `-phantomjs-path`.
+   * phantomjs is only required to have the components preview in the summary output page. If you prefer not to have them or if you do not manage to
+   have a working phantomjs executable, you can still run DBGWAS with parameter `-no-preview`, which will skip producing the components preview.
 
-DBGWAS v0.4.6: https://www.dropbox.com/s/fmttm0dhv1bq5ms/DBGWAS-0.4.6-Linux-precompiled.tar.gz?dl=1
-
-DBGWAS v0.4.5: https://www.dropbox.com/s/3yow59j0f5onnb7/DBGWAS-0.4.5-Linux-precompiled.tar.gz?dl=1
-
-DBGWAS v0.4.4: https://www.dropbox.com/s/ncf6ef4pwyzzuog/DBGWAS-0.4.4-Linux-precompiled.tar.gz?dl=1
-
-
+**In case nothing works, please fill an issue at https://gitlab.com/leoisl/dbgwas/issues**
 
 ## Compiling
-If you still want to compile, first have installed:
+
+If you need to compile, first have installed:
 ```
-cmake v2.6+
-g++ v5.4+
-ZLIB
+GCC 4.8.2+
+cmake v3.6+
+make
+zlib 1.2.11+
+git
 ```
 
 Then, clone the repository:
@@ -87,10 +118,10 @@ git clone --recursive https://gitlab.com/leoisl/dbgwas.git
 
 And build the package:
 ```
-cd dbgwas && mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make && cd DBGWAS && make package
+cd dbgwas && mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make && cd DBGWAS/DBGWAS && make package
 ```
 
-The package can be found in `build/DBGWAS/DBGWAS-<version>-Linux-precompiled.tar.gz`.
+The package can be found in `build/DBGWAS/DBGWAS/DBGWAS-<version>-Linux-precompiled.tar.gz`.
 
 ## Dependencies installation
 DBGWAS uses several thirdparty libraries, but most of them were already packed and were statically linked during compilation, so almost no dependencies are needed. However, in order to run the tool, you still need to:
@@ -106,9 +137,9 @@ install.packages("https://raw.githubusercontent.com/sgearle/bugwas/master/build/
 
 ## Running on a sample example
 
-Now that you have the package (either downloaded or you compiled it yourself),
+Now that you have the package (either the precompiled or you compiled it yourself),
 let's try running the tool in a sample example comprising 50 bacterial genomes (subset of the 282
-described in the "DBGWAS in a nutshell" section):
+described in the [DBGWAS in a nutshell](#dbgwas-in-a-nutshell-running-the-tool-in-one-example) section):
 
 1. Extract the package:
 ```
@@ -118,7 +149,7 @@ tar -zxvf DBGWAS-<version>-Linux-precompiled.tar.gz
 ```
 cd bin/
 ```
-3. Execute the program, using demo files:
+3. Execute the program on the sample example:
 ```
 ./DBGWAS -strains ../sample_example/strains -newick ../sample_example/strains.newick
 ```
@@ -127,37 +158,42 @@ cd bin/
 ```
 ./DBGWAS -h
 ```
-6. See also the directory ```sample_example``` to understand better this example;
+6. See also the directory ```sample_example``` to understand better this example.
 Check at least the file ```sample_example/strains``` to know how to build the input to the program.
 
 ## Parameters
 
 You can find DBGWAS parameters by running ```./DBGWAS -h``` or simply here:
 ```
-       -strains  (1 arg) :    A text file describing the strains containing 3 columns: 1) ID of the strain; 2) Phenotype (0/1/NA); 3) Path to a multi-fasta file containing the sequences of the strain. This file needs a header. Check the sample_example folder or https://gitlab.com/leoisl/dbgwas/raw/master/sample_example/strains for an example.
-       -k        (1 arg) :    K-mer size.  [default '31']
-       -newick   (1 arg) :    Optional path to a newick tree file. If (and only if) a newick tree file is provided, the lineage effect analysis is computed and PCs figures are generated.  [default '']
-       -nc_db    (1 arg) :    A list of Fasta files separated by comma containing annotations in a nucleotide alphabet format (e.g.: -nc_db path/to/file_1.fa,path/to/file_2.fa,etc). You can customize these files to work better with DBGWAS (see https://gitlab.com/leoisl/dbgwas/tree/master#customizing-annotation-databases).  [default '']
-       -pt_db    (1 arg) :    A list of Fasta files separated by comma containing annotations in a protein alphabet format (e.g.: -pt_db path/to/file_1.fa,path/to/file_2.fa,etc). You can customize these files to work better with DBGWAS (see https://gitlab.com/leoisl/dbgwas/tree/master#customizing-annotation-databases).  [default '']
-       -output   (1 arg) :    Path to the folder where the final and temporary files will be stored.  [default 'output']
-       -skip1    (0 arg) :    Skips Step 1, running only Steps 2 and 3. Assumes that Step 1 was correctly run and folder "step1" is present in the output folder.
-       -skip2    (0 arg) :    Skips Steps 1 and 2, running only Step 3. Assumes that Steps 1 and 2 were correctly run and folders "step1" and "step2" are present in the output folder.
-       -SFF      (1 arg) :    Denotes the Significant Features Filter - the features (or patterns) selected to create a visualisation around them. If it is a float number n, then only the features with q-value<=n are selected. If it is an integer n, then only the n first features are selected. Take a look at the output/step2/patterns.txt file to get a list of features ordered by q-value to better choose this parameter (re-run the tool with -skip2 in order to directly produce the visualisation of the features selected by your parameter).  [default '100']
-       -nh       (1 arg) :    Denotes the neighbourhood to be considered around the significant unitigs.  [default '5']
-       -maf      (1 arg) :    Minor Allele Frequency Filter.  [default '0.01']
-       -nb-cores (1 arg) :    number of cores  [default '1']
-       -verbose  (1 arg) :    verbosity level  [default '1']
-       -version  (0 arg) :    version
-       -help     (0 arg) :    help
+       -strains        (1 arg) :    A text file describing the strains containing 3 columns: 1) ID of the strain; 2) Phenotype (0/1/NA); 3) Path to a multi-fasta file containing the sequences of the strain. This file needs a header. Check the sample_example folder or https://gitlab.com/leoisl/dbgwas/raw/master/sample_example/strains for an example.
+       -k              (1 arg) :    K-mer size.  [default '31']
+       -newick         (1 arg) :    Optional path to a newick tree file. If (and only if) a newick tree file is provided, the lineage effect analysis is computed and PCs figures are generated.  [default '']
+       -nc-db          (1 arg) :    A list of Fasta files separated by comma containing annotations in a nucleotide alphabet format (e.g.: -nc-db path/to/file_1.fa,path/to/file_2.fa,etc). You can customize these files to work better with DBGWAS (see https://gitlab.com/leoisl/dbgwas/tree/master#customizing-annotation-databases).  [default '']
+       -pt-db          (1 arg) :    A list of Fasta files separated by comma containing annotations in a protein alphabet format (e.g.: -pt-db path/to/file_1.fa,path/to/file_2.fa,etc). You can customize these files to work better with DBGWAS (see https://gitlab.com/leoisl/dbgwas/tree/master#customizing-annotation-databases).  [default '']
+       -output         (1 arg) :    Path to the folder where the final and temporary files will be stored.  [default 'output']
+       -skip1          (0 arg) :    Skips Step 1, running only Steps 2 and 3. Assumes that Step 1 was correctly run and folder "step1" is present in the output folder.
+       -skip2          (0 arg) :    Skips Steps 1 and 2, running only Step 3. Assumes that Steps 1 and 2 were correctly run and folders "step1" and "step2" are present in the output folder.
+       -SFF            (1 arg) :    Denotes the Significant Features Filter - the features (or patterns) selected to create a visualisation around them. If it is a float number n, then only the features with q-value<=n are selected. If it is an integer n, then only the n first features are selected. Take a look at the output/step2/patterns.txt file to get a list of features ordered by q-value to better choose this parameter (re-run the tool with -skip2 in order to directly produce the visualisation of the features selected by your parameter).  [default '100']
+       -nh             (1 arg) :    Denotes the neighbourhood to be considered around the significant unitigs.  [default '5']
+       -maf            (1 arg) :    Minor Allele Frequency Filter.  [default '0.01']
+       -GEMMA-path     (1 arg) :    Path to the GEMMA executable.  [default '<DBGWAS_lib>/gemma.0.93b']
+       -Blast-path     (1 arg) :    Path to the directory containing the Blast suite (should contain at least blastn, blastx, and makeblastdb).  [default '<DBGWAS_lib>/']
+       -phantomjs-path (1 arg) :    Path to phantomjs executable (DBGWAS was tested only with version 2.1.1).  [default '<DBGWAS_lib>/phantomjs']
+       -no-preview     (0 arg) :    Do not produce the components preview in the summary output page.
+       -Rscript-path   (1 arg) :    Path to Rscript.  [default 'Rscript']
+       -nb-cores       (1 arg) :    number of cores  [default '1']
+       -verbose        (1 arg) :    verbosity level  [default '1']
+       -version        (0 arg) :    version
+       -help           (0 arg) :    help
 ```
 
 ## Lineage vs locus effect
 
 DBGWAS is based on bugwas, which is described in the following paper:
 
-Sarah Earle et al., "Identifying lineage effects when controlling for
+[Sarah Earle et al., "Identifying lineage effects when controlling for
 population structure improves power in bacterial association studies",
-Nature Microbiology 2016.
+Nature Microbiology 2016.](https://www.nature.com/articles/nmicrobiol201641)
 
 Bugwas offers association tests at the "locus" level (SNPs, kmers, or
 in our case unitigs) or at the lineage level, i.e. groups of
@@ -169,7 +205,7 @@ then the lineage effect analysis is computed. Otherwise, it is skipped.
 ## Memory and CPU requirements
 
 The analysis on the full dataset with 280 P. aeruginosa strains and amikacin resistance phenotype,
-described in section "DBGWAS in a nutshell",
+described in section [DBGWAS in a nutshell](#dbgwas-in-a-nutshell-running-the-tool-in-one-example),
 produces 54,397,312 kmers which are compressed
 into 2,356,052 unitigs corresponding to 1,141,877 unique patterns.
 
@@ -187,14 +223,6 @@ nor annotation of subgraphs), on an Intel(R) Xeon(R) CPU E5-1620 v3 processor.
 Scaling on new datasets will essentially depend on the number of
 strains and the number of unique presence/absence patterns obtained
 across unitigs, i.e., on the genetic variability in the dataset.
-
-## Troubleshooting
-
-**IMPORTANT: DBGWAS ONLY WORKS ON LINUX FOR THE MOMENT.**
-
-**IMPORTANT: DBGWAS' OUTPUT IS ONLY TESTED WITH GOOGLE CHROME, FIREFOX AND OPERA BROWSERS.**
-
-If you have any doubts or find any bug, please fill in an issue at https://gitlab.com/leoisl/dbgwas/issues .
 
 # Customizing annotation databases
 
@@ -262,10 +290,14 @@ DBGWAS makes use of several thirdparty libraries:
 17. Shuffle.js (https://vestride.github.io/Shuffle/)
 18. Fastclick (https://github.com/ftlabs/fastclick)
 19. cmake-superbuild (https://github.com/Sarcasm/cmake-superbuild)
-
+20. docker (https://www.docker.com/)
+21. Holy Build Box (http://phusion.github.io/holy-build-box/)
 
 # How to cite
 
+<!--
+TODO: UPDATE ME
+-->
 Magali Jaillard, Leandro Lima, Maud Tournoud, Pierre Mahé, Alex van Belkum, Vincent Lacroix, Laurent Jacob. A fast and agnostic method for bacterial genome-wide association studies: bridging the gap between kmers and genetic events. bioRxiv Cold Spring Harbor Labs Journals (2018). doi:10.1101/297754. URL: https://www.biorxiv.org/content/early/2018/04/09/297754.
 
 # Supplementary Material

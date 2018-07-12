@@ -11,7 +11,7 @@
 #include <set>
 #include <map>
 #include <boost/algorithm/string.hpp>
-#include <regex>
+#include <boost/regex.hpp>
 
 using namespace std;
 
@@ -40,7 +40,7 @@ private:
 
     //parse the header and extract all the DBGWAS tags
     //header is intentionally string and not const string &
-    static map<string, string> extractValuesWithRegex(string header, const regex &expression);
+    static map<string, string> extractValuesWithRegex(string header, const boost::regex &expression);
 };
 
 

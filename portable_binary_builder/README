@@ -1,0 +1,5 @@
+Usage:
+cd <DBGWAS_folder>/portable_binary_builder
+bash build_portable_dbgwas.sh
+
+The portable package will be in <DBGWAS_folder>/DBGWAS-<version>-Linux-precompiled.tar.gz

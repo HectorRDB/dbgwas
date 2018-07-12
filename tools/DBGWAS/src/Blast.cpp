@@ -22,7 +22,7 @@ BlastRecord BlastRecord::parseString (const string &str) {
   boost::replace_all(header, "'", "\\'");
 
   //parse all tags
-  regex expression("DBGWAS_(\\w+)_tag_*=_*([^;]+)_*;?");
+  boost::regex expression("DBGWAS_(\\w+)_tag_*=_*([^;]+)_*;?");
   map<string, string> allTags = extractValuesWithRegex(header, expression);
 
   //check if general tag was specified
@@ -54,11 +54,11 @@ BlastRecord BlastRecord::parseString (const string &str) {
 
 //parse the header and extract all the DBGWAS tags
 //header is intentionally string and not const string &
-map<string, string> BlastRecord::extractValuesWithRegex(string header, const regex &expression) {
+map<string, string> BlastRecord::extractValuesWithRegex(string header, const boost::regex &expression) {
   map<string, string> extractedValues;
-  smatch matchResults;
+  boost::smatch matchResults;
 
-  while(regex_search(header, matchResults, expression))
+  while(boost::regex_search(header, matchResults, expression))
   {
     string key = matchResults.str(1);
     boost::trim_if(key, [](char c) -> bool { return c=='_';});
@@ -78,7 +78,7 @@ vector<BlastRecord> Blast::blast (const string &command, const string &queryPath
 
   //build the command line
   stringstream ss;
-  ss << dirWhereDBGWASIsInstalled << DBGWAS_lib << "/" << command << " -query " << queryPath << " -db " << dbPath << " -out " << outFilePath << " -num_threads " << nbCores << " -outfmt '6 qseqid sseqid qcovs bitscore pident evalue'";
+  ss << blastPath << "/" << command << " -query " << queryPath << " -db " << dbPath << " -out " << outFilePath << " -num_threads " << nbCores << " -outfmt '6 qseqid sseqid qcovs bitscore pident evalue'";
   string commandLine=ss.str();
   executeCommand(commandLine, false);
 
@@ -129,7 +129,7 @@ string Blast::makeblastdb (const string &dbtype, const string &originalDBPath, c
 
   //create the DB using the fixed FASTA
   {
-    string commandLineMakeblastdb = dirWhereDBGWASIsInstalled + DBGWAS_lib + string("/makeblastdb -dbtype ") + dbtype + " -in " + fixedDBPath;
+    string commandLineMakeblastdb = blastPath + "/makeblastdb -dbtype " + dbtype + " -in " + fixedDBPath;
     executeCommand(commandLineMakeblastdb);
   }
 

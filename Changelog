@@ -1,3 +1,20 @@
+Done v0.5.2:
+-Fixed various issues with the building process and the precompiled binary:
+    -The precompiled binary was not portable enough. Now we added a script to create a portable binary inspired by https://pmelsted.wordpress.com/2015/10/14/building-binaries-for-bioinformatics/;
+        -The script can be found in folder portable_binary_builder;
+        -The new precompiled binary (v0.5.2) is portable now;
+    -Fixed some bugs with CMAKE_ARGS in boostSuperBuild/SuperBuild.cmake;
+    -Updated GEMMA to a portable static binary;
+        -This binary is build using Holy Build Box in https://github.com/leoisl/gemma0.93b
+-Changed parameters -nc_db and -pt_db to -nc-db and -pt-db , in order to keep consistency with the other parameters naming
+-Added five new parameters to deal with binary incompatibility of the executables that are bundled with DBGWAS (GEMMA, Blast suite, phantomjs):
+    -GEMMA-path , -Blast-path , -phantomjs-path , -no-preview , and -Rscript-path
+-Replaced std::regex to boost::regex;
+-Added an automated test based on the 282 pseudomonas_aeruginosa dataset;
+-Improved well README.md;
+
+
+
 Done v0.5.1:
 -Fixed compilation issues
     -Due to this issue: https://gitlab.com/leoisl/dbgwas/issues/2 (reported by mail from the user of issue https://gitlab.com/leoisl/dbgwas/issues/1 )
