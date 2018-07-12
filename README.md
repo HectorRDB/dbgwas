@@ -1,3 +1,12 @@
+# NEWS
+
+DBGWAS v0.5.2 is now released. The main fix is that the precompiled binary is now built with [Holy Build Box](http://phusion.github.io/holy-build-box/),
+so it should work on pretty much any glibc-based x86 and x86-64 Linux distribution released since 2007 (e.g.: Debian >= 6, Ubuntu >= 10.04,
+Red Hat Enterprise Linux >= 5, CentOS >= 5, etc). See [Downloading the precompiled binaries](#downloading-the-precompiled-binaries) for details.
+The complete changelog for this new version can be found [here](https://gitlab.com/leoisl/dbgwas/blob/master/Changelog).
+
+
+
 # Before starting
 If you have any problems, please try to find your answer in this page or in the [issues page](https://gitlab.com/leoisl/dbgwas/issues?scope=all&utf8=%E2%9C%93&state=all).
 
@@ -70,16 +79,21 @@ For reproducibility reasons, in the following you have easily the input data, an
 ## Downloading the precompiled binaries
 This is the easiest way to run the tool since it is already precompiled.
 
-Precompilation is done using [Holy Build Box](http://phusion.github.io/holy-build-box/), so it should work on
-pretty much any glibc-based x86 and x86-64 Linux distribution released since 2007 (e.g.: Debian >= 6, Ubuntu >= 10.04,
-Red Hat Enterprise Linux >= 5, CentOS >= 5, etc). We acknowledge Páll Melsted since we followed his
-[blog post](https://pmelsted.wordpress.com/2015/10/14/building-binaries-for-bioinformatics/) to build this portable binary.
-
 Download the latest binary here (v0.5.2): https://www.dropbox.com/s/gf6n4ibcakcyo5k/DBGWAS-0.5.2-Linux-precompiled.tar.gz?dl=1
 
 **Note:** even in this case, you still have to install the R dependencies (see [Dependencies installation](#dependencies-installation)).
 
 If the precompiled binary worked on your machine, you can jump to section [Dependencies installation](#dependencies-installation). Otherwise, see the next sections.
+
+### Details about the precompiled binary
+
+Precompilation is done using [Holy Build Box](http://phusion.github.io/holy-build-box/), so it should work on
+pretty much any glibc-based x86 and x86-64 Linux distribution released since 2007 (e.g.: Debian >= 6, Ubuntu >= 10.04,
+Red Hat Enterprise Linux >= 5, CentOS >= 5, etc). We acknowledge Páll Melsted since we followed his
+[blog post](https://pmelsted.wordpress.com/2015/10/14/building-binaries-for-bioinformatics/) to build this portable binary.
+
+We attested that the precompiled binary works on Debian 7.11.0 or later and Ubuntu 14.04.5 or later, but it should work on
+all distributions supported by [Holy Build Box](http://phusion.github.io/holy-build-box/).
 
 ### Help, I can't run the precompiled binaries!
 Despite all our efforts, DBGWAS or the other binaries it uses might not work on your particular machine.
