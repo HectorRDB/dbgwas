@@ -75,7 +75,7 @@ pretty much any glibc-based x86 and x86-64 Linux distribution released since 200
 Red Hat Enterprise Linux >= 5, CentOS >= 5, etc). We acknowledge Páll Melsted since we followed his
 [blog post](https://pmelsted.wordpress.com/2015/10/14/building-binaries-for-bioinformatics/) to build this portable binary.
 
-Download the latest binary here (v0.5.2): https://www.dropbox.com/s/1fbf00cy8vhfxpg/DBGWAS-0.5.2-Linux-precompiled.tar.gz?dl=1
+Download the latest binary here (v0.5.2): https://www.dropbox.com/s/gf6n4ibcakcyo5k/DBGWAS-0.5.2-Linux-precompiled.tar.gz?dl=1
 
 **Note:** even in this case, you still have to install the R dependencies (see [Dependencies installation](#dependencies-installation)).
 
