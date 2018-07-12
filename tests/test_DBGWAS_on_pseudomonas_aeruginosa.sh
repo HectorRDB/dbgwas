@@ -13,4 +13,4 @@ unzip correct_output.zip
 
 #compare both outputs
 echo "Differences found (check them to see if they are really a problem):"
-diff -rq correct_output output | grep -v ".png" | grep -v ".log.txt"
+diff -rq correct_output output | grep -v ".png" | grep -v ".log.txt" | grep -v "nucl_db_fixed.nin" | grep -v "prot_db_fixed.pin"
