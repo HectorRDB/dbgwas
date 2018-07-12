@@ -2,7 +2,8 @@
 TODO list
 ---------------------------------------------------------------------------------------------------------------------------------------------
 Paper:
-    -Test on ubuntu, debian, openSuse, and any other OS we can;
+    TODO: test on Redhat (Magali)
+
     -Table to track the performance of DBGWAS
         -Subsampling SA, PA and TB big datasets
             -100, 250, 500, 1000, 2500, 5000 10000
@@ -15,9 +16,10 @@ Paper:
         -Parse output file and create the following table:
             Species     Nb_Genome   RunNb   Time    Mem
         -Magali generate the graph
-    -Changed all mentions of -nc_db and -pt_db to -nc-db and -pt-db in the text;
+
     -Put S1 online, and increment it to be a user-manual
-    -Other stuff needed for the paper (prioritize code, then test, then text)...
+    -Other stuff needed for the paper (prioritize code, then tests, then text)...
+    -Changed all mentions of -nc_db and -pt_db to -nc-db and -pt-db in the text;
 
 
 Next release (v0.5.2 ETA 31/05/2018):
