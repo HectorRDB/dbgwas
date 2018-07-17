@@ -92,7 +92,7 @@ pretty much any glibc-based x86 and x86-64 Linux distribution released since 200
 Red Hat Enterprise Linux >= 5, CentOS >= 5, etc). We acknowledge Páll Melsted since we followed his
 [blog post](https://pmelsted.wordpress.com/2015/10/14/building-binaries-for-bioinformatics/) to build this portable binary.
 
-We attested that the precompiled binary works on Debian 7.11.0 or later and Ubuntu 14.04.5 or later, but it should work on
+We attested that the precompiled binary works on Debian 7.11.0 or later, Ubuntu 14.04.5 or later, and CentOS 7 or later, but it should work on
 all distributions supported by [Holy Build Box](http://phusion.github.io/holy-build-box/).
 
 ### Help, I can't run the precompiled binaries!
