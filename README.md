@@ -140,7 +140,7 @@ The package can be found in `build/DBGWAS/DBGWAS/DBGWAS-<version>-Linux-precompi
 ## Dependencies installation
 DBGWAS uses several thirdparty libraries, but most of them were already packed and were statically linked during compilation, so almost no dependencies are needed. However, in order to run the tool, you still need to:
 
-1. Install bugwas (an R package). Execute these commands:
+1. Install bugwas (an R package). You will need `R >= 3.2.0` and to execute these commands:
 
 ```
 R
