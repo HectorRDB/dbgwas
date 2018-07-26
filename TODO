@@ -2,24 +2,11 @@
 TODO list
 ---------------------------------------------------------------------------------------------------------------------------------------------
 Paper:
-    TODO: test on Redhat (Magali)
-
-    -Table to track the performance of DBGWAS
-        -Subsampling SA, PA and TB big datasets
-            -100, 250, 500, 1000, 2500, 5000 10000
-            -Create the input files [MAGALI]
-        -Run once each point
-            -no-annotations
-            -no-newick
-            -8 cores
-            -Log the time and memory for each point
-        -Parse output file and create the following table:
-            Species     Nb_Genome   RunNb   Time    Mem
-        -Magali generate the graph
-
+    -TODO: change the package so that it extracts to a directory
+    -Finish dbgwas-performance-study and runs on pyseer, HAWK and DBGWAS
     -Put S1 online, and increment it to be a user-manual
-    -Other stuff needed for the paper (prioritize code, then tests, then text)...
     -Changed all mentions of -nc_db and -pt_db to -nc-db and -pt-db in the text;
+    -https://mail.google.com/mail/u/0/#inbox/16493fde8c69169a
 
 
 Next release (v0.5.2 ETA 31/05/2018):
