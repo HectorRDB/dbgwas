@@ -279,6 +279,14 @@ And this is what we get in the graph page:
 
 ![alt text](figures/GraphPage.png "Graph page")
 
+# User case studies
+Some interesting user case studies can be found here: [User case studies](http://leoisl.gitlab.io/DBGWAS_support/user_case_studies/index.html).
+
+These case studies that might help future users if they have a dataset similar to the ones tested here and wonder how DBGWAS would behave in their datasets.
+
+We thank the users a lot and we appreciate their time for providing us the description and the output of DBGWAS in these examples. All credits go to the users.
+
+If you want your case study to be featured here, please send the output and some description of your dataset by opening an issue at [https://gitlab.com/leoisl/dbgwas/issues](https://gitlab.com/leoisl/dbgwas/issues) or sending it by mail to leandro<dot>ishi<dot>lima<at>gmail<dot>com .
 
 # Thirdparties
 DBGWAS makes use of several thirdparty libraries:
