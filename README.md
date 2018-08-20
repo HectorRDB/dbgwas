@@ -282,7 +282,7 @@ And this is what we get in the graph page:
 # User case studies
 Some interesting user case studies can be found here: [User case studies](http://leoisl.gitlab.io/DBGWAS_support/user_case_studies/index.html).
 
-These case studies that might help future users if they have a dataset similar to the ones tested here and wonder how DBGWAS would behave in their datasets.
+These case studies might help future users if they have a dataset similar to the ones tested here and wonder how DBGWAS would behave in their datasets.
 
 We thank the users a lot and we appreciate their time for providing us the description and the output of DBGWAS in these examples. All credits go to the users.
 
