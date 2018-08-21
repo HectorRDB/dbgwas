@@ -201,15 +201,24 @@ You can find DBGWAS parameters by running ```./DBGWAS -h``` or simply here:
        -help           (0 arg) :    help
 ```
 
-# Miscellaneous
+## Learning how to use the DBGWAS web based interactive visualization
 
-[Lineage vs locus effect](https://gitlab.com/leoisl/dbgwas/wikis/Lineage-vs-locus-effect)
+See [DBGWAS web based interactive visualization](https://gitlab.com/leoisl/dbgwas/wikis/DBGWAS-web-based-interactive-visualization)
 
-[Memory and CPU requirements](https://gitlab.com/leoisl/dbgwas/wikis/Memory-and-CPU-requirements)
+## Lineage vs locus effect
 
-[Customizing annotation databases](https://gitlab.com/leoisl/dbgwas/wikis/Customizing-annotation-databases)
+See [Lineage vs locus effect](https://gitlab.com/leoisl/dbgwas/wikis/Lineage-vs-locus-effect)
 
-[User case studies](https://gitlab.com/leoisl/dbgwas/wikis/User-case-studies)
+## Memory and CPU requirements
+
+See [Memory and CPU requirements](https://gitlab.com/leoisl/dbgwas/wikis/Memory-and-CPU-requirements)
+
+## Customizing annotation databases
+
+See [Customizing annotation databases](https://gitlab.com/leoisl/dbgwas/wikis/Customizing-annotation-databases)
+
+## User case studies
+See [User case studies](https://gitlab.com/leoisl/dbgwas/wikis/User-case-studies)
 
 
 # Thirdparties
