@@ -28,6 +28,7 @@ Priority:
         In index pages with a lot of annotation, it is way too hard to use a drop-down list
 
     3) Do a text output of DBGWAS so users can use other tools to post-process its output
+        -Implement https://gitlab.com/leoisl/dbgwas/issues/5
 
     5) Add to DBGWAS parameter -runOnlyStep1 Freq/Bin
         -It will just produces the variant matrices and stop
