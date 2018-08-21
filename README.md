@@ -201,83 +201,11 @@ You can find DBGWAS parameters by running ```./DBGWAS -h``` or simply here:
        -help           (0 arg) :    help
 ```
 
-## Lineage vs locus effect
+# Miscellaneous
 
-DBGWAS is based on bugwas, which is described in the following paper:
-
-[Sarah Earle et al., "Identifying lineage effects when controlling for
-population structure improves power in bacterial association studies",
-Nature Microbiology 2016.](https://www.nature.com/articles/nmicrobiol201641)
-
-Bugwas offers association tests at the "locus" level (SNPs, kmers, or
-in our case unitigs) or at the lineage level, i.e. groups of
-SNPs/kmers/unitigs represented by a principal component of the full
-design matrix. The latter option needs more memory as it requires a
-PCA step. If a newick tree file is provided to DBGWAS (with parameter ```-newick```)
-then the lineage effect analysis is computed. Otherwise, it is skipped.
-
-## Memory and CPU requirements
-
-The analysis on the full dataset with 280 P. aeruginosa strains and amikacin resistance phenotype,
-described in section [DBGWAS in a nutshell](#dbgwas-in-a-nutshell-running-the-tool-in-one-example),
-produces 54,397,312 kmers which are compressed
-into 2,356,052 unitigs corresponding to 1,141,877 unique patterns.
-
-On a machine with 8 Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz cores, the analysis runs in:
-
-* 56 minutes and has 8Gb memory usage peak if the newick tree file and the annotation DBs are not given (lineage effect analysis and annotations are skipped);
-* 80 minutes and has 13.6Gb memory usage peak if the newick tree file and the annotation DBs are given (lineage effect analysis and annotations are processed);
-
-A more comprehensive test is presented below. DBGWAS time and maximal memory load on a **single core** is shown (memory between parenthesis). All
-runs were executed with the default parameters, without optional steps (lineage effect analysis
-nor annotation of subgraphs), on an Intel(R) Xeon(R) CPU E5-1620 v3 processor.
-
-![alt text](figures/runtime.png "Runtime and maximal memory load")
-
-Scaling on new datasets will essentially depend on the number of
-strains and the number of unique presence/absence patterns obtained
-across unitigs, i.e., on the genetic variability in the dataset.
-
-# Customizing annotation databases
-
-You can customize annotation databases to work better with DBGWAS. For example, consider this Fasta line in the UniProt database of bacterial proteins:
-```
->sp|P27431|ROXA_ECOLI 50S ribosomal protein L16 3-hydroxylase OS=Escherichia coli (strain K12) GN=roxA PE=1 SV=2
-MEYQLTLNWPDFLERHWQKRPVVLKRGFNNFIDPISPDELAGLAMESEVDSRLVSHQDGK
-WQVSHGPFESYDHLGETNWSLLVQAVNHWHEPTAALMRPFRELPDWRIDDLMISFSVPGG
-GVGPHLDQYDVFIIQGTGRRRWRVGEKLQMKQHCPHPDLLQVDPFEAIIDEELEPGDILY
-```
-If DBGWAS finds a hit to this line, it will consider the full header as its identifier, which can be too long to be shown, making the visualisation cumbersome. More worrying is that this long identifier can be too specific to show general informations, like in the summary page.
-
-If you wish to give new IDs to existing registries without changing much the database, in order to make the visualisation better, and also to group different annotations in the summary page, you can add some tags to the headers of the database in the following format:
-```
-DBGWAS_general_tag=<value>;
-DBGWAS_specific_tag=<value>;
-DBGWAS_xyz_tag=<value>;
-```
-
-```DBGWAS_general_tag``` will be the value shown for this annotation in the summary page.
-
-```DBGWAS_specific_tag``` will be the value shown for this annotation in the graph page. **It is advised that ```DBGWAS_specific_tag``` to be unique.**
-
-```DBGWAS_xyz_tag``` will be a column ```xyz``` added to the annotation table in the graph page to make it easier to analyse the annotations found by DBGWAS. With this tag, you could specify, for example, from which organism the annotation comes. There are no limits on the number of ```DBGWAS_xyz_tag``` one can use.
-
-
-For example, if we add three tags to our previous example (scroll to the right to see the tags):
-```
->sp|P27431|ROXA_ECOLI 50S ribosomal protein L16 3-hydroxylase OS=Escherichia coli (strain K12) GN=roxA PE=1 SV=2;DBGWAS_general_tag=ROXA;DBGWAS_specific_tag=[uniprot] 50S ribosomal protein L16 3-hydroxylase;DBGWAS_Organism_tag=Escherichia coli
-MEYQLTLNWPDFLERHWQKRPVVLKRGFNNFIDPISPDELAGLAMESEVDSRLVSHQDGK
-WQVSHGPFESYDHLGETNWSLLVQAVNHWHEPTAALMRPFRELPDWRIDDLMISFSVPGG
-GVGPHLDQYDVFIIQGTGRRRWRVGEKLQMKQHCPHPDLLQVDPFEAIIDEELEPGDILY
-```
-
-This is what we get in the summary page:
-
-![alt text](figures/SummaryPage.png "Summary page")
-
-And this is what we get in the graph page:
-
-![alt text](figures/GraphPage.png "Graph page")
+[Lineage vs locus effect](https://gitlab.com/leoisl/dbgwas/wikis/Lineage-vs-locus-effect)
+[Memory and CPU requirements](https://gitlab.com/leoisl/dbgwas/wikis/Memory-and-CPU-requirements)
+[Customizing annotation databases](https://gitlab.com/leoisl/dbgwas/wikis/Customizing-annotation-databases)
 
 # User case studies
 Some interesting user case studies can be found here: [User case studies](http://leoisl.gitlab.io/DBGWAS_support/user_case_studies/index.html).
