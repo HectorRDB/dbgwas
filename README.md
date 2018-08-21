@@ -48,7 +48,7 @@ The input to each of these experiments are the IDs, phenotypes and contigs for e
 <!--
 TODO: UPDATE ME
 -->
-A detailed description of the output can be found in [DBGWAS web based interactive visualization](https://gitlab.com/leoisl/dbgwas/wikis/DBGWAS-web-based-interactive-visualization)
+A detailed description of the output can be found in [DBGWAS web based interactive visualization Wiki page](https://gitlab.com/leoisl/dbgwas/wikis/DBGWAS-web-based-interactive-visualization) .
 
 # DBGWAS in a nutshell - running the tool in one example
 
