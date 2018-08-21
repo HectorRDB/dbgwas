@@ -43,17 +43,17 @@ interface assisting their interpretation.
 
 You can find DBGWAS' output using several antibiotic resistance phenotypes within three bacterial species of various degrees of genome plasticity (Mycobacterium tuberculosis, Staphylococcus aureus and Pseudomonas aeruginosa) here: http://leoisl.gitlab.io/DBGWAS_support/experiments/#DBGWAS_all_results .
 
-The input to each of these experiments are the IDs, phenotypes and contigs for each strain.
+The input to each of these experiments are the IDs, phenotypes and contigs for each strain. The details of each dataset can be found in the [full text](#how-to-cite).
 
 <!--
 TODO: UPDATE ME
 -->
-A detailed description of the output can be found in section 6 of the [supplementary material](https://www.dropbox.com/s/k554q1yqfuyhapf/Suppl_Materials_for_Fast-agnostic-bacterial-GWAS.pdf?dl=1) of our paper.
+A detailed description of the output can be found in [DBGWAS web based interactive visualization](https://gitlab.com/leoisl/dbgwas/wikis/DBGWAS-web-based-interactive-visualization)
 
 # DBGWAS in a nutshell - running the tool in one example
 
 For a quick example on how DBGWAS works, we provide the output
-obtained from 282 bacterial genomes along with their drug (amikacin) resistance/sensitivity
+obtained from 282 bacterial genomes of Pseudomonas aeruginosa along with their drug (amikacin) resistance/sensitivity
 phenotype.
 
 Genomes are taken from [van Belkum A et al., "Phylogenetic Distribution of CRISPR-Cas Systems in Antibiotic-Resistant Pseudomonas aeruginosa.", MBio, 2015 Nov 24;6(6):e01796-15](http://mbio.asm.org/content/6/6/e01796-15.full)
