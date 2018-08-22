@@ -201,6 +201,15 @@ You can find DBGWAS parameters by running ```./DBGWAS -h``` or simply here:
        -help           (0 arg) :    help
 ```
 
+## User case studies
+Some interesting user case studies can be found here: [User case studies](http://leoisl.gitlab.io/DBGWAS_support/user_case_studies/index.html).
+
+These case studies might help future users if they have a dataset similar to the ones tested here and wonder how DBGWAS would behave in their datasets.
+
+We thank the users a lot and we appreciate their time for providing us the description and the output of DBGWAS in these examples. All credits go to the users.
+
+If you want your case study to be featured here, please send the output and some description of your dataset by opening an issue at [https://gitlab.com/leoisl/dbgwas/issues](https://gitlab.com/leoisl/dbgwas/issues) or sending it by mail to leandro&lt;dot&gt;ishi&lt;dot&gt;lima&lt;at&gt;gmail&lt;dot&gt;com .
+
 ## Learning how to use the DBGWAS web based interactive visualization
 
 See [DBGWAS web based interactive visualization](https://gitlab.com/leoisl/dbgwas/wikis/DBGWAS-web-based-interactive-visualization)
@@ -217,8 +226,7 @@ See [Memory and CPU requirements](https://gitlab.com/leoisl/dbgwas/wikis/Memory-
 
 See [Customizing annotation databases](https://gitlab.com/leoisl/dbgwas/wikis/Customizing-annotation-databases)
 
-## User case studies
-See [User case studies](https://gitlab.com/leoisl/dbgwas/wikis/User-case-studies)
+
 
 
 # Thirdparties
