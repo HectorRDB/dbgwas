@@ -210,21 +210,36 @@ We thank the users a lot and we appreciate their time for providing us the descr
 
 If you want your case study to be featured here, please send the output and some description of your dataset by opening an issue at [https://gitlab.com/leoisl/dbgwas/issues](https://gitlab.com/leoisl/dbgwas/issues) or sending it by mail to leandro&lt;dot&gt;ishi&lt;dot&gt;lima&lt;at&gt;gmail&lt;dot&gt;com .
 
+
+
+## Customizing annotation databases
+
+DBGWAS works with any nucleotide or protein Fasta file as annotation databases straight away, i.e. there is no need for manual curation.
+However, you can customize the annotation databases by changing the Fasta sequences header to aid the interpretability of DBGWAS results.
+A common example is compacting the annotation in the summary page by using abbreviations or gene class names, and expanding them
+to full names in the subgraph page. Other custom fields can also be included in the annotation table by adding specific
+tags to the headers of the sequences. See [Customizing annotation databases](https://gitlab.com/leoisl/dbgwas/wikis/Customizing-annotation-databases)
+to know how to do this.
+
+
+
 ## Learning how to use the DBGWAS web based interactive visualization
 
 See [DBGWAS web based interactive visualization](https://gitlab.com/leoisl/dbgwas/wikis/DBGWAS-web-based-interactive-visualization)
+
+
 
 ## Lineage vs locus effect
 
 See [Lineage vs locus effect](https://gitlab.com/leoisl/dbgwas/wikis/Lineage-vs-locus-effect)
 
+
+
 ## Memory and CPU requirements
 
 See [Memory and CPU requirements](https://gitlab.com/leoisl/dbgwas/wikis/Memory-and-CPU-requirements)
 
-## Customizing annotation databases
 
-See [Customizing annotation databases](https://gitlab.com/leoisl/dbgwas/wikis/Customizing-annotation-databases)
 
 
 
