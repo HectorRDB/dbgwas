@@ -220,7 +220,7 @@ See [DBGWAS web based interactive visualization](https://gitlab.com/leoisl/dbgwa
 
 ## Customizing annotation databases
 
-DBGWAS works with any nucleotide or protein Fasta file as annotation databases straight away, i.e. there is no need for manual curation.
+DBGWAS works with any nucleotide or protein Fasta files as annotation databases straight away, i.e. there is no need for manual curation.
 However, you can customize the annotation databases by changing the Fasta sequences' headers to aid the interpretability of DBGWAS results.
 A common example is compacting the annotation in the summary page by using abbreviations or gene class names, and expanding them
 to full names in the subgraph page. Other custom fields can also be included in the annotation table by adding specific
