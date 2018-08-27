@@ -41,7 +41,7 @@ interface assisting their interpretation.
 
 # Could DBGWAS be useful to me? - a quick glance at DBGWAS' output
 
-You can find DBGWAS' output using several antibiotic resistance phenotypes within three bacterial species of various degrees of genome plasticity (Mycobacterium tuberculosis, Staphylococcus aureus and Pseudomonas aeruginosa) here: http://leoisl.gitlab.io/DBGWAS_support/experiments/#DBGWAS_all_results .
+You can find DBGWAS' output using several antibiotic resistance phenotypes within three bacterial species of various degrees of genome plasticity (Mycobacterium tuberculosis, Staphylococcus aureus and Pseudomonas aeruginosa) here: http://pbil.univ-lyon1.fr/datasets/DBGWAS_support/experiments/#DBGWAS_all_results .
 
 The input to each of these experiments are the IDs, phenotypes and contigs for each strain. The details of each dataset can be found in the [full text](#how-to-cite).
 
@@ -62,7 +62,7 @@ Phenotypes are taken from [Jaillard M et al. ,"Correlation between phenotypic an
 
 The graph nodes were annotated with a resistance database composed by four sources (ResFinders, MEGAres, ArgAnnot and CARD) and the UniProt database of bacterial proteins (http://www.uniprot.org/).
 
-The output can be found here: http://leoisl.gitlab.io/DBGWAS_support/full_dataset_visualization/
+The output can be found here: http://pbil.univ-lyon1.fr/datasets/DBGWAS_support/full_dataset_visualization/
 
 For reproducibility reasons, in the following you have easily the input data, annotation databases and command-line to generate the above output:
 
@@ -202,7 +202,7 @@ You can find DBGWAS parameters by running ```./DBGWAS -h``` or simply here:
 ```
 
 ## User case studies
-Some interesting user case studies can be found here: [User case studies](http://leoisl.gitlab.io/DBGWAS_support/user_case_studies/index.html).
+Some interesting user case studies can be found here: [User case studies](http://pbil.univ-lyon1.fr/datasets/DBGWAS_support/user_case_studies/index.html).
 
 These case studies might help future users if they have a dataset similar to the ones tested here and wonder how DBGWAS would behave in their datasets.
 
