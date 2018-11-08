@@ -1,12 +1,45 @@
 ﻿---------------------------------------------------------------------------------------------------------------------------------------------
 TODO list
 ---------------------------------------------------------------------------------------------------------------------------------------------
-Paper:
-    -TODO: change the package so that it extracts to a directory
-    -Finish dbgwas-performance-study and runs on pyseer, HAWK and DBGWAS
-    -Put S1 online, and increment it to be a user-manual
-    -Changed all mentions of -nc_db and -pt_db to -nc-db and -pt-db in the text;
-    -https://mail.google.com/mail/u/0/#inbox/16493fde8c69169a
+Binary 2 continuous phenotype:
+    -Step1: Accept continuous phenotype
+    -Step2: integrate it
+    -Step3:
+            -Color legend:
+                -Legend: -> Estimated Effect
+                -Pheno0: true minimum value
+                -Pheno1: true maximum value
+            -For the table, we replace Pheno0/Pheno1 -> Pheno <= Threshold and > Threshold
+            -Threshold by default is 0, but should be a parameter
+            -Step 3 should know and display the threshold
+
+Step1:
+    -Maf filter
+    -Remove nodes with a given AF
+    -Put in the docs that we count from genome assembly
+    -Remove the filter that removes the genomes with missing phenotypes
+
+Step2:
+    -parameter: only run step1
+    -customized step2 (script to run is a parameter, and we give all files to the scripts)
+    -pyseer Step2
+    -Other types of analysis
+        -no analysis, fixed effect
+        -bugwas bug
+
+Step3:
+    -Layout with alongated nodes like Bandage
+
+Continuous Genotype (frequencies):
+    -Step1:
+        -Parameter that is binary or continuous (frequency) genotype
+    -Step3:
+        -Always binarized?
+        -Frequencies Alelles/Counts
+
+
+Label predicting
+
 
 
 Next release (v0.5.2 ETA 31/05/2018):
