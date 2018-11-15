@@ -1,6 +1,8 @@
 # NEWS
 
-DBGWAS v0.5.2 is now released. The main fix is that the precompiled binary is now built with [Holy Build Box](http://phusion.github.io/holy-build-box/),
+* The paper describing DBGWAS was published in PLoS Genetics: [https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1007758](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1007758)
+
+* DBGWAS v0.5.2 is now released. The main fix is that the precompiled binary is now built with [Holy Build Box](http://phusion.github.io/holy-build-box/),
 so it should work on pretty much any glibc-based x86 and x86-64 Linux distribution released since 2007 (e.g.: Debian >= 6, Ubuntu >= 10.04,
 Red Hat Enterprise Linux >= 5, CentOS >= 5, etc). See [Downloading the precompiled binaries](#downloading-the-precompiled-binaries) for details.
 The complete changelog for this new version can be found [here](https://gitlab.com/leoisl/dbgwas/blob/master/Changelog).
@@ -21,11 +23,8 @@ DBGWAS is a tool for quick and efficient bacterial GWAS. It uses a compacted De 
 genome assemblies given as input. Then cDBG nodes are tested for association with a phenotype of interest and the resulting associated nodes are then re-mapped
 on the cDBG. The output of DBGWAS consists of regions of the cDBG around statistically significant nodes with several informations related to the phenotypes,
 offering a representation helping in the interpretation. The output can be viewed with any modern web browser, and thus easily shared.
+A complete description of DBGWAS and its application can be found in its publication: [https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1007758](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1007758)
 
-<!--
-TODO: add when published
-A complete description of DBGWAS and its application can be found in its publication: <publication_link>
--->
 
 
 
@@ -45,9 +44,6 @@ You can find DBGWAS' output using several antibiotic resistance phenotypes withi
 
 The input to each of these experiments are the IDs, phenotypes and contigs for each strain. The details of each dataset can be found in the [full text](#how-to-cite).
 
-<!--
-TODO: UPDATE ME
--->
 A detailed description of the output can be found in [DBGWAS web based interactive visualization Wiki page](https://gitlab.com/leoisl/dbgwas/wikis/DBGWAS-web-based-interactive-visualization) .
 
 # DBGWAS in a nutshell - running the tool in one example
@@ -273,14 +269,9 @@ DBGWAS makes use of several thirdparty libraries:
 
 # How to cite
 
-<!--
-TODO: UPDATE ME
--->
-Magali Jaillard, Leandro Lima, Maud Tournoud, Pierre Mahé, Alex van Belkum, Vincent Lacroix, Laurent Jacob. A fast and agnostic method for bacterial genome-wide association studies: bridging the gap between k-mers and genetic events. bioRxiv Cold Spring Harbor Labs Journals (2018). doi:10.1101/297754. URL: https://www.biorxiv.org/content/early/2018/04/09/297754.
-
-# Supplementary Material
-
-https://www.dropbox.com/s/k554q1yqfuyhapf/Suppl_Materials_for_Fast-agnostic-bacterial-GWAS.pdf?dl=1
+Jaillard M, Lima L, Tournoud M, Mahé P, van Belkum A, Lacroix V, Jacob L. (2018) A fast and agnostic method for bacterial
+genome-wide association studies: Bridging the gap between kmers and genetic events. PLoS Genet 14(11): e1007758.
+https://doi.org/10.1371/journal.pgen.1007758
 
 # License
 Copyright (C) <2017>  <bioMerieux, Universite Claude Bernard Lyon 1,
@@ -302,7 +293,9 @@ a scientific paper, a poster, a slideshow, an internet page, or a patent,
 of a result obtained directly or indirectly by running this program must
 cite the following paper :
 
-Magali Jaillard, Leandro Lima, Maud Tournoud, Pierre Mahé, Alex van Belkum, Vincent Lacroix, Laurent Jacob. A fast and agnostic method for bacterial genome-wide association studies: bridging the gap between k-mers and genetic events. bioRxiv Cold Spring Harbor Labs Journals (2018). doi:10.1101/297754. URL: https://www.biorxiv.org/content/early/2018/04/09/297754.
+Jaillard M, Lima L, Tournoud M, Mahé P, van Belkum A, Lacroix V, Jacob L. (2018) A fast and agnostic method for bacterial
+genome-wide association studies: Bridging the gap between kmers and genetic events. PLoS Genet 14(11): e1007758.
+https://doi.org/10.1371/journal.pgen.1007758
 
 # Affiliations:
 

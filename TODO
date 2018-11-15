@@ -1,25 +1,35 @@
 ﻿---------------------------------------------------------------------------------------------------------------------------------------------
 TODO list
 ---------------------------------------------------------------------------------------------------------------------------------------------
-Binary 2 continuous phenotype:
-    -Step1: Accept continuous phenotype
+1/ Binary 2 continuous phenotype (December) - Up to 12nd december:
+    -Step1: Accept continuous and N/A phenotype
+        -Change the filter
+        -Check if N/A works (see mail)
     -Step2: integrate it
+        -already on the branch
     -Step3:
             -Color legend:
                 -Legend: -> Estimated Effect
                 -Pheno0: true minimum value
                 -Pheno1: true maximum value
             -For the table, we replace Pheno0/Pheno1 -> Pheno <= Threshold and > Threshold
-            -Threshold by default is 0, but should be a parameter
+                -Threshold by default is 0, but should be a parameter
             -Step 3 should know and display the threshold
 
-Step1:
-    -Maf filter
-    -Remove nodes with a given AF
-    -Put in the docs that we count from genome assembly
-    -Remove the filter that removes the genomes with missing phenotypes
 
-Step2:
+
+2/ Continuous Genotype (frequencies) - December - Up to 12nd december:
+    -Step1:
+        -Parameter that is binary or continuous (frequency) genotype
+    -Step3:
+        -Keep the binary version
+        -Allele frequency
+
+
+3/ Automated labelling prediction (December) - After 12nd December
+
+
+4/ Custom Step2:
     -parameter: only run step1
     -customized step2 (script to run is a parameter, and we give all files to the scripts)
     -pyseer Step2
@@ -27,18 +37,37 @@ Step2:
         -no analysis, fixed effect
         -bugwas bug
 
-Step3:
+
+
+5/ Show the strain presence for each node
+    -1st - just tabular export
+    -Search for JS libraries or use iTol
+
+
+
+6/ Step1:
+    -Maf filter
+    -Remove nodes with a given AF
+    -Put in the docs that we count from genome assembly
+    -Remove the filter that removes the genomes with missing phenotypes
+
+
+
+7/ Textual output
+   -Add the strain presence files
+
+
+
+8/ Step3:
     -Layout with alongated nodes like Bandage
 
-Continuous Genotype (frequencies):
-    -Step1:
-        -Parameter that is binary or continuous (frequency) genotype
-    -Step3:
-        -Always binarized?
-        -Frequencies Alelles/Counts
 
 
-Label predicting
+9/ Double-check SFF filter
+    -When the 100th q-value is really not significant (like ~1), there is no meaning to generate a subgraph with the related unitigs.
+    The double check would be: take the top 100 q-values below a threshold (like the usual 0.05). Do you think we could try this ?
+    This would certainly lead to 2 different SFF parameters, which are somewhere correlated...
+
 
 
 
@@ -68,10 +97,6 @@ Priority:
         -Freq = use frequences
         -Bin = use presence/absence pattern
 
-    6) Double-check SFF filter
-        -When the 100th q-value is really not significant (like ~1), there is no meaning to generate a subgraph with the related unitigs.
-        The double check would be: take the top 100 q-values below a threshold (like the usual 0.05). Do you think we could try this ?
-        This would certainly lead to 2 different SFF parameters, which are somewhere correlated...
 
     7) When launching only step3, there should be no need to specify a strain file
 
