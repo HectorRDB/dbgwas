@@ -60,6 +60,8 @@ TODO list
     -Remove nodes with a given AF
     -Put in the docs that we count from genome assembly
     -Remove the filter that removes the genomes with missing phenotypes
+    -Store patterns file as binary and/or sparse matrix format (many rows with many zeros)
+        - if stores 0/1 values : would requireb Nstrain x Npatterns bits  
 
 
 
