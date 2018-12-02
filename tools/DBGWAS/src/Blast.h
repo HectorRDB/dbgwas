@@ -123,7 +123,7 @@ public:
     string getAllAnnotationsIDsFromANodeAsJSVector(int node);
 
     //get all the annotations names from a node as text to be used in the textual output
-    string AnnotationRecord::getAllAnnotationsNamesFromANodeAsText(int node);
+    string getAllAnnotationsNamesFromANodeAsText(int node);
 
     //get the extra tags as a JS vector
     string getExtraTagsAsJSVector() const;
