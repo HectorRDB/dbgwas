@@ -114,7 +114,7 @@ public:
     string getJSRepresentationAnnotIdAnnotInfoGraphPage();
 
     //get a textual representation of the annotation component for the graph page, with the annotation name, and all other info like nb of nodes, evalue and extra tags
-    string getTextualRepresentationAnnotationInfoGraphPage();
+    string getTextualRepresentationAnnotationInfoGraphPage(int compId);
 
     //get a JS array mapping annotation IDs to the nodes it maps to
     string getJSRepresentationAnnotation2NodesForGraphPage() const;

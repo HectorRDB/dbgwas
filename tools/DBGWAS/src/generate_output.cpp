@@ -537,8 +537,8 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
     annotationInfoTextOutputFilename << textualOutputFolder << "/components/" << typeOfGraph << "_" << i << "_annotations_info.tsv";
     openFileForWriting(annotationInfoTextOutputFilename.str(), annotationInfoTextOutputFile);
   }
-  annotationInfoTextOutputFile << "Annotation\tNumberOfNodes\tEValue" << annotationsOfThisComponent.getExtraTagsAsText() << endl;
-  annotationInfoTextOutputFile << annotationsOfThisComponent.getTextualRepresentationAnnotationInfoGraphPage();
+  annotationInfoTextOutputFile << "CompId\tAnnotation\tNumberOfNodes\tEValue" << annotationsOfThisComponent.getExtraTagsAsText() << endl;
+  annotationInfoTextOutputFile << annotationsOfThisComponent.getTextualRepresentationAnnotationInfoGraphPage(i);
   annotationInfoTextOutputFile.close();
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //TEXTUAL PRINTING

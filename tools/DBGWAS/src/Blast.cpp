@@ -218,10 +218,10 @@ string AnnotationRecord::getJSRepresentationAnnotIdAnnotInfoGraphPage() {
 
 
 //get a textual representation of the annotation component for the graph page, with the annotation name, and all other info like nb of nodes, evalue and extra tags
-string AnnotationRecord::getTextualRepresentationAnnotationInfoGraphPage() {
+string AnnotationRecord::getTextualRepresentationAnnotationInfoGraphPage(int compId) {
   stringstream ss;
   for (auto & indexAndAnnotationInfoGraphPage : annotations)
-    ss << annotationIndex[indexAndAnnotationInfoGraphPage.first] << "\t" << indexAndAnnotationInfoGraphPage.second.getTextualRepresentationForGraphPage(allExtraTags) << endl;
+    ss << compId << "\t" << annotationIndex[indexAndAnnotationInfoGraphPage.first] << "\t" << indexAndAnnotationInfoGraphPage.second.getTextualRepresentationForGraphPage(allExtraTags) << endl;
   return ss.str();
 }
 
