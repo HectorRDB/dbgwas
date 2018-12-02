@@ -1,3 +1,8 @@
+v0.5.3:
+-Textual output feature added
+
+
+
 Done v0.5.2:
 -Fixed various issues with the building process and the precompiled binary:
     -The precompiled binary was not portable enough. Now we added a script to create a portable binary inspired by https://pmelsted.wordpress.com/2015/10/14/building-binaries-for-bioinformatics/;

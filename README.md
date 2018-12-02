@@ -1,5 +1,8 @@
 # NEWS
 
+* DBGWAS v0.5.3 is now released. Implemented a feature that builds a textual output of DBGWAS. It can be used to easily plug DBGWAS' results
+on pipelines, and post-process them, for example to compare different GWAS runs. See the produced files and their formats here: [https://gitlab.com/leoisl/dbgwas/wikis/Files-and-formats-of-DBGWAS-textual-output](https://gitlab.com/leoisl/dbgwas/wikis/Files-and-formats-of-DBGWAS-textual-output)
+
 * The paper describing DBGWAS was published in PLoS Genetics: [https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1007758](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1007758)
 
 * DBGWAS v0.5.2 is now released. The main fix is that the precompiled binary is now built with [Holy Build Box](http://phusion.github.io/holy-build-box/),
@@ -75,7 +78,11 @@ For reproducibility reasons, in the following you have easily the input data, an
 ## Downloading the precompiled binaries
 This is the easiest way to run the tool since it is already precompiled.
 
-Download the latest binary here (v0.5.2): https://www.dropbox.com/s/gf6n4ibcakcyo5k/DBGWAS-0.5.2-Linux-precompiled.tar.gz?dl=1
+Download the latest binary here (v0.5.3): see https://gitlab.com/leoisl/dbgwas
+
+Previous versions:
+
+0.5.2: https://www.dropbox.com/s/gf6n4ibcakcyo5k/DBGWAS-0.5.2-Linux-precompiled.tar.gz?dl=1
 
 **Note:** even in this case, you still have to install the R dependencies (see [Dependencies installation](#dependencies-installation)).
 
@@ -212,6 +219,9 @@ If you want your case study to be featured here, please send the output and some
 
 See [DBGWAS web based interactive visualization](https://gitlab.com/leoisl/dbgwas/wikis/DBGWAS-web-based-interactive-visualization)
 
+## Files and formats of DBGWAS textual output
+
+See [Files and formats of DBGWAS textual output](https://gitlab.com/leoisl/dbgwas/wikis/Files-and-formats-of-DBGWAS-textual-output)
 
 
 ## Customizing annotation databases
