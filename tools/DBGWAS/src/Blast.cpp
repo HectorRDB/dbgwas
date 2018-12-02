@@ -276,6 +276,18 @@ string AnnotationRecord::getAllAnnotationsIDsFromANodeAsJSVector(int node) {
   return ss.str();
 }
 
+
+//get all the annotations names from a node as text to be used in the textual output
+string AnnotationRecord::getAllAnnotationsNamesFromANodeAsText(int node) {
+  stringstream ss;
+  for (const auto &annotationAndEvalue : nodeId2Annotations[node].annotation2Evalue)
+    ss << annotationIndex[annotationAndEvalue.first] << "~~~";
+  //remove the last "~~~"
+  string unfixedReturn = ss.str();
+  string fixedReturn = unfixedReturn.substr(0, unfixedReturn.size()-3);
+  return fixedReturn;
+}
+
 //get a dictionary in JS where the key is the node id and the value is a pair annotation and evalue
 string AnnotationRecord::getJSRepresentationNodeId2AnnotationsEvalueForGraphPage() const {
   stringstream ss;

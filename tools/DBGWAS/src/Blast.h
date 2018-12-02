@@ -122,6 +122,9 @@ public:
     //get all the annotations IDs from a node as JS vector
     string getAllAnnotationsIDsFromANodeAsJSVector(int node);
 
+    //get all the annotations names from a node as text to be used in the textual output
+    string AnnotationRecord::getAllAnnotationsNamesFromANodeAsText(int node);
+
     //get the extra tags as a JS vector
     string getExtraTagsAsJSVector() const;
 

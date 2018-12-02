@@ -1,6 +1,11 @@
 ﻿---------------------------------------------------------------------------------------------------------------------------------------------
 TODO list
 ---------------------------------------------------------------------------------------------------------------------------------------------
+0/ Produce the Textual output  - December - Up to 12nd december:
+    -Add the strain presence files
+
+
+
 1/ Binary 2 continuous phenotype (December) - Up to 12nd december:
     -Step1: Accept continuous and N/A phenotype
         -Change the filter
@@ -28,11 +33,6 @@ TODO list
 
 
 
-2.5/ Produce the Textual output  - December - Up to 12nd december:
-    -Add the strain presence files
-
-
-
 
 3/ Automated labelling prediction (December) - After 12nd December
 
@@ -46,7 +46,15 @@ TODO list
         -bugwas bug
 
 
+
+
 5/ Receive as input reads instead of contigs
+    -BCALM2 + BTRIM
+        -Filter on unitig count (check the parameter) and on kmer count  (-ab-min 2/3)
+        -5 iterations of trimming
+
+
+
 
 
 6/ Show the strain presence for each node

@@ -77,6 +77,7 @@ void executeCommand(const string &command, bool verbose=true, const string &mess
 void openFileForReading(const string &filePath, ifstream &stream);
 void openFileForWriting(const string &filePath, ofstream &stream);
 void createFolder(const string &path);
+void removeOldAndCreateFolder(const string &path, const string &reason="No details given");
 string getDirWhereDBGWASIsInstalled();
 
 

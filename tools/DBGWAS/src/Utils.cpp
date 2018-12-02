@@ -346,15 +346,18 @@ void checkParametersGenerateOutput(Tool *tool) {
   string tmpFolder = outputFolder+string("/tmp");
   createFolder(tmpFolder);
 
+
+  //remove old visualisation folder and create new
   string visualisationFolder = stripLastSlashIfExists(tool->getInput()->getStr(STR_OUTPUT))+string("/visualisations");
-  boost::filesystem::path visPath(visualisationFolder.c_str());
-  if (boost::filesystem::exists(visPath)) {
-    cerr << "[WARNING] Removing " << visualisationFolder << " because path already exists (maybe previous visualisations?). " << endl;
-    boost::filesystem::remove_all(visPath);
-  }
-  createFolder(visPath.string());
-  visPath /= "components";
-  createFolder(visPath.string());
+  removeOldAndCreateFolder(visualisationFolder, "maybe previous visualisations?");
+  string componentsFolder = visualisationFolder + string("/components");
+  createFolder(componentsFolder);
+
+  //do the same for the textual output
+  string textualOutputFolder = stripLastSlashIfExists(tool->getInput()->getStr(STR_OUTPUT))+string("/textualOutput");
+  removeOldAndCreateFolder(textualOutputFolder, "maybe previous textual output?");
+  string textualComponentsFolder = textualOutputFolder + string("/components");
+  createFolder(textualComponentsFolder);
 
 
   //parse and get SFF
@@ -488,7 +491,14 @@ void createFolder(const string &path) {
   }
 }
 
-
+void removeOldAndCreateFolder(const string &path, const string &reason){
+  boost::filesystem::path folder(path.c_str());
+  if (boost::filesystem::exists(folder)) {
+    cerr << "[WARNING] Removing " << path << " because path already exists (" << reason << "). " << endl;
+    boost::filesystem::remove_all(folder);
+  }
+  createFolder(folder.string());
+}
 
 
 void GetSignificantPatterns::operator()(int &n) const

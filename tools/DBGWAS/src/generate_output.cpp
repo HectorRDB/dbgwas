@@ -241,9 +241,9 @@ void generate_output::createIndexFile(int numberOfComponents, const string &visu
 
 
 void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector<MyVertex> &nodes, const string &typeOfGraph, int i,
-                             const string &tmpFolder, const string &visualisationsFolder, const vector<int> &selectedUnitigs, int nbPheno0, int nbPheno1,
-                             map<int, AnnotationRecord > &idComponent2Annotations,
-                             int nbCores) {
+                                              const string &tmpFolder, const string &visualisationsFolder, const string &textualOutputFolder,
+                                              const vector<int> &selectedUnitigs, int nbPheno0, int nbPheno1,
+                                              map<int, AnnotationRecord > &idComponent2Annotations, int nbCores) {
   cerr << "Rendering " << typeOfGraph << "_" << i << "..." << endl;
 
 
@@ -315,10 +315,10 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  //Cytoscape graph build step
+  //Cytoscape graph and output build step
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  cerr << "Building Cytoscape graph..." << endl;
+  cerr << "Building Cytoscape graph and textual output..." << endl;
 
   //gets the maxCoverage of the nodes in this component - will be used to normalize the width and height of the nodes
   int maxCoverage=-1;
@@ -327,8 +327,17 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
   }
 
 
-  //declares the stringstream which will store the elements to be printed
+  //declares the stringstream which will store the elements to be printed in the graphical output
   stringstream elementsSS;
+
+  //open the text output file
+  ofstream nodeInfoTextOutputFile;
+  {
+    stringstream nodeInfoTextOutputFilename;
+    nodeInfoTextOutputFilename << textualOutputFolder << "/components/" << typeOfGraph << "_" << i << "_nodes_info.tsv";
+    openFileForWriting(nodeInfoTextOutputFilename.str(), nodeInfoTextOutputFile);
+  }
+
   {
     elementsSS << scientific; //scientific notation for double
 
@@ -337,6 +346,10 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
     for (const auto &node : nodes) {
       verticesInThisComponent.insert(node);
 
+
+      //GRAPHICAL PRINTING
+      //GRAPHICAL PRINTING
+      //GRAPHICAL PRINTING
       //print the node with the full data
       elementsSS << "{data: {id: 'n" << graph[node].id << "'" <<
       ", name: '" << graph[node].name << "'" <<
@@ -365,9 +378,44 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
       (find(selectedUnitigs.begin(), selectedUnitigs.end(), graph[node].id) == selectedUnitigs.end()
        ? ", 'background-opacity': 0.3" : "") <<
       "}}, ";
+      //GRAPHICAL PRINTING
+      //GRAPHICAL PRINTING
+      //GRAPHICAL PRINTING
+
+
+
+
+      //TEXTUAL PRINTING
+      //TEXTUAL PRINTING
+      //TEXTUAL PRINTING
+      nodeInfoTextOutputFile << "NodeId\tAlleleFreq\tPheno0Count\tPheno0TotalCount\tPheno1Count\tPheno1TotalCount\tSignificant?\tq-Value\tEstEffect\tWaldStat\t"
+                            "Sequence\tSequenceLength\tAnnotations(sep=~~~)" << endl;
+      nodeInfoTextOutputFile << "n" << graph[node].id << "\t"
+                     << graph[node].phenoCounter.getTotal() << "\t"
+                     << graph[node].phenoCounter.getPheno0() << "\t"
+                     << nbPheno0 << "\t"
+                     << graph[node].phenoCounter.getPheno1() << "\t"
+                     << nbPheno1 << "\t"
+                     << (find(selectedUnitigs.begin(), selectedUnitigs.end(), graph[node].id) == selectedUnitigs.end() ? "No" : "Yes") << "\t"
+                     << graph[node].unitigStats.getQValueAsStr() << "\t"
+                     << graph[node].unitigStats.getWeightAsStr() << "\t"
+                     << graph[node].unitigStats.getWaldStatisticAsStr() << "\t"
+                     << graph[node].name << "\t"
+                     << graph[node].name.length() << "\t"
+                     << getAllAnnotationsNamesFromANodeAsText << "\t"
+                     << endl;
+      //TEXTUAL PRINTING
+      //TEXTUAL PRINTING
+      //TEXTUAL PRINTING
     }
+    //closes the node info textual output file
+    nodeInfoTextOutputFile.close();
+
 
     //goes through the edges and print them
+    //GRAPHICAL PRINTING
+    //GRAPHICAL PRINTING
+    //GRAPHICAL PRINTING
     for (auto ep = edges(graph); ep.first != ep.second; ++ep.first) {
       MyEdge e = *ep.first;
       //check if the edge is in this component
@@ -378,6 +426,9 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
         << "', target: 'n" << graph[target(e, graph)].id << "'}}, ";
       }
     }
+    //GRAPHICAL PRINTING
+    //GRAPHICAL PRINTING
+    //GRAPHICAL PRINTING
   }
 
   //this is what should replace <elementsTag>
@@ -426,10 +477,10 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
   string toLibPath = visualisationsFolder + "/components/lib";
   if (!boost::filesystem::exists(toLibPath))
     copyDirectoryRecursively(fromLibPath, toLibPath);
-  cerr << "Building Cytoscape graph... - Done!" << endl;
+  cerr << "Building Cytoscape graph and textual output... - Done!" << endl;
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  //Cytoscape graph build step
+  //Cytoscape graph and output build step
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -437,26 +488,33 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
 }
 
 void generate_output::execute () {
+  //check and get the parameters
   checkParametersGenerateOutput(this);
   int neighbourhood = getInput()->getInt(STR_MAX_NEIGHBOURHOOD);
   string outputFolderParameter = stripLastSlashIfExists(getInput()->getStr(STR_OUTPUT));
   string outputFolder = outputFolderParameter+string("/step3");
   string tmpFolder = outputFolder+string("/tmp");
   string visualisationsFolder = outputFolderParameter+string("/visualisations");
+  string textualOutputFolder = outputFolderParameter+string("/textualOutput");
   string step1OutputFolder = outputFolderParameter+string("/step1");
   string step2OutputFolder = outputFolderParameter+string("/step2");
   int nbCores = getInput()->getInt(STR_NBCORES);
 
-
   //get the nbContigs
   int nbContigs = getNbLinesInFile(step1OutputFolder+string("/graph.nodes"));
 
+
+
+
+
+
+  //Getting the significant unitigs from the patterns
   cerr << "[Getting the significant unitigs from the patterns...]" << endl;
 
   //read the patterns
   auto sortedPatterns = PatternFromStats::readFile(step2OutputFolder + "/patterns.txt", true);
 
-  //associates each unitig to its pattern stats
+  //associates each unitig to its pattern stats (pattern stats are the stats that the step 2 (stat step) output)
   vector<const PatternFromStats*> unitigToPatternStats(nbContigs, NULL);
   {
     //since not all patterns have stats, this maps the id of the pattern to its stats, so we know easily which pattern has stats
@@ -467,7 +525,6 @@ void generate_output::execute () {
     //associates each unitig to its Pattern stats
     ifstream unitigToPatternFilestream;
     openFileForReading(step1OutputFolder + string("/gemma_input.unitig_to_pattern.binary"), unitigToPatternFilestream);
-
     int unitig, pattern;
     while (unitigToPatternFilestream >> unitig >> pattern) {
       if (patternsToStats.find(pattern) != patternsToStats.end()) {
@@ -525,10 +582,14 @@ void generate_output::execute () {
   }
   cerr << "[Getting significant unitigs from the patterns...] - Done!" << endl;
 
-  cerr << "[Reading input and creating BOOST graph...]" << endl;
 
-  //declare the graph
-  graph_t graph(nbContigs);
+
+
+
+
+
+  //Reading input and creating BOOST graph
+  cerr << "[Reading input and creating BOOST graph...]" << endl;
 
   //get the unitigs selected for visualization
   vector<int> selectedUnitigs;
@@ -571,6 +632,8 @@ void generate_output::execute () {
 
   //create the nodes of the graph
   //assume the graph is undirected, instead of directed
+  //declare the graph
+  graph_t graph(nbContigs);
   string nodesFile = step1OutputFolder+string("/graph.nodes");
   {
     ifstream nodesFileReader;
@@ -623,6 +686,7 @@ void generate_output::execute () {
   for (auto unitig : selectedUnitigs) {
     MyVertex selectedVertex = vertex(unitig, graph);
     try {
+      //TODO performance: replace by BFS
       fill(distances.begin(), distances.end(), 0);
       dijkstra_shortest_paths(graph, selectedVertex, weight_map(get(&EdgeInfo::weight, graph)).
           distance_map(make_iterator_property_map(distances.begin(),
@@ -646,6 +710,7 @@ void generate_output::execute () {
   map<int, AnnotationRecord > idComponent2Annotations;
   int numberOfComponents=0;
   {
+    //add all vertices in the neighbourhood to the new graph, creating the merged subgraph
     for (auto vp = vertices(graph); vp.first != vp.second; ++vp.first) {
       MyVertex v = *vp.first;
       if (verticesInTheNeighbourhood.find(v)!=verticesInTheNeighbourhood.end()) {
@@ -653,15 +718,18 @@ void generate_output::execute () {
       }
     }
 
-    //get the components of this subgraphs
-    vector<int> componentOfThisNode = vector<int>(num_vertices(newGraph));
-    int num = connected_components(newGraph, &componentOfThisNode[0]);
+    //get the components of the merged subgraph
+    vector<int> componentOfThisNode = vector<int>(num_vertices(newGraph)); //maps node -> component
+    int num = connected_components(newGraph, &componentOfThisNode[0]); //gets the components of the graph
+
+    //maps component -> nodes
     nodesInComponent = vector<vector<MyVertex> >(num);
     for (int i = 0; i != componentOfThisNode.size(); ++i)
       nodesInComponent[componentOfThisNode[i]].push_back(vertex(i, newGraph));
 
+    //generate the subgraph page for each component
     for (int i = 0; i < nodesInComponent.size(); i++) {
-      generateCytoscapeOutput(newGraph, nodesInComponent[i], "comp", i, tmpFolder, visualisationsFolder, selectedUnitigs, nbPheno0, nbPheno1,
+      generateCytoscapeOutput(newGraph, nodesInComponent[i], "comp", i, tmpFolder, visualisationsFolder, textualOutputFolder, selectedUnitigs, nbPheno0, nbPheno1,
                               idComponent2Annotations, nbCores);
     }
     numberOfComponents = nodesInComponent.size();
