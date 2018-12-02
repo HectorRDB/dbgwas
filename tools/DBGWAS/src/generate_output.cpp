@@ -402,7 +402,7 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
                      << graph[node].unitigStats.getWaldStatisticAsStr() << "\t"
                      << graph[node].name << "\t"
                      << graph[node].name.length() << "\t"
-                     << annotationsOfThisComponent.getAllAnnotationsNamesFromANodeAsText() << "\t"
+                     << annotationsOfThisComponent.getAllAnnotationsNamesFromANodeAsText(graph[node].id) << "\t"
                      << endl;
       //TEXTUAL PRINTING
       //TEXTUAL PRINTING
