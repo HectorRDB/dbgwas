@@ -80,7 +80,7 @@ For reproducibility reasons, in the following you have easily the input data, an
 ## Downloading the precompiled binaries
 This is the easiest way to run the tool since it is already precompiled.
 
-Download the latest binary here (v0.5.3): see https://gitlab.com/leoisl/dbgwas
+Download the latest binary here (v0.5.3): https://www.dropbox.com/s/vkhyd2khlir0z8r/DBGWAS-0.5.3-Linux-precompiled.tar.gz?dl=1
 
 Previous versions:
 
