@@ -1,7 +1,9 @@
 # NEWS
 
 * DBGWAS v0.5.3 is now released. Implemented a feature that builds a textual output of DBGWAS. It can be used to easily plug DBGWAS' results
-on pipelines, and post-process them, for example to compare different GWAS runs. See the produced files and their formats here: [https://gitlab.com/leoisl/dbgwas/wikis/Files-and-formats-of-DBGWAS-textual-output](https://gitlab.com/leoisl/dbgwas/wikis/Files-and-formats-of-DBGWAS-textual-output)
+on pipelines, and post-process them, for example to compare different GWAS runs. See the produced files and their formats here: [https://gitlab.com/leoisl/dbgwas/wikis/Files-and-formats-of-DBGWAS-textual-output](https://gitlab.com/leoisl/dbgwas/wikis/Files-and-formats-of-DBGWAS-textual-output) .
+Download the new version here: [Downloading the precompiled binaries](#downloading-the-precompiled-binaries).
+
 
 * The paper describing DBGWAS was published in PLoS Genetics: [https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1007758](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1007758)
 
