@@ -221,7 +221,7 @@ string AnnotationRecord::getJSRepresentationAnnotIdAnnotInfoGraphPage() {
 string AnnotationRecord::getTextualRepresentationAnnotationInfoGraphPage() {
   stringstream ss;
   for (auto & indexAndAnnotationInfoGraphPage : annotations)
-    ss << annotationIndex[indexAndAnnotationInfoGraphPage.first] << "\t" << indexAndAnnotationInfoGraphPage.second.getTextualRepresentationForGraphPage(allExtraTags) << "], ";
+    ss << annotationIndex[indexAndAnnotationInfoGraphPage.first] << "\t" << indexAndAnnotationInfoGraphPage.second.getTextualRepresentationForGraphPage(allExtraTags) << endl;
   return ss.str();
 }
 

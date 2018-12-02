@@ -268,9 +268,9 @@ void generate_output::createIndexFile(int numberOfComponents, const string &visu
   //TEXTUAL OUTPUT
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   concatenateAllFiles(textualOutputFolder+string("/components/comp_%d_nodes_info.tsv"), numberOfComponents,
-                      textualOutputFolder+string("all_comps_nodes_info.tsv"));
+                      textualOutputFolder+string("/all_comps_nodes_info.tsv"));
   concatenateAllFiles(textualOutputFolder+string("/components/comp_%d_annotations_info.tsv"), numberOfComponents,
-                      textualOutputFolder+string("all_comps_annotations_info.tsv"));
+                      textualOutputFolder+string("/all_comps_annotations_info.tsv"));
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //TEXTUAL OUTPUT
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
