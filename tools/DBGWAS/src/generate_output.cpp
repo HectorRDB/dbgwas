@@ -75,8 +75,19 @@ void generate_output::concatenateAllFiles(const string &pattern, int numberOfCom
     auto allStringsFromFile = getVectorStringFromFile(buffer);
 
     //output the file
-    for (const auto stringFromFile : allStringsFromFile)
-      outputFile << stringFromFile << endl;
+    bool header=true;
+    for (const auto stringFromFile : allStringsFromFile) {
+      if (header) {
+        if (component == 0) {
+          //output the header
+          outputFile << stringFromFile << endl;
+        }
+        header=false; //we already output
+      }else {
+        //always output non-header lines
+        outputFile << stringFromFile << endl;
+      }
+    }
   }
 
   outputFile.close();
