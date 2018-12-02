@@ -431,12 +431,14 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
     //GRAPHICAL PRINTING
   }
 
+
+  //GRAPHICAL PRINTING
+  //GRAPHICAL PRINTING
+  //GRAPHICAL PRINTING
+  //create the graph file
   //this is what should replace <elementsTag>
   string elements = elementsSS.str();
 
-
-
-  //create the graph file
   //read template file
   string templatePath = DBGWAS_lib + "/cytoscape_template.html";
   string cytoscapeOutput = readFileAsString(templatePath.c_str());
@@ -471,12 +473,38 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
   outFile << cytoscapeOutput;
   outFile.close();
 
-
   //copy the lib folder, if it is not already copied
   string fromLibPath = DBGWAS_lib + "/lib";
   string toLibPath = visualisationsFolder + "/components/lib";
   if (!boost::filesystem::exists(toLibPath))
     copyDirectoryRecursively(fromLibPath, toLibPath);
+  //GRAPHICAL PRINTING
+  //GRAPHICAL PRINTING
+  //GRAPHICAL PRINTING
+
+
+
+  //open the text annotation output file
+  //TEXTUAL PRINTING
+  //TEXTUAL PRINTING
+  //TEXTUAL PRINTING
+  ofstream annotationInfoTextOutputFile;
+  {
+    stringstream annotationInfoTextOutputFilename;
+    annotationInfoTextOutputFilename << textualOutputFolder << "/components/" << typeOfGraph << "_" << i << "_annotation_info.tsv";
+    openFileForWriting(annotationInfoTextOutputFilename.str(), annotationInfoTextOutputFile);
+  }
+  annotationInfoTextOutputFile << "Annotation\tNumberOfNodes\tEValue" << annotationsOfThisComponent.getExtraTagsAsText() << endl;
+  annotationInfoTextOutputFile << annotationsOfThisComponent.getTextualRepresentationAnnotationInfoGraphPage();
+  annotationInfoTextOutputFile.close();
+  //TEXTUAL PRINTING
+  //TEXTUAL PRINTING
+  //TEXTUAL PRINTING
+
+
+
+
+
   cerr << "Building Cytoscape graph and textual output... - Done!" << endl;
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

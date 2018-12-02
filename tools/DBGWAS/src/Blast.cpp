@@ -179,6 +179,17 @@ string AnnotationRecord::AnnotationInfoGraphPage::getHTMLRepresentationForGraphP
   return ss.str();
 }
 
+
+//transform to a textual representation
+string AnnotationRecord::AnnotationInfoGraphPage::getTextualRepresentationForGraphPage (const set<string>& allExtraTags) {
+  stringstream ss;
+  ss << scientific;
+  ss << nodes.size() << "\t" << minEvalue;
+  for (const auto &extraTag : allExtraTags)
+    ss << "\t" << record.DBGWAS_tags[extraTag];
+  return ss.str();
+}
+
 //transform to a javascript array
 string AnnotationRecord::AnnotationInfoGraphPage::getHTMLRepresentationForIndexPage () const {
   stringstream ss;
@@ -202,6 +213,15 @@ string AnnotationRecord::getJSRepresentationAnnotIdAnnotInfoGraphPage() {
   for (auto & indexAndAnnotationInfoGraphPage : annotations)
     ss << "[" << indexAndAnnotationInfoGraphPage.first << ", " << indexAndAnnotationInfoGraphPage.second.getHTMLRepresentationForGraphPage(allExtraTags) << "], ";
   ss << "]";
+  return ss.str();
+}
+
+
+//get a textual representation of the annotation component for the graph page, with the annotation name, and all other info like nb of nodes, evalue and extra tags
+string AnnotationRecord::getTextualRepresentationAnnotationInfoGraphPage() {
+  stringstream ss;
+  for (auto & indexAndAnnotationInfoGraphPage : annotations)
+    ss << annotationIndex[indexAndAnnotationInfoGraphPage.first] << "\t" << indexAndAnnotationInfoGraphPage.second.getTextualRepresentationForGraphPage(allExtraTags) << "], ";
   return ss.str();
 }
 
@@ -317,5 +337,13 @@ string AnnotationRecord::getExtraTagsAsJSVector() const {
   for (const string &extraTag : allExtraTags)
     ss << "'" << extraTag << "', ";
   ss << "]";
+  return ss.str();
+}
+
+//get the extra tags as text
+string AnnotationRecord::getExtraTagsAsText() const {
+  stringstream ss;
+  for (const string &extraTag : allExtraTags)
+    ss << "\t" << extraTag;
   return ss.str();
 }
