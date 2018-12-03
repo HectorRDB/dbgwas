@@ -3,15 +3,22 @@ TODO list
 ---------------------------------------------------------------------------------------------------------------------------------------------
 0/ Produce the Textual output  - December - Up to 12nd december:
     -Done in pre-release v0.5.3
-    -Still to check if we add more fields or not
+    -Still need to check if we add more fields or not
         -Add the strain presence files
             -I think this should be done with TODO 6/ Show the strain presence for each node
 
 
 
 1/ Binary 2 continuous phenotype (December) - Up to 12nd december:
+    -Next monday: ready
     -Doubts:
         -Are there parameters to define if you want to work on continous or binary phenotypes?
+        These previous TODOs:
+            - Replace the part where we test whether both "0" and "1" phenotypes are present by a test that the empirical variance of the phenotypes is above some threshold (or simply that they are not all identical).
+                - Done right now: -Removed the filter to check if at least one phenotype 0 and 1 is present (we don't have this concept anymore)
+            Regarding the figures:
+                - The barplot and manhattan plot for PCs can be done with non-binary phenotypes.
+                - The "indiv vs first PCs" and tree plot would need to be adapted eg by replacing the 2 colors by a gradient of shades.
     -TODO:
         -CHECK THE TODO [CONTINUOUS PHENOTYPE]
         -Step1: Accept continuous and N/A phenotype
@@ -33,6 +40,7 @@ TODO list
 
 
 2/ Continuous Genotype (frequencies) - December - Up to 12nd december:
+    -Deadline: ???
     -Doubts:
         -Transform to the enconding where 0 is the major allele and 1 is the minor one
             -How to do this with continuous phenotype?
@@ -55,10 +63,12 @@ TODO list
 
 
 3/ Automated labelling prediction (December) - After 12nd December
+    -Deadline: ???
     -Doubts:
         -Everything is done, just merge and we are set?
 
 
+------------------------------------------------------------------------------------------------------------------------
 
 4/ Custom Step2:
     -parameter: only run step1
@@ -109,20 +119,16 @@ TODO list
 
 
 
+
+
+
+
 Integration with prokka
     @see https://gitlab.com/leoisl/dbgwas/issues/8
 
 
 
-Next release (v0.5.2 ETA 31/05/2018):
-Continuous genotypes/phenotypes:
-    - Still read the phenotype as a string, to deal with NAs.
-    - If not NA, convert to float, and store as a float in the strain object.
-    - Replace the part where we test whether both "0" and "1" phenotypes are present by a test that the empirical variance of the phenotypes is above some threshold (or simply that they are not all identical).
-    - Optionally build the pheno0Count and pheno1Count counters (which we use for visualization) using a user specified threshold: eg, users can say that positive phenotypes are class1 and non-negative ones are class 0. We provide a default threshold (eg >0 vs <=0, which works seamlessly for the current binary phenotypes) and an option to just desactivate the count columns in the visualization.
-    Regarding the figures:
-        - The barplot and manhattan plot for PCs can be done with non-binary phenotypes.
-        - The "indiv vs first PCs" and tree plot would need to be adapted eg by replacing the 2 colors by a gradient of shades. I can try and do it (or we can just skip these plots for non-binary phenotypes for the moment).
+
 
 
 Priority:
@@ -131,9 +137,6 @@ Priority:
 
     2) Change filter in the annotation list in the summary page (add option for the user to use text or to type something)
         In index pages with a lot of annotation, it is way too hard to use a drop-down list
-
-    3) Do a text output of DBGWAS so users can use other tools to post-process its output
-        -Implement https://gitlab.com/leoisl/dbgwas/issues/5
 
     5) Add to DBGWAS parameter -runOnlyStep1 Freq/Bin
         -It will just produces the variant matrices and stop
