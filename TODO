@@ -2,46 +2,62 @@
 TODO list
 ---------------------------------------------------------------------------------------------------------------------------------------------
 0/ Produce the Textual output  - December - Up to 12nd december:
-    -Add the strain presence files
+    -Done in pre-release v0.5.3
+    -Still to check if we add more fields or not
+        -Add the strain presence files
+            -I think this should be done with TODO 6/ Show the strain presence for each node
 
 
 
 1/ Binary 2 continuous phenotype (December) - Up to 12nd december:
-    -Step1: Accept continuous and N/A phenotype
-        -Done
-            -The allowed values for phenotypes now are real numbers between 0 and 1 (both inclusive) or NA.
-            -Removed the filter to check if at least one phenotype 0 and 1 is present (we don't have this concept anymore)
-            -Removed the filter that ignored strains with phenotype "NA" (might change a lot? I think for some big panels, we had a lot of NA strains?)
-
-
-    -Step2: integrate it
-        -already on the branch
-    -Step3:
-            -Color legend:
-                -Legend: -> Estimated Effect
-                -Pheno0: true minimum value
-                -Pheno1: true maximum value
-            -For the table, we replace Pheno0/Pheno1 -> Pheno <= Threshold and > Threshold
-                -Threshold by default is 0, but should be a parameter
-            -Step 3 should know and display the threshold
+    -Doubts:
+        -Are there parameters to define if you want to work on continous or binary phenotypes?
+    -TODO:
+        -CHECK THE TODO [CONTINUOUS PHENOTYPE]
+        -Step1: Accept continuous and N/A phenotype
+            -Done
+                -The allowed values for phenotypes now are real numbers between 0 and 1 (both inclusive) or NA.
+                -Removed the filter to check if at least one phenotype 0 and 1 is present (we don't have this concept anymore)
+                -Removed the filter that ignored strains with phenotype "NA" (might change a lot? I think for some big panels, we had a lot of NA strains?)
+        -Step2: integrate it
+            -already on the branch
+        -Step3:
+                -Color legend:
+                    -Legend: -> Estimated Effect
+                    -Pheno0: true minimum value
+                    -Pheno1: true maximum value
+                -For the table, we replace Pheno0/Pheno1 -> Pheno <= Threshold and > Threshold
+                    -Threshold by default is 0, but should be a parameter
+                -Step 3 should know and display the threshold
 
 
 
 2/ Continuous Genotype (frequencies) - December - Up to 12nd december:
+    -Doubts:
+        -Transform to the enconding where 0 is the major allele and 1 is the minor one
+            -How to do this with continuous phenotype?
+                -How to complement 0 (or other values) with continuous phenotype?
+            -I think bugwas can process this, so there is no need to do this anymore?
+            -What about the weight correction?
+            -Do we keep exactly as before if it is binary phenotype?
+        -How to compress different patterns with continuous phenotype:
+            -Unitig U1 with the count pattern: [0, 5, 10, 10, 0] has the same count pattern as unitig U2: [0, 5, 10, 9, 0]?
+            -Care that we might not be compressing almost anything...
+        -Step 2 works with continuous genotype right out of the box?
+    -TODO:
+        -CHECK THE TODO [CONTINUOUS GENOTYPE]
     -Step1:
         -Parameter that is binary or continuous (frequency) genotype
-        -What about the minor and major allele, and weight correction?
-        -
-
     -Step3:
         -Keep the binary version
         -Allele frequency
 
 
 
-
-
 3/ Automated labelling prediction (December) - After 12nd December
+    -Doubts:
+        -Everything is done, just merge and we are set?
+
 
 
 4/ Custom Step2:
