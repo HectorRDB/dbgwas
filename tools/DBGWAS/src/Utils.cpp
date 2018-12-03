@@ -90,8 +90,6 @@ void checkStrainsFile(const string &strainsFile) {
   openFileForReading(strainsFile, input);
   set<string> allIds;
 
-  bool pheno0IsPresent=false;
-  bool pheno1IsPresent=false;
   for(string line; getline( input, line ); )
   {
     //parse header
@@ -119,19 +117,16 @@ void checkStrainsFile(const string &strainsFile) {
     allIds.insert(id);
 
     //check for disallowed phenotypes
-    if (pheno!="0" && pheno!="1" && pheno!="NA") {
+    bool phenoIsNumber;
+    double phenoAsNumber;
+    std::tie(phenoIsNumber, phenoAsNumber) = is_number(pheno);
+
+    //allowed phenotypes are only "NA" or numbers between 0 and 1
+    if ((!phenoIsNumber && pheno!="NA") || (phenoIsNumber && (phenoAsNumber<0 || phenoAsNumber>1))) {
       stringstream ss;
-      ss << "Phenotype not allowed: " << pheno << " . The only allowed values for phenotype are 0, 1 or NA." << endl;
+      ss << "Phenotype not allowed: " << pheno << " . The only allowed values for phenotypes are real numbers between 0 and 1 (both inclusive) or NA." << endl;
       fatalError(ss.str());
     }
-
-    //only allowed phenotypes here, check if pheno0IsPresent
-    if (pheno=="0")
-      pheno0IsPresent=true;
-
-    //only allowed phenotypes here, check if pheno1IsPresent
-    if (pheno=="1")
-      pheno1IsPresent=true;
 
     //check if the path is ok
     ifstream file;
@@ -143,26 +138,11 @@ void checkStrainsFile(const string &strainsFile) {
     }
     file.close();
 
-    //add the strain if it is different from NA
-    if (pheno=="NA") {
-      cerr << "[WARNING] Skipping strain " << id << " because its phenotype is NA" << endl;
-    }else {
-      Strain strain(id, pheno, path);
-      localStrains.push_back(strain);
-    }
+    //add the strain
+    Strain strain(id, pheno, path);
+    localStrains.push_back(strain);
   }
   input.close();
-
-  if (pheno0IsPresent==false) {
-    stringstream ss;
-    ss << "No strains with Phenotype 0 was found in input file " << strainsFile << ". Please provide at least one strain with Phenotype 0.";
-    fatalError(ss.str());
-  }
-  if (pheno1IsPresent==false) {
-    stringstream ss;
-    ss << "No strains with Phenotype 1 was found in input file " << strainsFile << ". Please provide at least one strain with Phenotype 1.";
-    fatalError(ss.str());
-  }
 
   //in the end, check if strain is null. If it is, populate it
   if (strains==NULL)
@@ -552,4 +532,19 @@ string getDirWhereDBGWASIsInstalled() {
   }
 
   return toReturn;
+}
+
+
+//tries to parse s, and returns a pair<bool, double>
+//the first value indicates if s was successfully parsed into a double
+//the second value indicates the double (it is only valid if the first is true)
+pair<bool, double> is_number(const std::string& s) {
+  double number;
+  try {
+    number = std::stod(s);
+  }
+  catch(...) {
+    return make_pair<false, number>;
+  }
+  return make_pair<true, number>;
 }

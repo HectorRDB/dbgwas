@@ -80,6 +80,11 @@ void createFolder(const string &path);
 void removeOldAndCreateFolder(const string &path, const string &reason="No details given");
 string getDirWhereDBGWASIsInstalled();
 
+//tries to parse s, and returns a pair<bool, double>
+//the first value indicates if s was successfully parsed into a double
+//the second value indicates the double (it is only valid if the first is true)
+bool is_number(const std::string& s);
+
 
 
 //global vars used by all programs
