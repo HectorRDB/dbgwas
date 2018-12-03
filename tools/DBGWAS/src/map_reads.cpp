@@ -392,6 +392,9 @@ void generateBugwasInput (const vector <string> &allReadFilesNames, const string
 
 
     //create the file showing the overall frequencies of each unitig
+    //TODO: frequency_unitig_to_total_pheno0_pheno1_NA_count should be changed from unitig_to_phenotypes
+    //TODO: unitig_to_phenotypes will contain the phenotypes of each unitig only
+    //TODO: frequency_unitig_to_total_pheno0_pheno1_NA_count should be computed in step 3, with a threshold to denote what is pheno0 and pheno1
     cerr << "[Generating the frequency files...]" << endl;
     vector<PhenoCounter > unitigs2PhenoCounter(nbContigs);
     for(int strainIndex=0;strainIndex<allReadFilesNames.size();strainIndex++) {
@@ -422,6 +425,9 @@ void generateBugwasInput (const vector <string> &allReadFilesNames, const string
 
 
     //create a file with the total nb of Pheno0 and Pheno1 strains
+    //TODO: this should be changed to phenotypes_not_NA
+    //TODO: will contain all phenotypes that are not NA
+    //TODO: the total nb of strains in each pheno should be computed in step3
     Strain::createFileWithAmountOfStrainsInEachPheno(outputFolder+string("/total_nb_of_strains_in_each_pheno"), strains);
 
     cerr << "[Generating the frequency files...] - Done!" << endl;

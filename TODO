@@ -8,8 +8,12 @@ TODO list
 
 1/ Binary 2 continuous phenotype (December) - Up to 12nd december:
     -Step1: Accept continuous and N/A phenotype
-        -Change the filter
-        -Check if N/A works (see mail)
+        -Done
+            -The allowed values for phenotypes now are real numbers between 0 and 1 (both inclusive) or NA.
+            -Removed the filter to check if at least one phenotype 0 and 1 is present (we don't have this concept anymore)
+            -Removed the filter that ignored strains with phenotype "NA" (might change a lot? I think for some big panels, we had a lot of NA strains?)
+
+
     -Step2: integrate it
         -already on the branch
     -Step3:
@@ -26,6 +30,9 @@ TODO list
 2/ Continuous Genotype (frequencies) - December - Up to 12nd december:
     -Step1:
         -Parameter that is binary or continuous (frequency) genotype
+        -What about the minor and major allele, and weight correction?
+        -
+
     -Step3:
         -Keep the binary version
         -Allele frequency
