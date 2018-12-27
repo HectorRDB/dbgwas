@@ -703,15 +703,27 @@ void generate_output::execute () {
     }
 
 
+
+    //TODO: MERGING TO A NEW BRANCH FROM HERE
+
+    //TODO: Rscript calling and output format
+    //Rscript prediction.R <nodes_descriptor_path> <subgraph_descriptor_path> <output_file>
+    //<output file format>
+    //a matrix, 1 line per subgraph, 3 columns (subgraph_id, predicted label and probability)
+
     //create the subgraph descriptor file
     ofstream statsFile;
     openFileForWriting(outputFolder+string("/subgraph_descriptors"), statsFile);
+
+    //TODO: REMOVE max_contig_pos	max_contig_neg	pos_neg_contig_homology columns
     statsFile << "subgraph_id\tnode_number\tsig_node_number\tsig_node_ratio\tpos_effect_ratio\tmax_contig_pos\tmax_contig_neg\tpos_neg_contig_homology" << endl;
     // max_contig is the max length of the contig obtained by assembling/aligning the unitigs (I'd like to remove contigs without sign nodes)
 
     //create the node descriptor file
     ofstream nodesFile;
     openFileForWriting(outputFolder+string("/nodes_descriptors"), nodesFile);
+
+    //TODO: REMOVE qvalue
     nodesFile << "subgraph_id\tnode_id\tnode_sign\tnode_effect\tnode_length\tnode_strand\tnode_degree " <<
               "\tnode_in_Pheno0\tnode_in_Pheno1\tnb_Pheno0\tnb_Pheno1\tqvalue" << endl;
 
@@ -787,6 +799,8 @@ void generate_output::execute () {
     }
     statsFile.close();
     nodesFile.close();
+
+    //TODO: MERGING TO A NEW BRANCH TO HERE
 
     numberOfComponents = nodesInComponent.size();
   }
