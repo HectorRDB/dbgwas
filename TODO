@@ -13,12 +13,16 @@ TODO list
     -Next monday: ready
     -Doubts:
         -Are there parameters to define if you want to work on continous or binary phenotypes?
+            -no
         These previous TODOs:
             - Replace the part where we test whether both "0" and "1" phenotypes are present by a test that the empirical variance of the phenotypes is above some threshold (or simply that they are not all identical).
                 - Done right now: -Removed the filter to check if at least one phenotype 0 and 1 is present (we don't have this concept anymore)
+                - Check if there are at least two different numbers
             Regarding the figures:
                 - The barplot and manhattan plot for PCs can be done with non-binary phenotypes.
+                    -implemented
                 - The "indiv vs first PCs" and tree plot would need to be adapted eg by replacing the 2 colors by a gradient of shades.
+                    -implemented
     -TODO:
         -CHECK THE TODO [CONTINUOUS PHENOTYPE]
         -Step1: Accept continuous and N/A phenotype
@@ -43,14 +47,24 @@ TODO list
     -Deadline: ???
     -Doubts:
         -Transform to the enconding where 0 is the major allele and 1 is the minor one
-            -How to do this with continuous phenotype?
+            -How to do this with continuous genotype?
                 -How to complement 0 (or other values) with continuous phenotype?
             -I think bugwas can process this, so there is no need to do this anymore?
             -What about the weight correction?
             -Do we keep exactly as before if it is binary phenotype?
+                -Don't complement!
+            -don't remove the complement for binary for now
+                -create a fake weight correction for continuous
+
+        -MAF filter
+            -Think about it
+            -How to remove very present unitigs?
+
         -How to compress different patterns with continuous phenotype:
             -Unitig U1 with the count pattern: [0, 5, 10, 10, 0] has the same count pattern as unitig U2: [0, 5, 10, 9, 0]?
             -Care that we might not be compressing almost anything...
+                -For now we compress everything, and after we might compress similar patterns
+
         -Step 2 works with continuous genotype right out of the box?
     -TODO:
         -CHECK THE TODO [CONTINUOUS GENOTYPE]
