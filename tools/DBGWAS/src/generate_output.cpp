@@ -41,7 +41,6 @@
 #include <boost/filesystem.hpp>
 #undef BOOST_NO_CXX11_SCOPED_ENUMS
 #include "version.h"
-#include "compareNeg2Pos.h"
 
 using namespace std;
 
@@ -702,31 +701,23 @@ void generate_output::execute () {
                               idComponent2Annotations, nbCores);
     }
 
+    // **** node and subgraph desc files for automated labelling **** //
 
     //create the subgraph descriptor file
     ofstream statsFile;
-    openFileForWriting(outputFolder+string("/subgraph_descriptors"), statsFile);
-    statsFile << "subgraph_id\tnode_number\tsig_node_number\tsig_node_ratio\tpos_effect_ratio\tmax_contig_pos\tmax_contig_neg\tpos_neg_contig_homology" << endl;
-    // max_contig is the max length of the contig obtained by assembling/aligning the unitigs (I'd like to remove contigs without sign nodes)
+    openFileForWriting(outputFolder+string("/subgraph_descriptors.txt"), statsFile);
+    statsFile << "subgraph_id\tnode_number\tsig_node_number\tsig_node_ratio\tpos_effect_ratio\tnb_Pheno0\tnb_Pheno1" << endl;
 
     //create the node descriptor file
     ofstream nodesFile;
-    openFileForWriting(outputFolder+string("/nodes_descriptors"), nodesFile);
-    nodesFile << "subgraph_id\tnode_id\tnode_sign\tnode_effect\tnode_length\tnode_strand\tnode_degree " <<
-              "\tnode_in_Pheno0\tnode_in_Pheno1\tnb_Pheno0\tnb_Pheno1\tqvalue" << endl;
-
+    openFileForWriting(outputFolder+string("/nodes_descriptors.txt"), nodesFile);
+    nodesFile << "subgraph_id\tnode_id\tnode_sign\tnode_effect\tnode_length\tnode_degree" <<
+              "\tnode_in_Pheno0\tnode_in_Pheno1" << endl;
 
     for (int i = 0; i < nodesInComponent.size(); i++) { //we go through each component
       //computing some values and writing to nodesFile and statsFile
       int numberOfSignificantNodes=0;
       int numberOfPositiveEffectOnTheSignificantNodes=0;
-
-      // [automated_labelling] These variables are declared to get the homology score between the assembly of the positive effect and negative effect nodes
-      // From an array/flow of DNA sequences: (to be integrated in generate_output.cpp)
-      TStore storeNEG;
-      TStore storePOS;
-      TStringSet signNEG;
-      TStringSet signPOS;
 
       for (const auto &node : nodesInComponent[i]) {
 
@@ -737,56 +728,23 @@ void generate_output::execute () {
           }
         }
 
-        //adding the info to the nodesFile
-        nodesFile << i << "\t" << newGraph[node].id << "\t" << ((int)newGraph[node].significant)
-        << "\t" << newGraph[node].unitigStats.getWeight() << "\t" << newGraph[node].name.size() << "\t"
-        << newGraph[node].strand  << "\t" << out_degree(node, newGraph) << "\t"
-        << newGraph[node].phenoCounter.getPheno0() << "\t" << newGraph[node].phenoCounter.getPheno1() << "\t"
-        << nbPheno0 << "\t" << nbPheno1 << "\t" <<  newGraph[node].unitigStats.getQValueAsStr() << endl;
+        nodesFile << i << "\t" << newGraph[node].id << "\t" << ((int)newGraph[node].significant) << "\t"
+        << newGraph[node].unitigStats.getWeight() << "\t" << newGraph[node].name.size() << "\t"
+        << out_degree(node, newGraph) << "\t" << newGraph[node].phenoCounter.getPheno0() << "\t"
+        << newGraph[node].phenoCounter.getPheno1() << endl;
       }
-
-      //[automatic_labelling] assembling the positive and negative effect unitigs using seqan directly from the C++ object
-      for (const auto &node : nodesInComponent[i]) {
-        if (newGraph[node].unitigStats.getWeight() > 0 || !newGraph[node].unitigStats.getValid()) {
-          appendRead(storePOS, newGraph[node].name);
-
-          if (newGraph[node].significant == true ){
-            seqan::DnaString str = newGraph[node].name;
-            appendValue(signPOS, str);
-          }
-        }
-
-        if (newGraph[node].unitigStats.getWeight() < 0 || !newGraph[node].unitigStats.getValid()) {
-          appendRead(storeNEG, newGraph[node].name);
-
-          if (newGraph[node].significant == true ){
-            seqan::DnaString str = newGraph[node].name;
-            appendValue(signNEG, str);
-          }
-        }
-      }
-      // and here we do the process for each component (we ask seqan to make the assembly and get the longest contig)
-      makeAssembly(storeNEG);
-      TSequence contigNEG = selectContig(storeNEG, signNEG);
-      makeAssembly(storePOS);
-      TSequence contigPOS = selectContig(storePOS, signPOS);
-
-      // And now the three indicators I'd like to output in the subgraph description file:
-      int score = homologyScore(contigNEG, contigPOS);
-      int lengthPOS = seqan::length(contigPOS);
-      int lengthNEG = seqan::length(contigNEG);
-
 
       //adding the info to the stats file
       statsFile << i << "\t" << nodesInComponent[i].size() << "\t"
       << numberOfSignificantNodes << "\t" << (double) numberOfSignificantNodes/nodesInComponent[i].size()
       << "\t" <<  (double) numberOfPositiveEffectOnTheSignificantNodes/numberOfSignificantNodes
-      << "\t" << lengthPOS << "\t" << lengthNEG << "\t" << score << endl;
-
+      << "\t" <<  nbPheno0 << "\t" << nbPheno1  << endl;
 
     }
     statsFile.close();
     nodesFile.close();
+    // **** end node and subgraph desc files preparation **** //
+
 
     numberOfComponents = nodesInComponent.size();
   }
@@ -810,3 +768,4 @@ void generate_output::execute () {
       "******************************************************************************" << endl << endl;
   cout.flush();
 }
+
