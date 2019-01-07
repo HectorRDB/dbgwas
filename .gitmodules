@@ -4,6 +4,3 @@
 [submodule "whereami"]
 	path = whereami
 	url = https://github.com/gpakosz/whereami.git
-[submodule "seqan"]
-	path = seqan
-	url = https://github.com/seqan/seqan
