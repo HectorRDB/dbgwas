@@ -703,6 +703,14 @@ void generate_output::execute () {
 
     // **** node and subgraph desc files for automated labelling **** //
 
+
+    //TODO: MERGING TO A NEW BRANCH FROM HERE
+
+    //TODO: Rscript calling and output format
+    //Rscript prediction.R <nodes_descriptor_path> <subgraph_descriptor_path> <output_file>
+    //<output file format>
+    //a matrix, 1 line per subgraph, 3 columns (subgraph_id, predicted label and probability)
+
     //create the subgraph descriptor file
     ofstream statsFile;
     openFileForWriting(outputFolder+string("/subgraph_descriptors.txt"), statsFile);
@@ -745,6 +753,8 @@ void generate_output::execute () {
     nodesFile.close();
     // **** end node and subgraph desc files preparation **** //
 
+
+    //TODO: MERGING TO A NEW BRANCH TO HERE
 
     numberOfComponents = nodesInComponent.size();
   }
