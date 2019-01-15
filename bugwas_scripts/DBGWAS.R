@@ -244,6 +244,7 @@ bh.pv <- p.adjust(lmm.result$p_lrt, method='BH')
 
 write.table(file=sprintf('%s_DBGWAS_patterns.txt', prefix),
             cbind(names(SNPdata$XX.all$bippat)[lmm.result$ps],
+                  lmm.result$p_lrt[lmm.result$ps], # p-values
                   bh.pv[lmm.result$ps], # q-values
                   lmm.result$beta[lmm.result$ps], # effect in the linear model
                   (lmm.result$beta/lmm.result$se)[lmm.result$ps]), # Wald statistic
