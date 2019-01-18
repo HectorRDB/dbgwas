@@ -8,8 +8,8 @@ Download the new version here: [Downloading the precompiled binaries](#downloadi
 * The paper describing DBGWAS was published in PLoS Genetics: [https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1007758](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1007758)
 
 * DBGWAS v0.5.2 is now released. The main fix is that the precompiled binary is now built with [Holy Build Box](http://phusion.github.io/holy-build-box/),
-so it should work on pretty much any glibc-based x86 and x86-64 Linux distribution released since 2007 (e.g.: Debian >= 6, Ubuntu >= 10.04,
-Red Hat Enterprise Linux >= 5, CentOS >= 5, etc). See [Downloading the precompiled binaries](#downloading-the-precompiled-binaries) for details.
+so it should work on pretty much any glibc-based x86 and x86-64 Linux distribution released since approx 2011 (e.g.: Debian >= 7, Ubuntu >= 10.10,
+Red Hat Enterprise Linux >= 6, CentOS >= 6, etc). See [Downloading the precompiled binaries](#downloading-the-precompiled-binaries) for details.
 The complete changelog for this new version can be found [here](https://gitlab.com/leoisl/dbgwas/blob/master/Changelog).
 
 
@@ -93,8 +93,8 @@ If the precompiled binary worked on your machine, you can jump to section [Depen
 ### Details about the precompiled binary
 
 Precompilation is done using [Holy Build Box](http://phusion.github.io/holy-build-box/), so it should work on
-pretty much any glibc-based x86 and x86-64 Linux distribution released since 2007 (e.g.: Debian >= 6, Ubuntu >= 10.04,
-Red Hat Enterprise Linux >= 5, CentOS >= 5, etc). We acknowledge Páll Melsted since we followed his
+pretty much any glibc-based x86 and x86-64 Linux distribution released since approx 2011 (e.g.: Debian >= 7, Ubuntu >= 10.10,
+Red Hat Enterprise Linux >= 6, CentOS >= 6, etc). We acknowledge Páll Melsted since we followed his
 [blog post](https://pmelsted.wordpress.com/2015/10/14/building-binaries-for-bioinformatics/) to build this portable binary.
 
 We attested that the precompiled binary works on Debian 7.11.0 or later, Ubuntu 14.04.5 or later, and CentOS 7 or later, but it should work on
