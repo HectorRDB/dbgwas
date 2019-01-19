@@ -9,7 +9,7 @@ docker pull phusion/holy-build-box-64:2.0.1
 
 #run the container
 #this will start the container and put you in the dbgwas folder, ready for you to work
-docker run --rm -it -v ${dbgwasDir}:/dbgwas phusion/holy-build-box-64:2.0.1 /bin/bash -c "cd /dbgwas; source /hbb_exe/activate; bash"
+docker run --rm -it -v ${dbgwasDir}:/dbgwas phusion/holy-build-box-64:2.0.1 /bin/bash -c "cd /dbgwas && source /hbb_exe/activate && /bin/bash"
 
 #you can proceed by doing the common compilation commands:
 #mkdir build && cd build && cmake .. && make
