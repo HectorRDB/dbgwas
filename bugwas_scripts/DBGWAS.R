@@ -62,7 +62,7 @@ maf.filter <- as.numeric(args[6])
 ## plots. Otherwise skip tree management, svd, pca and plots. 
 
 do.lineage <- FALSE
-tree.file <- ""
+tree.file <- NULL
 
 if (length(args) == 7) {
   tree.file <- args[7]
@@ -76,8 +76,11 @@ output.dir <- '.' # must be '.' as gemma automatically writes in ./output.
 ##--------------------------------
 gen.file <- file.path(step1.output, 'bugwas_input.unique_rows.binary')
 message(sprintf('[DBGWAS] Reading unitigs from %s', gen.file))
+## gen <- read.table(file=gen.file, header=TRUE,
+##                   row.names=1, check.names=FALSE, colClasses='integer')
 gen <- read.table(file=gen.file, header=TRUE,
-                  row.names=1, check.names=FALSE, colClasses='integer')
+                  row.names=1, check.names=FALSE, colClasses='numeric')
+
 cleanMem()
 
 
@@ -85,27 +88,38 @@ cleanMem()
 ## Read phenotypes
 ##------------------------------
 message(sprintf('[DBGWAS] Reading phenotypes from %s', pheno.file))
-pheno.mat <- read.table(file=pheno.file, header=TRUE, check.names=FALSE, colClasses=c("character","integer"))
+## pheno.mat <- read.table(file=pheno.file, header=TRUE, check.names=FALSE, colClasses=c("character","integer"))
+pheno.mat <- read.table(file=pheno.file, header=TRUE, check.names=FALSE, colClasses=c("character","numeric"))
 if((ncol(gen) != nrow(pheno.mat)) || any(colnames(gen) != pheno.mat['ID'])){
     stop('Mismatch between genotype and phenotype ids (should be in the same order)')
 }
 
-##-------------------------------------------------------------------
-## Restrict genotype, phenotype and tree to annotated strains (gemma
-## deals with missing phenotypes but bugwas does not, first bug
-## encountered in bugwas:::ridge_regression)
-##-------------------------------------------------------------------
+##------------------------------
+## Read covariates
+##------------------------------
+## cov.file <- '../step1/bugwas_input.confounders' # To be passed as an argument
+cov.file <- NULL
+if(!is.null(cov.file)){
+    message(sprintf('[DBGWAS] Reading covariates from %s', cov.file))
+    cov.mat <- read.table(file=cov.file)
+    if((ncol(gen) != nrow(cov.mat))){
+        stop('Genotype and covariates should be over the the same number of samples (%d for genotypes, %d for covariates)', ncol(gen), nrow(cov.mat))
+    }
+}
+
+
 
 ## annotated.sample <- !is.na(pheno.mat['pheno'])
 ## message(sprintf('[DBGWAS] Restricting genotype, phenotype and tree to %d/%d annotated strains.', sum(annotated.sample), length(annotated.sample)))
 ## pheno.mat <- pheno.mat[annotated.sample, ] # Restrict phenotype
-restr.pheno.file <- paste0(prefix, "_restricted_pheno.txt")
-write.table(pheno.mat, file=restr.pheno.file, row.names=FALSE, col.names=TRUE, quote=FALSE, sep='\t')
+## restr.pheno.file <- paste0(prefix, "_restricted_pheno.txt")
+## write.table(pheno.mat, file=restr.pheno.file, row.names=FALSE, col.names=TRUE, quote=FALSE, sep='\t')
 ## gen <- gen[, annotated.sample] # Restrict genotype
 ## ## Need to re-switch minor allele to 1
 ## rmg.mask <- (rowMeans(gen) > 0.5)
 ## cleanMem()
 ## gen[rmg.mask, ] <- 1L - gen[rmg.mask, ]
+
 XX.ID <- colnames(gen)
 
 if(do.lineage){
@@ -128,7 +142,7 @@ if(do.lineage){
 ## Takes up memory (~3x design size)
 
 ## Remove mono-allelic (constant) patterns (even if maf.filter=0)
-polyallelic.mask <- (apply(gen, 1, FUN=function(v) length(unique(v))) > 1)
+polyallelic.mask <- (apply(gen[, !is.na(pheno.mat[, 'pheno'])], 1, FUN=function(v) length(unique(v))) > 1)
 cleanMem()
 ## Filter on MAF
 maf.mask <- (rowMeans(gen) >= maf.filter)
@@ -204,8 +218,8 @@ relmatrix <- bugwas:::get_kinship(XX = SNPdata$XX.all$XX,
 message('[DBGWAS] Performing association tests')
 
 data <- cdbg_lin_loc(SNPdata=SNPdata,
-                    pheno=restr.pheno.file,
                     phylo=restr.tree.file,
+                    cov.file=cov.file,
                     prefix=prefix,
                     gem.path=gem.path,
                     relmatrix=relmatrix,

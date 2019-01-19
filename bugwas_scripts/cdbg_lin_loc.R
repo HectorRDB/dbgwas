@@ -96,7 +96,6 @@
 ##' #### An example of running lin_loc with the minimum required inputs
 ##' #### Assuming gemma is installed in the present working directory
 ##' gen <- system.file("extdata", "gen.txt", package = "bugwas")
-##' pheno <- system.file("extdata", "pheno.txt", package = "bugwas")
 ##' phylo <- system.file("extdata", "tree.txt", package = "bugwas")
 ##' prefix <- "test_bugwas"
 ##' gem.path <- "./gemma"
@@ -104,8 +103,8 @@
 
 
 cdbg_lin_loc <- function(SNPdata = NULL,
-                         pheno = NULL,
-                         phylo = NULL,
+                         phylo = NULL,                         
+                         cov.file = NULL,
                          prefix = NULL,
                          gem.path = NULL,
                          pcs = NULL,
@@ -123,7 +122,6 @@ cdbg_lin_loc <- function(SNPdata = NULL,
                          svd.XX = NULL,
                          pca = NULL){
     
-    pheno = bugwas:::extractInputArgument(arg = pheno, checkExist = TRUE)
     phylo = bugwas:::extractInputArgument(arg = phylo, canBeNULL=TRUE, checkExist = TRUE)
     prefix = bugwas:::extractInputArgument(arg = prefix)
     gem.path = bugwas:::extractInputArgument(arg = gem.path, checkExist = TRUE)
@@ -212,6 +210,7 @@ cdbg_lin_loc <- function(SNPdata = NULL,
                                     lambda = lambda,
                                     relmatrix = relmatrix,
                                     pheno.file = pheno.file,
+                                    cov.file = cov.file,
                                     maf = maf,
                                     gem.path = gem.path,
                                     output.dir = output.dir,
@@ -289,8 +288,9 @@ cdbg_lin_loc <- function(SNPdata = NULL,
 ## Changelog:
 ##   - calls gemma with option "-lmm 4" rather than "-lmm 2" in order
 ##    to get beta (weights in the linear model) and standard errors
-##    rather than just lrt p-values.
-##
+##    rather than just lrt p-values.##
+##   - optional cov.file argument, providing the name of a file which
+##    contains covariates to be added to the linear model.
 ##
 ## Run GEMMA software on binary data.
 ## @XX: Binary variant patterns
@@ -316,6 +316,7 @@ cdbg_run_lmm_bi <- function(XX = NULL,
                             pattern = NULL,
                             ps = NULL,
                             pheno.file = NULL,
+                            cov.file = NULL,
                             maf = NULL,
                             prefix = NULL,
                             path = NULL,
@@ -350,8 +351,16 @@ cdbg_run_lmm_bi <- function(XX = NULL,
     snp.file <- cbind(paste0("pattern",1:n.pat), 1:n.pat, rep(24,n.pat))
     write.table(snp.file, file = snp.output.file, row=F, col=F, sep="\t", quote=F)
 
-    system(paste0(path, " -g ", gen.output.file, " -p ", pheno.file, " -a ", snp.output.file,
-                  " -k ", relmatrix," -lmm 4 -o ", prefix, "_lmmout_patterns"," -maf ", maf))
+    ## system(paste0(path, " -g ", gen.output.file, " -p ", pheno.file, " -a ", snp.output.file,
+    ##               " -k ", relmatrix," -lmm 4 -o ", prefix, "_lmmout_patterns"," -maf ", maf))
+
+    if(!is.null(cov.file)){
+        system(paste0(path, " -g ", gen.output.file, " -p ", pheno.file, " -a ", snp.output.file,
+                      " -k ", relmatrix," -c ", cov.file," -lmm 4 -o ", prefix, "_lmmout_patterns"," -maf ", maf))
+    }else{
+        system(paste0(path, " -g ", gen.output.file, " -p ", pheno.file, " -a ", snp.output.file,
+                      " -k ", relmatrix," -lmm 4 -o ", prefix, "_lmmout_patterns"," -maf ", maf))
+    }
     
                                         ##message("LMM calculations completed successfully.")
     lmm.log <- paste0(dir, "/output/", prefix, "_lmmout_patterns.log.txt")
@@ -432,6 +441,7 @@ cdbg_get_biallelic <- function(logreg.bi = NULL,
                                lambda = NULL,
                                relmatrix = NULL,
                                pheno.file = NULL,
+                               cov.file = NULL,
                                maf = NULL,
                                gem.path = NULL,
                                output.dir = NULL,
@@ -475,7 +485,7 @@ cdbg_get_biallelic <- function(logreg.bi = NULL,
         
         if(is.null(lognull) | is.null(lambda)){
             lambda.lognull <- cdbg_run_lmm_bi(XX = XX.all$XX[1,], relmatrix = relmatrix,
-                                              pheno.file = pheno.file, maf = maf,
+                                              pheno.file = pheno.file, cov.file = cov.file, maf = maf,
                                               prefix = paste0(prefix, "_getlognull"), path = gem.path,
                                               dir = output.dir, process.results = FALSE)
             if(is.null(lambda)){
@@ -492,7 +502,7 @@ cdbg_get_biallelic <- function(logreg.bi = NULL,
         
     } else if(is.null(lmm.bi) & run.lmm){	
         lmm.bi <- cdbg_run_lmm_bi(XX = XX.all$XX, relmatrix = relmatrix, pattern = XX.all$pattern,
-                                  ps = XX.all$ps, pheno.file = pheno.file, maf = maf,
+                                  ps = XX.all$ps, pheno.file = pheno.file, cov.file = cov.file, maf = maf,
                                   prefix = paste0(prefix, "_biallelic"), path = gem.path, dir = output.dir)
         
         lognull <- as.numeric(lmm.bi$lognull)
@@ -590,7 +600,7 @@ cdbg_wald_test <- function(y = NULL,
     
     ## Heritability
     fit.lmm.ypred <- XX %*% fit.lmm$Ebeta
-    cat(paste0("## Heritability (R^2) = ", cor(fit.lmm.ypred,y)^2),
+    cat(paste0("## Heritability (R^2) = ", cor(fit.lmm.ypred,y, use='complete.obs')^2),
     	file=paste0(prefix, "_logfile.txt"), sep="\n", append=TRUE)
     
     ## Get full posterior covariance matrix for Bayesian Wald Test
@@ -641,7 +651,7 @@ cdbg_wald_test <- function(y = NULL,
 cdbg_get_wald_input <- function(fit.lmm = NULL,
                                 pca = NULL,
                                 y = NULL){
-	
+
     ## Get full posterior covariance matrix for Bayesian Wald Test
     ## Need the full posterior covariance matrix for the Bayesian Wald test,
     ## to get the posterior uncertainty for each point estimate
@@ -649,12 +659,16 @@ cdbg_get_wald_input <- function(fit.lmm = NULL,
     ## Cstar = diag(lambda * pca$d^2 / (lambda * pca$d^2 + 1))
     ## For the null model, the posterior mean and variance (may be slow!)
     ## astar = t(y) %*% y - t(y) %*% XX %*% fit.lmm$Ebeta
-    pca.Ebeta <- diag(1/(1/(fit.lmm$prefered.lambda) + pca$d^2)) %*% t(pca$x) %*% y
+
+    ## Deal with NA by restricting post.mean computation to phenotyped
+    ## samples
+    missing.y <- is.na(y)
+    pca.Ebeta <- diag(1/(1/(fit.lmm$prefered.lambda) + pca$d^2)) %*% t(pca$x[!missing.y, ]) %*% y[!missing.y]
     XE <- pca$x %*% pca.Ebeta
-    astar <- crossprod(y) - t(y) %*% XE
+    astar <- crossprod(y[!missing.y]) - t(y[!missing.y]) %*% XE[!missing.y, ]
     ## csqxty <-  diag(1/sqrt(1/(fit.lmm$prefered.lambda) + pca$d^2)) %*% t(pca$x) %*% y
     ## astar = crossprod(y) - crossprod(csqxty)
-    dstar = length(y)
+    dstar = sum(!missing.y) #length(y)
     tau = as.numeric((dstar-2)/astar)
     
     ## rotation = t(pca$rotation[,1:npcs])
