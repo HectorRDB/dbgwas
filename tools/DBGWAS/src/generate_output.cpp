@@ -411,8 +411,8 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
       ", info: '" << graph[node].id << "'" <<
       ", total: '" << graph[node].phenoCounter.getTotal() << "'" <<
       ", annotations: " << annotationsOfThisComponent.getAllAnnotationsIDsFromANodeAsJSVector(graph[node].id) <<
-      ", pheno0: '" << graph[node].phenoCounter.getPheno0() << "/" << nbPheno0 << "'" <<
-      ", pheno1: '" << graph[node].phenoCounter.getPheno1() << "/" << nbPheno1 << "'" <<
+      ", pheno0: '" << graph[node].phenoCounter.getPheno0(phenoThreshold) << "/" << nbPheno0 << "'" <<
+      ", pheno1: '" << graph[node].phenoCounter.getPheno1(phenoThreshold) << "/" << nbPheno1 << "'" <<
       ", NA: '" << graph[node].phenoCounter.getNA() << "'" <<
       ", significant: '" << (find(selectedUnitigs.begin(), selectedUnitigs.end(), graph[node].id) == selectedUnitigs.end() ? "No" : "Yes") << "'" <<
       ", qValue: '" << graph[node].unitigStats.getQValueAsStr() << "'" <<
@@ -446,9 +446,9 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
                      << i << "\t"
                      << "n" << graph[node].id << "\t"
                      << graph[node].phenoCounter.getTotal() << "\t"
-                     << graph[node].phenoCounter.getPheno0() << "\t"
+                     << graph[node].phenoCounter.getPheno0(phenoThreshold) << "\t"
                      << nbPheno0 << "\t"
-                     << graph[node].phenoCounter.getPheno1() << "\t"
+                     << graph[node].phenoCounter.getPheno1(phenoThreshold) << "\t"
                      << nbPheno1 << "\t"
                      << (find(selectedUnitigs.begin(), selectedUnitigs.end(), graph[node].id) == selectedUnitigs.end() ? "No" : "Yes") << "\t"
                      << graph[node].unitigStats.getQValueAsStr() << "\t"
@@ -684,31 +684,27 @@ void generate_output::execute () {
     selectedUnitigsStream.close();
   }
 
-  //read the frequency file
-  vector< PhenoCounter > phenotypeCounters;
+  //read the unitigs2PhenoCounter file
+  vector< PhenoCounter > unitigs2PhenoCounter;
   {
-    string frequencyFilename(step1OutputFolder+string("/frequency_unitig_to_total_pheno0_pheno1_NA_count"));
-    ifstream frequencyFile;
-    openFileForReading(frequencyFilename, frequencyFile);
-
-    int temp1, temp2, temp3, temp4;
-    while (frequencyFile >> temp1) {
-      frequencyFile >> temp2 >> temp3 >> temp4;
-      phenotypeCounters.push_back(PhenoCounter(temp2, temp3, temp4));
-    }
-
-    frequencyFile.close();
+    // create and open an archive for input
+    std::ifstream ifs(step1OutputFolder+string("/unitigs2PhenoCounter"));
+    boost::archive::text_iarchive ia(ifs);
+    // read class state from archive
+    ia >> unitigs2PhenoCounter;
+    // archive and stream closed when destructors are called
   }
 
-  //read the total number of pheno0 and pheno1 strains
-  int nbPheno0, nbPheno1;
+  //read the phenoCounter for all strains
+  PhenoCounter phenoCounter;
   {
-    ifstream totalNbOfStrainsInEachPheno;
-    openFileForReading(step1OutputFolder + string("/total_nb_of_strains_in_each_pheno"), totalNbOfStrainsInEachPheno);
-    totalNbOfStrainsInEachPheno >> nbPheno0 >> nbPheno1;
-    totalNbOfStrainsInEachPheno.close();
+    // create and open an archive for input
+    std::ifstream ifs(step1OutputFolder+string("/phenoCounter"));
+    boost::archive::text_iarchive ia(ifs);
+    // read class state from archive
+    ia >> unitigs2PhenoCounter;
+    // archive and stream closed when destructors are called
   }
-
 
 
 
@@ -729,6 +725,7 @@ void generate_output::execute () {
       graph[vF].name = seq;
       graph[vF].id = id;
       graph[vF].strand = 'F';
+      //TODO: confirm that we are using the move assignment operator here
       graph[vF].phenoCounter = phenotypeCounters[id];
       graph[vF].unitigStats = UnitigStats(unitigToPatternStats[id], unitigToWeightCorrection[id]);
       index++;

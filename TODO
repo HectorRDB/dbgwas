@@ -30,8 +30,8 @@ TODO list
                 -The allowed values for phenotypes now are real numbers between 0 and 1 (both inclusive) or NA.
                 -Removed the filter to check if at least one phenotype 0 and 1 is present (we don't have this concept anymore)
                 -Removed the filter that ignored strains with phenotype "NA" (might change a lot? I think for some big panels, we had a lot of NA strains?)
-        -Step2: integrate it
-            -already on the branch
+        -Step2: integrate continuous_phenotype branch
+            -Done
         -Step3:
                 -Color legend:
                     -Legend: -> Estimated Effect
@@ -39,6 +39,7 @@ TODO list
                     -Pheno1: true maximum value
                 -For the table, we replace Pheno0/Pheno1 -> Pheno <= Threshold and > Threshold
                     -Threshold by default is 0, but should be a parameter
+                    -Add the NA count value
                 -Step 3 should know and display the threshold
 
 

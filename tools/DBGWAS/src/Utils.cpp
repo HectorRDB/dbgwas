@@ -548,3 +548,19 @@ tuple<bool, double> is_number(const std::string& s) {
   }
   return make_tuple(true, number);
 }
+
+
+void Strain::createPhenotypeCounter(const string &filePath, vector< Strain >* strains) {
+  PhenoCounter phenoCounter;
+  for (const auto &strain : (*strains))
+    phenoCounter.add(strain.phenotype, 1);
+  //serialize phenoCounter
+  ofstream phenoCounterFile;
+  {
+    openFileForWriting(filePath, phenoCounterFile);
+    boost::archive::text_oarchive boostOutputArchive(phenoCounterFile);
+    //serialization itself
+    boostOutputArchive & phenoCounter;
+  } //boostOutputArchive is closed on destruction
+  phenoCounterFile.close();
+}

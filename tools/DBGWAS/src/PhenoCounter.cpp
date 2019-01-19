@@ -27,3 +27,17 @@
 */
 
 #include "PhenoCounter.h"
+
+
+//add the given phenotype count times to this object
+void PhenoCounter::add(const string &phenotype, int count){
+  bool success;
+  double phenotypeAsDouble;
+  tie(success, phenotypeAsDouble) = is_number(phenotype);
+  if (success) {
+    for (int i=0; i<count; i++)
+      validPhenotypes.push_back(phenotypeAsDouble);
+  }else {
+    NACount += count;
+  }
+}

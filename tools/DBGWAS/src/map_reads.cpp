@@ -31,6 +31,7 @@
 #include "Utils.h"
 #include "PhenoCounter.h"
 #include <boost/algorithm/string/predicate.hpp>
+#include <boost/archive/text_oarchive.hpp>
 #include <map>
 #define NB_OF_READS_NOTIFICATION_MAP_AND_PHASE 10 //Nb of reads that the map and phase must process for notification
 using namespace std;
@@ -397,46 +398,36 @@ void generateBugwasInput (const vector <string> &allReadFilesNames, const string
     cerr << "[Generating bugwas and gemma input] - Done!" << endl;
 
 
-    //create the file showing the overall frequencies of each unitig
-    //TODO [CONTINUOUS PHENOTYPE]: frequency_unitig_to_total_pheno0_pheno1_NA_count should be changed from unitig_to_phenotypes
-    //TODO [CONTINUOUS PHENOTYPE]: unitig_to_phenotypes will contain the phenotypes of each unitig only
-    //TODO [CONTINUOUS PHENOTYPE]: frequency_unitig_to_total_pheno0_pheno1_NA_count should be computed in step 3, with a threshold to denote what is pheno0 and pheno1
-    cerr << "[Generating the frequency files...]" << endl;
-    vector<PhenoCounter > unitigs2PhenoCounter(nbContigs);
+    // create a vector indexed by the unitigIndex containing each position a vector of phenotypeValue,
+    // indicating the phenotypes of each appearance of the unitig in the strains
+    // it can be used to know the total count of a unitig (size of the vector) and their phenotype count in step 3
+    // (e.g. how many times an unitig appeared in strains with phenotype 0, >0 and NA)
+    //TODO: instead of representing the phenotype of each appearance, just use a pair <count, phenotype>
+    //TODO: this could save disk
+    cerr << "[Generating unitigs2PhenoCounter...]" << endl;
+    vector< PhenoCounter > unitigs2PhenoCounter(nbContigs);
     for(int strainIndex=0;strainIndex<allReadFilesNames.size();strainIndex++) {
         ifstream unitigCountForStrain;
         openFileForReading(tmpFolder+string("/XU_strain_")+to_string(strainIndex), unitigCountForStrain);
-
         for (int unitigIndex=0; unitigIndex<nbContigs; unitigIndex++) {
             int count;
             unitigCountForStrain >> count;
-            if ((*strains)[strainIndex].phenotype=="0")
-                unitigs2PhenoCounter[unitigIndex].increasePheno0(count);
-            else if ((*strains)[strainIndex].phenotype=="1")
-                unitigs2PhenoCounter[unitigIndex].increasePheno1(count);
-            else if ((*strains)[strainIndex].phenotype=="NA")
-                unitigs2PhenoCounter[unitigIndex].increaseNA(count);
-            else
-                throw runtime_error("[FATAL ERROR] on map_reads::execute () [Generating the frequency files...]");
+            unitigs2PhenoCounter[unitigIndex].add((*strains)[strainIndex].phenotype, count);
         }
         unitigCountForStrain.close();
     }
 
-    ofstream frequencyFile;
-    openFileForWriting(outputFolder+string("/frequency_unitig_to_total_pheno0_pheno1_NA_count"), frequencyFile);
-    for (int unitigIndex=0; unitigIndex<nbContigs; unitigIndex++)
-        frequencyFile << unitigs2PhenoCounter[unitigIndex].getTotal() << " " << unitigs2PhenoCounter[unitigIndex].getPheno0() << " "
-                      << unitigs2PhenoCounter[unitigIndex].getPheno1() << " " << unitigs2PhenoCounter[unitigIndex].getNA() << endl;
-    frequencyFile.close();
+    //serialize unitigs2PhenoCounter
+    {
+        ofstream unitigs2PhenoCounterFile;
+        openFileForWriting(outputFolder+string("/unitigs2PhenoCounter"), unitigs2PhenoCounterFile);
+        boost::archive::text_oarchive boostOutputArchive(unitigs2PhenoCounterFile);
+        //serialization itself
+        boostOutputArchive & unitigs2PhenoCounter;
+    } //boostOutputArchive and the stream are closed on destruction
 
-
-    //create a file with the total nb of Pheno0 and Pheno1 strains
-    //TODO [CONTINUOUS PHENOTYPE]: this should be changed to phenotypes_not_NA
-    //TODO [CONTINUOUS PHENOTYPE]: will contain all phenotypes that are not NA
-    //TODO [CONTINUOUS PHENOTYPE]: the total nb of strains in each pheno should be computed in step3
-    Strain::createFileWithAmountOfStrainsInEachPheno(outputFolder+string("/total_nb_of_strains_in_each_pheno"), strains);
-
-    cerr << "[Generating the frequency files...] - Done!" << endl;
+    Strain::createPhenotypeCounter(outputFolder+string("/phenoCounter"), strains);
+    cerr << "[Generating unitigs2PhenoCounter...] - Done!" << endl;
 }
 
 /*********************************************************************

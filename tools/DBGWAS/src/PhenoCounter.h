@@ -29,26 +29,60 @@
 #ifndef KSGATB_PHENOCOUNTER_H
 #define KSGATB_PHENOCOUNTER_H
 
+#include <algorithm>
+#include <boost/serialization/vector.hpp>
+#include <vector>
+#include "Utils.h"
+
+using namespace std;
 
 //class used to count how many times a unitig is seen overall, in phenotype 0, 1 or NA
 class PhenoCounter {
 private:
-    int pheno0;
-    int pheno1;
-    int NA;
+    vector<double> validPhenotypes;
+    int NACount;
 public:
-    PhenoCounter(int pheno0=0, int pheno1=0, int NA=0):pheno0(pheno0), pheno1(pheno1), NA(NA){}
-    int getPheno0() const { return pheno0; }
-    void increasePheno0(int n) { pheno0+=n; }
+    PhenoCounter():validPhenotypes(), NACount(0){}
 
-    int getPheno1() const { return pheno1; }
-    void increasePheno1(int n) { pheno1+=n; }
+    //return # phenotypes <= threshold
+    int getPheno0(double threshold) const {
+      return std::count_if(validPhenotypes.begin(), validPhenotypes.end(), [&](double phenotype) {
+          return phenotype <= threshold;
+      });
+    }
 
-    int getNA() const { return NA; }
-    void increaseNA(int n) { NA+=n; }
+    //return # phenotypes > threshold
+    int getPheno1(double threshold) const { return validPhenotypes.size() - getPheno0(threshold); }
 
-    int getTotal() const { return getPheno0() + getPheno1() + getNA(); }
-    int getSumOfBothPhenos() const { return getPheno0() + getPheno1(); }
+    //return # phenotypes == NA
+    int getNA() const { return NACount; }
+
+    //get the total # of appearances of this unitig (total pheno counter = unitig counter)
+    int getTotal() const { return validPhenotypes.size() + NACount; }
+
+    //get the nb of valid phenotypes
+    int getNbOfValidPhenos() const { return validPhenotypes.size(); }
+
+    //get the minimum and maximum phenotypes
+    double getMinimumPhenotype() const { return *std::min_element(validPhenotypes.begin(), validPhenotypes.end()); }
+    double getMaximumPhenotype() const { return *std::max_element(validPhenotypes.begin(), validPhenotypes.end()); }
+
+
+    //add the given phenotype count times to this object
+    void add(const string &phenotype, int count);
+
+
+    //method to allow boost serialization
+    friend class boost::serialization::access;
+    // When the class Archive corresponds to an output archive, the
+    // & operator is defined similar to <<.  Likewise, when the class Archive
+    // is a type of input archive the & operator is defined similar to >>.
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version)
+    {
+      ar & validPhenotypes;
+      ar & NACount;
+    }
 };
 
 
