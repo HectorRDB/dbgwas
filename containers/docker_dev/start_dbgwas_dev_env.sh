@@ -7,10 +7,10 @@ dbgwasDir="$(dirname "$(dirname "$scriptDir")")"
 
 #run the container
 #this will start the container and put you in the dbgwas folder, ready for you to work
-docker run --rm -it -v ${dbgwasDir}:/dbgwas leandroishilima/dbgwas:dev_0.5.4
+docker run --name dbgwas_dev --rm -it -v ${dbgwasDir}:/dbgwas leandroishilima/dbgwas:dev_0.5.4
 
 #you can proceed by doing the common compilation commands:
-#mkdir build && cd build && cmake .. && make
+#mkdir build && cd build && cmake .. && make && cd DBGWAS/DBGWAS && make package
 
 #note that the first compilation will take a lot of time. The next ones will be only incremental
 #do not delete anything after finishing your work, just exit the container
