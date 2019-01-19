@@ -83,7 +83,7 @@ string getDirWhereDBGWASIsInstalled();
 //tries to parse s, and returns a pair<bool, double>
 //the first value indicates if s was successfully parsed into a double
 //the second value indicates the double (it is only valid if the first is true)
-bool is_number(const std::string& s);
+tuple<bool, double> is_number(const std::string& s);
 
 
 
