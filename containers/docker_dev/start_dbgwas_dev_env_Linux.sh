@@ -6,10 +6,10 @@ scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 dbgwasDir="$(dirname "$(dirname "$scriptDir")")"
 
 #run the container
-#this will start the container and put you in the dbgwas folder, ready for you to work
+#this will download the container, if you don't have it, start it, put you in the dbgwas folder, ready for you to work
 docker run --name dbgwas_dev --rm -it -v ${dbgwasDir}:/dbgwas leandroishilima/dbgwas:dev_0.5.4
 
-#you can proceed by doing the common compilation commands:
+#you can proceed by doing the common compilation commands on the mounted dbgwas folder:
 #mkdir build && cd build && cmake .. && make && cd DBGWAS/DBGWAS && make package
 
 #note that the first compilation will take a lot of time. The next ones will be only incremental
