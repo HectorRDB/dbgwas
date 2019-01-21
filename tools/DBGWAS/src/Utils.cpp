@@ -385,6 +385,9 @@ void checkParametersGenerateOutput(Tool *tool) {
 
   //get the -no-preview parameter
   noPreview = tool->getInput()->get(STR_NO_PREVIEW) != 0;
+
+  //get the phenotype threshold
+  phenotypeThreshold = tool->getInput()->getDouble(STR_PHENOTYPE_THRESHOLD);
 }
 
 

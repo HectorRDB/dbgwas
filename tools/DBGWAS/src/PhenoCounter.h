@@ -63,11 +63,6 @@ public:
     //get the nb of valid phenotypes
     int getNbOfValidPhenos() const { return validPhenotypes.size(); }
 
-    //get the minimum and maximum phenotypes
-    double getMinimumPhenotype() const { return *std::min_element(validPhenotypes.begin(), validPhenotypes.end()); }
-    double getMaximumPhenotype() const { return *std::max_element(validPhenotypes.begin(), validPhenotypes.end()); }
-
-
     //add the given phenotype count times to this object
     void add(const string &phenotype, int count);
 

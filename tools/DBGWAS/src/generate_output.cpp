@@ -41,6 +41,7 @@
 #include <boost/filesystem.hpp>
 #undef BOOST_NO_CXX11_SCOPED_ENUMS
 #include "version.h"
+#include <boost/archive/text_iarchive.hpp>
 
 using namespace std;
 
@@ -292,7 +293,7 @@ void generate_output::createIndexFile(int numberOfComponents, const string &visu
 
 void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector<MyVertex> &nodes, const string &typeOfGraph, int i,
                                               const string &tmpFolder, const string &visualisationsFolder, const string &textualOutputFolder,
-                                              const vector<int> &selectedUnitigs, int nbPheno0, int nbPheno1,
+                                              const vector<int> &selectedUnitigs, const PhenoCounter &phenoCounterForAllStrains,
                                               map<int, AnnotationRecord > &idComponent2Annotations, int nbCores) {
   cerr << "Rendering " << typeOfGraph << "_" << i << "..." << endl;
 
@@ -411,9 +412,9 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
       ", info: '" << graph[node].id << "'" <<
       ", total: '" << graph[node].phenoCounter.getTotal() << "'" <<
       ", annotations: " << annotationsOfThisComponent.getAllAnnotationsIDsFromANodeAsJSVector(graph[node].id) <<
-      ", pheno0: '" << graph[node].phenoCounter.getPheno0(phenoThreshold) << "/" << nbPheno0 << "'" <<
-      ", pheno1: '" << graph[node].phenoCounter.getPheno1(phenoThreshold) << "/" << nbPheno1 << "'" <<
-      ", NA: '" << graph[node].phenoCounter.getNA() << "'" <<
+      ", pheno0: '" << graph[node].phenoCounter.getPheno0(phenotypeThreshold) << "/" << phenoCounterForAllStrains.getPheno0(phenotypeThreshold) << "'" <<
+      ", pheno1: '" << graph[node].phenoCounter.getPheno1(phenotypeThreshold) << "/" << phenoCounterForAllStrains.getPheno1(phenotypeThreshold) << "'" <<
+      ", NA: '" << graph[node].phenoCounter.getNA() << "/" << phenoCounterForAllStrains.getNA() <<  "'" <<
       ", significant: '" << (find(selectedUnitigs.begin(), selectedUnitigs.end(), graph[node].id) == selectedUnitigs.end() ? "No" : "Yes") << "'" <<
       ", qValue: '" << graph[node].unitigStats.getQValueAsStr() << "'" <<
       ", weight: '" << graph[node].unitigStats.getWeightAsStr() << "'" <<
@@ -446,10 +447,10 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
                      << i << "\t"
                      << "n" << graph[node].id << "\t"
                      << graph[node].phenoCounter.getTotal() << "\t"
-                     << graph[node].phenoCounter.getPheno0(phenoThreshold) << "\t"
-                     << nbPheno0 << "\t"
-                     << graph[node].phenoCounter.getPheno1(phenoThreshold) << "\t"
-                     << nbPheno1 << "\t"
+                     << graph[node].phenoCounter.getPheno0(phenotypeThreshold) << "\t"
+                     << phenoCounterForAllStrains.getPheno0(phenotypeThreshold) << "\t"
+                     << graph[node].phenoCounter.getPheno1(phenotypeThreshold) << "\t"
+                     << phenoCounterForAllStrains.getPheno1(phenotypeThreshold) << "\t"
                      << (find(selectedUnitigs.begin(), selectedUnitigs.end(), graph[node].id) == selectedUnitigs.end() ? "No" : "Yes") << "\t"
                      << graph[node].unitigStats.getQValueAsStr() << "\t"
                      << graph[node].unitigStats.getWeightAsStr() << "\t"
@@ -514,6 +515,40 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
 
   //put the extraTags info into the template file
   boost::replace_all(cytoscapeOutput, "<extraTagsPar>", annotationsOfThisComponent.getExtraTagsAsJSVector());
+
+
+  //put the phenotypeThreshold info into the template file
+  string phenotypeThresholdAsFormattedStr;
+  {
+    stringstream ss;
+    ss << setprecision(2) << phenotypeThreshold;
+    ss >> phenotypeThresholdAsFormattedStr;
+  }
+  boost::replace_all(cytoscapeOutput, "<phenotypeThreshold>", phenotypeThresholdAsFormattedStr);
+
+  //put the <min/maxEstimatedEffect> info into the template file
+  //get the values
+  double minEstimatedEffect, maxEstimatedEffect;
+  bool estEffectIsSet=false;
+  for (const auto &node : nodes) {
+    bool validDouble;
+    double waldStat;
+    tie(validDouble, waldStat) = graph[node].unitigStats.getWaldAsDoubleIfItIsANumber();
+    if (validDouble) {
+      minEstimatedEffect = min(minEstimatedEffect, waldStat);
+      maxEstimatedEffect = max(maxEstimatedEffect, waldStat);
+      estEffectIsSet = true;
+    }
+  }
+  string minEstimatedEffectAsStr("N/A"), maxEstimatedEffectAsStr("N/A");
+  if (estEffectIsSet) {
+    stringstream ss;
+    ss << scientific;
+    ss << minEstimatedEffect; ss >> minEstimatedEffectAsStr;
+    ss << maxEstimatedEffect; ss >> maxEstimatedEffectAsStr;
+  }
+  boost::replace_all(cytoscapeOutput, "<minEstimatedEffect>", minEstimatedEffectAsStr);
+  boost::replace_all(cytoscapeOutput, "<maxEstimatedEffect>", maxEstimatedEffectAsStr);
 
   //output the file
   string outfilename;
@@ -696,13 +731,13 @@ void generate_output::execute () {
   }
 
   //read the phenoCounter for all strains
-  PhenoCounter phenoCounter;
+  PhenoCounter phenoCounterForAllStrains;
   {
     // create and open an archive for input
     std::ifstream ifs(step1OutputFolder+string("/phenoCounter"));
     boost::archive::text_iarchive ia(ifs);
     // read class state from archive
-    ia >> unitigs2PhenoCounter;
+    ia >> phenoCounterForAllStrains;
     // archive and stream closed when destructors are called
   }
 
@@ -726,7 +761,7 @@ void generate_output::execute () {
       graph[vF].id = id;
       graph[vF].strand = 'F';
       //TODO: confirm that we are using the move assignment operator here
-      graph[vF].phenoCounter = phenotypeCounters[id];
+      graph[vF].phenoCounter = unitigs2PhenoCounter[id];
       graph[vF].unitigStats = UnitigStats(unitigToPatternStats[id], unitigToWeightCorrection[id]);
       index++;
     }
@@ -808,7 +843,7 @@ void generate_output::execute () {
 
     //generate the subgraph page for each component
     for (int i = 0; i < nodesInComponent.size(); i++) {
-      generateCytoscapeOutput(newGraph, nodesInComponent[i], "comp", i, tmpFolder, visualisationsFolder, textualOutputFolder, selectedUnitigs, nbPheno0, nbPheno1,
+      generateCytoscapeOutput(newGraph, nodesInComponent[i], "comp", i, tmpFolder, visualisationsFolder, textualOutputFolder, selectedUnitigs, phenoCounterForAllStrains,
                               idComponent2Annotations, nbCores);
     }
     numberOfComponents = nodesInComponent.size();

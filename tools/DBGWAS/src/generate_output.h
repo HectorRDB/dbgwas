@@ -74,7 +74,6 @@ public:
         }
     }
 
-
     string getQValueAsStr() const {
         stringstream ss;
         ss << scientific;
@@ -115,6 +114,10 @@ public:
         } else {
             return string("NA");
         }
+    }
+
+    tuple<bool, double> getWaldAsDoubleIfItIsANumber() const {
+        return is_number(waldStatistic);
     }
 };
 
@@ -251,7 +254,7 @@ private:
 
     void generateCytoscapeOutput(const graph_t &graph, const vector<MyVertex> &nodes, const string &typeOfGraph, int i,
                                  const string &tmpFolder, const string &visualisationsFolder, const string &textualOutputFolder,
-                                 const vector<int> &selectedUnitigs, int nbPheno0, int nbPheno1,
+                                 const vector<int> &selectedUnitigs, const PhenoCounter &phenoCounterForAllStrains,
                                  map<int, AnnotationRecord > &idComponent2Annotations, int nbCores);
 
     void createIndexFile(int numberOfComponents, const string &visualisationsFolder, const string &textualOutputFolder, const string &step2OutputFolder, const vector<vector<MyVertex> > &nodesInComponent, graph_t& newGraph,

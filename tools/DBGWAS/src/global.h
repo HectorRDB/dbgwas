@@ -54,6 +54,7 @@ extern const char* STR_BLAST_PATH;
 extern const char* STR_PHANTOMJS_PATH;
 extern const char* STR_RSCRIPT_PATH;
 extern const char* STR_NO_PREVIEW;
+extern const char* STR_PHENOTYPE_THRESHOLD;
 
 //TODO: seeveral questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
 //extern const char* STR_COUNT_MODE;
@@ -73,6 +74,7 @@ extern string blastPath;
 extern string phantomjsPath;
 extern string RscriptPath;
 extern bool noPreview;
+extern double phenotypeThreshold;
 
 void populateParser (Tool *tool);
 
