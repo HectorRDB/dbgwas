@@ -12,17 +12,17 @@
 
 	`mkdir build && cd build`
 
-	`cmake .. && make && cd DBGWAS/DBGWAS && make package`
+	`cmake .. && make && cd DBGWAS && make package`
 
 3. If you are on **Mac/Windows**:
-	* You **SHOULD NOT** compile on the `/dbgwas` mounted folder as you would do in linux, since this is very slow in Mac/Windows
-	* Build the project somewhere else, outside of the mounted folder (here we build it on /dbgwasDockerBuild):
+	* You **SHOULD NOT** compile on the `/dbgwas` mounted folder as you would do in Linux, since this is very slow in Mac/Windows;
+	* Build the project somewhere else, outside of the mounted folder (here we build it on `/dbgwasDockerBuild`):
 
 	`mkdir /dbgwasDockerBuild && cd /dbgwasDockerBuild`
 
-	`cmake /dbgwas && make && cd DBGWAS/DBGWAS && make package`
+	`cmake /dbgwas && make && cd DBGWAS && make package`
 
-	* If you want to see the results using your browser, then you can copy to the mounted folder (e.g. to /dbgwas/output)
+	* If you want to see the results using your browser, then you can copy to the mounted folder (e.g. to `/dbgwas/output`)
 
 4. Note that the first compilation will take a lot of time. The next ones will be only incremental;
 5. Do not delete anything after finishing your work, just exit the container;
