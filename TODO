@@ -1,46 +1,63 @@
 ﻿---------------------------------------------------------------------------------------------------------------------------------------------
 TODO list
 ---------------------------------------------------------------------------------------------------------------------------------------------
-0/ Produce the Textual output  - December - Up to 12nd december:
+
+TODO v0.5.4:
+
+1/ Produce the Textual output
     -Done in pre-release v0.5.3
     -Still need to check if we add more fields or not
+        -TODOTODOTODOTODOTODO: Add the NACount and NATotalCount
         -Add the strain presence files
             -I think this should be done with TODO 6/ Show the strain presence for each node
 
 
 
-1/ Binary 2 continuous phenotype (December) - Up to 12nd december:
-    -Next monday: ready
-    -Doubts:
-        -Are there parameters to define if you want to work on continous or binary phenotypes?
-            -no
-        These previous TODOs:
-            - Replace the part where we test whether both "0" and "1" phenotypes are present by a test that the empirical variance of the phenotypes is above some threshold (or simply that they are not all identical).
-                - Done right now: -Removed the filter to check if at least one phenotype 0 and 1 is present (we don't have this concept anymore)
-                - Check if there are at least two different numbers
-            Regarding the figures:
-                - The barplot and manhattan plot for PCs can be done with non-binary phenotypes.
-                    -implemented
-                - The "indiv vs first PCs" and tree plot would need to be adapted eg by replacing the 2 colors by a gradient of shades.
-                    -implemented
-    -TODO:
-        -CHECK THE TODO [CONTINUOUS PHENOTYPE]
-        -Step1: Accept continuous and N/A phenotype
-            -Done
-                -The allowed values for phenotypes now are real numbers between 0 and 1 (both inclusive) or NA.
-                -Removed the filter to check if at least one phenotype 0 and 1 is present (we don't have this concept anymore)
-                -Removed the filter that ignored strains with phenotype "NA" (might change a lot? I think for some big panels, we had a lot of NA strains?)
-        -Step2: integrate continuous_phenotype branch
-            -Done
-        -Step3:
-                -Color legend:
-                    -Legend: -> Estimated Effect
-                    -Pheno0: true minimum value
-                    -Pheno1: true maximum value
-                -For the table, we replace Pheno0/Pheno1 -> Pheno <= Threshold and > Threshold
-                    -Threshold by default is 0, but should be a parameter
-                    -Add the NA count value
-                -Step 3 should know and display the threshold
+2/ Binary 2 continuous phenotype:
+    -Step1: Accept continuous and N/A phenotype
+        -Done:
+            -The allowed values for phenotypes now are real numbers between 0 and 1 (both inclusive) or NA.
+            -Removed the filter to check if at least one phenotype 0 and 1 is present (we don't have this concept anymore)
+            -Removed the filter that ignored strains with phenotype "NA" (might change a lot? I think for some big panels, we had a lot of NA strains?)
+    -Step2: integrate continuous_phenotype branch
+        -Done:
+    -Step3:
+        -Done:
+            -Color legend:
+                -Legend: -> Estimated Effect
+                -Pheno0: true minimum value
+                -Pheno1: true maximum value
+            -For the table, we replace Pheno0/Pheno1 -> Pheno <= Threshold and > Threshold
+                -Threshold by default is 0, but should be a parameter
+                -Add the NA count value
+    -TODOTODOTODOTODOTODO: test
+
+
+
+3/ TODOTODOTODOTODOTODO: Option to sort by p-value or q-value (default), and show both on the output
+
+4/ TODOTODOTODOTODOTODO: Docker to just run the tools (this is pretty fast to do);
+
+5/ TODOTODOTODOTODOTODO: Release
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
