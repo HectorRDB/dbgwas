@@ -521,7 +521,7 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
   string phenotypeThresholdAsFormattedStr;
   {
     stringstream ss;
-    ss << setprecision(2) << phenotypeThreshold;
+    ss << setprecision(2) << fixed << phenotypeThreshold;
     ss >> phenotypeThresholdAsFormattedStr;
   }
   boost::replace_all(cytoscapeOutput, "<phenotypeThreshold>", phenotypeThresholdAsFormattedStr);
@@ -534,18 +534,22 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
     bool validDouble;
     double waldStat;
     tie(validDouble, waldStat) = graph[node].unitigStats.getWaldAsDoubleIfItIsANumber();
+
     if (validDouble) {
-      minEstimatedEffect = min(minEstimatedEffect, waldStat);
-      maxEstimatedEffect = max(maxEstimatedEffect, waldStat);
-      estEffectIsSet = true;
+      if (estEffectIsSet==false) {
+        minEstimatedEffect = maxEstimatedEffect = waldStat;
+        estEffectIsSet = true;
+      }else {
+        minEstimatedEffect = min(minEstimatedEffect, waldStat);
+        maxEstimatedEffect = max(maxEstimatedEffect, waldStat);
+      }
     }
   }
-  string minEstimatedEffectAsStr("N/A"), maxEstimatedEffectAsStr("N/A");
+  string minEstimatedEffectAsStr("NA"), maxEstimatedEffectAsStr("NA");
   if (estEffectIsSet) {
     stringstream ss;
-    ss << scientific;
-    ss << minEstimatedEffect; ss >> minEstimatedEffectAsStr;
-    ss << maxEstimatedEffect; ss >> maxEstimatedEffectAsStr;
+    ss << setprecision(2) << fixed << minEstimatedEffect << " " << maxEstimatedEffect;
+    ss >> minEstimatedEffectAsStr >> maxEstimatedEffectAsStr;
   }
   boost::replace_all(cytoscapeOutput, "<minEstimatedEffect>", minEstimatedEffectAsStr);
   boost::replace_all(cytoscapeOutput, "<maxEstimatedEffect>", maxEstimatedEffectAsStr);
