@@ -220,13 +220,17 @@ cdbg_lin_loc <- function(SNPdata = NULL,
                                     pca = pca$pca,
                                     npcs = npcs)
     message("Biallelic data processed successfully.")
-
+    
     if(creatingAllPlots){
         ## Get list of all tree info
+        
+        ## Samples with missing phenotype will not be represented in the tree.
+        restricted.pca <- pca$pca
+        restricted.pca$x <- restricted.pca$x[!is.na(y), ]
         treeInfo <- bugwas:::get_tree(phylo = phylo,
                                       prefix = prefix,
-                                      XX.ID = XX.ID,
-                                      pca = pca$pca,
+                                      XX.ID = XX.ID[!is.na(y)],
+                                      pca = restricted.pca,
                                       npcs = npcs,
                                       allBranchAndPCCor = allBranchAndPCCor)
         message("Tree data processed successfully.")
