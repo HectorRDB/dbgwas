@@ -140,8 +140,8 @@ cdbg_lin_loc <- function(SNPdata = NULL,
 
     XX.all <- SNPdata$XX.all
     sample_ID <- SNPdata$sample_ID
-    npcs <- SNPdata$npcs
     y <- SNPdata$y
+    npcs <- min(SNPdata$npcs, sum(!is.na(y)))
     XX.ID <- SNPdata$XX.ID
     rm(SNPdata)
     cleanMem()
@@ -165,10 +165,14 @@ cdbg_lin_loc <- function(SNPdata = NULL,
     }
     
 
-    if(creatingAllPlots){
+    if(creatingAllPlots){## XX <- bugwas:::rescale_variants(var = XX.all$XX[, !is.na(y)], varpat = XX.all$bippat)
+        
+        ## We choose to retain strains with no phenotype for PCA (could better highlight population structure)
+        
         XX <- bugwas:::rescale_variants(var = XX.all$XX, varpat = XX.all$bippat)
         cleanMem()
         message("Rescaled variants.")
+
     }else{
         XX <- NULL
     }
@@ -199,12 +203,17 @@ cdbg_lin_loc <- function(SNPdata = NULL,
         ## pca$pca$d <- pca$pca$sdev * sqrt(max(1, nrow(XX) - 1))        
         cleanMem()
         message("Principal component analysis complete.")
+    }    
+    if(!is.null(pca)){
+        ## Samples with missing phenotype will not be represented in the tree.
+        pca$pca$x <- pca$pca$x[!is.na(y), 1:sum(!is.na(y))]
+        pca$pca$d <- pca$pca$d[1:sum(!is.na(y))]
+        pca$pca$rotation <- pca$pca$rotation[, 1:sum(!is.na(y))]
     }
-
-    ## save(file='biallelic-data.RData', logreg.bi, XX.all, XX, lmm.bi, lognull, lambda, relmatrix, pheno.file, maf, gem.path, output.dir, prefix, run.lmm, XX.ID, pca, npcs, y, phylo)
+    
     biallelic <- cdbg_get_biallelic(logreg.bi = logreg.bi,
                                     XX.all = XX.all,
-                                    XX = XX,
+                                    XX = XX[!is.na(y), ],
                                     lmm.bi = lmm.bi,
                                     lognull = lognull,
                                     lambda = lambda,
@@ -223,21 +232,18 @@ cdbg_lin_loc <- function(SNPdata = NULL,
     
     if(creatingAllPlots){
         ## Get list of all tree info
-        
-        ## Samples with missing phenotype will not be represented in the tree.
-        restricted.pca <- pca$pca
-        restricted.pca$x <- restricted.pca$x[!is.na(y), ]
-        treeInfo <- bugwas:::get_tree(phylo = phylo,
-                                      prefix = prefix,
-                                      XX.ID = XX.ID[!is.na(y)],
-                                      pca = restricted.pca,
-                                      npcs = npcs,
-                                      allBranchAndPCCor = allBranchAndPCCor)
+        treeInfo <- cdbg_get_tree(phylo = phylo,
+                                  prefix = prefix,
+                                  XX.ID = XX.ID[!is.na(y)],
+                                  pca = pca$pca,
+                                  npcs = npcs,
+                                  allBranchAndPCCor = allBranchAndPCCor)
         message("Tree data processed successfully.")
         
         ## Ridge regression
-        wald <- cdbg_wald_test(y = y,
-                               XX = XX,
+        XX.all$XX <- XX.all$XX[, !is.na(y)]
+        wald <- cdbg_wald_test(y = y[!is.na(y)],
+                               XX = XX[!is.na(y), ],
                                lambda = biallelic$lambda,
                                XX.all = XX.all,
                                prefix = prefix,
@@ -274,8 +280,16 @@ cdbg_lin_loc <- function(SNPdata = NULL,
                    "cutoffCor" = cutOffCor)
     
     if(creatingAllPlots){
-        cdbg_all_plots(biallelic = biallelic, triallelic = NULL,
-                       genVars = NULL, treeInfo = treeInfo, config = config)        
+        ## Plot will only involve phenotyped strains (tree was
+        ## restricted to phenotyped strains too).
+        biallelic.plot <- biallelic
+        keep.mask <- !is.na(biallelic.plot$pheno)
+        biallelic.plot$pheno <- biallelic.plot$pheno[keep.mask]
+        biallelic.plot$id <- biallelic.plot$id[keep.mask]
+        cdbg_all_plots(biallelic = biallelic.plot, triallelic = NULL,
+                       genVars = NULL, treeInfo = treeInfo, config = config)
+        rm(biallelic.plot)
+        cleanMem()
     }
     
     return(list("biallelic" = biallelic, "config" = config, "treeInfo" = treeInfo))
@@ -690,4 +704,39 @@ cdbg_get_wald_input <- function(fit.lmm = NULL,
     pca.Vbeta <- lambda/tau * diag(1 - (lambda * pca$d^2 / (lambda * pca$d^2 + 1)))
     
     return(list("Ebeta" = pca.Ebeta, "Vbeta" = pca.Vbeta, "XE"=XE))    
+}
+
+################################################################################################
+## Changelog:
+##
+## - Call cdbg_get_correlation instead of bugwas:::get_correlation.
+##
+################################################################################################
+
+cdbg_get_tree <- function (phylo = NULL, prefix = NULL, XX.ID = NULL, pca = NULL, 
+                           npcs = NULL, allBranchAndPCCor = FALSE) 
+{
+    tree <- ape::read.tree(phylo)
+    if (any(is.na(match(XX.ID, tree$tip.label)))) {
+        stop("\nError: Phylogeny sample names do not match the sample names of the SNP data\n")
+    }
+    tree <- phangorn::midpoint(tree)
+    ape::write.tree(tree, paste0(prefix, "_midpointrooted_tree.txt"))
+    tree <- ape::read.tree(paste0(prefix, "_midpointrooted_tree.txt"))
+    treepat <- bugwas:::tree2patterns(tree = tree, tiporder = XX.ID)
+    mtp <- treepat$pat
+    message("Retrieve all correlations between branches and PCs: ", 
+        allBranchAndPCCor)
+    cor.tree <- cdbg_get_correlations(XX = mtp, pca = pca$x, npcs = npcs, 
+        id = XX.ID, all.cor = allBranchAndPCCor)
+    if (allBranchAndPCCor) {
+        branchPCCorFileName = paste(prefix, "allBranchAndPCCor.txt", 
+            sep = "_")
+        write.table(signif(cor.tree$all.cor.pc, digits = 3), 
+            branchPCCorFileName, row.names = T, col.names = T, 
+            quote = F, sep = "\t")
+        ape::write.tree(treepat$labelled.tree, paste0(prefix, 
+            "_node_labelled_tree.txt"))
+    }
+    return(list(tree = tree, pattern = treepat, cor.tree = cor.tree))
 }

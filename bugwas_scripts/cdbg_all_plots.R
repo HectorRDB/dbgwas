@@ -237,7 +237,6 @@ genVars = NULL, cutoffCor = NULL,  npcs = NULL, phenotype = NULL,
                        
     message("The reduced space plot of the sample on the top two significant additive PCs been completed successfully.")                    
                        
-  
   #The plot with true and predicted phenotype on the tree
     .trueAndPredPhenoOnTreePlot(prefix = prefix, tree = tree, which.mtp.pc = unlist(which.mtp.pc), #Check with SGE
                                 max.mtp.cor.pc = max.mtp.cor.pc, cutoffCor = cutoffCor, treepat = treepat,
@@ -506,9 +505,10 @@ cdbg_getSNPColours = function(sampleCount = NULL,
             ## Use bin indices, ii, to select color from vector of n-1 equally spaced colors
             pheno.colors <- colorRampPalette(c("grey", "black"))(99)[ii]
         }
-
         ape::plot.phylo(tree.eq, type = "fan", show.tip.label = TRUE, 
-            edge.col = branch.col.pc, tip.col = pheno.colors, lwd = 3, adj = 0.5, lab4ut = "axial")
+                        edge.col = branch.col.pc, tip.col = pheno.colors, lwd = 3, adj = 0.5, lab4ut = "axial")
+        ## cdbg_plot_phylo(tree.eq, type = "fan", show.tip.label = TRUE, 
+        ##                 edge.col = branch.col.pc, tip.col = pheno.colors, lwd = 3, adj = 0.5, lab4ut = "axial")
         xx = get("last_plot.phylo", envir = ape::.PlotPhyloEnv)$xx[1:n][match(XX.comid, 
             tree$tip.label)]
         yy = get("last_plot.phylo", envir = ape::.PlotPhyloEnv)$yy[1:n][match(XX.comid, 
