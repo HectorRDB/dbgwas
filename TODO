@@ -17,6 +17,7 @@ TODO v0.5.4:
     -Step1: Accept continuous and N/A phenotype
         -Done:
             -The allowed values for phenotypes now are real numbers between 0 and 1 (both inclusive) or NA.
+                -TODO: allowed phenotypes should be any real number + NA.
             -Removed the filter to check if at least one phenotype 0 and 1 is present (we don't have this concept anymore)
             -Removed the filter that ignored strains with phenotype "NA" (might change a lot? I think for some big panels, we had a lot of NA strains?)
     -Step2: integrate continuous_phenotype branch
