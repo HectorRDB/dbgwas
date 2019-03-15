@@ -75,6 +75,7 @@ extern string phantomjsPath;
 extern string RscriptPath;
 extern bool noPreview;
 extern double phenotypeThreshold;
+extern char qOrPValue;
 
 void populateParser (Tool *tool);
 

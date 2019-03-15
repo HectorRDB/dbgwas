@@ -291,6 +291,41 @@ void checkParametersBuildDBG(Tool *tool) {
   createFolder(p.string());
 }
 
+//parse SFF
+void parseSFF(const string &SFFString) {
+  qOrPValue = SFFString[0];
+  string SFFNumber = SFFString.substr(1);
+  if (qOrPValue!='q' && qOrPValue!='p')
+    fatalError(string("Error on ") + string(STR_SFF) + " parameter. First argument must be p or q.");
+
+  if (SFFNumber.find(".")==string::npos) {
+    //. not found in SFFNumber : integer
+    //get the first n significant patterns
+    int n;
+    {
+      stringstream ss;
+      ss << SFFNumber;
+      ss >> n;
+      if (ss.fail())
+        fatalError(string("Error on ") + string(STR_SFF) + " parameter. Second argument must be an integer or a double.");
+    }
+
+    SFF=n;
+  }else {
+    //double
+    //get all sequence in which the q-value is <= n
+    double n;
+    {
+      stringstream ss;
+      ss << SFFNumber;
+      ss >> n;
+      if (ss.fail())
+        fatalError(string("Error on ") + string(STR_SFF) + " parameter. Second argument must be an integer or a double.");
+    }
+    SFF = n;
+  }
+}
+
 
 void checkParametersStatisticalTest(Tool *tool) {
   if (skip2) {
@@ -311,6 +346,10 @@ void checkParametersStatisticalTest(Tool *tool) {
       fatalError(ss.str());
     }
   }
+
+  //parse SFF
+  string SFFString = tool->getInput()->getStr(STR_SFF);
+  parseSFF(SFFString);
 }
 
 
@@ -340,35 +379,6 @@ void checkParametersGenerateOutput(Tool *tool) {
   createFolder(textualComponentsFolder);
 
 
-  //parse and get SFF
-  string SFFString = tool->getInput()->getStr(STR_SFF);
-  if (SFFString.find(".")==string::npos) {
-    //. not found in SFFString : integer
-    //get the first n significant patterns
-    int n;
-    {
-      stringstream ss;
-      ss << SFFString;
-      ss >> n;
-      if (ss.fail())
-        fatalError(string("Error on ") + string(STR_SFF) + " parameter. It must be an integer or a double.");
-    }
-
-    SFF=n;
-  }else {
-    //double
-    //get all sequence in which the q-value is <= n
-    double n;
-    {
-      stringstream ss;
-      ss << SFFString;
-      ss >> n;
-      if (ss.fail())
-        fatalError(string("Error on ") + string(STR_SFF) + " parameter. It must be an integer or a double.");
-    }
-    SFF = n;
-  }
-
   //check the nucleotide DB
   if (tool->getInput()->get(STR_NUCLEOTIDE_DB)) {
     //build the nucleotide DB
@@ -388,6 +398,10 @@ void checkParametersGenerateOutput(Tool *tool) {
 
   //get the phenotype threshold
   phenotypeThreshold = tool->getInput()->getDouble(STR_PHENOTYPE_THRESHOLD);
+
+  //parse SFF
+  string SFFString = tool->getInput()->getStr(STR_SFF);
+  parseSFF(SFFString);
 }
 
 

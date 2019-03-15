@@ -85,7 +85,7 @@ void statistical_test::execute () {
   executeCommand(ssCommand.str()); //execute the command
   fs::current_path(currentPath); //cd back
 
-  //sort the file by q-value and output it to output/patterns.txt
+  //sort the file by q/p-value and output it to output/patterns.txt
   //read
   auto patterns = PatternFromStats::readFile(outputFolder + "/bugwas_out_DBGWAS_patterns.txt");
   //sort
