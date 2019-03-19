@@ -127,7 +127,7 @@ if(do.lineage){
     ## Restrict tree
     library(ape)
     bmx.tree <- read.tree(tree.file)
-    restr.tree <- drop.tip(bmx.tree, setdiff(bmx.tree$tip.label, XX.ID))
+    restr.tree <- drop.tip(bmx.tree, setdiff(bmx.tree$tip.label, XX.ID[!is.na(pheno.mat['pheno']]))
     restr.tree.file <- paste0(prefix, "_restricted_tree.txt")
     write.tree(restr.tree, file=restr.tree.file)
     ## restr.tree.file <- tree.file
