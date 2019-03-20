@@ -58,11 +58,17 @@ TODO v0.5.4:
 
 
 
-TODO next versions:
+TODO next version:
+2/ Automated labelling prediction (December) - After 12nd December
+    -Deadline: ???
+    -Doubts:
+        -Everything is done, just merge and we are set?
 
 
 
-2/ Continuous Genotype (frequencies) - December - Up to 12nd december:
+
+
+3/ Continuous Genotype (frequencies) - December - Up to 12nd december:
     -Deadline: ???
     -Doubts:
         -Transform to the enconding where 0 is the major allele and 1 is the minor one
@@ -95,10 +101,6 @@ TODO next versions:
 
 
 
-3/ Automated labelling prediction (December) - After 12nd December
-    -Deadline: ???
-    -Doubts:
-        -Everything is done, just merge and we are set?
 
 
 ------------------------------------------------------------------------------------------------------------------------
