@@ -36,12 +36,13 @@ TODO v0.5.4:
     -TODOTODOTODOTODOTODO: TEST
 
 
-
 3/ Option to sort by p-value or q-value (default), and show both on the output
     -Done
+    -TODOTODOTODOTODOTODO: TEST
 
-4/ TODOTODOTODOTODOTODO: Docker to just run the tool
-    -Maybe use WORKDIR on both docker to put user in the good place
+
+4/ TODO: Docker to just run the tool
+    -Just after points 1, 2 and 3 ok
 
 
 5/ TODOTODOTODOTODOTODO: Release
