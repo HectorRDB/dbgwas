@@ -7,10 +7,11 @@ TODO v0.5.4:
 1/ Produce the Textual output
     -Done in pre-release v0.5.3
     -Still need to check if we add more fields or not
-        -TODOTODOTODOTODOTODO: Add the NACount and NATotalCount
+        -TODO: Add the NACount and NATotalCount
+            -Done
         -Add the strain presence files
             -I think this should be done with TODO 6/ Show the strain presence for each node
-
+    -TODOTODOTODOTODOTODO: TEST
 
 
 2/ Binary 2 continuous phenotype:
@@ -18,10 +19,11 @@ TODO v0.5.4:
         -Done:
             -The allowed values for phenotypes now are real numbers between 0 and 1 (both inclusive) or NA.
                 -TODO: allowed phenotypes should be any real number + NA.
+                    -Done
             -Removed the filter to check if at least one phenotype 0 and 1 is present (we don't have this concept anymore)
             -Removed the filter that ignored strains with phenotype "NA" (might change a lot? I think for some big panels, we had a lot of NA strains?)
     -Step2: integrate continuous_phenotype branch
-        -Done:
+        -Done
     -Step3:
         -Done:
             -Color legend:
@@ -31,13 +33,14 @@ TODO v0.5.4:
             -For the table, we replace Pheno0/Pheno1 -> Pheno <= Threshold and > Threshold
                 -Threshold by default is 0, but should be a parameter
                 -Add the NA count value
-    -TODOTODOTODOTODOTODO: test
+    -TODOTODOTODOTODOTODO: TEST
 
 
 
-3/ TODOTODOTODOTODOTODO: Option to sort by p-value or q-value (default), and show both on the output
+3/ Option to sort by p-value or q-value (default), and show both on the output
+    -Done
 
-4/ TODOTODOTODOTODOTODO: Docker to just run the tools (this is pretty fast to do);
+4/ TODOTODOTODOTODOTODO: Docker to just run the tool
     -Maybe use WORKDIR on both docker to put user in the good place
 
 
