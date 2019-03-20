@@ -85,11 +85,19 @@ void statistical_test::execute () {
   executeCommand(ssCommand.str()); //execute the command
   fs::current_path(currentPath); //cd back
 
+  //TODO: should we move this code to step3?
+  //TODO: the problem I see is that if the user wants to use pValue instead of qValue, he/she has to recompute step2 again...
+
   //sort the file by q/p-value and output it to output/patterns.txt
   //read
   auto patterns = PatternFromStats::readFile(outputFolder + "/bugwas_out_DBGWAS_patterns.txt");
+
   //sort
-  sort(patterns.begin(), patterns.end());
+  //Note: it would maybe cool use to pointer to class data members here (https://stackoverflow.com/questions/670734/pointer-to-class-data-member)
+  //but this would be overcomplication of a very simple logic...
+  sort(patterns.begin(), patterns.end(), [](const PatternFromStats& a, const PatternFromStats& b) -> bool {
+      return (qOrPValue=='p') ? a.pValue < b.pValue : a.qValue < b.qValue ;
+  });
   //write
   PatternFromStats::writeFile(outputFolder + "/patterns.txt", patterns);
 

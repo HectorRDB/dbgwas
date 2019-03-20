@@ -313,7 +313,7 @@ void parseSFF(const string &SFFString) {
     SFF=n;
   }else {
     //double
-    //get all sequence in which the q-value is <= n
+    //get all sequence in which the p/q-value is <= n
     double n;
     {
       stringstream ss;
@@ -509,10 +509,10 @@ void GetSignificantPatterns::operator()(int &n) const
   }
 }
 
-void GetSignificantPatterns::operator()(double &qValue) const
+void GetSignificantPatterns::operator()(double &qOrPValueThreshold) const
 {
   for (const auto &pattern : patterns) {
-    if (pattern.qValue <= qValue)
+    if ((qOrPValue=='p' && pattern.pValue <= qOrPValueThreshold) || (qOrPValue=='q' && pattern.qValue <= qOrPValueThreshold))
       significantPatterns.push_back(pattern);
   }
 }

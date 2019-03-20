@@ -231,6 +231,7 @@ function fillTable() {
                     node.data('NA'),
                     node.data('annotations').toString(),
                     node.data('significant'),
+                    node.data('pValue'),
                     node.data('qValue'),
                     node.data('weight'),
                     node.data('waldStatistic'),

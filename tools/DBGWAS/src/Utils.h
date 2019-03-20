@@ -163,14 +163,11 @@ struct Strain {
 
 struct PatternFromStats {
     int pattern;
+    long double pValue;
     long double qValue;
     long double weight;
     long double normalizedWeight;
     string waldStatistic;
-
-    bool operator < (const PatternFromStats& other) const {
-      return this->qValue < other.qValue;
-    }
 
     static vector<PatternFromStats> readFile(const string &filename, bool header=false) {
       vector<PatternFromStats> patterns;
@@ -187,7 +184,7 @@ struct PatternFromStats {
           string tmp;
           getline(patternStream, tmp);
         }
-        while (patternStream >> pattern.pattern >> pattern.qValue >> pattern.weight >> pattern.waldStatistic)
+        while (patternStream >> pattern.pattern >> pattern.pValue >> pattern.qValue >> pattern.weight >> pattern.waldStatistic)
           patterns.push_back(pattern);
         patternStream.close();
       }
@@ -223,9 +220,9 @@ struct PatternFromStats {
       ofstream patternSortedStream;
       openFileForWriting(filename, patternSortedStream);
       patternSortedStream << setprecision(std::numeric_limits<long double>::digits10 + 1);
-      patternSortedStream << "pattern q-value weight wald_statistic" << endl;
+      patternSortedStream << "pattern p-value q-value weight wald_statistic" << endl;
       for (const auto &pattern : patterns)
-        patternSortedStream << pattern.pattern << " " << pattern.qValue << " " << pattern.weight << " " << pattern.waldStatistic << endl;
+        patternSortedStream << pattern.pattern << " " << pattern.pValue  << " " << pattern.qValue << " " << pattern.weight << " " << pattern.waldStatistic << endl;
       patternSortedStream.close();
     }
 };
@@ -247,7 +244,7 @@ public:
 
     void operator()(int &n) const;
 
-    void operator()(double &qValue) const;
+    void operator()(double &qOrPValueThreshold) const;
 
 };
 #endif //KISSPLICE_UTILS_H

@@ -55,6 +55,7 @@ using namespace std;
 
 class UnitigStats {
 private:
+    long double pValue;
     long double qValue;
     long double weight;
     long double normalizedWeight;
@@ -64,6 +65,7 @@ public:
     UnitigStats():valid(false){} //default constructor
     UnitigStats(const PatternFromStats *patternStat, int weightCorretion) {
         if (patternStat) { //valid stuff
+            this->pValue = patternStat->pValue;
             this->qValue = patternStat->qValue;
             this->weight = patternStat->weight * weightCorretion;
             this->normalizedWeight = (weightCorretion == 1 ? patternStat->normalizedWeight : (1 - patternStat->normalizedWeight));
@@ -71,6 +73,17 @@ public:
             valid = true;
         }else{
             valid=false; //not valid
+        }
+    }
+
+    string getPValueAsStr() const {
+        stringstream ss;
+        ss << scientific;
+        if (valid) {
+            ss << pValue;
+            return ss.str();
+        } else {
+            return string("NA");
         }
     }
 
@@ -175,17 +188,18 @@ public:
 class ObjectPreview {
 private:
     int id;
+    double pvalue;
     double qvalue;
     string annotationsConcatenated;
     string preview;
     string annotationsForHOT;
 public:
-    ObjectPreview(int id, double qvalue, const string &annotationsConcatenated, const string &preview, const string &annotationsForHOT):
-        id(id), qvalue(qvalue), annotationsConcatenated(annotationsConcatenated), preview(preview), annotationsForHOT(annotationsForHOT){}
+    ObjectPreview(int id, double pvalue, double qvalue, const string &annotationsConcatenated, const string &preview, const string &annotationsForHOT):
+        id(id), pvalue(pvalue), qvalue(qvalue), annotationsConcatenated(annotationsConcatenated), preview(preview), annotationsForHOT(annotationsForHOT){}
 
     string toJSObject () const {
         stringstream ss;
-        ss << "{id: " << id << ",\nqvalue: " << qvalue << ",\nannCat: '" << annotationsConcatenated << "',\npreview: '" << preview << "'"
+        ss << "{id: " << id << ",\npvalue: " << pvalue << ",\nqvalue: " << qvalue << ",\nannCat: '" << annotationsConcatenated << "',\npreview: '" << preview << "'"
         << ",\nannHOT: " << annotationsForHOT << "}\n";
         return ss.str();
     }

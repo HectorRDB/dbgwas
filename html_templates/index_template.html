@@ -104,6 +104,7 @@
 
             var queryBuilder = $('#builder').queryBuilder({
                 filters: [
+                    {id: 'pvalue', type: 'string', label: 'p-value', input: 'text', operators: ['equal', 'not_equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal', 'between']},
                     {id: 'qvalue', type: 'string', label: 'q-value', input: 'text', operators: ['equal', 'not_equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal', 'between']},
                     {id: 'annCat', type: 'string', label: 'Annotations', input: 'select', operators: ['contains', 'not_contains'], values: <all_tags_in_all_components>}
                 ],
@@ -131,6 +132,7 @@
 
     <h3> Sort by:
         <select id="sortTerm">
+            <option value="pvalue">p-value</option>
             <option value="qvalue" selected>q-value</option>
         </select>
         <select id="asc_desc">

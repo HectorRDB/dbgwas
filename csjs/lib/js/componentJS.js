@@ -382,6 +382,7 @@ function buildPage(graphElements, allAnnotations, componentAnnotation, node2Anno
                 'NA',
                 'Annotation',
                 'Significant?',
+                'p-Value',
                 'q-Value',
                 'Est effect',
                 'Wald stat',

@@ -149,14 +149,17 @@ void generate_output::createIndexFile(int numberOfComponents, const string &visu
     });
 
 
-    //get the lowest qvalue of the nodes in the component
+    //get the lowest q/pvalue of the nodes in the component
+    long double lowestPValue = std::numeric_limits<long double>::max();
     long double lowestQValue = std::numeric_limits<long double>::max();
     for(const auto &node : nodesInComponent[i]) {
       int id = newGraph[node].id;
 
       //check if the patterns exists
-      if (unitigToPatternStats[id])
-        lowestQValue=min(lowestQValue, unitigToPatternStats[id]->qValue);
+      if (unitigToPatternStats[id]) {
+        lowestPValue = min(lowestPValue, unitigToPatternStats[id]->pValue);
+        lowestQValue = min(lowestQValue, unitigToPatternStats[id]->qValue);
+      }
     }
 
     //add the true values to this preview
@@ -165,19 +168,20 @@ void generate_output::createIndexFile(int numberOfComponents, const string &visu
     boost::replace_all(thisPreview, "<nb_sig_unitigs>", to_string(nbOfSignificantNodes));
     boost::replace_all(thisPreview, "<id>", idString);
 
-    string lowestQValueAsStr;
+    string lowestQValueAsStr, lowestPValueAsStr;
     {
       stringstream ss;
       ss << scientific;
-      ss << lowestQValue;
-      ss >> lowestQValueAsStr;
+      ss << lowestQValue << " " << lowestPValue;
+      ss >> lowestQValueAsStr >> lowestPValueAsStr;
     }
+    boost::replace_all(thisPreview, "<p-value>", lowestPValueAsStr);
     boost::replace_all(thisPreview, "<q-value>", lowestQValueAsStr);
 
     string annotationsForHOT=idComponent2Annotations[i].getAnnotationsForHOTForIndexPage(i);
 
     //add this preview to all previews
-    previews.push_back(ObjectPreview(i, lowestQValue, annotationsSQL, thisPreview, annotationsForHOT));
+    previews.push_back(ObjectPreview(i, lowestPValue, lowestQValue, annotationsSQL, thisPreview, annotationsForHOT));
   }
 
 
@@ -389,7 +393,7 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
     openFileForWriting(nodeInfoTextOutputFilename.str(), nodeInfoTextOutputFile);
 
     //write the header already
-    nodeInfoTextOutputFile << "CompId\tNodeId\tAlleleFreq\tPheno0Count\tPheno0TotalCount\tPheno1Count\tPheno1TotalCount\tSignificant?\tq-Value\tEstEffect\tWaldStat\t"
+    nodeInfoTextOutputFile << "CompId\tNodeId\tAlleleFreq\tPheno0Count\tPheno0TotalCount\tPheno1Count\tPheno1TotalCount\tSignificant?\tp-value\tq-Value\tEstEffect\tWaldStat\t"
         "Sequence\tSequenceLength\tAnnotations(sep=~~~)" << endl;
 
   }
@@ -416,6 +420,7 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
       ", pheno1: '" << graph[node].phenoCounter.getPheno1(phenotypeThreshold) << "/" << phenoCounterForAllStrains.getPheno1(phenotypeThreshold) << "'" <<
       ", NA: '" << graph[node].phenoCounter.getNA() << "/" << phenoCounterForAllStrains.getNA() <<  "'" <<
       ", significant: '" << (find(selectedUnitigs.begin(), selectedUnitigs.end(), graph[node].id) == selectedUnitigs.end() ? "No" : "Yes") << "'" <<
+      ", pValue: '" << graph[node].unitigStats.getPValueAsStr() << "'" <<
       ", qValue: '" << graph[node].unitigStats.getQValueAsStr() << "'" <<
       ", weight: '" << graph[node].unitigStats.getWeightAsStr() << "'" <<
       ", waldStatistic: '" << graph[node].unitigStats.getWaldStatisticAsStr() << "'" <<
@@ -452,6 +457,7 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
                      << graph[node].phenoCounter.getPheno1(phenotypeThreshold) << "\t"
                      << phenoCounterForAllStrains.getPheno1(phenotypeThreshold) << "\t"
                      << (find(selectedUnitigs.begin(), selectedUnitigs.end(), graph[node].id) == selectedUnitigs.end() ? "No" : "Yes") << "\t"
+                     << graph[node].unitigStats.getPValueAsStr() << "\t"
                      << graph[node].unitigStats.getQValueAsStr() << "\t"
                      << graph[node].unitigStats.getWeightAsStr() << "\t"
                      << graph[node].unitigStats.getWaldStatisticAsStr() << "\t"
