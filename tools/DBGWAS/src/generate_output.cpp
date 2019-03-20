@@ -393,8 +393,9 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
     openFileForWriting(nodeInfoTextOutputFilename.str(), nodeInfoTextOutputFile);
 
     //write the header already
-    nodeInfoTextOutputFile << "CompId\tNodeId\tAlleleFreq\tPheno0Count\tPheno0TotalCount\tPheno1Count\tPheno1TotalCount\tSignificant?\tp-value\tq-Value\tEstEffect\tWaldStat\t"
-        "Sequence\tSequenceLength\tAnnotations(sep=~~~)" << endl;
+    nodeInfoTextOutputFile << "CompId\tNodeId\tAlleleFreq\tPheno0Count\tPheno0TotalCount\tPheno1Count\tPheno1TotalCount\t"
+                              "NACount\tNATotalCount\tSignificant?\tp-value\tq-Value\tEstEffect\tWaldStat\t"
+                              "Sequence\tSequenceLength\tAnnotations(sep=~~~)" << endl;
 
   }
 
@@ -456,6 +457,8 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
                      << phenoCounterForAllStrains.getPheno0(phenotypeThreshold) << "\t"
                      << graph[node].phenoCounter.getPheno1(phenotypeThreshold) << "\t"
                      << phenoCounterForAllStrains.getPheno1(phenotypeThreshold) << "\t"
+                     << graph[node].phenoCounter.getNA() << "\t"
+                     << phenoCounterForAllStrains.getNA() << "\t"
                      << (find(selectedUnitigs.begin(), selectedUnitigs.end(), graph[node].id) == selectedUnitigs.end() ? "No" : "Yes") << "\t"
                      << graph[node].unitigStats.getPValueAsStr() << "\t"
                      << graph[node].unitigStats.getQValueAsStr() << "\t"
