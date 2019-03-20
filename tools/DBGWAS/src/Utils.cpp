@@ -122,9 +122,9 @@ void checkStrainsFile(const string &strainsFile) {
     std::tie(phenoIsNumber, phenoAsNumber) = is_number(pheno);
 
     //allowed phenotypes are only "NA" or numbers between 0 and 1
-    if ((!phenoIsNumber && pheno!="NA") || (phenoIsNumber && (phenoAsNumber<0 || phenoAsNumber>1))) {
+    if (!phenoIsNumber && pheno!="NA") {
       stringstream ss;
-      ss << "Phenotype not allowed: " << pheno << " . The only allowed values for phenotypes are real numbers between 0 and 1 (both inclusive) or NA." << endl;
+      ss << "Phenotype not allowed: " << pheno << " . The only allowed values for phenotypes are real numbers or NA." << endl;
       fatalError(ss.str());
     }
 
