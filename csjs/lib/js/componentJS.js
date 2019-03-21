@@ -372,6 +372,7 @@ function buildPage(graphElements, allAnnotations, componentAnnotation, node2Anno
                 {type: 'text'},
                 {type: 'text'},
                 {type: 'text'},
+                {type: 'text'},
                 {renderer: longColumnRenderer}
             ],
             colHeaders: [

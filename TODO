@@ -5,21 +5,17 @@ TODO list
 TODO v0.5.4:
 
 1/ Produce the Textual output
-    -Done in pre-release v0.5.3
-    -Still need to check if we add more fields or not
-        -TODO: Add the NACount and NATotalCount
-            -Done
-        -Add the strain presence files
-            -I think this should be done with TODO 6/ Show the strain presence for each node
+    -Done
+    -TODO: Add the strain presence files?
+        -I think this should be done with TODO 6/ Show the strain presence for each node
     -TODOTODOTODOTODOTODO: TEST
+        -Add more fields?
 
 
 2/ Binary 2 continuous phenotype:
     -Step1: Accept continuous and N/A phenotype
         -Done:
-            -The allowed values for phenotypes now are real numbers between 0 and 1 (both inclusive) or NA.
-                -TODO: allowed phenotypes should be any real number + NA.
-                    -Done
+            -The allowed values for phenotypes now are any real numbers or NA.
             -Removed the filter to check if at least one phenotype 0 and 1 is present (we don't have this concept anymore)
             -Removed the filter that ignored strains with phenotype "NA" (might change a lot? I think for some big panels, we had a lot of NA strains?)
     -Step2: integrate continuous_phenotype branch
