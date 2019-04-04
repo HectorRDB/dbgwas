@@ -20,16 +20,7 @@
     7. DBGWAS is now on docker:
         * See https://gitlab.com/leoisl/dbgwas/tree/master/containers/docker for instructions on how to use it;
 
-Download the new version here: [Downloading the precompiled binaries](#downloading-the-precompiled-binaries).
-
-
-* The paper describing DBGWAS was published in PLoS Genetics: [https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1007758](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1007758)
-
-* DBGWAS v0.5.2 is now released. The main fix is that the precompiled binary is now built with [Holy Build Box](http://phusion.github.io/holy-build-box/),
-so it should work on pretty much any glibc-based x86 and x86-64 Linux distribution released since approx 2011 (e.g.: Debian >= 7, Ubuntu >= 10.10,
-Red Hat Enterprise Linux >= 6, CentOS >= 6, etc). See [Downloading the precompiled binaries](#downloading-the-precompiled-binaries) for details.
-The complete changelog for this new version can be found [here](https://gitlab.com/leoisl/dbgwas/blob/master/Changelog).
-
+**Download the new version here: [Downloading the precompiled binaries](#downloading-the-precompiled-binaries).**
 
 
 # Before starting
