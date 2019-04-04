@@ -8,7 +8,13 @@ wget https://www.dropbox.com/s/9y1p0yw918ips6k/uniprot_sprot_bacteria_for_DBGWAS
 ./DBGWAS -strains pseudomonas_aeruginosa_full_dataset/strains -newick pseudomonas_aeruginosa_full_dataset/strains.newick -nc-db Resistance_DB_for_DBGWAS.fasta -pt-db uniprot_sprot_bacteria_for_DBGWAS.fasta
 
 #get the correct output
+
+#to compare with v0.5.2:
 wget https://www.dropbox.com/s/pr5vn76xksdbtzj/correct_output_v0.5.2.zip?dl=1 -O correct_output.zip
+
+#to compare with v0.5.4:
+wget https://www.dropbox.com/s/akzz2jor9pmw6yo/correct_output_v0.5.4.zip?dl=1 -O correct_output.zip
+
 unzip correct_output.zip
 
 #compare both outputs
