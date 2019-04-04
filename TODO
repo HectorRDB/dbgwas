@@ -6,40 +6,16 @@ TODO v0.5.4:
 
 1/ Produce the Textual output
     -Done
-    -TODO: Add the strain presence files?
-        -I think this should be done with TODO 6/ Show the strain presence for each node
-    -TODOTODOTODOTODOTODO: TEST
-        -Add more fields?
-
 
 2/ Binary 2 continuous phenotype:
-    -Step1: Accept continuous and N/A phenotype
-        -Done:
-            -The allowed values for phenotypes now are any real numbers or NA.
-            -Removed the filter to check if at least one phenotype 0 and 1 is present (we don't have this concept anymore)
-            -Removed the filter that ignored strains with phenotype "NA" (might change a lot? I think for some big panels, we had a lot of NA strains?)
-    -Step2: integrate continuous_phenotype branch
-        -Done
-    -Step3:
-        -Done:
-            -Color legend:
-                -Legend: -> Estimated Effect
-                -Pheno0: true minimum value
-                -Pheno1: true maximum value
-            -For the table, we replace Pheno0/Pheno1 -> Pheno <= Threshold and > Threshold
-                -Threshold by default is 0, but should be a parameter
-                -Add the NA count value
-    -TODOTODOTODOTODOTODO: TEST
-
+    -Done
 
 3/ Option to sort by p-value or q-value (default), and show both on the output
     -Done
-    -TODOTODOTODOTODOTODO: TEST
 
 
 4/ TODO: Docker to just run the tool
     -Just after points 1, 2 and 3 ok
-
 
 5/ TODOTODOTODOTODOTODO: Release
 

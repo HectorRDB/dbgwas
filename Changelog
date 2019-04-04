@@ -1,5 +1,23 @@
-v0.5.3:
--Textual output feature added
+Done v0.5.4:
+-DBGWAS now accepts continuous phenotypes:
+    -The allowed values for phenotypes now are any real number or NA;
+-Textual output feature added:
+    -Produces a textual output of DBGWAS graphical output, allowing to plug it in a pipeline;
+    -The textual output is created in the 'textualOutput' folder in the output folder;
+-Visualisation changes:
+    -p-value added to the visualisations;
+    -Several other improvements;
+-Parameter -SFF changed:
+    -Now, two arguments must be given to this parameter. The first (q or p) denotes if q-values or p-values must be used to control the FDR.
+    The second argument is a number. If it is a float number n, then only the features with q/p-value <=n are selected.
+    If it is an integer n, then only the n first features are selected. Note that there is no space between these parameters, e.g. q100.
+-Parameter -keepNA added:
+    -Keep strains with phenotype NA in the analysis, instead of ignoring them;
+-Parameter -phenoThreshold added:
+    -Phenotype threshold. Values <= than this are considered Phenotype 0, and > than this are considered Phenotype 1. Used only on the visualisation.
+-DBGWAS is now on docker:
+    -See https://gitlab.com/leoisl/dbgwas/tree/master/containers/docker for instructions on how to use it;
+
 
 
 
