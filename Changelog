@@ -2,8 +2,9 @@ Done v0.5.4:
 -DBGWAS now accepts continuous phenotypes:
     -The allowed values for phenotypes now are any real number or NA;
 -Textual output feature added:
-    -Produces a textual output of DBGWAS graphical output, allowing to plug it in a pipeline;
-    -The textual output is created in the 'textualOutput' folder in the output folder;
+    -Produces a textual output of DBGWAS graphical output. It can be used to easily plug DBGWAS' results on pipelines,
+    and post-process them, for example to compare different GWAS runs.
+    See the produced files and their formats here: https://gitlab.com/leoisl/dbgwas/wikis/Files-and-formats-of-DBGWAS-textual-output.
 -Visualisation changes:
     -p-value added to the visualisations;
     -Several other improvements;

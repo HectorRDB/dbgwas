@@ -1,7 +1,25 @@
 # NEWS
+* DBGWAS v0.5.4 is now released. Many changes:
+    1. DBGWAS now accepts continuous phenotypes:
+        * The allowed values for phenotypes now are any real number or NA; 
+    2. Textual output feature added:
+        * Produces a textual output of DBGWAS graphical output. It can be used to easily plug DBGWAS' results on pipelines,
+        and post-process them, for example to compare different GWAS runs.
+        See the produced files and their formats here: https://gitlab.com/leoisl/dbgwas/wikis/Files-and-formats-of-DBGWAS-textual-output.
+    3. Visualisation changes:
+        * p-value added to the visualisations;
+        * Several other improvements;
+    4. Parameter -SFF changed:
+        * Now, two arguments must be given to this parameter. The first (q or p) denotes if q-values or p-values must be used to control the FDR.
+        The second argument is a number. If it is a float number n, then only the features with q/p-value <=n are selected.
+        If it is an integer n, then only the n first features are selected. Note that there is no space between these parameters, e.g. q100.
+    5. Parameter -keepNA added:
+        * Keep strains with phenotype NA in the analysis, instead of ignoring them;
+    6. Parameter -phenoThreshold added:
+        * Phenotype threshold. Values <= than this are considered Phenotype 0, and > than this are considered Phenotype 1. Used only on the visualisation.
+    7. DBGWAS is now on docker:
+        * See https://gitlab.com/leoisl/dbgwas/tree/master/containers/docker for instructions on how to use it;
 
-* DBGWAS v0.5.3 is now released. Implemented a feature that builds a textual output of DBGWAS. It can be used to easily plug DBGWAS' results
-on pipelines, and post-process them, for example to compare different GWAS runs. See the produced files and their formats here: [https://gitlab.com/leoisl/dbgwas/wikis/Files-and-formats-of-DBGWAS-textual-output](https://gitlab.com/leoisl/dbgwas/wikis/Files-and-formats-of-DBGWAS-textual-output) .
 Download the new version here: [Downloading the precompiled binaries](#downloading-the-precompiled-binaries).
 
 
