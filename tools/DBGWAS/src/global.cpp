@@ -49,6 +49,7 @@ const char* STR_PHANTOMJS_PATH = "-phantomjs-path";
 const char* STR_RSCRIPT_PATH = "-Rscript-path";
 const char* STR_NO_PREVIEW = "-no-preview";
 const char* STR_PHENOTYPE_THRESHOLD = "-phenoThreshold";
+const char* STR_KEEP_NA = "-keepNA";
 
 //TODO: seeveral questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
 //const char* STR_COUNT_MODE = "-count";
@@ -72,6 +73,7 @@ string blastPath;
 string phantomjsPath;
 string RscriptPath;
 bool noPreview = false;
+bool keepNA = false;
 double phenotypeThreshold = 0.0;
 char qOrPValue = '?';
 
@@ -89,6 +91,7 @@ void populateParser (Tool *tool) {
   tool->getParser()->push_front (new OptionOneParam (STR_GEMMA_PATH, "Path to the GEMMA executable.",  false, "<DBGWAS_lib>/gemma.0.93b"));
   tool->getParser()->push_front (new OptionNoParam (STR_SKIP2, "Skips Steps 1 and 2, running only Step 3. Assumes that Steps 1 and 2 were correctly run and folders \"step1\" and \"step2\" are present in the output folder.",  false));
   tool->getParser()->push_front (new OptionNoParam (STR_SKIP1, "Skips Step 1, running only Steps 2 and 3. Assumes that Step 1 was correctly run and folder \"step1\" is present in the output folder.",  false));
+  tool->getParser()->push_front (new OptionNoParam (STR_KEEP_NA, "Keep strains with phenotype NA.",  false));
   tool->getParser()->push_front (new OptionOneParam (STR_PHENOTYPE_THRESHOLD, "Phenotype threshold. Values <= than this are considered Phenotype 0, and > than this are considered Phenotype 1. Used only on the visualisation.",  false, "0.0"));
   tool->getParser()->push_front (new OptionOneParam (STR_MAF_FILTER, "Minor Allele Frequency Filter.",  false, "0.01"));
   tool->getParser()->push_front (new OptionOneParam (STR_MAX_NEIGHBOURHOOD, "Denotes the neighbourhood to be considered around the significant unitigs.",  false, "5"));

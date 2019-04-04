@@ -138,9 +138,14 @@ void checkStrainsFile(const string &strainsFile) {
     }
     file.close();
 
-    //add the strain
-    Strain strain(id, pheno, path);
-    localStrains.push_back(strain);
+
+    //add the strain if it is different from NA
+    if (pheno=="NA" && keepNA==false) {
+      cerr << "[WARNING] Skipping strain " << id << " because its phenotype is NA and " << STR_KEEP_NA << " is not set." << endl;
+    }else {
+      Strain strain(id, pheno, path);
+      localStrains.push_back(strain);
+    }
   }
   input.close();
 
@@ -253,6 +258,7 @@ void checkParametersBuildDBG(Tool *tool) {
   //check if we skip or not
   skip1 = tool->getInput()->get(STR_SKIP1) != 0;
   skip2 = tool->getInput()->get(STR_SKIP2) != 0;
+  keepNA = tool->getInput()->get(STR_KEEP_NA) != 0;
   hasNewickFile = tool->getInput()->get(STR_NEWICK_PATH) != 0;
 
   if (skip2) skip1=true;
