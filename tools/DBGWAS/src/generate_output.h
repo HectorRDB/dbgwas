@@ -76,6 +76,8 @@ public:
         }
     }
 
+    bool isValid() const { return valid; }
+
     string getPValueAsStr() const {
         stringstream ss;
         ss << scientific;
@@ -109,9 +111,7 @@ public:
         }
     }
 
-    tuple<bool, double> getWeightAsDoubleIfItIsANumber() const {
-        return is_number(weight);
-    }
+    long double getWeight() const { return weight; }
 
     string getRGB() const {
         stringstream ss;

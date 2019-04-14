@@ -537,14 +537,12 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
 
   //put the <min/maxEstimatedEffect> info into the template file
   //get the values
-  double minEstimatedEffect, maxEstimatedEffect;
+  long double minEstimatedEffect, maxEstimatedEffect;
   bool estEffectIsSet=false;
   for (const auto &node : nodes) {
-    bool validDouble;
-    double estimatedEffect;
-    tie(validDouble, estimatedEffect) = graph[node].unitigStats.getWeightAsDoubleIfItIsANumber();
+    if (graph[node].unitigStats.isValid()) {
+      long double estimatedEffect = graph[node].unitigStats.getWeight();
 
-    if (validDouble) {
       if (estEffectIsSet==false) {
         minEstimatedEffect = maxEstimatedEffect = estimatedEffect;
         estEffectIsSet = true;
