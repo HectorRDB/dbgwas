@@ -109,6 +109,10 @@ public:
         }
     }
 
+    tuple<bool, double> getWeightAsDoubleIfItIsANumber() const {
+        return is_number(weight);
+    }
+
     string getRGB() const {
         stringstream ss;
         if (valid) {

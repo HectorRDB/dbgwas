@@ -541,16 +541,16 @@ void generate_output::generateCytoscapeOutput(const graph_t &graph, const vector
   bool estEffectIsSet=false;
   for (const auto &node : nodes) {
     bool validDouble;
-    double waldStat;
-    tie(validDouble, waldStat) = graph[node].unitigStats.getWaldAsDoubleIfItIsANumber();
+    double estimatedEffect;
+    tie(validDouble, estimatedEffect) = graph[node].unitigStats.getWeightAsDoubleIfItIsANumber();
 
     if (validDouble) {
       if (estEffectIsSet==false) {
-        minEstimatedEffect = maxEstimatedEffect = waldStat;
+        minEstimatedEffect = maxEstimatedEffect = estimatedEffect;
         estEffectIsSet = true;
       }else {
-        minEstimatedEffect = min(minEstimatedEffect, waldStat);
-        maxEstimatedEffect = max(maxEstimatedEffect, waldStat);
+        minEstimatedEffect = min(minEstimatedEffect, estimatedEffect);
+        maxEstimatedEffect = max(maxEstimatedEffect, estimatedEffect);
       }
     }
   }
