@@ -23,8 +23,22 @@ SET (gatb-tool_VERSION_MAJOR 0)
 SET (gatb-tool_VERSION_MINOR 5)
 SET (gatb-tool_VERSION_PATCH 4)
 
+################################################################################
+# getting git version
+################################################################################
+#from http://stackoverflow.com/questions/1435953/how-can-i-pass-git-sha1-to-compiler-as-definition-using-cmake
+exec_program(
+        "git"
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        ARGS "rev-parse --short HEAD"
+        OUTPUT_VARIABLE VERSION_SHA1 )
+################################################################################
+# getting git version
+################################################################################
+
+
 #write the version number
-file(WRITE ${PROJECT_SOURCE_DIR}/tools/DBGWAS/src/version.h "\#define VERSION \"${gatb-tool_VERSION_MAJOR}.${gatb-tool_VERSION_MINOR}.${gatb-tool_VERSION_PATCH}\"")
+file(WRITE ${PROJECT_SOURCE_DIR}/tools/DBGWAS/src/version.h "\#define VERSION \"${gatb-tool_VERSION_MAJOR}.${gatb-tool_VERSION_MINOR}.${gatb-tool_VERSION_PATCH} git commit ${VERSION_SHA1}\"")
 
 
 IF (DEFINED MAJOR)
