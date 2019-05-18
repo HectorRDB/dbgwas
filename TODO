@@ -2,34 +2,6 @@
 TODO list
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
-TODO v0.5.4:
-
-1/ Produce the Textual output
-    -Done
-
-2/ Binary 2 continuous phenotype:
-    -Done
-
-3/ Option to sort by p-value or q-value (default), and show both on the output
-    -Done
-
-
-4/ TODO: Docker to just run the tool
-    -Just after points 1, 2 and 3 ok
-
-5/ TODOTODOTODOTODOTODO: Release
-
-
-
-
-
-
-
-
-
-
-
-
 TODO next version:
 2/ Automated labelling prediction (December) - After 12nd December
     -Deadline: ???
