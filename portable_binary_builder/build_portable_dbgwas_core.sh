@@ -13,6 +13,9 @@ source /hbb_exe/activate
 
 set -eux
 
+#install git
+yum install git -y
+
 # compile and install dbgwas
 cd io
 mkdir build
