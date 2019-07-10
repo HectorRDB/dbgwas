@@ -96,7 +96,7 @@ void populateParser (Tool *tool) {
   tool->getParser()->push_front (new OptionOneParam (STR_MAF_FILTER, "Minor Allele Frequency Filter.",  false, "0.01"));
   tool->getParser()->push_front (new OptionOneParam (STR_MAX_NEIGHBOURHOOD, "Denotes the neighbourhood to be considered around the significant unitigs.",  false, "5"));
   tool->getParser()->push_front (new OptionOneParam (STR_SFF, "Denotes the Significant Features Filter - the features (or patterns) selected to create a visualisation around them. Two arguments must be given to this parameter. "
-      "The first (q or p) denotes if q-values or p-values must be used to control the FDR. The second argument is a number. If it is a float number n, then only the features with q/p-value <=n are selected. "
+      "The first (q or p) indicates whether q- or p-values are used to control the number of retained patterns. The second argument is a number. If it is a float number n, then only the features with q/p-value <=n are selected. "
       "If it is an integer n, then only the n first features are selected. Note that there is no space between these parameters, e.g. q100. "
       "Take a look at the output/step2/patterns.txt file to get a list of features ordered by q/p-value to better choose this parameter "
       "(re-run the tool with -skip2 in order to directly produce the visualisation of the features selected by your parameter).",  false, "q100"));

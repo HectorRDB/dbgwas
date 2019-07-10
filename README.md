@@ -1,7 +1,7 @@
 # NEWS
 * DBGWAS v0.5.4 is now released. Many changes:
     1. DBGWAS now accepts continuous phenotypes:
-        * The allowed values for phenotypes now are any real number or NA; 
+        * The allowed values for phenotypes now are any real number or NA. In particular, 0/1 binary phenotypes are still valid values. 
     2. Textual output feature added:
         * Produces a textual output of DBGWAS graphical output. It can be used to easily plug DBGWAS' results on pipelines,
         and post-process them, for example to compare different GWAS runs.
@@ -9,9 +9,10 @@
     3. Visualisation changes:
         * p-value added to the visualisations;
         * Several other improvements;
-    4. Parameter -SFF changed:
-        * Now, two arguments must be given to this parameter. The first (q or p) denotes if q-values or p-values must be used to control the FDR.
-        The second argument is a number. If it is a float number n, then only the features with q/p-value <=n are selected.
+    4. Parameter -SFF changed:    
+        * Now, two arguments must be given to this parameter.
+	The first (q or p) indicates whether q- or p-values are used to control the number of retained patterns.
+	The second argument is a number. If it is a float number n, then only the features with q/p-value <=n are selected.
         If it is an integer n, then only the n first features are selected. Note that there is no space between these parameters, e.g. q100.
     5. Parameter -keepNA added:
         * Keep strains with phenotype NA in the analysis, instead of ignoring them;
@@ -199,7 +200,7 @@ You can find DBGWAS parameters by running ```./DBGWAS -h``` or simply here:
        -nc-db          (1 arg) :    A list of Fasta files separated by comma containing annotations in a nucleotide alphabet format (e.g.: -nc-db path/to/file_1.fa,path/to/file_2.fa,etc). You can customize these files to work better with DBGWAS (see https://gitlab.com/leoisl/dbgwas/tree/master#customizing-annotation-databases).  [default '']
        -pt-db          (1 arg) :    A list of Fasta files separated by comma containing annotations in a protein alphabet format (e.g.: -pt-db path/to/file_1.fa,path/to/file_2.fa,etc). You can customize these files to work better with DBGWAS (see https://gitlab.com/leoisl/dbgwas/tree/master#customizing-annotation-databases).  [default '']
        -output         (1 arg) :    Path to the folder where the final and temporary files will be stored.  [default 'output']
-       -SFF            (1 arg) :    Denotes the Significant Features Filter - the features (or patterns) selected to create a visualisation around them. Two arguments must be given to this parameter. The first (q or p) denotes if q-values or p-values must be used to control the FDR. The second argument is a number. If it is a float number n, then only the features with q/p-value <=n are selected. If it is an integer n, then only the n first features are selected. Note that there is no space between these parameters, e.g. q100. Take a look at the output/step2/patterns.txt file to get a list of features ordered by q/p-value to better choose this parameter (re-run the tool with -skip2 in order to directly produce the visualisation of the features selected by your parameter).  [default 'q100']
+       -SFF            (1 arg) :    Denotes the Significant Features Filter - the features (or patterns) selected to create a visualisation around them. Two arguments must be given to this parameter. The first (q or p) indicates whether q- or p-values are used to control the number of retained patterns. The second argument is a number. If it is a float number n, then only the features with q/p-value <=n are selected. If it is an integer n, then only the n first features are selected. Note that there is no space between these parameters, e.g. q100. Take a look at the output/step2/patterns.txt file to get a list of features ordered by q/p-value to better choose this parameter (re-run the tool with -skip2 in order to directly produce the visualisation of the features selected by your parameter).  [default 'q100']
        -nh             (1 arg) :    Denotes the neighbourhood to be considered around the significant unitigs.  [default '5']
        -maf            (1 arg) :    Minor Allele Frequency Filter.  [default '0.01']
        -phenoThreshold (1 arg) :    Phenotype threshold. Values <= than this are considered Phenotype 0, and > than this are considered Phenotype 1. Used only on the visualisation.  [default '0.0']
