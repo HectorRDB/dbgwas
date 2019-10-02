@@ -6,7 +6,7 @@ Done v0.5.4:
     and post-process them, for example to compare different GWAS runs.
     See the produced files and their formats here: https://gitlab.com/leoisl/dbgwas/wikis/Files-and-formats-of-DBGWAS-textual-output.
 -Visualisation changes:
-    -p-value added to the visualisations;
+    -p-value added to the visualisations, and components are now sorted by default by the p-value;
     -Several other improvements;
 -Parameter -SFF changed:
     -Now, two arguments must be given to this parameter. The first (q or p) denotes if q-values or p-values must be used to control the FDR.
