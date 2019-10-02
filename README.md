@@ -7,7 +7,7 @@
         and post-process them, for example to compare different GWAS runs.
         See the produced files and their formats here: https://gitlab.com/leoisl/dbgwas/wikis/Files-and-formats-of-DBGWAS-textual-output.
     3. Visualisation changes:
-        * p-value added to the visualisations;
+        * p-value added to the visualisations, and components are now sorted by default by the p-value;
         * Several other improvements;
     4. Parameter -SFF changed:    
         * Now, two arguments must be given to this parameter.
@@ -87,10 +87,18 @@ For reproducibility reasons, in the following you have easily the input data, an
 5. After finishing the execution, the output can be found in the folder ```bin/output/visualisations```
 
 # Downloading, installing and running
-## Downloading the precompiled binaries
-This is the easiest way to run the tool since it is already precompiled.
 
-Download the latest binary here (v0.5.4): https://www.dropbox.com/s/aji8e6o1iwqyas6/DBGWAS-0.5.4-Linux-precompiled.tar.gz?dl=1
+## Using containers
+
+The easiest way to run DBGWAS is using [singularity](https://sylabs.io/docs/) as all dependencies are dealt with automatically.
+See [Running DBGWAS on singularity](containers/docker#running-dbgwas-on-singularity).
+
+An alternative is to run DBGWAS using [docker](https://www.docker.com/). See [Running DBGWAS on docker](containers/docker#running-dbgwas-on-docker).
+
+## Downloading the precompiled binaries
+If you prefer to not use containers, you can download the precompiled binary. This binary requires having `R` and the `R` dependencies installed.
+
+Download the latest binary here (v0.5.4): https://www.dropbox.com/s/wco26mqn4ajb3vg/DBGWAS-0.5.4-Linux-precompiled.tar.gz?dl=1
 
 Previous versions:
 
@@ -166,7 +174,7 @@ install.packages("https://raw.githubusercontent.com/sgearle/bugwas/master/build/
 
 ## Running on a sample example
 
-Now that you have the package (either the precompiled or you compiled it yourself),
+Now that you have the package (either from the container, or precompiled or you compiled it yourself),
 let's try running the tool in a sample example comprising 50 bacterial genomes (subset of the 282
 described in the [DBGWAS in a nutshell](#dbgwas-in-a-nutshell-running-the-tool-in-one-example) section):
 

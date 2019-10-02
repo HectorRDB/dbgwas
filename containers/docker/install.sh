@@ -7,5 +7,5 @@ Rscript R_deps
 rm R_deps
 mkdir dbgwas
 cd dbgwas
-wget https://www.dropbox.com/s/aji8e6o1iwqyas6/DBGWAS-0.5.4-Linux-precompiled.tar.gz?dl=1 -O DBGWAS-0.5.4-Linux-precompiled.tar.gz
+wget https://www.dropbox.com/s/wco26mqn4ajb3vg/DBGWAS-0.5.4-Linux-precompiled.tar.gz?dl=1 -O DBGWAS-0.5.4-Linux-precompiled.tar.gz
 tar -zxvf DBGWAS-0.5.4-Linux-precompiled.tar.gz
