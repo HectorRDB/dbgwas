@@ -98,7 +98,7 @@ An alternative is to run DBGWAS using [docker](https://www.docker.com/). See [Ru
 ## Downloading the precompiled binaries
 If you prefer to not use containers, you can download the precompiled binary. This binary requires having `R` and the `R` dependencies installed.
 
-Download the latest binary here (v0.5.4): https://www.dropbox.com/s/wco26mqn4ajb3vg/DBGWAS-0.5.4-Linux-precompiled.tar.gz?dl=1
+Download the latest binary here (v0.5.4): https://www.dropbox.com/s/s9oojqfl1kgi4l5/DBGWAS-0.5.4-Linux-precompiled.tar.gz?dl=1
 
 Previous versions:
 
