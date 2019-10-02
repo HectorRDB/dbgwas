@@ -21,10 +21,24 @@ endif()
 ################################################################################
 SET (gatb-tool_VERSION_MAJOR 0)
 SET (gatb-tool_VERSION_MINOR 5)
-SET (gatb-tool_VERSION_PATCH 2)
+SET (gatb-tool_VERSION_PATCH 4)
+
+################################################################################
+# getting git version
+################################################################################
+#from http://stackoverflow.com/questions/1435953/how-can-i-pass-git-sha1-to-compiler-as-definition-using-cmake
+exec_program(
+        "git"
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        ARGS "rev-parse --short HEAD"
+        OUTPUT_VARIABLE VERSION_SHA1 )
+################################################################################
+# getting git version
+################################################################################
+
 
 #write the version number
-file(WRITE ${PROJECT_SOURCE_DIR}/tools/DBGWAS/src/version.h "\#define VERSION \"${gatb-tool_VERSION_MAJOR}.${gatb-tool_VERSION_MINOR}.${gatb-tool_VERSION_PATCH}\"")
+file(WRITE ${PROJECT_SOURCE_DIR}/tools/DBGWAS/src/version.h "\#define VERSION \"${gatb-tool_VERSION_MAJOR}.${gatb-tool_VERSION_MINOR}.${gatb-tool_VERSION_PATCH} git commit ${VERSION_SHA1}\"")
 
 
 IF (DEFINED MAJOR)
@@ -102,7 +116,7 @@ SET (CPACK_SOURCE_IGNORE_FILES
 INSTALL (FILES   ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE                     DESTINATION . COMPONENT precompiled)
 INSTALL (FILES   ${CMAKE_CURRENT_SOURCE_DIR}/THIRDPARTIES                     DESTINATION . COMPONENT precompiled)
 INSTALL (FILES   ${CMAKE_CURRENT_SOURCE_DIR}/Changelog                     DESTINATION . COMPONENT precompiled)
-INSTALL (FILES   ${CMAKE_CURRENT_SOURCE_DIR}/README.md                     DESTINATION . COMPONENT precompiled)
+INSTALL (FILES   ${CMAKE_CURRENT_SOURCE_DIR}/README                     DESTINATION . COMPONENT precompiled)
 INSTALL (FILES   ${PROJECT_SOURCE_DIR}/csjs/cytoscape_template.html  DESTINATION ./bin/DBGWAS_lib/ COMPONENT precompiled)
 INSTALL (PROGRAMS   ${PROJECT_SOURCE_DIR}/gemma/gemma.0.93b  DESTINATION ./bin/DBGWAS_lib/ COMPONENT precompiled)
 INSTALL (PROGRAMS   ${PROJECT_SOURCE_DIR}/phantomjs/phantomjs  DESTINATION ./bin/DBGWAS_lib/ COMPONENT precompiled)

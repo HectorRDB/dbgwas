@@ -31,6 +31,7 @@
 #include "Utils.h"
 #include "PhenoCounter.h"
 #include <boost/algorithm/string/predicate.hpp>
+#include <boost/archive/text_oarchive.hpp>
 #include <map>
 #define NB_OF_READS_NOTIFICATION_MAP_AND_PHASE 10 //Nb of reads that the map and phase must process for notification
 using namespace std;
@@ -133,6 +134,7 @@ struct MapAndPhase
         SubjectIterator <Sequence> it(inputBank->iterator(), NB_OF_READS_NOTIFICATION_MAP_AND_PHASE, mapAndPhaseIteratorListener);
 
         //XU_strain_i = how many times each unitig map to a strain
+        //TODO [CONTINUOUS GENOTYPE] - add the suffix to this file, so that we know if it is binary or continuous counting
         ofstream mappingOutputFile;
         openFileForWriting(tmpFolder+string("/XU_strain_")+to_string(i), mappingOutputFile);
 
@@ -333,6 +335,9 @@ void generateBugwasInput (const vector <string> &allReadFilesNames, const string
     }
 
     //create a binary XU
+    //TODO [CONTINUOUS GENOTYPE] : no need for this -> if it is binary, the counts are already as 0/1
+    //TODO [CONTINUOUS GENOTYPE] : if it is not, it is the true count
+    //TODO [CONTINUOUS GENOTYPE] : removing this will also save a lot of memory
     vector< vector<int> > XUbinary(XU);
 
     //creates also a file saying if the unitig was inverted (-1) or not (1)
@@ -341,10 +346,12 @@ void generateBugwasInput (const vector <string> &allReadFilesNames, const string
     openFileForWriting(outputFolder+string("/weight_correction"), weightCorrectionStream);
 
     for (int i=0;i<XUbinary.size();i++) {
+        //TODO [CONTINUOUS GENOTYPE] : no need to transform - it will come correct already
         //1. Transform frequency to binary
         for (int j = 0; j < XUbinary[i].size(); j++)
             XUbinary[i][j] = ((int)((bool)(XUbinary[i][j])));
 
+        //TODO [CONTINUOUS GENOTYPE] : how to do this with continous genotype?
         //2. Transform to the enconding where 0 is the major allele and 1 is the minor one
         //count how many 0s and 1s we have
         int count0=0;
@@ -391,40 +398,36 @@ void generateBugwasInput (const vector <string> &allReadFilesNames, const string
     cerr << "[Generating bugwas and gemma input] - Done!" << endl;
 
 
-    //create the file showing the overall frequencies of each unitig
-    cerr << "[Generating the frequency files...]" << endl;
-    vector<PhenoCounter > unitigs2PhenoCounter(nbContigs);
+    // create a vector indexed by the unitigIndex containing each position a vector of phenotypeValue,
+    // indicating the phenotypes of each appearance of the unitig in the strains
+    // it can be used to know the total count of a unitig (size of the vector) and their phenotype count in step 3
+    // (e.g. how many times an unitig appeared in strains with phenotype 0, >0 and NA)
+    //TODO: instead of representing the phenotype of each appearance, just use a pair <count, phenotype>
+    //TODO: this could save disk
+    cerr << "[Generating unitigs2PhenoCounter...]" << endl;
+    vector< PhenoCounter > unitigs2PhenoCounter(nbContigs);
     for(int strainIndex=0;strainIndex<allReadFilesNames.size();strainIndex++) {
         ifstream unitigCountForStrain;
         openFileForReading(tmpFolder+string("/XU_strain_")+to_string(strainIndex), unitigCountForStrain);
-
         for (int unitigIndex=0; unitigIndex<nbContigs; unitigIndex++) {
             int count;
             unitigCountForStrain >> count;
-            if ((*strains)[strainIndex].phenotype=="0")
-                unitigs2PhenoCounter[unitigIndex].increasePheno0(count);
-            else if ((*strains)[strainIndex].phenotype=="1")
-                unitigs2PhenoCounter[unitigIndex].increasePheno1(count);
-            else if ((*strains)[strainIndex].phenotype=="NA")
-                unitigs2PhenoCounter[unitigIndex].increaseNA(count);
-            else
-                throw runtime_error("[FATAL ERROR] on map_reads::execute () [Generating the frequency files...]");
+            unitigs2PhenoCounter[unitigIndex].add((*strains)[strainIndex].phenotype, count);
         }
         unitigCountForStrain.close();
     }
 
-    ofstream frequencyFile;
-    openFileForWriting(outputFolder+string("/frequency_unitig_to_total_pheno0_pheno1_NA_count"), frequencyFile);
-    for (int unitigIndex=0; unitigIndex<nbContigs; unitigIndex++)
-        frequencyFile << unitigs2PhenoCounter[unitigIndex].getTotal() << " " << unitigs2PhenoCounter[unitigIndex].getPheno0() << " "
-                      << unitigs2PhenoCounter[unitigIndex].getPheno1() << " " << unitigs2PhenoCounter[unitigIndex].getNA() << endl;
-    frequencyFile.close();
+    //serialize unitigs2PhenoCounter
+    {
+        ofstream unitigs2PhenoCounterFile;
+        openFileForWriting(outputFolder+string("/unitigs2PhenoCounter"), unitigs2PhenoCounterFile);
+        boost::archive::text_oarchive boostOutputArchive(unitigs2PhenoCounterFile);
+        //serialization itself
+        boostOutputArchive & unitigs2PhenoCounter;
+    } //boostOutputArchive and the stream are closed on destruction
 
-
-    //create a file with the total nb of Pheno0 and Pheno1 strains
-    Strain::createFileWithAmountOfStrainsInEachPheno(outputFolder+string("/total_nb_of_strains_in_each_pheno"), strains);
-
-    cerr << "[Generating the frequency files...] - Done!" << endl;
+    Strain::createPhenotypeCounter(outputFolder+string("/phenoCounter"), strains);
+    cerr << "[Generating unitigs2PhenoCounter...] - Done!" << endl;
 }
 
 /*********************************************************************
@@ -444,6 +447,14 @@ void map_reads::execute ()
     string tmpFolder = outputFolder+string("/tmp");
     string longReadsFile = tmpFolder+string("/readsFile");
     int nbCores = getInput()->getInt(STR_NBCORES);
+
+    //TODO [CONTINUOUS GENOTYPE]
+    //TODO: seeveral questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
+    //string countMode = getInput()->getStr(STR_COUNT_MODE);
+    //presenceAbsenceCountMode = (countMode=="01");
+    presenceAbsenceCountMode = true;
+    //TODO: seeveral questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
+
 
     //get the nbContigs
     int nbContigs = getNbLinesInFile(outputFolder+string("/graph.nodes"));

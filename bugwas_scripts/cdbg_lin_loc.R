@@ -96,7 +96,6 @@
 ##' #### An example of running lin_loc with the minimum required inputs
 ##' #### Assuming gemma is installed in the present working directory
 ##' gen <- system.file("extdata", "gen.txt", package = "bugwas")
-##' pheno <- system.file("extdata", "pheno.txt", package = "bugwas")
 ##' phylo <- system.file("extdata", "tree.txt", package = "bugwas")
 ##' prefix <- "test_bugwas"
 ##' gem.path <- "./gemma"
@@ -104,8 +103,8 @@
 
 
 cdbg_lin_loc <- function(SNPdata = NULL,
-                         pheno = NULL,
-                         phylo = NULL,
+                         phylo = NULL,                         
+                         cov.file = NULL,
                          prefix = NULL,
                          gem.path = NULL,
                          pcs = NULL,
@@ -123,7 +122,6 @@ cdbg_lin_loc <- function(SNPdata = NULL,
                          svd.XX = NULL,
                          pca = NULL){
     
-    pheno = bugwas:::extractInputArgument(arg = pheno, checkExist = TRUE)
     phylo = bugwas:::extractInputArgument(arg = phylo, canBeNULL=TRUE, checkExist = TRUE)
     prefix = bugwas:::extractInputArgument(arg = prefix)
     gem.path = bugwas:::extractInputArgument(arg = gem.path, checkExist = TRUE)
@@ -142,8 +140,8 @@ cdbg_lin_loc <- function(SNPdata = NULL,
 
     XX.all <- SNPdata$XX.all
     sample_ID <- SNPdata$sample_ID
-    npcs <- SNPdata$npcs
     y <- SNPdata$y
+    npcs <- min(SNPdata$npcs, sum(!is.na(y)))
     XX.ID <- SNPdata$XX.ID
     rm(SNPdata)
     cleanMem()
@@ -167,10 +165,14 @@ cdbg_lin_loc <- function(SNPdata = NULL,
     }
     
 
-    if(creatingAllPlots){
+    if(creatingAllPlots){## XX <- bugwas:::rescale_variants(var = XX.all$XX[, !is.na(y)], varpat = XX.all$bippat)
+        
+        ## We choose to retain strains with no phenotype for PCA (could better highlight population structure)
+        
         XX <- bugwas:::rescale_variants(var = XX.all$XX, varpat = XX.all$bippat)
         cleanMem()
         message("Rescaled variants.")
+
     }else{
         XX <- NULL
     }
@@ -201,17 +203,23 @@ cdbg_lin_loc <- function(SNPdata = NULL,
         ## pca$pca$d <- pca$pca$sdev * sqrt(max(1, nrow(XX) - 1))        
         cleanMem()
         message("Principal component analysis complete.")
+    }    
+    if(!is.null(pca)){
+        ## Samples with missing phenotype will not be represented in the tree.
+        pca$pca$x <- pca$pca$x[!is.na(y), 1:sum(!is.na(y))]
+        pca$pca$d <- pca$pca$d[1:sum(!is.na(y))]
+        pca$pca$rotation <- pca$pca$rotation[, 1:sum(!is.na(y))]
     }
-
-    ## save(file='biallelic-data.RData', logreg.bi, XX.all, XX, lmm.bi, lognull, lambda, relmatrix, pheno.file, maf, gem.path, output.dir, prefix, run.lmm, XX.ID, pca, npcs, y, phylo)
+    
     biallelic <- cdbg_get_biallelic(logreg.bi = logreg.bi,
                                     XX.all = XX.all,
-                                    XX = XX,
+                                    XX = XX[!is.na(y), ],
                                     lmm.bi = lmm.bi,
                                     lognull = lognull,
                                     lambda = lambda,
                                     relmatrix = relmatrix,
                                     pheno.file = pheno.file,
+                                    cov.file = cov.file,
                                     maf = maf,
                                     gem.path = gem.path,
                                     output.dir = output.dir,
@@ -221,20 +229,21 @@ cdbg_lin_loc <- function(SNPdata = NULL,
                                     pca = pca$pca,
                                     npcs = npcs)
     message("Biallelic data processed successfully.")
-
+    
     if(creatingAllPlots){
         ## Get list of all tree info
-        treeInfo <- bugwas:::get_tree(phylo = phylo,
-                                      prefix = prefix,
-                                      XX.ID = XX.ID,
-                                      pca = pca$pca,
-                                      npcs = npcs,
-                                      allBranchAndPCCor = allBranchAndPCCor)
+        treeInfo <- cdbg_get_tree(phylo = phylo,
+                                  prefix = prefix,
+                                  XX.ID = XX.ID[!is.na(y)],
+                                  pca = pca$pca,
+                                  npcs = npcs,
+                                  allBranchAndPCCor = allBranchAndPCCor)
         message("Tree data processed successfully.")
         
         ## Ridge regression
-        wald <- cdbg_wald_test(y = y,
-                               XX = XX,
+        XX.all$XX <- XX.all$XX[, !is.na(y)]
+        wald <- cdbg_wald_test(y = y[!is.na(y)],
+                               XX = XX[!is.na(y), ],
                                lambda = biallelic$lambda,
                                XX.all = XX.all,
                                prefix = prefix,
@@ -271,8 +280,16 @@ cdbg_lin_loc <- function(SNPdata = NULL,
                    "cutoffCor" = cutOffCor)
     
     if(creatingAllPlots){
-        cdbg_all_plots(biallelic = biallelic, triallelic = NULL,
-                       genVars = NULL, treeInfo = treeInfo, config = config)        
+        ## Plot will only involve phenotyped strains (tree was
+        ## restricted to phenotyped strains too).
+        biallelic.plot <- biallelic
+        keep.mask <- !is.na(biallelic.plot$pheno)
+        biallelic.plot$pheno <- biallelic.plot$pheno[keep.mask]
+        biallelic.plot$id <- biallelic.plot$id[keep.mask]
+        cdbg_all_plots(biallelic = biallelic.plot, triallelic = NULL,
+                       genVars = NULL, treeInfo = treeInfo, config = config)
+        rm(biallelic.plot)
+        cleanMem()
     }
     
     return(list("biallelic" = biallelic, "config" = config, "treeInfo" = treeInfo))
@@ -289,8 +306,9 @@ cdbg_lin_loc <- function(SNPdata = NULL,
 ## Changelog:
 ##   - calls gemma with option "-lmm 4" rather than "-lmm 2" in order
 ##    to get beta (weights in the linear model) and standard errors
-##    rather than just lrt p-values.
-##
+##    rather than just lrt p-values.##
+##   - optional cov.file argument, providing the name of a file which
+##    contains covariates to be added to the linear model.
 ##
 ## Run GEMMA software on binary data.
 ## @XX: Binary variant patterns
@@ -316,6 +334,7 @@ cdbg_run_lmm_bi <- function(XX = NULL,
                             pattern = NULL,
                             ps = NULL,
                             pheno.file = NULL,
+                            cov.file = NULL,
                             maf = NULL,
                             prefix = NULL,
                             path = NULL,
@@ -350,8 +369,16 @@ cdbg_run_lmm_bi <- function(XX = NULL,
     snp.file <- cbind(paste0("pattern",1:n.pat), 1:n.pat, rep(24,n.pat))
     write.table(snp.file, file = snp.output.file, row=F, col=F, sep="\t", quote=F)
 
-    system(paste0(path, " -g ", gen.output.file, " -p ", pheno.file, " -a ", snp.output.file,
-                  " -k ", relmatrix," -lmm 4 -o ", prefix, "_lmmout_patterns"," -maf ", maf))
+    ## system(paste0(path, " -g ", gen.output.file, " -p ", pheno.file, " -a ", snp.output.file,
+    ##               " -k ", relmatrix," -lmm 4 -o ", prefix, "_lmmout_patterns"," -maf ", maf))
+
+    if(!is.null(cov.file)){
+        system(paste0(path, " -g ", gen.output.file, " -p ", pheno.file, " -a ", snp.output.file,
+                      " -k ", relmatrix," -c ", cov.file," -lmm 4 -o ", prefix, "_lmmout_patterns"," -maf ", maf))
+    }else{
+        system(paste0(path, " -g ", gen.output.file, " -p ", pheno.file, " -a ", snp.output.file,
+                      " -k ", relmatrix," -lmm 4 -o ", prefix, "_lmmout_patterns"," -maf ", maf))
+    }
     
                                         ##message("LMM calculations completed successfully.")
     lmm.log <- paste0(dir, "/output/", prefix, "_lmmout_patterns.log.txt")
@@ -432,6 +459,7 @@ cdbg_get_biallelic <- function(logreg.bi = NULL,
                                lambda = NULL,
                                relmatrix = NULL,
                                pheno.file = NULL,
+                               cov.file = NULL,
                                maf = NULL,
                                gem.path = NULL,
                                output.dir = NULL,
@@ -475,7 +503,7 @@ cdbg_get_biallelic <- function(logreg.bi = NULL,
         
         if(is.null(lognull) | is.null(lambda)){
             lambda.lognull <- cdbg_run_lmm_bi(XX = XX.all$XX[1,], relmatrix = relmatrix,
-                                              pheno.file = pheno.file, maf = maf,
+                                              pheno.file = pheno.file, cov.file = cov.file, maf = maf,
                                               prefix = paste0(prefix, "_getlognull"), path = gem.path,
                                               dir = output.dir, process.results = FALSE)
             if(is.null(lambda)){
@@ -492,7 +520,7 @@ cdbg_get_biallelic <- function(logreg.bi = NULL,
         
     } else if(is.null(lmm.bi) & run.lmm){	
         lmm.bi <- cdbg_run_lmm_bi(XX = XX.all$XX, relmatrix = relmatrix, pattern = XX.all$pattern,
-                                  ps = XX.all$ps, pheno.file = pheno.file, maf = maf,
+                                  ps = XX.all$ps, pheno.file = pheno.file, cov.file = cov.file, maf = maf,
                                   prefix = paste0(prefix, "_biallelic"), path = gem.path, dir = output.dir)
         
         lognull <- as.numeric(lmm.bi$lognull)
@@ -590,7 +618,7 @@ cdbg_wald_test <- function(y = NULL,
     
     ## Heritability
     fit.lmm.ypred <- XX %*% fit.lmm$Ebeta
-    cat(paste0("## Heritability (R^2) = ", cor(fit.lmm.ypred,y)^2),
+    cat(paste0("## Heritability (R^2) = ", cor(fit.lmm.ypred,y, use='complete.obs')^2),
     	file=paste0(prefix, "_logfile.txt"), sep="\n", append=TRUE)
     
     ## Get full posterior covariance matrix for Bayesian Wald Test
@@ -641,7 +669,7 @@ cdbg_wald_test <- function(y = NULL,
 cdbg_get_wald_input <- function(fit.lmm = NULL,
                                 pca = NULL,
                                 y = NULL){
-	
+
     ## Get full posterior covariance matrix for Bayesian Wald Test
     ## Need the full posterior covariance matrix for the Bayesian Wald test,
     ## to get the posterior uncertainty for each point estimate
@@ -649,12 +677,16 @@ cdbg_get_wald_input <- function(fit.lmm = NULL,
     ## Cstar = diag(lambda * pca$d^2 / (lambda * pca$d^2 + 1))
     ## For the null model, the posterior mean and variance (may be slow!)
     ## astar = t(y) %*% y - t(y) %*% XX %*% fit.lmm$Ebeta
-    pca.Ebeta <- diag(1/(1/(fit.lmm$prefered.lambda) + pca$d^2)) %*% t(pca$x) %*% y
+
+    ## Deal with NA by restricting post.mean computation to phenotyped
+    ## samples
+    missing.y <- is.na(y)
+    pca.Ebeta <- diag(1/(1/(fit.lmm$prefered.lambda) + pca$d^2)) %*% t(pca$x[!missing.y, ]) %*% y[!missing.y]
     XE <- pca$x %*% pca.Ebeta
-    astar <- crossprod(y) - t(y) %*% XE
+    astar <- crossprod(y[!missing.y]) - t(y[!missing.y]) %*% XE[!missing.y, ]
     ## csqxty <-  diag(1/sqrt(1/(fit.lmm$prefered.lambda) + pca$d^2)) %*% t(pca$x) %*% y
     ## astar = crossprod(y) - crossprod(csqxty)
-    dstar = length(y)
+    dstar = sum(!missing.y) #length(y)
     tau = as.numeric((dstar-2)/astar)
     
     ## rotation = t(pca$rotation[,1:npcs])
@@ -672,4 +704,39 @@ cdbg_get_wald_input <- function(fit.lmm = NULL,
     pca.Vbeta <- lambda/tau * diag(1 - (lambda * pca$d^2 / (lambda * pca$d^2 + 1)))
     
     return(list("Ebeta" = pca.Ebeta, "Vbeta" = pca.Vbeta, "XE"=XE))    
+}
+
+################################################################################################
+## Changelog:
+##
+## - Call cdbg_get_correlation instead of bugwas:::get_correlation.
+##
+################################################################################################
+
+cdbg_get_tree <- function (phylo = NULL, prefix = NULL, XX.ID = NULL, pca = NULL, 
+                           npcs = NULL, allBranchAndPCCor = FALSE) 
+{
+    tree <- ape::read.tree(phylo)
+    if (any(is.na(match(XX.ID, tree$tip.label)))) {
+        stop("\nError: Phylogeny sample names do not match the sample names of the SNP data\n")
+    }
+    tree <- phangorn::midpoint(tree)
+    ape::write.tree(tree, paste0(prefix, "_midpointrooted_tree.txt"))
+    tree <- ape::read.tree(paste0(prefix, "_midpointrooted_tree.txt"))
+    treepat <- bugwas:::tree2patterns(tree = tree, tiporder = XX.ID)
+    mtp <- treepat$pat
+    message("Retrieve all correlations between branches and PCs: ", 
+        allBranchAndPCCor)
+    cor.tree <- cdbg_get_correlations(XX = mtp, pca = pca$x, npcs = npcs, 
+        id = XX.ID, all.cor = allBranchAndPCCor)
+    if (allBranchAndPCCor) {
+        branchPCCorFileName = paste(prefix, "allBranchAndPCCor.txt", 
+            sep = "_")
+        write.table(signif(cor.tree$all.cor.pc, digits = 3), 
+            branchPCCorFileName, row.names = T, col.names = T, 
+            quote = F, sep = "\t")
+        ape::write.tree(treepat$labelled.tree, paste0(prefix, 
+            "_node_labelled_tree.txt"))
+    }
+    return(list(tree = tree, pattern = treepat, cor.tree = cor.tree))
 }

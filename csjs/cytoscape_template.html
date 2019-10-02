@@ -74,7 +74,7 @@
             node2AnnotationEvalue = <node2AnnotationEvalueTag>
             var annotation2NodesPar = <annotation2NodesParTag>
             var extraTags = <extraTagsPar>
-            buildPage(elements, allAnnotations, componentAnnotation, node2AnnotationEvalue, annotation2NodesPar, extraTags)
+            buildPage(elements, allAnnotations, componentAnnotation, node2AnnotationEvalue, annotation2NodesPar, extraTags, <phenotypeThreshold>)
         });
     </script>
 </head>
@@ -95,12 +95,12 @@
             </tr>
             <tr>
             <tr>
-                <td>Legend:</td>
+                <td>Estimated Effect:</td>
             </tr>
             <tr>
                 <td>
                     <canvas id="gradientCanvas" width="150" height="25"></canvas> <br/>
-                    <span style="color:blue">Pheno0 &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp </span><span style="color:red">Pheno1</span>
+                    <span style="color:blue"><minEstimatedEffect> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp </span><span style="color:red"><maxEstimatedEffect></span>
                 </td>
             </tr>
             <tr>

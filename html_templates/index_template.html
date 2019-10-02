@@ -52,7 +52,7 @@
     <script src="components/lib/js/functions.js"></script>
     <script src="components/lib/js/indexJS.js"></script>
 
-    <title>Your DBGWAS <version> results</title>
+    <title>Your DBGWAS [version <version>] results</title>
 </head>
 <body>
 
@@ -67,7 +67,7 @@
     <a target="_blank" href="http://www.biomerieux.fr/"><img class="logo" src="components/lib/resources/biomerieux_logo.png" /></a>
 </div>
 
-<h1>Your DBGWAS <version> results</h1>
+<h1>Your DBGWAS [version <version>] results</h1>
 
 <button id="argumentsButton" type="button" class="btn btn-primary" data-toggle="collapse" data-target="#arguments">
     <span class="glyphicon glyphicon-collapse-down"></span> Show arguments used to produce these results
@@ -104,12 +104,13 @@
 
             var queryBuilder = $('#builder').queryBuilder({
                 filters: [
+                    {id: 'pvalue', type: 'string', label: 'p-value', input: 'text', operators: ['equal', 'not_equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal', 'between']},
                     {id: 'qvalue', type: 'string', label: 'q-value', input: 'text', operators: ['equal', 'not_equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal', 'between']},
                     {id: 'annCat', type: 'string', label: 'Annotations', input: 'select', operators: ['contains', 'not_contains'], values: <all_tags_in_all_components>}
                 ],
                 rules: [{
                     condition: 'AND',
-                    id: 'qvalue',
+                    id: 'pvalue',
                     operator: 'between',
                     value: ['0.0', '1.0']
                 }],
@@ -131,7 +132,8 @@
 
     <h3> Sort by:
         <select id="sortTerm">
-            <option value="qvalue" selected>q-value</option>
+            <option value="pvalue" selected>p-value</option>
+            <option value="qvalue">q-value</option>
         </select>
         <select id="asc_desc">
             <option value="ASC" selected>Asc</option>

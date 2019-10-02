@@ -55,6 +55,7 @@ using namespace std;
 
 class UnitigStats {
 private:
+    long double pValue;
     long double qValue;
     long double weight;
     long double normalizedWeight;
@@ -64,6 +65,7 @@ public:
     UnitigStats():valid(false){} //default constructor
     UnitigStats(const PatternFromStats *patternStat, int weightCorretion) {
         if (patternStat) { //valid stuff
+            this->pValue = patternStat->pValue;
             this->qValue = patternStat->qValue;
             this->weight = patternStat->weight * weightCorretion;
             this->normalizedWeight = (weightCorretion == 1 ? patternStat->normalizedWeight : (1 - patternStat->normalizedWeight));
@@ -74,6 +76,18 @@ public:
         }
     }
 
+    bool isValid() const { return valid; }
+
+    string getPValueAsStr() const {
+        stringstream ss;
+        ss << scientific;
+        if (valid) {
+            ss << pValue;
+            return ss.str();
+        } else {
+            return string("NA");
+        }
+    }
 
     string getQValueAsStr() const {
         stringstream ss;
@@ -97,6 +111,8 @@ public:
         }
     }
 
+    long double getWeight() const { return weight; }
+
     string getRGB() const {
         stringstream ss;
         if (valid) {
@@ -115,6 +131,10 @@ public:
         } else {
             return string("NA");
         }
+    }
+
+    tuple<bool, double> getWaldAsDoubleIfItIsANumber() const {
+        return is_number(waldStatistic);
     }
 };
 
@@ -172,17 +192,18 @@ public:
 class ObjectPreview {
 private:
     int id;
+    double pvalue;
     double qvalue;
     string annotationsConcatenated;
     string preview;
     string annotationsForHOT;
 public:
-    ObjectPreview(int id, double qvalue, const string &annotationsConcatenated, const string &preview, const string &annotationsForHOT):
-        id(id), qvalue(qvalue), annotationsConcatenated(annotationsConcatenated), preview(preview), annotationsForHOT(annotationsForHOT){}
+    ObjectPreview(int id, double pvalue, double qvalue, const string &annotationsConcatenated, const string &preview, const string &annotationsForHOT):
+        id(id), pvalue(pvalue), qvalue(qvalue), annotationsConcatenated(annotationsConcatenated), preview(preview), annotationsForHOT(annotationsForHOT){}
 
     string toJSObject () const {
         stringstream ss;
-        ss << "{id: " << id << ",\nqvalue: " << qvalue << ",\nannCat: '" << annotationsConcatenated << "',\npreview: '" << preview << "'"
+        ss << "{id: " << id << ",\npvalue: " << pvalue << ",\nqvalue: " << qvalue << ",\nannCat: '" << annotationsConcatenated << "',\npreview: '" << preview << "'"
         << ",\nannHOT: " << annotationsForHOT << "}\n";
         return ss.str();
     }
@@ -247,11 +268,14 @@ public:
         return toReturn;
     }
 private:
+    void concatenateAllFiles(const string &pattern, int numberOfComponents, const string &outputFilename);
+
     void generateCytoscapeOutput(const graph_t &graph, const vector<MyVertex> &nodes, const string &typeOfGraph, int i,
-                                 const string &tmpFolder, const string &visualisationsFolder, const vector<int> &selectedUnitigs, int nbPheno0, int nbPheno1,
-                                 map<int, AnnotationRecord > &idComponent2Annotations,
-                                 int nbCores);
-    void createIndexFile(int numberOfComponents, const string &visualisationsFolder, const string &step2OutputFolder, const vector<vector<MyVertex> > &nodesInComponent, graph_t& newGraph,
+                                 const string &tmpFolder, const string &visualisationsFolder, const string &textualOutputFolder,
+                                 const vector<int> &selectedUnitigs, const PhenoCounter &phenoCounterForAllStrains,
+                                 map<int, AnnotationRecord > &idComponent2Annotations, int nbCores);
+
+    void createIndexFile(int numberOfComponents, const string &visualisationsFolder, const string &textualOutputFolder, const string &step2OutputFolder, const vector<vector<MyVertex> > &nodesInComponent, graph_t& newGraph,
                          map<int, AnnotationRecord > &idComponent2Annotations, const vector<const PatternFromStats*> &unitigToPatternStats,
                          const vector<int> &selectedUnitigs, int nbCores);
 };

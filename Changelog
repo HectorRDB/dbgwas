@@ -1,3 +1,27 @@
+Done v0.5.4:
+-DBGWAS now accepts continuous phenotypes:
+    -The allowed values for phenotypes now are any real number or NA;
+-Textual output feature added:
+    -Produces a textual output of DBGWAS graphical output. It can be used to easily plug DBGWAS' results on pipelines,
+    and post-process them, for example to compare different GWAS runs.
+    See the produced files and their formats here: https://gitlab.com/leoisl/dbgwas/wikis/Files-and-formats-of-DBGWAS-textual-output.
+-Visualisation changes:
+    -p-value added to the visualisations, and components are now sorted by default by the p-value;
+    -Several other improvements;
+-Parameter -SFF changed:
+    -Now, two arguments must be given to this parameter. The first (q or p) denotes if q-values or p-values must be used to control the FDR.
+    The second argument is a number. If it is a float number n, then only the features with q/p-value <=n are selected.
+    If it is an integer n, then only the n first features are selected. Note that there is no space between these parameters, e.g. q100.
+-Parameter -keepNA added:
+    -Keep strains with phenotype NA in the analysis, instead of ignoring them;
+-Parameter -phenoThreshold added:
+    -Phenotype threshold. Values <= than this are considered Phenotype 0, and > than this are considered Phenotype 1. Used only on the visualisation.
+-DBGWAS is now on docker:
+    -See https://gitlab.com/leoisl/dbgwas/tree/master/containers/docker for instructions on how to use it;
+
+
+
+
 Done v0.5.2:
 -Fixed various issues with the building process and the precompiled binary:
     -The precompiled binary was not portable enough. Now we added a script to create a portable binary inspired by https://pmelsted.wordpress.com/2015/10/14/building-binaries-for-bioinformatics/;

@@ -52,7 +52,7 @@ var colors = ['red', 'blue', 'green', 'yellow', 'fuchsia', 'brown', 'lime', 'aqu
 
 //***************************************************************
 //MAIN FUNCTIONS
-function buildPage(graphElements, allAnnotations, componentAnnotation, node2AnnotationEvalue, annotation2NodesPar, extraTags)
+function buildPage(graphElements, allAnnotations, componentAnnotation, node2AnnotationEvalue, annotation2NodesPar, extraTags, phenotypeThreshold)
 {
     $.blockUI({
       message: '<img width="25px" src="lib/resources/busy.gif" /> Loading resources and drawing the graph<br/>Please wait...' ,
@@ -364,10 +364,10 @@ function buildPage(graphElements, allAnnotations, componentAnnotation, node2Anno
                 {type: 'text'},
                 {type: 'text'},
                 {type: 'text'},
-                //TODO: NA temporarily removed
-                //{type: 'text'},
+                {type: 'text'},
                 {type: 'text'},
                 {renderer: nodeAnnotationRenderer},
+                {type: 'text'},
                 {type: 'text'},
                 {type: 'text'},
                 {type: 'text'},
@@ -378,12 +378,12 @@ function buildPage(graphElements, allAnnotations, componentAnnotation, node2Anno
             colHeaders: [
                 'Node ID',
                 'Allele freq',
-                'Pheno0',
-                'Pheno1',
-                //TODO: NA temporarily removed
-                //'NA',
+                'Pheno0 (<='+phenotypeThreshold+')',
+                'Pheno1 (>'+phenotypeThreshold+')',
+                'NA',
                 'Annotation',
                 'Significant?',
+                'p-Value',
                 'q-Value',
                 'Est effect',
                 'Wald stat',

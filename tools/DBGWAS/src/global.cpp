@@ -48,6 +48,8 @@ const char* STR_BLAST_PATH = "-Blast-path";
 const char* STR_PHANTOMJS_PATH = "-phantomjs-path";
 const char* STR_RSCRIPT_PATH = "-Rscript-path";
 const char* STR_NO_PREVIEW = "-no-preview";
+const char* STR_PHENOTYPE_THRESHOLD = "-phenoThreshold";
+const char* STR_KEEP_NA = "-keepNA";
 
 //TODO: seeveral questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
 //const char* STR_COUNT_MODE = "-count";
@@ -71,6 +73,9 @@ string blastPath;
 string phantomjsPath;
 string RscriptPath;
 bool noPreview = false;
+bool keepNA = false;
+double phenotypeThreshold = 0.0;
+char qOrPValue = '?';
 
 //global vars used by both programs
 Graph* graph;
@@ -84,17 +89,23 @@ void populateParser (Tool *tool) {
   tool->getParser()->push_front (new OptionOneParam (STR_PHANTOMJS_PATH, "Path to phantomjs executable (DBGWAS was tested only with version 2.1.1).",  false, "<DBGWAS_lib>/phantomjs"));
   tool->getParser()->push_front (new OptionOneParam (STR_BLAST_PATH, "Path to the directory containing the Blast suite (should contain at least blastn, blastx, and makeblastdb).",  false, "<DBGWAS_lib>/"));
   tool->getParser()->push_front (new OptionOneParam (STR_GEMMA_PATH, "Path to the GEMMA executable.",  false, "<DBGWAS_lib>/gemma.0.93b"));
-  tool->getParser()->push_front (new OptionOneParam (STR_MAF_FILTER, "Minor Allele Frequency Filter.",  false, "0.01"));
-  tool->getParser()->push_front (new OptionOneParam (STR_MAX_NEIGHBOURHOOD, "Denotes the neighbourhood to be considered around the significant unitigs.",  false, "5"));
-  tool->getParser()->push_front (new OptionOneParam (STR_SFF, "Denotes the Significant Features Filter - the features (or patterns) selected to create a visualisation around them. If it is a float number n, then only the features with q-value<=n are selected. If it is an integer n, then only the n first features are selected. Take a look at the output/step2/patterns.txt file to get a list of features ordered by q-value to better choose this parameter (re-run the tool with -skip2 in order to directly produce the visualisation of the features selected by your parameter).",  false, "100"));
   tool->getParser()->push_front (new OptionNoParam (STR_SKIP2, "Skips Steps 1 and 2, running only Step 3. Assumes that Steps 1 and 2 were correctly run and folders \"step1\" and \"step2\" are present in the output folder.",  false));
   tool->getParser()->push_front (new OptionNoParam (STR_SKIP1, "Skips Step 1, running only Steps 2 and 3. Assumes that Step 1 was correctly run and folder \"step1\" is present in the output folder.",  false));
+  tool->getParser()->push_front (new OptionNoParam (STR_KEEP_NA, "Keep strains with phenotype NA.",  false));
+  tool->getParser()->push_front (new OptionOneParam (STR_PHENOTYPE_THRESHOLD, "Phenotype threshold. Values <= than this are considered Phenotype 0, and > than this are considered Phenotype 1. Used only on the visualisation.",  false, "0.0"));
+  tool->getParser()->push_front (new OptionOneParam (STR_MAF_FILTER, "Minor Allele Frequency Filter.",  false, "0.01"));
+  tool->getParser()->push_front (new OptionOneParam (STR_MAX_NEIGHBOURHOOD, "Denotes the neighbourhood to be considered around the significant unitigs.",  false, "5"));
+  tool->getParser()->push_front (new OptionOneParam (STR_SFF, "Denotes the Significant Features Filter - the features (or patterns) selected to create a visualisation around them. Two arguments must be given to this parameter. "
+      "The first (q or p) indicates whether q- or p-values are used to control the number of retained patterns. The second argument is a number. If it is a float number n, then only the features with q/p-value <=n are selected. "
+      "If it is an integer n, then only the n first features are selected. Note that there is no space between these parameters, e.g. q100. "
+      "Take a look at the output/step2/patterns.txt file to get a list of features ordered by q/p-value to better choose this parameter "
+      "(re-run the tool with -skip2 in order to directly produce the visualisation of the features selected by your parameter).",  false, "q100"));
   tool->getParser()->push_front (new OptionOneParam (STR_OUTPUT, "Path to the folder where the final and temporary files will be stored.",  false, "output"));
   tool->getParser()->push_front (new OptionOneParam (STR_PROTEIN_DB, "A list of Fasta files separated by comma containing annotations in a protein alphabet format (e.g.: -pt-db path/to/file_1.fa,path/to/file_2.fa,etc). You can customize these files to work better with DBGWAS (see https://gitlab.com/leoisl/dbgwas/tree/master#customizing-annotation-databases).",  false));
   tool->getParser()->push_front (new OptionOneParam (STR_NUCLEOTIDE_DB, "A list of Fasta files separated by comma containing annotations in a nucleotide alphabet format (e.g.: -nc-db path/to/file_1.fa,path/to/file_2.fa,etc). You can customize these files to work better with DBGWAS (see https://gitlab.com/leoisl/dbgwas/tree/master#customizing-annotation-databases).",  false));
   tool->getParser()->push_front (new OptionOneParam (STR_NEWICK_PATH, "Optional path to a newick tree file. If (and only if) a newick tree file is provided, the lineage effect analysis is computed and PCs figures are generated.",  false));
   tool->getParser()->push_front (new OptionOneParam (STR_KSKMER_SIZE, "K-mer size.",  false, "31"));
-  tool->getParser()->push_front (new OptionOneParam (STR_STRAINS_FILE, "A text file describing the strains containing 3 columns: 1) ID of the strain; 2) Phenotype (0/1/NA); 3) Path to a multi-fasta file containing the sequences of the strain. This file needs a header. Check the sample_example folder or https://gitlab.com/leoisl/dbgwas/raw/master/sample_example/strains for an example.",  true));
+  tool->getParser()->push_front (new OptionOneParam (STR_STRAINS_FILE, "A text file describing the strains containing 3 columns: 1) ID of the strain; 2) Phenotype (a real number or NA); 3) Path to a multi-fasta file containing the sequences of the strain. This file needs a header. Check the sample_example folder or https://gitlab.com/leoisl/dbgwas/raw/master/sample_example/strains for an example.",  true));
 
   //TODO: seeveral questions are still unclear if we use the Freq count mode (how to run bugwas, the coloring, etc...). For now I am disabling this option
   //tool->getParser()->push_front (new OptionOneParam (STR_COUNT_MODE, "The count mode. If \"01\", then the count mode is seen as presence/absence. If \"Freq\", then the count mode is seen as the frequency",  false, "01"));

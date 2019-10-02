@@ -90,8 +90,6 @@ void checkStrainsFile(const string &strainsFile) {
   openFileForReading(strainsFile, input);
   set<string> allIds;
 
-  bool pheno0IsPresent=false;
-  bool pheno1IsPresent=false;
   for(string line; getline( input, line ); )
   {
     //parse header
@@ -119,19 +117,16 @@ void checkStrainsFile(const string &strainsFile) {
     allIds.insert(id);
 
     //check for disallowed phenotypes
-    if (pheno!="0" && pheno!="1" && pheno!="NA") {
+    bool phenoIsNumber;
+    double phenoAsNumber;
+    std::tie(phenoIsNumber, phenoAsNumber) = is_number(pheno);
+
+    //allowed phenotypes are only "NA" or numbers between 0 and 1
+    if (!phenoIsNumber && pheno!="NA") {
       stringstream ss;
-      ss << "Phenotype not allowed: " << pheno << " . The only allowed values for phenotype are 0, 1 or NA." << endl;
+      ss << "Phenotype not allowed: " << pheno << " . The only allowed values for phenotypes are real numbers or NA." << endl;
       fatalError(ss.str());
     }
-
-    //only allowed phenotypes here, check if pheno0IsPresent
-    if (pheno=="0")
-      pheno0IsPresent=true;
-
-    //only allowed phenotypes here, check if pheno1IsPresent
-    if (pheno=="1")
-      pheno1IsPresent=true;
 
     //check if the path is ok
     ifstream file;
@@ -143,26 +138,16 @@ void checkStrainsFile(const string &strainsFile) {
     }
     file.close();
 
+
     //add the strain if it is different from NA
-    if (pheno=="NA") {
-      cerr << "[WARNING] Skipping strain " << id << " because its phenotype is NA" << endl;
+    if (pheno=="NA" && keepNA==false) {
+      cerr << "[WARNING] Skipping strain " << id << " because its phenotype is NA and " << STR_KEEP_NA << " is not set." << endl;
     }else {
       Strain strain(id, pheno, path);
       localStrains.push_back(strain);
     }
   }
   input.close();
-
-  if (pheno0IsPresent==false) {
-    stringstream ss;
-    ss << "No strains with Phenotype 0 was found in input file " << strainsFile << ". Please provide at least one strain with Phenotype 0.";
-    fatalError(ss.str());
-  }
-  if (pheno1IsPresent==false) {
-    stringstream ss;
-    ss << "No strains with Phenotype 1 was found in input file " << strainsFile << ". Please provide at least one strain with Phenotype 1.";
-    fatalError(ss.str());
-  }
 
   //in the end, check if strain is null. If it is, populate it
   if (strains==NULL)
@@ -273,6 +258,7 @@ void checkParametersBuildDBG(Tool *tool) {
   //check if we skip or not
   skip1 = tool->getInput()->get(STR_SKIP1) != 0;
   skip2 = tool->getInput()->get(STR_SKIP2) != 0;
+  keepNA = tool->getInput()->get(STR_KEEP_NA) != 0;
   hasNewickFile = tool->getInput()->get(STR_NEWICK_PATH) != 0;
 
   if (skip2) skip1=true;
@@ -311,6 +297,41 @@ void checkParametersBuildDBG(Tool *tool) {
   createFolder(p.string());
 }
 
+//parse SFF
+void parseSFF(const string &SFFString) {
+  qOrPValue = SFFString[0];
+  string SFFNumber = SFFString.substr(1);
+  if (qOrPValue!='q' && qOrPValue!='p')
+    fatalError(string("Error on ") + string(STR_SFF) + " parameter. First argument must be p or q.");
+
+  if (SFFNumber.find(".")==string::npos) {
+    //. not found in SFFNumber : integer
+    //get the first n significant patterns
+    int n;
+    {
+      stringstream ss;
+      ss << SFFNumber;
+      ss >> n;
+      if (ss.fail())
+        fatalError(string("Error on ") + string(STR_SFF) + " parameter. Second argument must be an integer or a double.");
+    }
+
+    SFF=n;
+  }else {
+    //double
+    //get all sequence in which the p/q-value is <= n
+    double n;
+    {
+      stringstream ss;
+      ss << SFFNumber;
+      ss >> n;
+      if (ss.fail())
+        fatalError(string("Error on ") + string(STR_SFF) + " parameter. Second argument must be an integer or a double.");
+    }
+    SFF = n;
+  }
+}
+
 
 void checkParametersStatisticalTest(Tool *tool) {
   if (skip2) {
@@ -331,6 +352,10 @@ void checkParametersStatisticalTest(Tool *tool) {
       fatalError(ss.str());
     }
   }
+
+  //parse SFF
+  string SFFString = tool->getInput()->getStr(STR_SFF);
+  parseSFF(SFFString);
 }
 
 
@@ -346,45 +371,19 @@ void checkParametersGenerateOutput(Tool *tool) {
   string tmpFolder = outputFolder+string("/tmp");
   createFolder(tmpFolder);
 
+
+  //remove old visualisation folder and create new
   string visualisationFolder = stripLastSlashIfExists(tool->getInput()->getStr(STR_OUTPUT))+string("/visualisations");
-  boost::filesystem::path visPath(visualisationFolder.c_str());
-  if (boost::filesystem::exists(visPath)) {
-    cerr << "[WARNING] Removing " << visualisationFolder << " because path already exists (maybe previous visualisations?). " << endl;
-    boost::filesystem::remove_all(visPath);
-  }
-  createFolder(visPath.string());
-  visPath /= "components";
-  createFolder(visPath.string());
+  removeOldAndCreateFolder(visualisationFolder, "maybe previous visualisations?");
+  string componentsFolder = visualisationFolder + string("/components");
+  createFolder(componentsFolder);
 
+  //do the same for the textual output
+  string textualOutputFolder = stripLastSlashIfExists(tool->getInput()->getStr(STR_OUTPUT))+string("/textualOutput");
+  removeOldAndCreateFolder(textualOutputFolder, "maybe previous textual output?");
+  string textualComponentsFolder = textualOutputFolder + string("/components");
+  createFolder(textualComponentsFolder);
 
-  //parse and get SFF
-  string SFFString = tool->getInput()->getStr(STR_SFF);
-  if (SFFString.find(".")==string::npos) {
-    //. not found in SFFString : integer
-    //get the first n significant patterns
-    int n;
-    {
-      stringstream ss;
-      ss << SFFString;
-      ss >> n;
-      if (ss.fail())
-        fatalError(string("Error on ") + string(STR_SFF) + " parameter. It must be an integer or a double.");
-    }
-
-    SFF=n;
-  }else {
-    //double
-    //get all sequence in which the q-value is <= n
-    double n;
-    {
-      stringstream ss;
-      ss << SFFString;
-      ss >> n;
-      if (ss.fail())
-        fatalError(string("Error on ") + string(STR_SFF) + " parameter. It must be an integer or a double.");
-    }
-    SFF = n;
-  }
 
   //check the nucleotide DB
   if (tool->getInput()->get(STR_NUCLEOTIDE_DB)) {
@@ -402,6 +401,13 @@ void checkParametersGenerateOutput(Tool *tool) {
 
   //get the -no-preview parameter
   noPreview = tool->getInput()->get(STR_NO_PREVIEW) != 0;
+
+  //get the phenotype threshold
+  phenotypeThreshold = tool->getInput()->getDouble(STR_PHENOTYPE_THRESHOLD);
+
+  //parse SFF
+  string SFFString = tool->getInput()->getStr(STR_SFF);
+  parseSFF(SFFString);
 }
 
 
@@ -488,7 +494,14 @@ void createFolder(const string &path) {
   }
 }
 
-
+void removeOldAndCreateFolder(const string &path, const string &reason){
+  boost::filesystem::path folder(path.c_str());
+  if (boost::filesystem::exists(folder)) {
+    cerr << "[WARNING] Removing " << path << " because path already exists (" << reason << "). " << endl;
+    boost::filesystem::remove_all(folder);
+  }
+  createFolder(folder.string());
+}
 
 
 void GetSignificantPatterns::operator()(int &n) const
@@ -502,10 +515,10 @@ void GetSignificantPatterns::operator()(int &n) const
   }
 }
 
-void GetSignificantPatterns::operator()(double &qValue) const
+void GetSignificantPatterns::operator()(double &qOrPValueThreshold) const
 {
   for (const auto &pattern : patterns) {
-    if (pattern.qValue <= qValue)
+    if ((qOrPValue=='p' && pattern.pValue <= qOrPValueThreshold) || (qOrPValue=='q' && pattern.qValue <= qOrPValueThreshold))
       significantPatterns.push_back(pattern);
   }
 }
@@ -542,4 +555,35 @@ string getDirWhereDBGWASIsInstalled() {
   }
 
   return toReturn;
+}
+
+
+//tries to parse s, and returns a pair<bool, double>
+//the first value indicates if s was successfully parsed into a double
+//the second value indicates the double (it is only valid if the first is true)
+tuple<bool, double> is_number(const std::string& s) {
+  double number;
+  try {
+    number = std::stod(s);
+  }
+  catch(...) {
+    return make_tuple(false, number);
+  }
+  return make_tuple(true, number);
+}
+
+
+void Strain::createPhenotypeCounter(const string &filePath, vector< Strain >* strains) {
+  PhenoCounter phenoCounter;
+  for (const auto &strain : (*strains))
+    phenoCounter.add(strain.phenotype, 1);
+  //serialize phenoCounter
+  ofstream phenoCounterFile;
+  {
+    openFileForWriting(filePath, phenoCounterFile);
+    boost::archive::text_oarchive boostOutputArchive(phenoCounterFile);
+    //serialization itself
+    boostOutputArchive & phenoCounter;
+  } //boostOutputArchive is closed on destruction
+  phenoCounterFile.close();
 }

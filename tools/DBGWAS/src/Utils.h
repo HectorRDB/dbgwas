@@ -47,6 +47,8 @@
 #undef BOOST_NO_CXX11_SCOPED_ENUMS
 #include <pstream.h>
 #include <whereami.h>
+#include "PhenoCounter.h"
+#include <boost/archive/text_oarchive.hpp>
 
 
 using namespace std;
@@ -77,7 +79,13 @@ void executeCommand(const string &command, bool verbose=true, const string &mess
 void openFileForReading(const string &filePath, ifstream &stream);
 void openFileForWriting(const string &filePath, ofstream &stream);
 void createFolder(const string &path);
+void removeOldAndCreateFolder(const string &path, const string &reason="No details given");
 string getDirWhereDBGWASIsInstalled();
+
+//tries to parse s, and returns a pair<bool, double>
+//the first value indicates if s was successfully parsed into a double
+//the second value indicates the double (it is only valid if the first is true)
+tuple<bool, double> is_number(const std::string& s);
 
 
 
@@ -118,6 +126,7 @@ public:
 
 struct Strain {
     string id, phenotype, path;
+
     Strain(const string &id, const string &phenotype, const string &path) : id(id), phenotype(phenotype) {
       //transfor to canonical path
       boost::filesystem::path boostPath(boost::filesystem::canonical(path));
@@ -145,24 +154,8 @@ struct Strain {
       fout.close();
     }
 
-    //create a file with 2 ints. The first is the nb of pheno0 strains and the second is the nb of pheno1 strains
-    static void createFileWithAmountOfStrainsInEachPheno(const string &filePath, vector< Strain >* strains) {
-      ofstream fout;
-      openFileForWriting(filePath, fout);
-
-      int pheno0Count=0;
-      int pheno1Count=0;
-      for (const auto &strain : (*strains)) {
-        if (strain.phenotype == "0")
-          pheno0Count++;
-        if (strain.phenotype == "1")
-          pheno1Count++;
-      }
-
-      fout << pheno0Count << " " << pheno1Count;
-
-      fout.close();
-    }
+    //save a phenoCounter representing all phenotypes to step1/phenoCounter file
+    static void createPhenotypeCounter(const string &filePath, vector< Strain >* strains);
 };
 
 
@@ -170,14 +163,11 @@ struct Strain {
 
 struct PatternFromStats {
     int pattern;
+    long double pValue;
     long double qValue;
     long double weight;
     long double normalizedWeight;
     string waldStatistic;
-
-    bool operator < (const PatternFromStats& other) const {
-      return this->qValue < other.qValue;
-    }
 
     static vector<PatternFromStats> readFile(const string &filename, bool header=false) {
       vector<PatternFromStats> patterns;
@@ -194,7 +184,7 @@ struct PatternFromStats {
           string tmp;
           getline(patternStream, tmp);
         }
-        while (patternStream >> pattern.pattern >> pattern.qValue >> pattern.weight >> pattern.waldStatistic)
+        while (patternStream >> pattern.pattern >> pattern.pValue >> pattern.qValue >> pattern.weight >> pattern.waldStatistic)
           patterns.push_back(pattern);
         patternStream.close();
       }
@@ -230,9 +220,9 @@ struct PatternFromStats {
       ofstream patternSortedStream;
       openFileForWriting(filename, patternSortedStream);
       patternSortedStream << setprecision(std::numeric_limits<long double>::digits10 + 1);
-      patternSortedStream << "pattern q-value weight wald_statistic" << endl;
+      patternSortedStream << "pattern p-value q-value weight wald_statistic" << endl;
       for (const auto &pattern : patterns)
-        patternSortedStream << pattern.pattern << " " << pattern.qValue << " " << pattern.weight << " " << pattern.waldStatistic << endl;
+        patternSortedStream << pattern.pattern << " " << pattern.pValue  << " " << pattern.qValue << " " << pattern.weight << " " << pattern.waldStatistic << endl;
       patternSortedStream.close();
     }
 };
@@ -254,7 +244,7 @@ public:
 
     void operator()(int &n) const;
 
-    void operator()(double &qValue) const;
+    void operator()(double &qOrPValueThreshold) const;
 
 };
 #endif //KISSPLICE_UTILS_H

@@ -1,12 +1,27 @@
 # NEWS
+* DBGWAS v0.5.4 is now released. Many changes:
+    1. DBGWAS now accepts continuous phenotypes:
+        * The allowed values for phenotypes now are any real number or NA. In particular, 0/1 binary phenotypes are still valid values. 
+    2. Textual output feature added:
+        * Produces a textual output of DBGWAS graphical output. It can be used to easily plug DBGWAS' results on pipelines,
+        and post-process them, for example to compare different GWAS runs.
+        See the produced files and their formats here: https://gitlab.com/leoisl/dbgwas/wikis/Files-and-formats-of-DBGWAS-textual-output.
+    3. Visualisation changes:
+        * p-value added to the visualisations, and components are now sorted by default by the p-value;
+        * Several other improvements;
+    4. Parameter -SFF changed:    
+        * Now, two arguments must be given to this parameter.
+	The first (q or p) indicates whether q- or p-values are used to control the number of retained patterns.
+	The second argument is a number. If it is a float number n, then only the features with q/p-value <=n are selected.
+        If it is an integer n, then only the n first features are selected. Note that there is no space between these parameters, e.g. q100.
+    5. Parameter -keepNA added:
+        * Keep strains with phenotype NA in the analysis, instead of ignoring them;
+    6. Parameter -phenoThreshold added:
+        * Phenotype threshold. Values <= than this are considered Phenotype 0, and > than this are considered Phenotype 1. Used only on the visualisation.
+    7. DBGWAS is now on docker:
+        * See https://gitlab.com/leoisl/dbgwas/tree/master/containers/docker for instructions on how to use it;
 
-* The paper describing DBGWAS was published in PLoS Genetics: [https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1007758](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1007758)
-
-* DBGWAS v0.5.2 is now released. The main fix is that the precompiled binary is now built with [Holy Build Box](http://phusion.github.io/holy-build-box/),
-so it should work on pretty much any glibc-based x86 and x86-64 Linux distribution released since 2007 (e.g.: Debian >= 6, Ubuntu >= 10.04,
-Red Hat Enterprise Linux >= 5, CentOS >= 5, etc). See [Downloading the precompiled binaries](#downloading-the-precompiled-binaries) for details.
-The complete changelog for this new version can be found [here](https://gitlab.com/leoisl/dbgwas/blob/master/Changelog).
-
+**Download the new version here: [Downloading the precompiled binaries](#downloading-the-precompiled-binaries).**
 
 
 # Before starting
@@ -72,10 +87,22 @@ For reproducibility reasons, in the following you have easily the input data, an
 5. After finishing the execution, the output can be found in the folder ```bin/output/visualisations```
 
 # Downloading, installing and running
-## Downloading the precompiled binaries
-This is the easiest way to run the tool since it is already precompiled.
 
-Download the latest binary here (v0.5.2): https://www.dropbox.com/s/gf6n4ibcakcyo5k/DBGWAS-0.5.2-Linux-precompiled.tar.gz?dl=1
+## Using containers
+
+The easiest way to run DBGWAS is using [singularity](https://sylabs.io/docs/) as all dependencies are dealt with automatically.
+See [Running DBGWAS on singularity](containers/docker#running-dbgwas-on-singularity).
+
+An alternative is to run DBGWAS using [docker](https://www.docker.com/). See [Running DBGWAS on docker](containers/docker#running-dbgwas-on-docker).
+
+## Downloading the precompiled binaries
+If you prefer to not use containers, you can download the precompiled binary. This binary requires having `R` and the `R` dependencies installed.
+
+Download the latest binary here (v0.5.4): https://www.dropbox.com/s/s9oojqfl1kgi4l5/DBGWAS-0.5.4-Linux-precompiled.tar.gz?dl=1
+
+Previous versions:
+
+0.5.2: https://www.dropbox.com/s/gf6n4ibcakcyo5k/DBGWAS-0.5.2-Linux-precompiled.tar.gz?dl=1
 
 **Note:** even in this case, you still have to install the R dependencies (see [Dependencies installation](#dependencies-installation)).
 
@@ -84,8 +111,8 @@ If the precompiled binary worked on your machine, you can jump to section [Depen
 ### Details about the precompiled binary
 
 Precompilation is done using [Holy Build Box](http://phusion.github.io/holy-build-box/), so it should work on
-pretty much any glibc-based x86 and x86-64 Linux distribution released since 2007 (e.g.: Debian >= 6, Ubuntu >= 10.04,
-Red Hat Enterprise Linux >= 5, CentOS >= 5, etc). We acknowledge Páll Melsted since we followed his
+pretty much any glibc-based x86 and x86-64 Linux distribution released since approx 2011 (e.g.: Debian >= 7, Ubuntu >= 10.10,
+Red Hat Enterprise Linux >= 6, CentOS >= 6, etc). We acknowledge Páll Melsted since we followed his
 [blog post](https://pmelsted.wordpress.com/2015/10/14/building-binaries-for-bioinformatics/) to build this portable binary.
 
 We attested that the precompiled binary works on Debian 7.11.0 or later, Ubuntu 14.04.5 or later, and CentOS 7 or later, but it should work on
@@ -147,7 +174,7 @@ install.packages("https://raw.githubusercontent.com/sgearle/bugwas/master/build/
 
 ## Running on a sample example
 
-Now that you have the package (either the precompiled or you compiled it yourself),
+Now that you have the package (either from the container, or precompiled or you compiled it yourself),
 let's try running the tool in a sample example comprising 50 bacterial genomes (subset of the 282
 described in the [DBGWAS in a nutshell](#dbgwas-in-a-nutshell-running-the-tool-in-one-example) section):
 
@@ -175,17 +202,19 @@ Check at least the file ```sample_example/strains``` to know how to build the in
 
 You can find DBGWAS parameters by running ```./DBGWAS -h``` or simply here:
 ```
-       -strains        (1 arg) :    A text file describing the strains containing 3 columns: 1) ID of the strain; 2) Phenotype (0/1/NA); 3) Path to a multi-fasta file containing the sequences of the strain. This file needs a header. Check the sample_example folder or https://gitlab.com/leoisl/dbgwas/raw/master/sample_example/strains for an example.
+       -strains        (1 arg) :    A text file describing the strains containing 3 columns: 1) ID of the strain; 2) Phenotype (a real number or NA); 3) Path to a multi-fasta file containing the sequences of the strain. This file needs a header. Check the sample_example folder or https://gitlab.com/leoisl/dbgwas/raw/master/sample_example/strains for an example.
        -k              (1 arg) :    K-mer size.  [default '31']
        -newick         (1 arg) :    Optional path to a newick tree file. If (and only if) a newick tree file is provided, the lineage effect analysis is computed and PCs figures are generated.  [default '']
        -nc-db          (1 arg) :    A list of Fasta files separated by comma containing annotations in a nucleotide alphabet format (e.g.: -nc-db path/to/file_1.fa,path/to/file_2.fa,etc). You can customize these files to work better with DBGWAS (see https://gitlab.com/leoisl/dbgwas/tree/master#customizing-annotation-databases).  [default '']
        -pt-db          (1 arg) :    A list of Fasta files separated by comma containing annotations in a protein alphabet format (e.g.: -pt-db path/to/file_1.fa,path/to/file_2.fa,etc). You can customize these files to work better with DBGWAS (see https://gitlab.com/leoisl/dbgwas/tree/master#customizing-annotation-databases).  [default '']
        -output         (1 arg) :    Path to the folder where the final and temporary files will be stored.  [default 'output']
-       -skip1          (0 arg) :    Skips Step 1, running only Steps 2 and 3. Assumes that Step 1 was correctly run and folder "step1" is present in the output folder.
-       -skip2          (0 arg) :    Skips Steps 1 and 2, running only Step 3. Assumes that Steps 1 and 2 were correctly run and folders "step1" and "step2" are present in the output folder.
-       -SFF            (1 arg) :    Denotes the Significant Features Filter - the features (or patterns) selected to create a visualisation around them. If it is a float number n, then only the features with q-value<=n are selected. If it is an integer n, then only the n first features are selected. Take a look at the output/step2/patterns.txt file to get a list of features ordered by q-value to better choose this parameter (re-run the tool with -skip2 in order to directly produce the visualisation of the features selected by your parameter).  [default '100']
+       -SFF            (1 arg) :    Denotes the Significant Features Filter - the features (or patterns) selected to create a visualisation around them. Two arguments must be given to this parameter. The first (q or p) indicates whether q- or p-values are used to control the number of retained patterns. The second argument is a number. If it is a float number n, then only the features with q/p-value <=n are selected. If it is an integer n, then only the n first features are selected. Note that there is no space between these parameters, e.g. q100. Take a look at the output/step2/patterns.txt file to get a list of features ordered by q/p-value to better choose this parameter (re-run the tool with -skip2 in order to directly produce the visualisation of the features selected by your parameter).  [default 'q100']
        -nh             (1 arg) :    Denotes the neighbourhood to be considered around the significant unitigs.  [default '5']
        -maf            (1 arg) :    Minor Allele Frequency Filter.  [default '0.01']
+       -phenoThreshold (1 arg) :    Phenotype threshold. Values <= than this are considered Phenotype 0, and > than this are considered Phenotype 1. Used only on the visualisation.  [default '0.0']
+       -keepNA         (0 arg) :    Keep strains with phenotype NA.
+       -skip1          (0 arg) :    Skips Step 1, running only Steps 2 and 3. Assumes that Step 1 was correctly run and folder "step1" is present in the output folder.
+       -skip2          (0 arg) :    Skips Steps 1 and 2, running only Step 3. Assumes that Steps 1 and 2 were correctly run and folders "step1" and "step2" are present in the output folder.
        -GEMMA-path     (1 arg) :    Path to the GEMMA executable.  [default '<DBGWAS_lib>/gemma.0.93b']
        -Blast-path     (1 arg) :    Path to the directory containing the Blast suite (should contain at least blastn, blastx, and makeblastdb).  [default '<DBGWAS_lib>/']
        -phantomjs-path (1 arg) :    Path to phantomjs executable (DBGWAS was tested only with version 2.1.1).  [default '<DBGWAS_lib>/phantomjs']
@@ -212,6 +241,9 @@ If you want your case study to be featured here, please send the output and some
 
 See [DBGWAS web based interactive visualization](https://gitlab.com/leoisl/dbgwas/wikis/DBGWAS-web-based-interactive-visualization)
 
+## Files and formats of DBGWAS textual output
+
+See [Files and formats of DBGWAS textual output](https://gitlab.com/leoisl/dbgwas/wikis/Files-and-formats-of-DBGWAS-textual-output)
 
 
 ## Customizing annotation databases

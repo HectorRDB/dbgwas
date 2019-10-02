@@ -16,5 +16,5 @@ fi
 
 sudo docker run -t -i --rm \
   -v ${DBGWAS_DIR}:/io \
-  phusion/holy-build-box-64:latest \
+  phusion/holy-build-box-64:2.0.1 \
   bash /io/portable_binary_builder/build_portable_dbgwas_core.sh

@@ -1,0 +1,22 @@
+-Large kmer size bug:
+    -Even if we set in CMakeLists.txt:
+        set (KSIZE_LIST "32   64   96  128  160  192  224  256")
+    -We still can't run the tool with a large kmer size due to:
+        leandro@ngs-provisoire:/data2/leandro/GWAS/DBGWAS-0.4.8-Linux-precompiled/bin$ ./DBGWAS -strains pseudomonas_aeruginosa_full_dataset/strains -newick pseudomonas_aeruginosa_full_dataset/strains.newick -nc_db Resistance_DB_for_DBGWAS.fasta -pt_db uniprot_sprot_bacteria_for_DBGWAS.with_extra_tags.fasta -nb-cores 4 -k 165 -output output_test_k_165
+        Step 1. Building DBG and mapping strains on the DBG...
+        [WARNING] Skipping strain WH-SGI-V-07286 because its phenotype is NA
+        [WARNING] Skipping strain WH-SGI-V-07290 because its phenotype is NA
+        [DSK: nb solid kmers found : 140764976   ]  100  %   elapsed:  12 min 3  sec   remaining:   0 min 0  sec   cpu: 153.4 %   mem: [ 924, 4598, 4598] MB
+        [Building BooPHF]  99.8 %   elapsed:   0 min 57 sec   remaining:   0 min 0  sec
+        [MPHF: populate                          ]  100  %   elapsed:   1 min 22 sec   remaining:   0 min 0  sec   cpu:  99.9 %   mem: [ 924,  924, 4598] MB
+        EXCEPTION: kmer size 165 too big for cascading bloom filters
+    -The maximum k-mer size we can use is 127
+    -I am setting in CMakeLists.txt back to:
+        set (KSIZE_LIST "32   64   96  128")
+
+-Fix copy and paste of cells containing annotation;
+    -Asked on stack overflow
+
+-Bug with maf 0.5 => wrong node color (issue in step3)
+    -@see https://mail.google.com/mail/u/0/#inbox/1600315d1c1fe7bc
+

@@ -72,6 +72,9 @@ private:
         //transform to a javascript array
         string getHTMLRepresentationForGraphPage (const set<string>& allExtraTags);
 
+        //transform to a textual representation
+        string getTextualRepresentationForGraphPage (const set<string>& allExtraTags);
+
         //transform to a javascript array
         string getHTMLRepresentationForIndexPage () const;
 
@@ -110,6 +113,9 @@ public:
     //get an HTML representation of the annotation component for the graph page, with the annotation index, and all other info like nb of nodes, evalue and extra tags
     string getJSRepresentationAnnotIdAnnotInfoGraphPage();
 
+    //get a textual representation of the annotation component for the graph page, with the annotation name, and all other info like nb of nodes, evalue and extra tags
+    string getTextualRepresentationAnnotationInfoGraphPage(int compId);
+
     //get a JS array mapping annotation IDs to the nodes it maps to
     string getJSRepresentationAnnotation2NodesForGraphPage() const;
 
@@ -122,8 +128,14 @@ public:
     //get all the annotations IDs from a node as JS vector
     string getAllAnnotationsIDsFromANodeAsJSVector(int node);
 
+    //get all the annotations names from a node as text to be used in the textual output
+    string getAllAnnotationsNamesFromANodeAsText(int node);
+
     //get the extra tags as a JS vector
     string getExtraTagsAsJSVector() const;
+
+    //get the extra tags as text
+    string getExtraTagsAsText() const;
 
     //get a dictionary in JS where the key is the node id and the value is a pair annotation and evalue
     string getJSRepresentationNodeId2AnnotationsEvalueForGraphPage() const;
