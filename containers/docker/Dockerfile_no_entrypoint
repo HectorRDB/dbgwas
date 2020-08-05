@@ -1,0 +1,8 @@
+# To build: docker build . -f Dockerfile_no_entrypoint -t leandroishilima/dbgwas_no_entrypoint:0.5.4
+# However, prefer to pull it from dockerhub
+# This is to address https://gitlab.com/leoisl/dbgwas/-/issues/51
+FROM ubuntu:18.04
+ENV DEBIAN_FRONTEND=noninteractive
+COPY ./install.sh ./
+RUN chmod +x ./install.sh && ./install.sh
+ENV PATH="/dbgwas/bin/:${PATH}"

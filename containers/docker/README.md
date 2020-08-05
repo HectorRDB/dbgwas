@@ -14,3 +14,7 @@ As an example, this is a commmand to run on the Pseudomonas Aeruginosa with Amik
 If you are having issues running DBGWAS on docker due to permissions, we recommend running it on singularity, e.g.:
 
 `singularity run docker://leandroishilima/dbgwas:0.5.4 -strains pseudomonas_aeruginosa_full_dataset/strains -newick pseudomonas_aeruginosa_full_dataset/strains.newick -nc-db Resistance_DB_for_DBGWAS.fasta -pt-db uniprot_sprot_bacteria_for_DBGWAS.fasta` 
+
+# Troubleshooting
+
+`Nextflow` with `awsbatch` does not support images with entrypoints. In this case, you can use the no entrypoint image: `leandroishilima/dbgwas_no_entrypoint:0.5.4`.
